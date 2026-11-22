@@ -287,7 +287,71 @@
  @api.get("/uploads/{storage_path:path}")
  async def serve_upload(storage_path: str):
      if ".." in storage_path:
-@@ -6056,6 +6294,11 @@
+@@ -1725,13 +1963,11 @@
+
+
+ # ---------------------------------------------------------------------------
+-# CHAND AI — ephemeral speech and photo shopping adapters
++# CHAND AI — ephemeral photo shopping adapter
+ # ---------------------------------------------------------------------------
+
+ _CHAND_IMAGE_MAX_BYTES = 5 * 1024 * 1024
+-_CHAND_AUDIO_MAX_BYTES = 12 * 1024 * 1024
+ _CHAND_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
+-_CHAND_AUDIO_TYPES = {"audio/webm", "audio/mp4", "audio/mpeg", "audio/wav", "audio/x-wav", "audio/ogg", "audio/m4a"}
+
+
+ def _chand_provider_settings() -> tuple[str, str, str, str]:
+@@ -1776,48 +2012,9 @@
+         "live_probe": False,
+         "message": "Configuration is present; provider connectivity has not been tested." if configured else "Configure a supported provider on the backend.",
+         "vision_capability": "unverified" if configured else "not_configured",
+-        "speech_to_text_configured": provider == "openai_compatible" and bool(base_url and api_key and os.environ.get("COMEIN_STT_MODEL", "whisper-1").strip()),
+     }
+
+
+-@api.post("/assistant/transcribe")
+-async def assistant_transcribe(
+-    file: UploadFile = File(...),
+-    language: Optional[str] = Query(default=None, pattern="^(hi|en)$"),
+-    user: dict = Depends(get_current_user),
+-):
+-    """Transcribe a short customer voice query; audio is processed in memory only."""
+-    await _chand_upload_rate_limit(user, "speech", 10)
+-    content_type = (file.content_type or "").split(";")[0].strip().lower()
+-    if content_type not in _CHAND_AUDIO_TYPES:
+-        raise HTTPException(status_code=415, detail="Use a supported audio recording format.")
+-    audio = await file.read(_CHAND_AUDIO_MAX_BYTES + 1)
+-    if not audio or len(audio) > _CHAND_AUDIO_MAX_BYTES:
+-        raise HTTPException(status_code=413, detail="Audio must be between 1 byte and 12 MB.")
+-    provider, base_url, api_key, _ = _chand_provider_settings()
+-    stt_model = (os.environ.get("COMEIN_STT_MODEL") or "whisper-1").strip()
+-    if provider != "openai_compatible" or not base_url or not api_key or not stt_model:
+-        raise HTTPException(status_code=503, detail="Speech provider is not configured. Voice transcription is unavailable.")
+-    safe_name = "chand-audio." + {"audio/webm": "webm", "audio/mp4": "m4a", "audio/m4a": "m4a", "audio/mpeg": "mp3", "audio/wav": "wav", "audio/x-wav": "wav", "audio/ogg": "ogg"}.get(content_type, "bin")
+-    try:
+-        response = await asyncio.to_thread(
+-            requests.post,
+-            base_url + "/audio/transcriptions",
+-            headers={"Authorization": f"Bearer {api_key}"},
+-            data={**({"language": language} if language else {}), "model": stt_model},
+-            files={"file": (safe_name, audio, content_type)},
+-            timeout=25,
+-        )
+-        response.raise_for_status()
+-        transcript = response.json().get("text")
+-    except Exception:
+-        logger.warning("Chand speech transcription provider unavailable")
+-        raise HTTPException(status_code=502, detail="Speech transcription failed. Please try again or type your request.")
+-    if not isinstance(transcript, str) or not transcript.strip():
+-        raise HTTPException(status_code=422, detail="No speech was recognized. Please try again.")
+-    return {"text": transcript.strip()[:1000], "language": language or "auto", "stored": False}
+-
+-
+ @api.post("/assistant/vision")
+ async def assistant_vision(
+     request: Request,
+@@ -6056,6 +6253,11 @@
      await db.grocery_quotes.create_index("expires_at", expireAfterSeconds=0)
      await db.grocery_quotes.create_index([("scope", 1), ("status", 1)])
      await db.files.create_index("owner_id")
@@ -374,7 +438,23 @@
 +        return {"status": "FAILED", "decision": "needs_review", "reason": "CHAND review could not be completed; retry after provider recovery."}
 --- a/frontend/src/lib/api.ts
 +++ b/frontend/src/lib/api.ts
-@@ -249,6 +249,16 @@
+@@ -124,15 +124,6 @@
+   put: <T,>(path: string, json: unknown, auth = true) =>
+     request<T>(path, { method: "PUT", json, auth }),
+   del: <T,>(path: string, auth = true) => request<T>(path, { method: "DELETE", auth }),
+-  async chandTranscribe(file: LocalFile, language?: "hi" | "en"): Promise<{ text: string; language: string; stored: false }> {
+-    if (!API_BASE) throw { status: 0, message: "Backend URL is not configured." } as ApiError;
+-    const headers = await withAuthHeaders();
+-    const query = language ? `?language=${language}` : "";
+-    const res = await uploadForm(`${API_URL}/assistant/transcribe${query}`, { files: { file }, headers });
+-    const payload: any = await res.json().catch(() => null);
+-    if (!res.ok) throw { status: res.status, message: toMessage(payload?.detail ?? payload), detail: payload?.detail } as ApiError;
+-    return payload as { text: string; language: string; stored: false };
+-  },
+   async chandVision(file: LocalFile, language: string = "en"): Promise<any> {
+     if (!API_BASE) throw { status: 0, message: "Backend URL is not configured." } as ApiError;
+     const headers = await withAuthHeaders();
+@@ -249,6 +240,16 @@
      }
      return payload;
    },
@@ -510,3 +590,378 @@
 +    result = review_advertisement({"title": "Sale", "business_name": "A Shop", "destination": "/shops", "placement": "home_banner"}, requester=lambda *args, **kwargs: Response())
 +    assert result["status"] == "FAILED"
 +    assert result["decision"] == "needs_review"
+--- a/frontend/app/chand.tsx
++++ b/frontend/app/chand.tsx
+@@ -1,7 +1,6 @@
+ import Feather from "@react-native-vector-icons/feather";
+ import { Image } from "expo-image";
+ import * as ImagePicker from "expo-image-picker";
+-import { AudioModule, RecordingPresets, setAudioModeAsync, useAudioRecorder } from "expo-audio";
+ import { useRouter , useLocalSearchParams } from "expo-router";
+ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+ import {
+@@ -150,9 +149,8 @@
+   const { colors } = useTheme();
+   const { user } = useAuth();
+   const { addProduct, setAmount } = useCart();
+-  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+   const { lang, t } = useT();
+-  const routeParams = useLocalSearchParams<{ openHelp?: string; order_id?: string; order_kind?: string; voice?: string }>();
++  const routeParams = useLocalSearchParams<{ openHelp?: string; order_id?: string; order_kind?: string }>();
+   const initialRole: RoleMode = user?.role === "shopkeeper" ? "shopkeeper" : "customer";
+   const [role, setRole] = useState<RoleMode>(initialRole);
+   const [draft, setDraft] = useState("");
+@@ -160,17 +158,6 @@
+   const [requestError, setRequestError] = useState("");
+   const [retryQuery, setRetryQuery] = useState("");
+   const messageInputRef = useRef<React.ComponentRef<typeof TextInput> | null>(null);
+-  const [voiceTypingHint, setVoiceTypingHint] = useState(routeParams.voice === "1");
+-  const [previousVoiceParam, setPreviousVoiceParam] = useState(routeParams.voice);
+-  if (previousVoiceParam !== routeParams.voice) {
+-    setPreviousVoiceParam(routeParams.voice);
+-    if (routeParams.voice === "1") setVoiceTypingHint(true);
+-  }
+-  const [voiceLanguage, setVoiceLanguage] = useState<"auto" | "hi" | "en">("auto");
+-  const [voiceRecording, setVoiceRecording] = useState(false);
+-  const [voiceBusy, setVoiceBusy] = useState(false);
+-  const [voiceReview, setVoiceReview] = useState(false);
+-  const [voiceError, setVoiceError] = useState("");
+   const [photoAsset, setPhotoAsset] = useState<ImagePicker.ImagePickerAsset | null>(null);
+   const [photoBusy, setPhotoBusy] = useState(false);
+   const [photoError, setPhotoError] = useState("");
+@@ -178,16 +165,11 @@
+   const [photoClues, setPhotoClues] = useState("");
+   const [photoMatches, setPhotoMatches] = useState<Product[]>([]);
+   const [providerStatus, setProviderStatus] = useState<"checking" | "not_configured" | "configured_unverified" | "live" | "unavailable">("checking");
+-  useEffect(() => {
+-    if (routeParams.voice === "1") {
+-      messageInputRef.current?.focus();
+-    }
+-  }, [routeParams.voice]);
+   const [messages, setMessages] = useState<Message[]>([{
+     id: "welcome", from: "assistant",
+     text: `${t("brand.tagline")} ${t("chand.subtitle")}. ${t("chand.provider.note")}`,
+   }]);
+-  const suggestions = useMemo(() => SUGGESTION_KEYS[role].map((key) => t(key)), [role, t, lang]);
++  const suggestions = useMemo(() => SUGGESTION_KEYS[role].map((key) => t(key)), [role, t]);
+   useEffect(() => {
+     let active = true;
+     api.get<any>("/assistant/health", false).then((health) => {
+@@ -404,46 +386,6 @@
+     setPhotoNotice(`${product.name} was sent to your existing COME-IN Cart. Review it in Cart before checkout.`);
+   };
+
+-  const startVoiceRecording = async () => {
+-    if (!user) { setVoiceError("Please sign in before using voice shopping."); return; }
+-    setVoiceError(""); setVoiceReview(false);
+-    try {
+-      const permission = await AudioModule.requestRecordingPermissionsAsync();
+-      if (!permission.granted) { setVoiceError("Microphone permission was not granted. Allow it in device settings or type your request instead."); return; }
+-      await setAudioModeAsync({ allowsRecording: true, playsInSilentMode: true });
+-      await audioRecorder.prepareToRecordAsync();
+-      audioRecorder.record({ forDuration: 90 });
+-      setVoiceRecording(true);
+-    } catch (error: any) {
+-      setVoiceError(error?.message || "Could not start microphone recording.");
+-      setVoiceRecording(false);
+-    }
+-  };
+-
+-  const stopAndTranscribeVoice = async () => {
+-    if (!voiceRecording || voiceBusy) return;
+-    setVoiceBusy(true); setVoiceError("");
+-    try {
+-      await audioRecorder.stop();
+-      setVoiceRecording(false);
+-      const uri = audioRecorder.uri;
+-      if (!uri) throw new Error("The recording file was not created. Please record again.");
+-      const result = await api.chandTranscribe({ uri, name: "chand-shopping-request.m4a", mimeType: "audio/mp4" }, voiceLanguage === "auto" ? undefined : voiceLanguage);
+-      const transcript = String(result?.text || "").trim();
+-      if (!transcript) throw new Error("No speech was recognized. Please try again or type your request.");
+-      setDraft(transcript);
+-      setVoiceReview(true);
+-      setVoiceTypingHint(false);
+-    } catch (error: any) {
+-      setVoiceError(error?.message || "Voice transcription failed. Please try again or type your request.");
+-    } finally { setVoiceBusy(false); }
+-  };
+-
+-  const cancelVoiceRecording = async () => {
+-    try { if (voiceRecording) await audioRecorder.stop(); } catch {}
+-    setVoiceRecording(false); setVoiceBusy(false); setVoiceReview(false); setVoiceError("");
+-  };
+-
+   const submitChandFeedback = async () => {
+     if (!user || !feedbackRating || feedbackBusy) return;
+     const lastAssistant = [...messages].reverse().find((item) => item.from === "assistant");
+@@ -544,7 +486,7 @@
+     if (!clean || sending || clean.length > 1000) return;
+     const budgetMatch = clean.match(/(?:₹|rs\.?|rupees?)\s*(\d{1,6})/i) || clean.match(/budget[^0-9]{0,20}(\d{1,6})/i);
+     if (budgetMatch) setBudgetCap(Number(budgetMatch[1]));
+-    setDraft(""); setVoiceReview(false); setSending(true);
++    setDraft(""); setSending(true);
+     const userMessage: Message = { id: `u-${Date.now()}`, from: "user", text: clean };
+     setMessages((current) => [...current, userMessage]);
+     let answer = "";
+@@ -736,28 +678,8 @@
+             <Pressable key={suggestion} testID="chand-suggestion" onPress={() => send(suggestion)} style={styles.suggestion}><Text style={styles.suggestionText}>{suggestion}</Text></Pressable>
+           ))}
+         </ScrollView>
+-        {voiceTypingHint ? <Text style={styles.voiceHint}>Native recording is available below. The recording is uploaded only after you tap Stop & transcribe. No audio is sent automatically. You can also use your keyboard microphone and review the text before sending.</Text> : null}
+-        <View style={styles.voicePanel} testID="chand-voice-shopping">
+-          <View style={styles.voiceLanguages}>
+-            {(["auto", "hi", "en"] as const).map((value) => <Pressable key={value} testID={`chand-voice-language-${value}`} onPress={() => setVoiceLanguage(value)} style={[styles.voiceLanguage, voiceLanguage === value && styles.voiceLanguageActive]}><Text style={styles.voiceLanguageText}>{value === "auto" ? "Auto" : value === "hi" ? "हिन्दी" : "English"}</Text></Pressable>)}
+-          </View>
+-          <Text style={styles.feedbackHint}>Voice clips are limited to 90 seconds. You can review and edit the transcript before sending it to catalog search.</Text>
+-          <View style={styles.mediaActions}>
+-            {!voiceRecording ? <Pressable testID="chand-voice-start" disabled={voiceBusy || sending} onPress={() => void startVoiceRecording()} style={[styles.mediaButton, (voiceBusy || sending) && styles.sendDisabled]}><Feather name="mic" size={16} color={colors.brandForest} /><Text style={styles.mediaButtonText}>Record shopping request</Text></Pressable> : <>
+-              <Pressable testID="chand-voice-stop" onPress={() => void stopAndTranscribeVoice()} style={styles.mediaPrimary}><Feather name="square" size={14} color="#FFFFFF" /><Text style={styles.mediaPrimaryText}>Stop & transcribe</Text></Pressable>
+-              <Pressable testID="chand-voice-cancel" onPress={() => void cancelVoiceRecording()} style={styles.mediaButton}><Text style={styles.mediaButtonText}>Cancel recording</Text></Pressable>
+-            </>}
+-          </View>
+-          {voiceBusy ? <View style={styles.mediaStatus}><ActivityIndicator color={colors.brandPrimary} /><Text style={styles.feedbackHint}>Transcribing your recording…</Text></View> : null}
+-          {voiceRecording ? <Text accessibilityRole="status" style={styles.mediaError}>Recording… Tap Stop & transcribe when you are finished.</Text> : null}
+-          {voiceReview ? <Text accessibilityRole="status" style={styles.feedbackHint}>Transcription ready. Edit the text in the message box, then tap Send to search the live COME-IN catalog.</Text> : null}
+-          {voiceError ? <Text accessibilityRole="alert" style={styles.mediaError}>{voiceError}</Text> : null}
+-        </View>
+         <View style={styles.inputRow}>
+           <TextInput ref={messageInputRef} testID="chand-message-input" value={draft} onChangeText={setDraft} onSubmitEditing={() => send()} returnKeyType="send" maxLength={1000} multiline placeholder={t("chand.input.placeholder")} placeholderTextColor={colors.muted} style={styles.input} accessibilityLabel="Message CHAND" />
+-          <Pressable testID="chand-voice-typing" accessibilityRole="button" accessibilityLabel="Open device keyboard for voice typing" onPress={() => { setVoiceTypingHint(true); messageInputRef.current?.focus(); }} style={styles.voiceButton}>
+-            <Feather name="edit-3" size={18} color={colors.brandForest} />
+-          </Pressable>
+           <Pressable testID="chand-send" accessibilityRole="button" accessibilityLabel={t("chand.send")} disabled={!draft.trim() || sending} onPress={() => send()} style={[styles.sendButton, (!draft.trim() || sending) && styles.sendDisabled]}>
+             <Feather name="send" size={18} color="#FFFFFF" />
+           </Pressable>
+@@ -808,11 +730,6 @@
+   photoMatch: { gap: spacing.xs, paddingTop: spacing.sm, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
+   mediaStatus: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+   mediaError: { color: colors.error, fontSize: 12, fontWeight: "700" },
+-  voicePanel: { marginHorizontal: spacing.md, marginTop: spacing.sm, padding: spacing.sm, gap: spacing.sm, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
+-  voiceLanguages: { flexDirection: "row", gap: spacing.sm },
+-  voiceLanguage: { minWidth: 58, alignItems: "center", paddingHorizontal: spacing.sm, paddingVertical: 6, borderRadius: radius.sm, borderWidth: 1, borderColor: colors.border },
+-  voiceLanguageActive: { backgroundColor: colors.brandTertiary, borderColor: colors.brandPrimary },
+-  voiceLanguageText: { color: colors.brandForest, fontSize: 12, fontWeight: "700" },
+   header: { flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: spacing.md, paddingBottom: spacing.md, backgroundColor: colors.brandHeader, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
+   back: { width: 38, height: 38, borderRadius: 19, backgroundColor: "#FFFFFFA8", alignItems: "center", justifyContent: "center" },
+   brandMark: { width: 40, height: 40, borderRadius: 14, backgroundColor: colors.brandForest, alignItems: "center", justifyContent: "center", position: "relative" },
+@@ -901,8 +818,6 @@
+   suggestionText: { fontSize: 11, color: colors.onSurface, fontWeight: "600" },
+   inputRow: { flexDirection: "row", alignItems: "flex-end", gap: 8, marginHorizontal: spacing.md, padding: 7, borderWidth: 1, borderColor: colors.borderStrong, borderRadius: 18, backgroundColor: colors.surfaceSecondary },
+   input: { flex: 1, maxHeight: 100, minHeight: 40, paddingHorizontal: 9, paddingVertical: 9, fontSize: 14, color: colors.onSurface, textAlignVertical: "center" },
+-  voiceButton: { width: 40, height: 42, borderRadius: 14, alignItems: "center", justifyContent: "center", backgroundColor: colors.surface },
+-  voiceHint: { marginHorizontal: spacing.md, color: colors.muted, fontSize: 10, lineHeight: 15 },
+   sendButton: { width: 42, height: 42, borderRadius: 14, alignItems: "center", justifyContent: "center", backgroundColor: colors.brandPrimary },
+   sendDisabled: { opacity: 0.45 },
+   quickLinks: { flexDirection: "row", justifyContent: "space-around", paddingHorizontal: spacing.xs },
+--- a/frontend/app/(tabs)/index.tsx
++++ b/frontend/app/(tabs)/index.tsx
+@@ -93,9 +93,6 @@
+             <BrandLogo testID="brand-logo" size="md" />
+           </View>
+           <View style={styles.headerActions}>
+-            <Pressable testID="header-voice-search" accessibilityRole="button" accessibilityLabel="Open CHAND AI voice typing" onPress={() => router.push("/chand?voice=1")} style={styles.headerAction}>
+-              <Feather name="mic" size={19} color={colors.brandForest} />
+-            </Pressable>
+             <Pressable testID="header-language" accessibilityRole="button" accessibilityLabel="Choose language" onPress={() => router.push("/language")} style={styles.headerAction}>
+               <Feather name="globe" size={19} color={colors.brandForest} />
+             </Pressable>
+--- a/frontend/app.json
++++ b/frontend/app.json
+@@ -44,16 +44,7 @@
+         "expo-image-picker",
+         {
+           "photosPermission": "COME-IN uses your selected product photo only to identify matching products.",
+-          "cameraPermission": "COME-IN uses your camera only when you choose to take a product photo.",
+-          "microphonePermission": "COME-IN uses your microphone only when you choose to record a shopping request."
+-        }
+-      ],
+-      [
+-        "expo-audio",
+-        {
+-          "microphonePermission": "COME-IN uses your microphone only when you choose to record a shopping request.",
+-          "recordAudioAndroid": true,
+-          "enableBackgroundRecording": false
++          "cameraPermission": "COME-IN uses your camera only when you choose to take a product photo."
+         }
+       ]
+     ],
+--- a/frontend/package.json
++++ b/frontend/package.json
+@@ -21,7 +21,6 @@
+     "date-fns": "4.1.0",
+     "dayjs": "1.11.13",
+     "expo": "58.0.17",
+-    "expo-audio": "~58.0.12",
+     "expo-blur": "58.0.5",
+     "expo-constants": "58.0.13",
+     "expo-font": "58.0.9",
+--- a/frontend/yarn.lock
++++ b/frontend/yarn.lock
+@@ -3121,11 +3121,6 @@
+     "@expo/image-utils" "^0.12.5"
+     expo-constants "~58.0.13"
+
+-expo-audio@~58.0.12:
+-  version "58.0.12"
+-  resolved "https://registry.yarnpkg.com/expo-audio/-/expo-audio-58.0.12.tgz#6f0f192eacce31b900d4358b39fac880d8613914"
+-  integrity sha512-PNVqGyxZET+hSQ/JfX29VPzdj+W5qo7zRSQabN4T/0+EmnnMvyPf5u6FbaGWQuerXKMvKIy7RwSc13ldaye1RA==
+-
+ expo-blur@58.0.5:
+   version "58.0.5"
+   resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-58.0.5.tgz#55f32f4817e91f06a996c40cc65913eb515d3f69"
+--- a/frontend/plugins/withReleaseSafety.js
++++ b/frontend/plugins/withReleaseSafety.js
+@@ -2,9 +2,7 @@
+
+ module.exports = (config, { production = false } = {}) => {
+   config = withInfoPlist(config, (mod) => {
+-    // image-picker disables its microphone permission, but CHAND audio recording
+-    // still needs its own usage description. Verify the final generated plist.
+-    mod.modResults.NSMicrophoneUsageDescription = 'COME-IN uses your microphone only when you choose to record a shopping request.';
++    // No microphone permission is requested: CHAND supports text and photo shopping only.
+     if (production) mod.modResults.NSAppTransportSecurity = { NSAllowsArbitraryLoads: false };
+     return mod;
+   });
+--- a/backend/tests/test_chand_media_contract.py
++++ b/backend/tests/test_chand_media_contract.py
+@@ -7,20 +7,16 @@
+
+ def test_health_diagnostic_never_exposes_provider_credentials_or_claims_live_probe():
+     assert '@api.get("/assistant/health")' in SERVER
+-    block = SERVER[SERVER.find('async def assistant_health'):SERVER.find('@api.post("/assistant/transcribe")')]
++    block = SERVER[SERVER.find('async def assistant_health'):SERVER.find('@api.post("/assistant/vision")')]
+     assert '"live_probe": False' in block
+     assert '"api_key":' not in block.split('return {', 1)[-1]
+     assert '"vision_capability": "unverified"' in block
+-    assert '"speech_to_text_configured"' in block
+     assert 'COMEIN_AI_API_KEY' in SERVER
+
+-def test_transcription_is_authenticated_bounded_and_ephemeral():
+-    block = SERVER[SERVER.find('@api.post("/assistant/transcribe")'):SERVER.find('@api.post("/assistant/vision")')]
+-    assert 'Depends(get_current_user)' in block
+-    assert '_CHAND_AUDIO_MAX_BYTES = 12 * 1024 * 1024' in SERVER
+-    assert 'audio/transcriptions' in block
+-    assert 'stored": False' in block
+-    assert 'COMEIN_STT_MODEL' in block
++def test_voice_transcription_is_removed_from_the_customer_chand_contract():
++    assert '@api.post("/assistant/transcribe")' not in SERVER
++    assert '_CHAND_AUDIO_MAX_BYTES' not in SERVER
++    assert 'COMEIN_STT_MODEL' not in SERVER
+
+ def test_photo_vision_validates_content_calls_provider_and_searches_live_catalog():
+     block = SERVER[SERVER.find('@api.post("/assistant/vision")'):SERVER.find('# Directory-only categories')]
+@@ -41,29 +37,24 @@
+
+ def test_frontend_api_client_has_authenticated_multipart_adapters():
+     assert 'import { uploadForm, type LocalFile } from "@/src/utils/upload"' in API_CLIENT
+-    assert 'chandTranscribe(file: LocalFile' in API_CLIENT
+     assert 'chandVision(file: LocalFile' in API_CLIENT
+-    assert 'assistant/transcribe' in API_CLIENT
+     assert 'assistant/vision' in API_CLIENT
+     assert 'withAuthHeaders()' in API_CLIENT
+
+
+-def test_native_photo_and_voice_mobile_integration_is_wired_to_existing_adapters():
++def test_native_photo_integration_remains_wired_after_voice_removal():
+     chand = (ROOT / "frontend" / "app" / "chand.tsx").read_text(encoding="utf-8")
+     package = (ROOT / "frontend" / "package.json").read_text(encoding="utf-8")
+     app_config = (ROOT / "frontend" / "app.json").read_text(encoding="utf-8")
+     assert '"expo-image-picker": "~58.0.10"' in package
+-    assert '"expo-audio": "~58.0.12"' in package
+-    assert 'expo-image-picker' in app_config and 'expo-audio' in app_config
++    assert '"expo-audio"' not in package
++    assert 'expo-image-picker' in app_config and 'expo-audio' not in app_config
+     assert 'requestCameraPermissionsAsync' in chand
+     assert 'requestMediaLibraryPermissionsAsync' in chand
+     assert 'launchCameraAsync' in chand and 'launchImageLibraryAsync' in chand
+     assert 'testID="chand-photo-cancel"' in chand
+     assert 'testID="chand-photo-replace"' in chand
+     assert 'api.chandVision' in chand
+-    assert 'AudioModule.requestRecordingPermissionsAsync' in chand
+-    assert 'audioRecorder.prepareToRecordAsync()' in chand
+-    assert 'audioRecorder.record({ forDuration: 90 })' in chand
+-    assert 'audioRecorder.stop()' in chand
+-    assert 'api.chandTranscribe' in chand
++    assert 'AudioModule.requestRecordingPermissionsAsync' not in chand
++    assert 'api.chandTranscribe' not in chand
+     assert 'testID={`chand-photo-confirm-${product.id}`}' in chand
+--- a/backend/tests/test_chand_shopping_integration_contract.py
++++ b/backend/tests/test_chand_shopping_integration_contract.py
+@@ -32,10 +32,9 @@
+     assert 'history }, false)' in CHAND
+
+
+-def test_home_account_and_header_voice_shortcuts_open_one_chand_route():
++def test_home_account_chand_entries_open_text_and_photo_shopping_without_voice():
+     assert 'testID="chand-home-entry"' in HOME
+-    assert 'router.push("/chand?voice=1")' in HOME
+-    assert 'Voice search unavailable' not in HOME
++    assert 'router.push("/chand?voice=1")' not in HOME
+     assert 'label: "CHAND AI"' in ACCOUNT
+     assert 'hint: "Your Smart Shopping Assistant"' in ACCOUNT
+     assert 'onPress: () => router.push("/chand")' in ACCOUNT
+@@ -43,16 +42,11 @@
+     assert 'router.push("/request")' not in ACCOUNT
+
+
+-def test_voice_typing_requires_user_to_review_and_send_transcript():
+-    assert 'testID="chand-voice-typing"' in CHAND
+-    assert 'messageInputRef.current?.focus()' in CHAND
+-    assert 'No audio is sent automatically.' in CHAND
+-    assert 'testID="chand-voice-start"' in CHAND
+-    assert 'testID="chand-voice-stop"' in CHAND
+-    assert 'testID="chand-voice-cancel"' in CHAND
+-    assert 'chand-voice-language-${value}' in CHAND
+-    assert 'api.chandTranscribe' in CHAND
+-    assert 'onPress={() => send()}' in CHAND
++def test_customer_chand_exposes_text_and_photo_shopping_only():
++    assert 'testID="chand-message-input"' in CHAND
++    assert 'testID="chand-photo-' in CHAND
++    assert 'chand-voice' not in CHAND
++    assert 'useAudioRecorder' not in CHAND
+
+
+ def test_provider_prompt_limits_chand_to_comein_and_grounded_budget_data():
+--- a/backend/tests/test_frontend_contracts.py
++++ b/backend/tests/test_frontend_contracts.py
+@@ -76,7 +76,6 @@
+         'testID="chand-home-entry"',
+         '{CATEGORIES.map((item) => (',
+         'testID="header-language"',
+-        'testID="header-voice-search"',
+         'testID="fresh-groceries-banner"',
+         'router.push("/restaurant")',
+         'router.push("/services")',
+@@ -99,26 +98,18 @@
+     assert 'router.push("/request")' not in home
+
+
+-def test_bakery_has_no_fabricated_sample_inventory_and_voice_is_honest():
++def test_bakery_has_no_fabricated_sample_inventory_and_chand_voice_is_removed():
+     catalog = (ROOT / "frontend/src/data/catalog.ts").read_text()
+     home = (ROOT / "frontend/app/(tabs)/index.tsx").read_text()
+     assert 'id: "bakery"' in catalog
+     assert 'id: "p-bakery-bread"' not in catalog
+     assert 'name: "Fresh Bread Loaf"' not in catalog
+-    # Home opens editable CHAND voice typing rather than claiming that every
+-    # device lacks speech support. Native/provider capability stays conditional.
+-    voice_button = home.split('testID="header-voice-search"', 1)[1].split('</Pressable>', 1)[0]
+-    assert 'accessibilityLabel="Open CHAND AI voice typing"' in voice_button
+-    assert 'router.push("/chand?voice=1")' in voice_button
+-    assert 'Voice search unavailable' not in voice_button
+-    assert 'Speech recognition is not configured for this app.' not in voice_button
+     chand = (ROOT / "frontend/app/chand.tsx").read_text()
+-    assert 'routeParams.voice === "1"' in chand
+-    assert 'messageInputRef.current?.focus()' in chand
+-    assert 'if (!permission.granted)' in chand
+-    assert 'Microphone permission was not granted.' in chand
+-    assert 'api.chandTranscribe' in chand
+-    assert 'Voice transcription failed. Please try again or type your request.' in chand
++    assert 'header-voice-search' not in home
++    assert 'chand?voice=1' not in home
++    assert 'chand-voice' not in chand
++    assert 'api.chandTranscribe' not in chand
++    assert 'testID="chand-photo-' in chand
+
+ def test_bakery_category_uses_catalog_filter_and_existing_empty_state():
+     catalog = (ROOT / "frontend/src/data/catalog.ts").read_text()

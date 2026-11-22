@@ -32,3 +32,7 @@
 - No native Android/iOS or real user/device validation was performed.
 - The legacy general image-upload route and existing customer CHAND vision UI predate this work. They conflict with the new Phase 2 application-wide “advertisement-only image upload” policy and require an explicit compatibility/migration decision before disabling them; they were not silently broken in this slice.
 - Membership, pricing, verification, delivery performance, complaints, analytics, and admin UI integrations remain Phase 2 work in progress.
+
+## Owner decision applied: CHAND voice removal
+
+On 22 November 2026 the owner removed Voice Shopping from the customer CHAND scope. The implementation removes the home shortcut, recorder UI/state, microphone permission configuration, `expo-audio` dependency and lock entry, frontend transcription adapter, and backend `/assistant/transcribe` route. Text and Photo Shopping remain. Fresh regression evidence: 34 focused CHAND/frontend contracts passed; TypeScript and targeted ESLint passed with no warnings/errors. Voice-specific provider validation is no longer applicable.

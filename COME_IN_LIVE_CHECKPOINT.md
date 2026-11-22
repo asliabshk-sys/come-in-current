@@ -8,6 +8,8 @@ Phase 2 is **IN PROGRESS**. The first implemented slice is captured in `patches/
 
 Owner direction has superseded the earlier policy: existing image uploads and CHAND Photo Shopping must be preserved and centralized image moderation is required. Advertisement publication now requires a configured `ADVERTISEMENT_OWNER_EMAIL`, safe CHAND review, and the exact poster SHA-256 reviewed; ordinary admins cannot publish. This correction has fresh 10-test focused evidence and forward/reverse patch dry-run evidence.
 
+CHAND AI Voice Shopping was removed by final owner decision on 22 November 2026. Customer CHAND now retains Text Shopping and Photo Shopping only. Removed: voice shortcut, UI/state/recorder, microphone permission configuration, `expo-audio`, API adapter and backend transcription route. Fresh focused regression: 34 PASS; TypeScript PASS; targeted ESLint PASS; patch forward/reverse dry-run PASS.
+
 Completed: fetched and verified `origin/work`; read handover, five checkpoints, Task 1 final owner-approval record, external validation and release-readiness records; reconciled the recovered 22-task canonical roadmap into `docs/COME_IN_MASTER_TASK_BOARD.md`; prepared `docs/TASK_2_PREPARATION_PROMPT.md`. The owner explicitly approved Task 1 on 22 November 2026; `docs/TASK_1_OWNER_APPROVAL_RECORD_20261122.md` is the durable decision record. Task 2 has not started.
 
 Pending/blocked: Task 2 requires separate owner authorization. Android/iOS native validation, actual Razorpay TEST payment/webhook/refund and production configuration/infrastructure validation remain DEFERRED/BLOCKED.

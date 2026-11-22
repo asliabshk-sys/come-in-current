@@ -4,6 +4,8 @@
 
 > **Phase 2 implementation pointer — 22 November 2026:** **IN PROGRESS.** The Advertisement Foundation patch and fresh test evidence are `patches/phase2-advertisement-foundation.patch` and `evidence/phase-2-prelaunch-20261122/advertisement-foundation/IMPLEMENTATION_REPORT.md`. Real CHAND provider, native/device, payment and production validation remain deferred/blocked.
 
+> **CHAND scope decision:** Customer Voice Shopping is **REMOVED BY OWNER DECISION**. The supported customer modes are Text Shopping and Photo Shopping; this was implemented and regression-tested in the active Phase 2 patch.
+
 > **Task 2 execution update — 22 November 2026:** Task 2 is now **APPROVED** by explicit owner decision, recorded in `docs/TASK_2_OWNER_APPROVAL_RECORD_20261122.md`. The official reference app icon was found already correctly integrated in Expo configuration; byte identity/configuration, static UI/theme audit, web export and relevant frontend evidence are at `evidence/task-2-theme-icon-20261122/`. TypeScript has 0 errors; ESLint has 0 errors and 7 existing warnings. No application source changed. Native/device and full runtime visual validation are deferred.
 
 > **Task 3 execution update — 22 November 2026:** Task 3 is **IN PROGRESS** under explicit owner authorization as a discovery/audit-only phase. Home/navigation, category and Seller Dashboard evidence is being collected under `evidence/task-3-home-category-seller-20261122/`. No source/category/API/database/auth/Restaurant Mode change or Task 4 work is authorized.
