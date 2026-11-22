@@ -9,3 +9,6 @@
 7. **Owner approval:** independent final review and owner acceptance remain pending. Task 4 locked.
 
 Blocked/deferred: standard pytest config requires unavailable `pytest-xdist`; isolated frontend has no `node_modules`; Android/iOS physical devices and live Razorpay TEST are separately deferred. No fake data, production credential/payment changes or new unrelated features.
+
+## Added blocker — November 22 sanitized source inaccessible
+GitHub blob `b1e1d2c813185967dde4c979509410a95abd4d30` identified, but binary contents unavailable through connector; Git blob endpoint UTF-8-only; local Git HTTPS DNS blocked. Do not infer completeness, duplicate patch state, latest source authority, or compatibility. Require exact archive bytes before Task 3 implementation continues. No new source conflicts independently confirmed in this session.
