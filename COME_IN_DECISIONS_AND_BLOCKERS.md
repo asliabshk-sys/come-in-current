@@ -30,6 +30,12 @@
 
 **Deferred final-stage testing:** native Android device/build, native iOS device/build, full runtime visual testing and final native release validation are DEFERRED, not failures or passes. Task 3 remains locked pending separate owner authorization.
 
+## 22 November 2026 — Task 3 audit authorization
+
+**Decision:** Task 3 is authorized solely for evidence-based audit and discovery of Home/navigation, categories and Seller Dashboard capabilities. Recommendations do not authorize implementation. Existing categories, mappings, UI/theme/navigation, Restaurant Mode, APIs, database and authentication must remain unchanged.
+
+**Deferred:** native/device testing remains outside this phase. Any serious defect is documented for owner decision; it is not fixed in Task 3.
+
 ## Approved decisions (preserved from history, plus BATCH-02)
 | # | Decision | Source |
 |---|---|---|

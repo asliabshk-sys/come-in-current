@@ -30,6 +30,14 @@ The owner explicitly approved Task 2’s completed local scope. Durable decision
 
 Next precise action: review, commit/push and remote-verify this approval checkpoint; then wait for Task 3 authorization. No application source, artwork, UI, backend, database, authentication or API change is authorized by this approval record.
 
+## Task 3 audit start — 22 November 2026 (Asia/Kolkata)
+
+Owner authorized Task 3 as an audit-only phase. Starting repository SHA: `01361d97b6b0f6d0418134070683c7a5ffc1d262`; `work` and `origin/work` matched with `0 0` ahead/behind and a clean tree. Task 2 approval was verified. Active application source remains `/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115`; it will not be modified.
+
+Current work: Home/navigation, category and Seller Dashboard discovery, source/API/database/test evidence inventory and safe checks. No category changes, UI/theme/navigation changes, Seller feature work, API/database/auth changes, Restaurant Mode changes, Task 4 work or native-device validation are authorized. Evidence directory: `evidence/task-3-home-category-seller-20261122/`; checklist: `docs/TASK_3_EXECUTION_CHECKLIST.md`.
+
+Exact next action: complete source inventories and report each feature with evidence classification, saving/pushing audit milestones before final owner review.
+
 ## READ-ONLY release audit — 2026-11-17T01:41:36.643661-08:00
 
 Project COME-IN, repository asliabshk-sys/come-in-current at /workspace/come-in-current; application /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115.

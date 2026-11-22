@@ -14,6 +14,10 @@ The canonical 22-task roadmap is reconciled in [COME_IN_MASTER_TASK_BOARD.md](CO
 
 Task 2 (Theme and Design / official app icon integration) is **APPROVED** for its completed local scope by explicit owner decision; see `docs/TASK_2_OWNER_APPROVAL_RECORD_20261122.md`. The official owner-reference icon was already configured in Expo, Android adaptive-icon and web favicon paths; no source/artwork change was needed. Fresh local evidence: TypeScript 0 errors, ESLint 0 errors/7 warnings, Expo config PASS, web export PASS, static inventory 95 modules/53 route-layout files/0 parse diagnostics, and CHAND planner 11 assertions PASS. Native Android/iOS verification, full runtime visual testing and final native release validation remain deferred. Do not start Task 3 without separate owner authorization.
 
+## Task 3 status — 22 November 2026
+
+Task 3 is **IN PROGRESS** under explicit owner authorization, but is audit/discovery only. It covers Home/navigation, categories and Seller Dashboard evidence. No existing implementation is to be changed. Audit reports are being assembled under `evidence/task-3-home-category-seller-20261122/`; use `docs/TASK_3_EXECUTION_CHECKLIST.md` for exact scope and stop conditions. Task 4 is locked.
+
 Date: 22 November 2026 (Asia/Kolkata)  
 Repository: `https://github.com/asliabshk-sys/come-in-current`  
 Working branch at handover preparation: `work`  

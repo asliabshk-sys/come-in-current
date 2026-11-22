@@ -4,6 +4,8 @@
 
 > **Task 2 execution update — 22 November 2026:** Task 2 is now **APPROVED** by explicit owner decision, recorded in `docs/TASK_2_OWNER_APPROVAL_RECORD_20261122.md`. The official reference app icon was found already correctly integrated in Expo configuration; byte identity/configuration, static UI/theme audit, web export and relevant frontend evidence are at `evidence/task-2-theme-icon-20261122/`. TypeScript has 0 errors; ESLint has 0 errors and 7 existing warnings. No application source changed. Native/device and full runtime visual validation are deferred.
 
+> **Task 3 execution update — 22 November 2026:** Task 3 is **IN PROGRESS** under explicit owner authorization as a discovery/audit-only phase. Home/navigation, category and Seller Dashboard evidence is being collected under `evidence/task-3-home-category-seller-20261122/`. No source/category/API/database/auth/Restaurant Mode change or Task 4 work is authorized.
+
 **Updated:** 2026-11-12 — Chand AI Phase 5 deterministic party planner added; 128 focused Chand/Task 5/Restaurant/Cart/Checkout/Support regression tests pass; native dependency lock, live provider, MongoDB and device verification remain blocked  
 **Primary source:** `COME-IN-MASTER-COMPLETE-TASK5-MONGODB_2026-11-11 2.zip` (SHA-256 `9d871f9f04551017a5322a275ddbd63a353f2ed24d13be9cd57831d9c27738f6`)  
 **Machine-readable tracker:** `COME_IN_MASTER_TASK_TRACKER.json`  
