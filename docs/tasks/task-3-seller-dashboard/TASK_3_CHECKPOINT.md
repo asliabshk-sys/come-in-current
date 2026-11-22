@@ -11,3 +11,6 @@
 - Exact next action: locate and verify the latest retained application state (consider `archives/COME-IN-COMPLETE-MASTER-SOURCE-20261122-current-state-sanitized.zip` as a **candidate**, not an automatically authoritative source), compare against November 15 ZIP and `patches/task3-seller-dashboard-overview.patch`, then verify the patch in a disposable working copy. No blind restore.
 - Relevant evidence: `evidence/task-3-seller-implementation-20261122/`, `docs/TASK_3_IMPLEMENTATION_CHECKLIST.md`, and these six handoff files.
 - No application source changes made during this session; no final owner approval.
+
+## Follow-up checkpoint — November 22 archive blocker
+Starting verified remote HEAD `6e4d9e93a2567bf9115204d34be2f32c68b59c6a`; the final HEAD after this documentation-only update must be verified from remote `work` and reported in the session response. Latest completed step: locate November 22 archive Git blob. Current blocked step: obtain bytes and verify SHA-256/CRC/contents before any source selection. Next action: supply the November 22 sanitized ZIP as an attachment or use a network-enabled authorized Codex checkout; compare it in isolation with November 15 source and Increment 01 patch. No application changes.
