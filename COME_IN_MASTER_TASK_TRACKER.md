@@ -1,6 +1,6 @@
 # COME-IN — Master Task Tracker (22 canonical roadmap tasks)
 
-> **Current reconciliation pointer — 22 November 2026 (Asia/Kolkata):** The authoritative current board is [docs/COME_IN_MASTER_TASK_BOARD.md](docs/COME_IN_MASTER_TASK_BOARD.md). Historical `COMPLETED` rows below retain implementation/evidence history; they do not approve Phase 1 Task 1. Task 1 is **REVIEW PENDING**, Task 2 is prepared but locked pending explicit owner approval, and Android/iOS/Razorpay TEST/production validation remains deferred or blocked. Remote/local `work` was verified equal at `0ecfbd08cc999d7106efbb0e28a6a9d3d56b114f` before this reconciliation documentation change.
+> **Current reconciliation pointer — 22 November 2026 (Asia/Kolkata):** The authoritative current board is [docs/COME_IN_MASTER_TASK_BOARD.md](docs/COME_IN_MASTER_TASK_BOARD.md). Phase 1 Task 1 is **APPROVED** by explicit owner decision, recorded in `docs/TASK_1_OWNER_APPROVAL_RECORD_20261122.md`. Task 2 is prepared but remains **NOT STARTED** until separately authorized. Android/iOS/Razorpay TEST/production validation remains deferred or blocked.
 
 **Updated:** 2026-11-12 — Chand AI Phase 5 deterministic party planner added; 128 focused Chand/Task 5/Restaurant/Cart/Checkout/Support regression tests pass; native dependency lock, live provider, MongoDB and device verification remain blocked  
 **Primary source:** `COME-IN-MASTER-COMPLETE-TASK5-MONGODB_2026-11-11 2.zip` (SHA-256 `9d871f9f04551017a5322a275ddbd63a353f2ed24d13be9cd57831d9c27738f6`)  

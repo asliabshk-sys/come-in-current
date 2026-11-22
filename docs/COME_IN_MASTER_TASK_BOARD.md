@@ -15,8 +15,8 @@ The recovered roadmap contains **22 canonical tasks**. Report labels such as Tas
 
 | Gate | Status | Evidence / exact next action |
 |---|---|---|
-| Task 1 — Existing Project Audit | **REVIEW PENDING** | Final package manifest: 189/189 hashes verified; owner must accept limitations, review the seven intentional source/test changes, explicitly approve/reject closure, and separately authorize Task 2. |
-| Task 2 and later execution | **BLOCKED** | Task 2 is prepared below but must not start until the owner expressly approves Task 1. |
+| Task 1 — Existing Project Audit | **APPROVED** | Owner approval recorded 22 November 2026 in `docs/TASK_1_OWNER_APPROVAL_RECORD_20261122.md`; final package manifest: 189/189 hashes verified. |
+| Task 2 execution | **NOT STARTED** | Task 2 is prepared and its Task 1 dependency is satisfied; separate owner authorization is still required before execution. |
 | Android / iOS native validation | **DEFERRED** | Separate authorized native/device phase required. |
 | Razorpay TEST payment, webhook, refund | **DEFERRED** | Separate authorized provider phase with TEST credentials and webhook endpoint required. |
 | Production configuration / infrastructure validation | **BLOCKED** | Requires approved non-production-equivalent deployment evidence and owner-controlled configuration; no production action is authorized. |
@@ -25,7 +25,7 @@ The recovered roadmap contains **22 canonical tasks**. Report labels such as Tas
 
 | ID | Canonical task | Original objective (condensed) | Reconciled status | Existing evidence / completed work | Pending, deferred, or dependency | Exact next action |
 |---:|---|---|---|---|---|---|
-| 1 | Existing Project Audit | Audit app, routes, workflows, API, DB, auth, gaps and duplicates before fixes. | **REVIEW PENDING** | Final owner package, security evidence, regression records; 189-entry final manifest verified. | Owner review/approval; external validation remains separate. | Owner completes the Task 1 checklist below. |
+| 1 | Existing Project Audit | Audit app, routes, workflows, API, DB, auth, gaps and duplicates before fixes. | **APPROVED** | Final owner package, security evidence, regression records; 189-entry final manifest verified; owner approval record saved. | External validation remains separate and does not affect this Task 1 governance decision. | Await separate authorization for Task 2. |
 | 2 | Theme and Design | Consistent mobile design: yellow/forest-green/pale-mint, readable rounded cards and spacing. | **COMPLETED** | Historical theme reports and preserved source. | Visual/device recheck is not fresh evidence. Depends on Task 1 approval for any new work. | Do not execute; use prepared Task 2 brief after approval. |
 | 3 | Home Screen and Navigation | Clear access to online/offline shops, restaurants, Home Services and return paths. | **COMPLETED** | Historical route/UI evidence; CHAND-only decision retained. | Full device check deferred. | Revalidate only if a future approved change touches navigation. |
 | 4 | Categories and Catalog | Grocery, essentials, local shops and restaurant catalog/menu. | **COMPLETED** | Historical catalog runtime evidence and source. | No fresh runtime run in this reconciliation. | Revisit only when catalog scope changes. |
@@ -48,16 +48,16 @@ The recovered roadmap contains **22 canonical tasks**. Report labels such as Tas
 | 21 | Smart Price Comparison | Comparison UI and data rules. | **IN PROGRESS** | Source/UI preserved. | Linked-master endpoint runtime and distance data evidence. | Define/authorize data source and runtime validation. |
 | 22 | Home Services Logo/Icon and Tile Integration | Home Services visual tile and entry integration. | **COMPLETED** | Existing report and source/evidence retained. | No new work identified. | Revisit only if product direction changes. |
 
-## Task 1 owner approval checklist
+## Task 1 owner approval checklist — completed
 
 - [x] Final evidence package exists at `evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/`.
 - [x] `TASK_1_FINAL_MASTER_MANIFEST.json` records 189 entries; all were hash-verified in the saved review.
 - [x] SEC-01–SEC-09 local source-level corrections and focused evidence are recorded.
 - [x] Locally guarded backend/frontend/security evidence is preserved; the unscoped diagnostic with 17 environment errors is disclosed and excluded from guarded PASS totals.
 - [x] Architecture, source archive and protected-file preservation evidence is recorded.
-- [ ] Owner accepts the historical and external-validation limitations.
-- [ ] Owner reviews the seven intentional source/test changes listed in `TASK_1_CHANGED_FILES_AND_PATCHES.md`.
-- [ ] Owner explicitly approves or rejects Task 1 closure.
+- [x] Owner accepted the historical and external-validation limitations.
+- [x] Owner reviewed the seven intentional source/test changes listed in `TASK_1_CHANGED_FILES_AND_PATCHES.md`.
+- [x] Owner explicitly approved Task 1 on 22 November 2026; see `TASK_1_OWNER_APPROVAL_RECORD_20261122.md`.
 - [ ] Owner separately authorizes Task 2.
 
 **Missing acceptance evidence (not a local failure):** native Android device/build validation; native iOS device/build validation; genuine Razorpay TEST payment, webhook and refund delivery; production infrastructure/configuration validation. These remain deferred or blocked and must never be reported as PASS without their own evidence.
@@ -66,7 +66,7 @@ The recovered roadmap contains **22 canonical tasks**. Report labels such as Tas
 
 **Canonical Task ID:** 2 — Theme and Design
 **Status:** `NOT STARTED` for the next governed execution, notwithstanding retained historical implementation evidence.
-**Dependency:** explicit owner approval of Task 1 and a clean, verified `origin/work` checkpoint.
+**Dependency:** Task 1 owner approval is satisfied. Separate owner authorization to begin Task 2 is still required, along with a clean, verified `origin/work` checkpoint.
 
 **Objective:** verify and, only if authorized by the Task 2 work order, make minimal changes necessary to maintain the existing yellow/forest-green/pale-mint, mobile-friendly visual system, readable cards/text, spacing and component consistency.
 
@@ -88,4 +88,4 @@ After each meaningful work session: (1) update `COME_IN_LIVE_CHECKPOINT.md`; (2)
 
 This reconciliation performed no application test, source change, deployment, provider operation or Task 2 work. It fetched `origin/work` and verified local/remote equality at `0ecfbd08cc999d7106efbb0e28a6a9d3d56b114f` before documentation changes.
 
-**Exact next action:** owner reviews the Task 1 checklist and explicitly approves or rejects Task 1. If approved, begin only the prepared canonical Task 2 scope after first fetching and verifying `origin/work`.
+**Exact next action:** wait for the owner to separately authorize Task 2. When authorized, first fetch and verify `origin/work`, then begin only the prepared canonical Task 2 scope.

@@ -4,7 +4,7 @@
 
 The canonical 22-task roadmap is reconciled in [COME_IN_MASTER_TASK_BOARD.md](COME_IN_MASTER_TASK_BOARD.md). At the start of that reconciliation, branch `work` and `origin/work` were equal at `0ecfbd08cc999d7106efbb0e28a6a9d3d56b114f` (zero ahead/behind; clean tree). This documentation-only session did not modify application source or run tests.
 
-**Current decision point:** Task 1 remains **REVIEW PENDING**. The owner must accept the disclosed limitations, review the seven intentional source/test files, explicitly approve/reject Task 1, and separately authorize Task 2. Do not infer approval from the existence of evidence. `docs/TASK_2_PREPARATION_PROMPT.md` is a prepared, non-executable scope for canonical Task 2 (Theme and Design).
+**Current decision point:** Task 1 is **APPROVED** by explicit owner decision on 22 November 2026; see `docs/TASK_1_OWNER_APPROVAL_RECORD_20261122.md`. This does not establish production readiness. `docs/TASK_2_PREPARATION_PROMPT.md` is a prepared, non-executable scope for canonical Task 2 (Theme and Design), which still requires separate owner authorization.
 
 **Deferred/blocked:** native Android/iOS validation; genuine Razorpay TEST payment, webhook and refund validation; production configuration/infrastructure validation. These are neither failures nor passes and require a separate authorized phase/resources.
 

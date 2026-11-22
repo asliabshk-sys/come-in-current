@@ -4,7 +4,7 @@
 
 Continue COME-IN in `/workspace/come-in-current`. First read `docs/COME_IN_MASTER_TASK_BOARD.md`, `docs/ACCOUNT_HANDOVER_MASTER.md`, all five root checkpoint files, `docs/TASK_1_FINAL_OWNER_APPROVAL_REPORT_20261122.md`, `EXTERNAL_VALIDATION_REPORT.md`, and `COME_IN_RELEASE_READINESS.md`. Inspect Git status, branch, local `HEAD`, `origin/work`, and the last recorded operation. Do not repeat completed tests or start Task 2.
 
-Task 1 is **REVIEW PENDING**. The exact next action is owner approval or rejection using the Task 1 checklist in `docs/COME_IN_MASTER_TASK_BOARD.md`. Android/iOS native validation, actual Razorpay TEST payment/webhook/refund, and production validation stay DEFERRED/BLOCKED. If (and only if) Task 1 is explicitly approved and Task 2 separately authorized, use `docs/TASK_2_PREPARATION_PROMPT.md`; first fetch and verify `origin/work`.
+Task 1 is **APPROVED** by explicit owner decision recorded in `docs/TASK_1_OWNER_APPROVAL_RECORD_20261122.md`. Task 2 remains PREPARED/NOT STARTED and requires separate owner authorization. Android/iOS native validation, actual Razorpay TEST payment/webhook/refund, and production validation stay DEFERRED/BLOCKED. If Task 2 is separately authorized, use `docs/TASK_2_PREPARATION_PROMPT.md`; first fetch and verify `origin/work`.
 
 Before ending any future meaningful session, update the five checkpoint files and related handover/decision records, review changed files for secrets, commit, non-force push to `origin/work`, fetch, verify local/remote SHA equality and zero ahead/behind, then record the exact result. Never reset, force push, expose secrets, deploy, or publish without authorization.
 

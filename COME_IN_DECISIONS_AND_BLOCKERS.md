@@ -10,6 +10,12 @@
 
 **Git rule:** Every meaningful future session follows the permanent checkpoint and non-force-push verification protocol in `docs/COME_IN_MASTER_TASK_BOARD.md`.
 
+## 22 November 2026 — explicit Task 1 owner approval
+
+**Decision:** The owner explicitly approved Phase 1 / Task 1. The exact durable record is `docs/TASK_1_OWNER_APPROVAL_RECORD_20261122.md`. This approves Task 1's documented local completion scope only; it does not assert production readiness or remove external validation gates.
+
+**Continuing constraints:** Task 2 is prepared but may not start until separately authorized. Android/iOS native validation, genuine Razorpay TEST payment/webhook/refund, and production infrastructure/configuration validation remain deferred or blocked.
+
 ## Approved decisions (preserved from history, plus BATCH-02)
 | # | Decision | Source |
 |---|---|---|
