@@ -29,3 +29,16 @@ Earlier Increment 01 report records 44 PASS, TypeScript/ESLint/web export PASS *
 | `sha256sum '/mnt/data/COME-IN-COMPLETE-MASTER-SOURCE-20261115 (1).zip'` | PASS | `3233dcd9c8f1997b06035fd5cd7b458ab511658faf25e184044b17aec624d28c` |
 | November 22 ZIP SHA-256, ZIP CRC, inventory, patch inclusion | NOT RUN | Actual ZIP bytes unavailable |
 | Fresh frontend/backend/QA tests | NOT RUN | No verified newer source to test; no new implementation |
+
+## 2026-11-22 binary-safe retrieval attempts
+| Method | Result | Evidence |
+|---|---|---|
+| GitHub compare prior `7515e35...` vs `work` | PASS | Identical before work |
+| Raw URL via Python requests | BLOCKED | DNS failure for raw.githubusercontent.com |
+| GitHub REST Contents API | BLOCKED | HTTP 400, UTF-8 text restriction |
+| GitHub REST Git Blob API | BLOCKED | HTTP 400, UTF-8 text restriction |
+| GitHub connector `fetch_blob` | BLOCKED | UnicodeDecodeError at byte 10 |
+| GitHub connector `fetch_file` base64 | BLOCKED | Empty content |
+| GitHub repository ZIP endpoint | BLOCKED | DNS failure for api.github.com |
+| November 22 ZIP SHA-256/CRC and patch inclusion | NOT RUN | Binary unavailable |
+| New seller implementation/QA tests | NOT RUN | No verified latest source; no application changes |
