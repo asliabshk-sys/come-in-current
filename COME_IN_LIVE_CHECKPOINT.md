@@ -874,3 +874,7 @@ Local milestone implemented and verified. Gateway execution remains disabled by 
 ## Task 3 Seller Dashboard owner approval and closure — 2026-11-23 IST
 
 Task 3 implementation is **COMPLETE**. Security and regression checks **PASSED** as documented in `evidence/task-3-seller-implementation-20261122/final-completion-20261122/`. The owner granted final approval. Owner approval is **APPROVED** and the final status is **CLOSED**. See `docs/TASK_3_OWNER_APPROVAL_RECORD_20261123.md`. Live seller runtime, native Android/iOS, external provider and production-only validation remain **DEFERRED**. Task 4 requires separate authorization.
+
+## Task 4 project-wide verification — 2026-11-23 IST
+
+**COMPLETED & VERIFIED for this authorized local cycle.** Verified GitHub baseline `784dd21fa7395029a8a78674b1fe8327d9318dcb` and preserved Task 1–3 governance. Restored exact public templates through `patches/task4-restore-public-templates.patch`. Full backend 685 passed, zero failed and five initial skips; four optional parser cases passed in a separate 21-test rerun and object storage remains blocked. Targeted retest 52 passed. Expo/web and local browser verification passed. Production remains blocked; native-device and genuine Razorpay validations remain deferred. See `evidence/task-4-project-verification-20261123/AUDIT_REPORT.md`.

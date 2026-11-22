@@ -1,0 +1,4 @@
+INFO:     Waiting for application startup.
+WARNING:comein:EMERGENT_LLM_KEY missing; uploads disabled
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:18329 (Press CTRL+C to quit)

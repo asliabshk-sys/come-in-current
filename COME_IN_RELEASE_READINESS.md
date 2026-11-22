@@ -298,3 +298,7 @@ Continue COME-IN from /workspace/come-in-current. First read COME_IN_LIVE_CHECKP
 ## Task 1 final reconciliation — 2026-11-22
 
 Current decision: **NOT RELEASE READY — EXTERNAL VALIDATION REMAINS**. The historical CSV/Home work was completed in the later final Task 1 package; no local defect was found in today’s evidence reconciliation. Task 1 remains REVIEW PENDING. Native Android/iOS, actual Razorpay TEST and production gates remain BLOCKED/DEFERRED. See `docs/TASK_1_FINAL_OWNER_APPROVAL_REPORT_20261122.md`.
+
+## Task 4 verification handover — 2026-11-23 IST
+
+Apply `patches/task4-restore-public-templates.patch` last in the verified application restoration chain. The local verification cycle is complete. See `evidence/task-4-project-verification-20261123/` for the audit, canonical/task-wise status matrix, fresh run logs and release decision. Local development may proceed. Production rollout is blocked, and native/device and genuine external Razorpay testing remain deferred. Task 3 remains owner-approved and closed.

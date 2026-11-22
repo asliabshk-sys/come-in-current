@@ -952,3 +952,7 @@ The proposed policy is implemented with gateway execution disabled by default un
 ## Task 3 Seller Dashboard owner approval and closure — 2026-11-23 IST
 
 Task 3 implementation is **COMPLETE**. Security and regression checks **PASSED** as documented in `evidence/task-3-seller-implementation-20261122/final-completion-20261122/`. The owner granted final approval. Owner approval is **APPROVED** and the final status is **CLOSED**. See `docs/TASK_3_OWNER_APPROVAL_RECORD_20261123.md`. Live seller runtime, native Android/iOS, external provider and production-only validation remain **DEFERRED**. Task 4 requires separate authorization.
+
+## Task 4 verification handover — 2026-11-23 IST
+
+Apply `patches/task4-restore-public-templates.patch` last in the verified application restoration chain. The local verification cycle is complete. See `evidence/task-4-project-verification-20261123/` for the audit, canonical/task-wise status matrix, fresh run logs and release decision. Local development may proceed. Production rollout is blocked, and native/device and genuine external Razorpay testing remain deferred. Task 3 remains owner-approved and closed.

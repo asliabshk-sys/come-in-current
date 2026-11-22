@@ -1,0 +1,9 @@
+PASS grocery: dismiss, decline, duplicate tap/callback, failed verification, retry, and confirmed server result
+PASS restaurant: dismiss, decline, duplicate tap/callback, failed verification, retry, and confirmed server result
+Traceback (most recent call last):
+  File "/workspace/come-in-current/evidence/phase-2-prelaunch-20261122/razorpay-pretest-20261123/browser-checkout.py", line 136, in <module>
+    run(browser, flow)
+  File "/workspace/come-in-current/evidence/phase-2-prelaunch-20261122/razorpay-pretest-20261123/browser-checkout.py", line 123, in run
+    assert seen["refresh"] > refresh_count
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

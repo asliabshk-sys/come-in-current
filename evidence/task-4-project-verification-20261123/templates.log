@@ -1,0 +1,4 @@
+patching file backend/.env.example
+patching file frontend/.env.example
+783c648b2ebb28d2d02b5b57d9cae4f501a3fb0e68b1c144b6133de314201b62  backend/.env.example
+645046a9fe6badd1ee57345da0ad36fbe0b82009471dcf0a765e611f772f8d19  frontend/.env.example

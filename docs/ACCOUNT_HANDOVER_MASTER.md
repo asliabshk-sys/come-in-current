@@ -112,3 +112,7 @@ On 22 November 2026 the final evidence manifest verified 189/189 entries. No unv
 ## Membership refund continuation — 2026-11-23 IST
 
 Apply `patches/membership-balanced-refunds.patch` after the Razorpay pre-test patch. See `docs/PREMIUM_MEMBERSHIP_REFUND_POLICY.md` for policy configuration and `evidence/phase-2-prelaunch-20261122/membership-balanced-refunds-20261123/IMPLEMENTATION_REPORT.md` for verified local results.
+
+## Task 4 verification handover — 2026-11-23 IST
+
+Apply `patches/task4-restore-public-templates.patch` last in the verified application restoration chain. The local verification cycle is complete. See `evidence/task-4-project-verification-20261123/` for the audit, canonical/task-wise status matrix, fresh run logs and release decision. Local development may proceed. Production rollout is blocked, and native/device and genuine external Razorpay testing remain deferred. Task 3 remains owner-approved and closed.

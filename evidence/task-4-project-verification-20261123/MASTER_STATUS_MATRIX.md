@@ -1,0 +1,60 @@
+# Task 4 master status matrix
+
+Verification baseline: `784dd21fa7395029a8a78674b1fe8327d9318dcb`. The commit column gives a source or governance anchor reachable on that baseline. Archive-based features use `831481f`. The fresh [source inventory](SOURCE_INVENTORY.md) maps API handlers and Expo route modules. API examples are relative to `/api`; primary classifications apply only to each row’s stated scope.
+
+| Item | Primary status | Source and API | Database or service | Fresh evidence and runtime boundary | Commit anchor | Remaining work, blocker and proceed decision |
+|---|---|---|---|---|---|---|
+| Task 1 — Existing Project Audit | COMPLETED & VERIFIED | Task 1 final owner package, server, checkout, discovery address, public backend template | Mongo, auth and checkout | 189/189 evidence hashes, six archived source hashes, exact template restored; backend regression | `831481f`, `3aa855a` | Approved scope may continue. Device, provider and production gates remain separate. |
+| Task 2 — Theme and Design | COMPLETED & VERIFIED | Expo config, theme, configured app/adaptive/web artwork | Expo tooling | Three identical configured icon hashes, Expo public config, TypeScript/lint/web export and 11 planner assertions | `e738824`, `01361d9` | Approved design may continue. Native visual/device acceptance deferred. |
+| Task 3 — Seller Dashboard closure | COMPLETED & VERIFIED | Overview, Help, Account, shop/orders/earnings/support APIs | Shops, products, orders, seller support, earnings | Six final evidence hashes; local seller and customer-guard browser checks; existing 91-test evidence | `d0f7297`, `36436f0`, `784dd21` | Implementation complete, recorded checks passed, owner approved, closed. Live seller/device/provider/production deferred. |
+| Task 4 — current verification authorization | COMPLETED & VERIFIED | This package, restoration patch and tracker update | Disposable Mongo and local Expo | Full backend, optional parser rerun, web/runtime checks and preservation evidence | `784dd21` baseline plus this package commit | Continue authorized local development. Production release gates remain open. |
+| Premium Membership | IMPLEMENTED — VERIFICATION INCOMPLETE | Seller membership, search/catalog, offer comparison and admin reports; `/shops/{id}/membership`, `/catalog/search` | Memberships, membership audit, premium exposure, products and shops | Real local API/search/analytics browser, simulated gateway and HTTP transaction regression | `ee62780` | ₹299/30 days and verified-only activation. No guaranteed orders. Live provider/deployment evidence and order attribution unavailable. |
+| Balanced Refund Policy | APPROVAL REQUIRED | MembershipRefunds, policy module and admin review/refund/outage APIs | Membership refunds, outages, audit, notifications | HTTP/Mongo mock refund and rollback, browser fixtures for reviewer/seller | `165ef24` | Gateway disabled by default pending owner/legal approval. No automated incident feed. Local review can proceed; external execution remains deferred. |
+| Razorpay | IMPLEMENTED — VERIFICATION INCOMPLETE | Grocery, Restaurant and Membership intents/verification; signed shared webhook and admin refunds | Payment/order/event/ledger collections, Razorpay | Fresh full suite includes fixture signing, simulated provider and Mongo transactions. Three payment browser fixtures and five native adapter mocks passed. | `0664e4b` | Historical 94 focused / 683 full results remain historical. Genuine TEST, native and production acceptance deferred. |
+| Advertisement System | IMPLEMENTED — VERIFICATION INCOMPLETE | Seller advertisement screen, poster validation, CHAND adapter, owner-only publish and event API | Advertisements, ad events, object storage, optional CHAND | Source and contracts verify bounded poster, approval invalidation, owner separation, hash binding and event uniqueness | `8b68006`, `6d5d5e7` | Live upload, provider review and publication need configured services and owner identity. Distribution UI was not independently accepted. |
+| CHAND AI | IMPLEMENTED — VERIFICATION INCOMPLETE | CHAND screen, /assistant/context, /assistant/vision and health | Local catalogue, rate limits, optional AI provider | Contracts, 11 planner assertions and health response. Customer voice dependency and transcription route absent. | `831481f`, `cfc5a99` | Text/Photo implementation present. Live vision and external AI validation deferred or dependent on configuration. |
+| Seller Dashboard and product management | COMPLETED & VERIFIED | Overview, Help, seller products, earnings and orders | Shops, products, orders, support and ledgers | Local signed-in dashboard and denied customer access, API and stock regressions | `d0f7297` | Local scope verified. Native and live-seller validation remain deferred. |
+| Customer application and authentication | IMPLEMENTED — VERIFICATION INCOMPLETE | Auth, Account, Home, password reset, addresses, orders | Users, rate limits, addresses and order collections | Local login, order/history API, topic-specific Chromium and backend contracts | `831481f` | Native, SMTP deliverability and exhaustive navigation acceptance remain open. |
+| Grocery Mode | COMPLETED & VERIFIED | Categories, product, cart, `/grocery/quotes` and `/orders` | Products, inventory, quotes and transaction-capable Mongo | Disposable API checkout/order tests, local discovery browser, refunds and checkout mocks | `831481f`, `ee62780` | Applicable local scope passed. External payment and device gates remain deferred. |
+| Restaurant Mode | COMPLETED & VERIFIED | Restaurant routes, serviceability, menu, checkout, reviews and support | Restaurants, menus, orders and payment data | Fresh local restaurant runtime/API tests and mocked checkout | `831481f`, `0664e4b` | Local mode can proceed. Live timing/location or payment integrations need independent evidence. |
+| Search, filters and price comparison | COMPLETED & VERIFIED | Search, product detail and catalogue endpoints | Products, shops, membership and master products | Local exact-shop/item search and Premium badges; offer order/stock regression | `ee62780` | Distance requires coordinates, and estimates are not fabricated. Broad production inventory validation remains open. |
+| Repeat orders and out-of-stock replacement | IMPLEMENTED — VERIFICATION INCOMPLETE | Orders/cart routes, repeat-order API and same-shop replacement | Prior orders, live stock/variants and quote validation | Backend source and contract coverage, no separate Chromium interaction run | `831481f` | Proceed with scoped local development. Native and broader interaction checks remain open. |
+| Tracking, order help, refunds and complaints | PARTIALLY IMPLEMENTED | Tracking, CHAND order help, Grocery/Restaurant support and refunds | Orders, support, tracking, ledger and provider optional | Runtime tests for status tracking/support and mocked local refunds | `831481f`, `0664e4b` | Verified location/provider and standalone customer trust system were not established. |
+| Admin panel | COMPLETED & VERIFIED | Admin routes, dashboard, membership and seller/delivery review | Users, orders, shops, membership and delivery applications | Local API RBAC plus admin membership browser and refund fixture | `831481f`, `165ef24` | Authorized local use can proceed. Production admin operations require separate acceptance. |
+| Catalogue import | IMPLEMENTED — VERIFICATION INCOMPLETE | Import engine, seller staged job routes, admin retail import | Import jobs, records, products, optional object storage/OCR | Fresh 21 parser tests with optional dependencies, approval and local transaction tests | `831481f` | Object-storage and externally configured OCR/provider acceptance remain open. |
+| Delivery Partner | PARTIALLY IMPLEMENTED | Delivery-partner onboarding, admin approval and provider interfaces | Applications, audit, referrals; identity/OTP/document providers | Source and backend role/contracts; no external identity or live delivery performance run | `831481f` | Provider bindings and native/device operations deferred; comprehensive performance product not established. |
+| Loyalty and Referral | PARTIALLY IMPLEMENTED | Referral dashboard, /referrals/me and admin rewards | Referrals, reward approvals, ledger | Fresh referral contracts and transaction tests; no broad standalone loyalty/coupon engine found | `831481f` | Existing referral features may continue. Coupon or broader loyalty rules need scope. |
+| Coupons | PENDING | No dedicated seller/admin coupon workflow identified | No standalone coupon storage identified | Source inventory only | `831481f` baseline | Define separate scope before implementation. |
+| Analytics | PARTIALLY IMPLEMENTED | Admin dashboard and earnings; membership exposure/revenue by shop | Orders, financial ledger, premium events | Local admin browser, ownership and reporting test coverage | `831481f`, `ee62780` | Historical exposure, reliable order attribution and broader shop/provider performance unavailable. |
+| Security and Fraud Protection | IMPLEMENTED — VERIFICATION INCOMPLETE | Auth, RBAC, order security, upload and payment/refund guards | Users, locks, audit, payment and inventory | Defensive validation tests, local access controls, transactions and upload unit checks | `831481f`, `0664e4b`, `165ef24` | Independent production security and storage moderation checks remain open. |
+| Notifications | PARTIALLY IMPLEMENTED | In-app notification center and read/unread APIs | Notifications and optional delivery providers | Local order status notification and report contracts; push not configured | `831481f`, `165ef24` | In-app can proceed. Push/email/native delivery needs provider configuration and validation. |
+| Build and release readiness | IMPLEMENTED — VERIFICATION INCOMPLETE | Python, Expo config/export, archives, lockfile and release docs | Retained dependency set, Mongo; native/production targets separate | Python compilation, web build and Chromium + API. No fresh immutable install or native/device build claimed. | `831481f`, `784dd21` | Local web/development can proceed. Do not release to production from this audit alone. |
+
+## Recovered canonical roadmap index
+
+[Original roadmap recovery](../../COME_IN_TASK_1_ORIGINAL_ROADMAP_RECOVERY.md) documents 22 canonical tasks. Canonical Task 3 is **Home Screen and Navigation** and canonical Task 4 is **Categories and Catalog**. The separately authorized operational Task 3 is Seller Dashboard and the current operational Task 4 is project-wide verification. Later reports preserve labels 23–25. Original definitions for 26–30 were not recovered.
+
+| # | Canonical task | Primary status for the verified scope |
+|---:|---|---|
+| 1 | Existing Project Audit | COMPLETED & VERIFIED |
+| 2 | Theme and Design | COMPLETED & VERIFIED |
+| 3 | Home Screen and Navigation | IMPLEMENTED — VERIFICATION INCOMPLETE |
+| 4 | Categories and Catalog | COMPLETED & VERIFIED |
+| 5 | Quantity, Variants and Units | COMPLETED & VERIFIED |
+| 6 | Search and Filters | COMPLETED & VERIFIED |
+| 7 | Cart and Checkout | COMPLETED & VERIFIED |
+| 8 | Repeat Order | IMPLEMENTED — VERIFICATION INCOMPLETE |
+| 9 | Out-of-Stock Replacement | IMPLEMENTED — VERIFICATION INCOMPLETE |
+| 10 | Live Tracking | PARTIALLY IMPLEMENTED |
+| 11 | Order Help and Refund Status | IMPLEMENTED — VERIFICATION INCOMPLETE |
+| 12 | Excel/CSV Price and Stock Import | IMPLEMENTED — VERIFICATION INCOMPLETE |
+| 13 | Login and Account | IMPLEMENTED — VERIFICATION INCOMPLETE |
+| 14 | Seller/Shop/Restaurant Panel | COMPLETED & VERIFIED |
+| 15 | Admin Panel | COMPLETED & VERIFIED |
+| 16 | Backend, Database and Security | IMPLEMENTED — VERIFICATION INCOMPLETE |
+| 17 | Payments and Notifications | IMPLEMENTED — VERIFICATION INCOMPLETE |
+| 18 | Testing and Bug Fixes | COMPLETED & VERIFIED for this local verification cycle |
+| 19 | Production Build and Launch | BLOCKED |
+| 20 | Smart Notification System | PARTIALLY IMPLEMENTED |
+| 21 | Smart Price Comparison | IMPLEMENTED — VERIFICATION INCOMPLETE |
+| 22 | Home Services Logo/Icon and Tile Integration | IMPLEMENTED — VERIFICATION INCOMPLETE |
