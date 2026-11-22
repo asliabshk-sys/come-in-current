@@ -1,8 +1,8 @@
 # COME-IN Master Task Board
 
-**Reconciled:** 22 November 2026 (Asia/Kolkata)  
-**Repository:** `asliabshk-sys/come-in-current` — `/workspace/come-in-current`  
-**Branch / verified remote-local HEAD:** `work` / `0ecfbd08cc999d7106efbb0e28a6a9d3d56b114f`  
+**Reconciled:** 22 November 2026 (Asia/Kolkata)
+**Repository:** `asliabshk-sys/come-in-current` — `/workspace/come-in-current`
+**Branch / verified remote-local HEAD:** `work` / `0ecfbd08cc999d7106efbb0e28a6a9d3d56b114f`
 **Authority:** recovered original roadmap (`COME_IN_TASK_1_ORIGINAL_ROADMAP_RECOVERY.md`), existing master tracker, Task 1 evidence package, and owner-approval record.
 
 ## How to read this board
@@ -64,8 +64,8 @@ The recovered roadmap contains **22 canonical tasks**. Report labels such as Tas
 
 ## Prepared next task — do not start
 
-**Canonical Task ID:** 2 — Theme and Design  
-**Status:** `NOT STARTED` for the next governed execution, notwithstanding retained historical implementation evidence.  
+**Canonical Task ID:** 2 — Theme and Design
+**Status:** `NOT STARTED` for the next governed execution, notwithstanding retained historical implementation evidence.
 **Dependency:** explicit owner approval of Task 1 and a clean, verified `origin/work` checkpoint.
 
 **Objective:** verify and, only if authorized by the Task 2 work order, make minimal changes necessary to maintain the existing yellow/forest-green/pale-mint, mobile-friendly visual system, readable cards/text, spacing and component consistency.

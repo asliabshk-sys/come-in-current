@@ -1,7 +1,7 @@
 # COME-IN — Canonical Task 2 Preparation Prompt (Do Not Execute Until Authorized)
 
-Repository: `asliabshk-sys/come-in-current`  
-Branch: `work`  
+Repository: `asliabshk-sys/come-in-current`
+Branch: `work`
 Prerequisite: the owner has explicitly approved Phase 1 / Task 1 and separately authorized this Task 2 execution.
 
 First fetch `origin/work`, inspect the five checkpoint files plus `docs/COME_IN_MASTER_TASK_BOARD.md`, and verify that local `HEAD` equals `origin/work`. Preserve all existing changes. Do not begin if Task 1 is still `REVIEW PENDING`.
