@@ -14,3 +14,6 @@
 
 ## Follow-up checkpoint — November 22 archive blocker
 Starting verified remote HEAD `6e4d9e93a2567bf9115204d34be2f32c68b59c6a`; the final HEAD after this documentation-only update must be verified from remote `work` and reported in the session response. Latest completed step: locate November 22 archive Git blob. Current blocked step: obtain bytes and verify SHA-256/CRC/contents before any source selection. Next action: supply the November 22 sanitized ZIP as an attachment or use a network-enabled authorized Codex checkout; compare it in isolation with November 15 source and Increment 01 patch. No application changes.
+
+## 2026-11-22 binary retrieval checkpoint
+Pre-session remote `work` HEAD `7515e35afc2f1adeea7c6db6b8f85a482d3cfe9c` (identical at start). All available direct HTTPS/connector binary methods blocked; exact ZIP bytes absent. Next action: use authorized network-enabled Codex environment with binary-safe `git clone` or GitHub authenticated API, or an authenticated GitHub Actions workflow producing a downloadable artifact (requires explicit owner approval for workflow changes). Compare in isolated directory; do not apply patch until proven absent. Resolve final remote `work` SHA from GitHub; this file intentionally does not embed its own commit SHA.
