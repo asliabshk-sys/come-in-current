@@ -4,6 +4,8 @@
 
 Task 3 has completed its authorized local Seller Dashboard scope and is **REVIEW PENDING** for the owner. Read `docs/TASK_3_IMPLEMENTATION_CHECKLIST.md` and `evidence/task-3-seller-implementation-20261122/final-completion-20261122/` first. Existing seller flows are retained; the implementation is a real-data overview plus bounded Help Center/human support, verified from an isolated archive restoration. External/provider/device and commercial-policy work remains deferred or requires a separate owner decision. Task 4 remains locked.
 
+Final Task 3 evidence content commit: `36436f009e9d9f181f0ddd1f6e07b4f315c33c83`, pushed and verified at `origin/work` with zero ahead/behind. This record does not approve Task 3.
+
 Increment 01 implementation is recorded in `evidence/task-3-seller-implementation-20261122/SELLER_DASHBOARD_INCREMENT_01_REPORT.md` and `patches/task3-seller-dashboard-overview.patch`. It adds no credentials, provider connection, database migration or production operation. Before further work, verify the patch and its recorded focused PASS evidence, then fetch/verify Git state.
 
 ## 22 November 2026 — master task-board checkpoint
