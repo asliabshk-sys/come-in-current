@@ -2,7 +2,7 @@
 
 **Reconciled:** 22 November 2026 (Asia/Kolkata)
 **Repository:** `asliabshk-sys/come-in-current` — `/workspace/come-in-current`
-**Branch / verified remote-local HEAD:** `work` / `0ecfbd08cc999d7106efbb0e28a6a9d3d56b114f`
+**Branch / final local verification baseline:** `work` / `e7d49ff4ce75fa8563e272657e4ac66c1fab8a69`
 **Authority:** recovered original roadmap (`COME_IN_TASK_1_ORIGINAL_ROADMAP_RECOVERY.md`), existing master tracker, Task 1 evidence package, and owner-approval record.
 
 ## How to read this board
@@ -17,7 +17,7 @@ The recovered roadmap contains **22 canonical tasks**. Report labels such as Tas
 |---|---|---|
 | Task 1 — Existing Project Audit | **APPROVED** | Owner approval recorded 22 November 2026 in `docs/TASK_1_OWNER_APPROVAL_RECORD_20261122.md`; final package manifest: 189/189 hashes verified. |
 | Task 2 execution | **APPROVED** | Owner approved completed local scope on 22 November 2026; record: `docs/TASK_2_OWNER_APPROVAL_RECORD_20261122.md`. Deferred native/runtime testing remains visible. |
-| Task 3 execution | **IN PROGRESS** | Audit package is complete in `evidence/task-3-home-category-seller-20261122/`; owner has now authorized Seller Dashboard implementation. Checklist: `docs/TASK_3_IMPLEMENTATION_CHECKLIST.md`. Task 4 remains locked. |
+| Task 3 execution | **REVIEW PENDING** | Seller Dashboard final local package is in `evidence/task-3-seller-implementation-20261122/final-completion-20261122/`; 91 recovered-source contracts, TypeScript, targeted lint, web export, patch and archive checks passed. Owner decision required; Task 4 remains locked. |
 | Android / iOS native validation | **DEFERRED** | Separate authorized native/device phase required. |
 | Razorpay TEST payment, webhook, refund | **DEFERRED** | Separate authorized provider phase with TEST credentials and webhook endpoint required. |
 | Production configuration / infrastructure validation | **BLOCKED** | Requires approved non-production-equivalent deployment evidence and owner-controlled configuration; no production action is authorized. |
@@ -28,7 +28,7 @@ The recovered roadmap contains **22 canonical tasks**. Report labels such as Tas
 |---:|---|---|---|---|---|---|
 | 1 | Existing Project Audit | Audit app, routes, workflows, API, DB, auth, gaps and duplicates before fixes. | **APPROVED** | Final owner package, security evidence, regression records; 189-entry final manifest verified; owner approval record saved. | External validation remains separate and does not affect this Task 1 governance decision. | Await separate authorization for Task 2. |
 | 2 | Theme and Design | Consistent mobile design: yellow/forest-green/pale-mint, readable rounded cards and spacing. | **APPROVED** | Official icon configuration, static UI/theme audit, typecheck, lint, web export, static inventory and CHAND planner checks completed; no confirmed defect required a change. Owner approved local scope. | Native/device visual validation remains deferred to final project-wide testing. | Wait for separate owner authorization before Task 3. |
-| 3 | Home Screen and Navigation | Clear access to online/offline shops, restaurants, Home Services and return paths. | **IN PROGRESS** | Audit package complete; seller implementation is now authorized under `docs/TASK_3_IMPLEMENTATION_CHECKLIST.md`. | Full device/runtime checks remain deferred; commercial-policy features require explicit decisions. | Implement only confirmed seller gaps, with focused tests and GitHub checkpoints; do not start Task 4. |
+| 3 | Home Screen and Navigation | Clear access to online/offline shops, restaurants, Home Services and return paths. | **REVIEW PENDING** | Audit package plus recovered Seller Dashboard implementation/final local verification are saved; 91 contract tests and source/build checks passed. | Full device/runtime checks remain deferred; ads/membership/staff/branches/reviews/analytics require explicit policy decisions. | Obtain owner decision on the completed local Task 3 scope; do not start Task 4. |
 | 4 | Categories and Catalog | Grocery, essentials, local shops and restaurant catalog/menu. | **COMPLETED** | Historical catalog runtime evidence and source. | No fresh runtime run in this reconciliation. | Revisit only when catalog scope changes. |
 | 5 | Quantity, Variants and Units | Size, weight, quantity, variants, unit pricing. | **COMPLETED** | Historical Mongo/transaction and measured-order evidence. | Low finding F-1: conflict loser response semantics; native/provider out of scope. | Triage F-1 only under an authorized defect task. |
 | 6 | Search and Filters | Product/shop/restaurant search and relevant filters. | **COMPLETED** | Earlier reports and source retained. | Runtime recency not established. | Revalidate only on approved search/filter changes. |

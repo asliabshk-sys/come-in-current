@@ -2,7 +2,7 @@
 
 ## Current Task 3 implementation state — 22 November 2026
 
-Task 3 changed from audit-only review to **IN PROGRESS** under explicit owner authorization for Seller Dashboard implementation. Read `docs/TASK_3_IMPLEMENTATION_CHECKLIST.md` and the Task 3 audit package first. Existing seller flows are retained; the first implementation increment is a real-data overview plus bounded Help Center/human support. External/provider/device and commercial-policy work remains deferred or requires a separate owner decision. Task 4 remains locked.
+Task 3 has completed its authorized local Seller Dashboard scope and is **REVIEW PENDING** for the owner. Read `docs/TASK_3_IMPLEMENTATION_CHECKLIST.md` and `evidence/task-3-seller-implementation-20261122/final-completion-20261122/` first. Existing seller flows are retained; the implementation is a real-data overview plus bounded Help Center/human support, verified from an isolated archive restoration. External/provider/device and commercial-policy work remains deferred or requires a separate owner decision. Task 4 remains locked.
 
 Increment 01 implementation is recorded in `evidence/task-3-seller-implementation-20261122/SELLER_DASHBOARD_INCREMENT_01_REPORT.md` and `patches/task3-seller-dashboard-overview.patch`. It adds no credentials, provider connection, database migration or production operation. Before further work, verify the patch and its recorded focused PASS evidence, then fetch/verify Git state.
 
@@ -22,7 +22,7 @@ Task 2 (Theme and Design / official app icon integration) is **APPROVED** for it
 
 ## Task 3 status — 22 November 2026
 
-Task 3 is **IN PROGRESS** under explicit owner authorization, but is audit/discovery only. It covers Home/navigation, categories and Seller Dashboard evidence. No existing implementation is to be changed. Audit reports are being assembled under `evidence/task-3-home-category-seller-20261122/`; use `docs/TASK_3_EXECUTION_CHECKLIST.md` for exact scope and stop conditions. Task 4 is locked.
+Task 3 is **REVIEW PENDING** after authorized Seller Dashboard implementation and final local verification. The final package is `evidence/task-3-seller-implementation-20261122/final-completion-20261122/`: recovered-source contract union 91 PASS, TypeScript 0 errors, targeted ESLint 0 errors/warnings, Expo web export PASS, patch reversibility PASS, and archive integrity PASS. No additional application source was changed in the final verification session. The sanitized archive excludes public `.env.example` templates, which is a documented restoration gap. Do not start Task 4; wait for an owner decision.
 
 ## Task 3 final status — 22 November 2026
 

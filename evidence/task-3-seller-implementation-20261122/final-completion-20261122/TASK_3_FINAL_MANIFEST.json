@@ -1,0 +1,14 @@
+{
+  "project": "COME-IN",
+  "task": "Task 3 — Seller Dashboard",
+  "generated_Asia_Kolkata": "2026-11-22",
+  "implementation_baseline": "d0f7297bb95b7a7470a533d2c0f3f590cf676391",
+  "archive_sha256": "4cb8a397bee482b263e9b2f3ccf60d5818d20b42ecd60ef6c2bcc9fe6b041e33",
+  "reports": [
+    {"path":"TASK_3_FINAL_COMPLETION_REPORT.md","sha256":"34b18ba8a411cfff7b94220f1fd971cd450fb39c479b8668432dda08fd3faf19"},
+    {"path":"TASK_3_FEATURE_STATUS.md","sha256":"ec8ee8e2a489b25269f7e4c55e6e64c395a93b7d2c3c66ee5738b2ba0a49730d"},
+    {"path":"TASK_3_SECURITY_AND_BACKUP_REPORT.md","sha256":"9d6930ed9f45636aac645c9850583af23b2d7ab67c637238c93591732e6051d0"},
+    {"path":"TASK_3_TEST_RESULTS.md","sha256":"32b8c981ea3117ceb18a5d9acda8fce7faac292c72c51b743c236da7b13b935b"},
+    {"path":"TASK_3_OWNER_APPROVAL_CHECKLIST.md","sha256":"8d52280256d634b0d29d355ef9bac13480510c20a7cb992645af327c3b1fc8b8"}
+  ]
+}
