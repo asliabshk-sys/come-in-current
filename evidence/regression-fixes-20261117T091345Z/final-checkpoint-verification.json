@@ -1,0 +1,26 @@
+{
+  "COME_IN_LIVE_CHECKPOINT.md": {
+    "bytes": 24832,
+    "sha256": "edee3bbc84a36fc9f94aaebb1ce5ef99beac44aa6ce631212e93d1fe285d0d6d"
+  },
+  "COME_IN_MASTER_TASK_TRACKER.md": {
+    "bytes": 63928,
+    "sha256": "7ae3500f7cfe27ac8d8c5f00277886f487a57441452dc31e57d088f2dfef2d27"
+  },
+  "COME_IN_DECISIONS_AND_BLOCKERS.md": {
+    "bytes": 41057,
+    "sha256": "b1b479465d14f0cb8d94249adf4b4ddd840bd32d12a68571894df6c45b17f690"
+  },
+  "COME_IN_SESSION_LOG.md": {
+    "bytes": 34996,
+    "sha256": "ba71c5fa68e0e2fbe28295830d3d680eeac737cede57668cd4ed235e41f06fbd"
+  },
+  "COME_IN_NEXT_SESSION_RESUME_PROMPT.md": {
+    "bytes": 7233,
+    "sha256": "eedb8f5fdb78ee274cecec7a4324f2281b5d07fc40efa2bf6ec2f870fc0ac40c"
+  },
+  "git_status": "?? AGENTS.md\n?? COME_IN_DECISIONS_AND_BLOCKERS.md\n?? COME_IN_LIVE_CHECKPOINT.md\n?? COME_IN_MASTER_TASK_TRACKER.md\n?? COME_IN_NEXT_SESSION_RESUME_PROMPT.md\n?? COME_IN_RELEASE_READINESS.md\n?? COME_IN_SESSION_LOG.md\n?? evidence/\n?? patches/\n",
+  "branch": "work",
+  "head": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "verified_at": "2026-11-17T01:24:03.851457-08:00"
+}

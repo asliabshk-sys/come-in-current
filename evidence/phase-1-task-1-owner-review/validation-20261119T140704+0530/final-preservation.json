@@ -1,0 +1,24 @@
+{
+  "timestamp_Asia_Kolkata": "2026-11-19T21:30:36.783643+05:30",
+  "status": "PASS",
+  "repository": "/workspace/come-in-current",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "protected_file_counts": [
+    8476,
+    8504,
+    8533
+  ],
+  "hash_mismatches": [],
+  "original_reports_and_checkpoints_preserved": true,
+  "source_ZIP_and_inherited_patches_preserved": true,
+  "previous_manifest_SHA256": "7fbe1ee4d606157421f7192cc69fc0ee59f8fd9409ac655fe1fd4a6a8308b8af",
+  "previous_manifest_members_checked": 27,
+  "captured_source_files": 8128,
+  "source_fingerprint": "310833a13dd07ee92a7764f951df26b176507a0de86891ed56027ba87ae3d495",
+  "tracked_diff_empty": true,
+  "staged_diff_empty": true,
+  "Git_status_outside_new_iteration_unchanged": true,
+  "intentional_changes": "Only this new validation/evidence folder plus authorized disposable database test records and temporary processes;no protected source/configuration fixes.",
+  "scope_limits": "Actual secret.env files,node_modules/dependency trees,.git internals and selected caches/uploads are not retrospective preservation proof. Runtime/process/test DB changes are separately authorized."
+}

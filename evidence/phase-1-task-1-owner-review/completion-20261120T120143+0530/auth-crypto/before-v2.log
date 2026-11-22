@@ -1,0 +1,26 @@
+AUTH-01 PASS 
+AUTH-02 PASS 
+AUTH-03 FAIL Pre-reset token remains accepted
+AUTH-04 PASS 
+AUTH-05 PASS 
+AUTH-06 FAIL Successful reset did not increment password version
+AUTH-07 PASS 
+AUTH-08 FAIL Unversioned token bypassed revocation
+AUTH-09 FAIL Mismatched version was ignored
+AUTH-10 FAIL Malformed version was accepted
+AUTH-11 PASS 
+AUTH-12 FAIL Password metadata exposed
+HASH-01 PASS 
+HASH-02 FAIL Legacy truncated suffix alias accepted
+HASH-03 FAIL Long ASCII suffix alias accepted
+HASH-04 FAIL UTF8 suffix alias accepted
+HASH-05 PASS 
+HASH-06 FAIL Long hash lacks explicit version/cost
+HASH-07 FAIL Malformed password hash did not fail closed
+HASH-08 FAIL Accepted maximum input truncates
+SMTP-01 PASS 
+SMTP-02 FAIL SMTP parsing escaped cleanup or retained an active token
+SMTP-03 PASS 
+SMTP-04 PASS 
+SMTP-05 PASS 
+{"stage": "before-v2", "counts": {"PASS": 12, "FAIL": 13, "ERROR": 0, "SKIPPED": 0}, "database_retained": "comein_auth_crypto_before-v2_20261120t063939z_337dc7e1"}

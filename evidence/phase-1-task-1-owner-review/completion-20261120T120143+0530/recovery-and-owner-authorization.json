@@ -1,0 +1,18 @@
+{
+  "timestamp_Asia_Kolkata": "2026-11-20T12:01:43.453069+05:30",
+  "repository": "/workspace/come-in-current",
+  "application": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "source_before_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "prior_SEC01_manifest_SHA256": "ceff1ec7af2d86810eee6d6f6c1ff840394fa49ad7a8875e543946cb6520e773",
+  "prior_manifest_members": 59,
+  "baseline_paths": 8807,
+  "scope": "Owner authorizes minimum confirmed SEC02\u2013SEC09 corrections and fourcodefailures inclSMTP,locallyavailableTask1work/regression. PreserveSEC01atomicity. AndroidNative,iOSNative and actualRazorpayproviders explicitlyDEFERRED;doNOTexecute.",
+  "allowed_initial_source_files": [
+    "backend/server.py",
+    "backend/.env.example",
+    "backend/tests/backend_test.py"
+  ],
+  "source_changes_started": false
+}

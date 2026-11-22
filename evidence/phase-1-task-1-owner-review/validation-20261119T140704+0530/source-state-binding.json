@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-11-19T21:30:36.783643+05:30",
+  "repository_HEAD_context": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "source_is_exact_Git_HEAD": false,
+  "source_note": "Git tracks the original ZIP/README;retained extraction contains preserved later uncommitted work. Current content hashes bind execution,HEAD alone does not.",
+  "captured_app_files": 8128,
+  "source_tree_fingerprint_SHA256": "310833a13dd07ee92a7764f951df26b176507a0de86891ed56027ba87ae3d495",
+  "source_mapping_baseline": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/preservation-baseline.json",
+  "baseline_SHA256": "84975d08c020570c1d1baaa1007ca45ad8edf4fb8756394d633852a85cfa6b7b",
+  "server_py_SHA256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+  "all_captured_source_bytes_unchanged": true,
+  "exclusions": "Actual secret.env files,node_modules/dependency trees,.git internals and selected caches/uploads are not retrospective preservation proof. Runtime/process/test DB changes are separately authorized."
+}

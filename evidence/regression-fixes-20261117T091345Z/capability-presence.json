@@ -1,0 +1,44 @@
+{
+  "variables_presence_only": {
+    "RAZORPAY_KEY_ID": {
+      "process_present": false,
+      "local_config_present": false
+    },
+    "RAZORPAY_KEY_SECRET": {
+      "process_present": false,
+      "local_config_present": false
+    },
+    "RAZORPAY_WEBHOOK_SECRET": {
+      "process_present": false,
+      "local_config_present": false
+    },
+    "COMEIN_AI_PROVIDER": {
+      "process_present": false,
+      "local_config_present": false
+    },
+    "COMEIN_AI_API_KEY": {
+      "process_present": false,
+      "local_config_present": false
+    },
+    "SMTP_HOST": {
+      "process_present": false,
+      "local_config_present": false
+    },
+    "EMERGENT_LLM_KEY": {
+      "process_present": false,
+      "local_config_present": false
+    },
+    "DELIVERY_OTP_PROVIDER_URL": {
+      "process_present": false,
+      "local_config_present": false
+    }
+  },
+  "native_tools": {
+    "adb": false,
+    "emulator": false,
+    "sdkmanager": false,
+    "xcodebuild": false,
+    "xcrun": false
+  },
+  "android_sdk_environment_present": false
+}

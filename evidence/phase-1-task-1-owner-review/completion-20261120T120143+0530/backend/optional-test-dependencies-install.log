@@ -1,0 +1,24 @@
+Collecting pypdf<7,>=4
+  Downloading pypdf-6.21.4-py3-none-any.whl.metadata (7.6 kB)
+Collecting openpyxl<4,>=3.1
+  Downloading openpyxl-3.1.5-py2.py3-none-any.whl.metadata (2.5 kB)
+Collecting Pillow<13,>=10.1
+  Downloading pillow-12.3.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+Collecting PyMuPDF<2,>=1.24
+  Downloading pymupdf-1.28.2-cp310-abi3-manylinux_2_28_x86_64.whl.metadata (26 kB)
+Collecting pytesseract<0.4,>=0.3.13
+  Downloading pytesseract-0.3.13-py3-none-any.whl.metadata (11 kB)
+Collecting et-xmlfile (from openpyxl<4,>=3.1)
+  Downloading et_xmlfile-2.0.0-py3-none-any.whl.metadata (2.7 kB)
+Requirement already satisfied: packaging>=21.3 in ./come-in-tools/py311/lib/python3.11/site-packages (from pytesseract<0.4,>=0.3.13) (26.3)
+Downloading pypdf-6.21.4-py3-none-any.whl (410 kB)
+Downloading openpyxl-3.1.5-py2.py3-none-any.whl (250 kB)
+Downloading pillow-12.3.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.9/6.9 MB 9.6 MB/s  0:00:00
+Downloading pymupdf-1.28.2-cp310-abi3-manylinux_2_28_x86_64.whl (25.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 25.8/25.8 MB 14.6 MB/s  0:00:01
+Downloading pytesseract-0.3.13-py3-none-any.whl (14 kB)
+Downloading et_xmlfile-2.0.0-py3-none-any.whl (18 kB)
+Installing collected packages: pypdf, PyMuPDF, Pillow, et-xmlfile, pytesseract, openpyxl
+
+Successfully installed Pillow-12.3.0 PyMuPDF-1.28.2 et-xmlfile-2.0.0 openpyxl-3.1.5 pypdf-6.21.4 pytesseract-0.3.13

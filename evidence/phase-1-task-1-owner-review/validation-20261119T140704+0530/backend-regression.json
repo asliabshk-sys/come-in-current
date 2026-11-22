@@ -1,0 +1,1195 @@
+{
+  "project": "COME-IN",
+  "recorded_Asia_Kolkata": "2026-11-19T21:23:18.865149+05:30",
+  "repository": "/workspace/come-in-current",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "application_path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+  "scope": "Fresh existing safe backend/source-contract regression plus isolated ASGI/Mongo/HTTP integration. Does not include the separately owned password-reset/security tests.",
+  "status": "FAIL \u2014 legacy suite exposed unchanged source/fixture contract mismatches;other executed selections pass",
+  "offline": {
+    "result_file": "backend-offline-result.json",
+    "log": "backend-offline.log",
+    "junit": "backend-offline.xml",
+    "counts": {
+      "PASS": 574,
+      "FAIL": 0,
+      "SKIPPED": 6
+    },
+    "exit_code": 0,
+    "command": [
+      "/workspace/come-in-tools/py311/bin/python",
+      "-m",
+      "pytest",
+      "tests",
+      "-q",
+      "-n",
+      "0",
+      "-p",
+      "no:cacheprovider",
+      "-p",
+      "backend_network_guard",
+      "--ignore=tests/test_preview_runtime_e2e.py",
+      "--ignore=tests/test_batch_5task_runtime.py",
+      "--ignore=tests/test_iter_notifications_admin_measured.py",
+      "--ignore=tests/test_task5_live_mongo_transactions.py",
+      "--ignore=tests/backend_test.py",
+      "--junitxml=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline.xml",
+      "--basetemp=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline-tmp"
+    ]
+  },
+  "local_suites": [
+    {
+      "category": "actual local ASGI+MongoDB with provider mocked",
+      "command": [
+        "/workspace/come-in-tools/py311/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_payment_webhook_local_integration.py",
+        "tests/test_grocery_refund_local_integration.py",
+        "-q",
+        "-n",
+        "0",
+        "-p",
+        "no:cacheprovider",
+        "-p",
+        "backend_local_guard",
+        "--junitxml=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-payments.xml",
+        "--basetemp=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-payment-tmp"
+      ],
+      "exit_code": 0,
+      "counts": {
+        "PASS": 2,
+        "FAIL": 0,
+        "SKIPPED": 0
+      },
+      "cases": [
+        {
+          "class": "tests.test_payment_webhook_local_integration",
+          "name": "test_local_signed_webhook_http_and_transaction_scenarios",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": "tests.test_grocery_refund_local_integration",
+          "name": "test_local_grocery_refund_authorization_accounting_and_retry",
+          "status": "PASS",
+          "reason": null
+        }
+      ],
+      "pytest_source_paths": [
+        "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_payment_webhook_local_integration.py",
+        "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_refund_local_integration.py"
+      ],
+      "provider_calls": "0 actual external calls;existing tests install in-process provider mocks",
+      "dotenv_files_read": false,
+      "databases": "unique comein_disposable_test_webhooks_* and comein_disposable_test_refund_* allocated by existing tests;retained,not dropped"
+    },
+    {
+      "category": "isolated local HTTP+real MongoDB four-module regression",
+      "command": [
+        "/workspace/come-in-tools/py311/bin/python",
+        "-m",
+        "pytest",
+        "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/live-tests/test_preview_runtime_e2e.py",
+        "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/live-tests/test_batch_5task_runtime.py",
+        "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/live-tests/test_iter_notifications_admin_measured.py",
+        "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/live-tests/test_task5_live_mongo_transactions.py",
+        "-q",
+        "-n",
+        "0",
+        "-p",
+        "no:cacheprovider",
+        "-p",
+        "backend_local_guard",
+        "-c",
+        "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/pytest.ini",
+        "--junitxml=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-live.xml",
+        "--basetemp=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-live-tmp"
+      ],
+      "exit_code": 0,
+      "counts": {
+        "PASS": 70,
+        "FAIL": 0,
+        "SKIPPED": 0
+      },
+      "cases": [
+        {
+          "class": ".TestAuth",
+          "name": "test_root",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAuth",
+          "name": "test_admin_login",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAuth",
+          "name": "test_customer_login",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAuth",
+          "name": "test_bad_login",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAuth",
+          "name": "test_register_new_and_me",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAuth",
+          "name": "test_register_dup",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestSeller",
+          "name": "test_create_shop_and_approve",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestSeller",
+          "name": "test_add_products",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestSeller",
+          "name": "test_public_listing",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestGroceryOrder",
+          "name": "test_quote_and_cod_order",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestGroceryOrder",
+          "name": "test_orders_mine_and_seller_orders",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestGroceryOrder",
+          "name": "test_status_update_and_tracking",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestGroceryOrder",
+          "name": "test_customer_cannot_update_status",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestRestaurant",
+          "name": "test_create_approve_menu",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestRestaurant",
+          "name": "test_public_restaurant_list",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestRestaurant",
+          "name": "test_restaurant_pickup_order",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestRestaurant",
+          "name": "test_restaurant_cod_delivery_order",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestRestaurant",
+          "name": "test_restaurant_orders_mine",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestRestaurant",
+          "name": "test_razorpay_config_blocked",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdmin",
+          "name": "test_admin_get[/admin/users]",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdmin",
+          "name": "test_admin_get[/admin/shops]",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdmin",
+          "name": "test_admin_get[/admin/orders]",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdmin",
+          "name": "test_admin_get[/admin/earnings]",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdmin",
+          "name": "test_admin_get[/admin/restaurants]",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdmin",
+          "name": "test_admin_get[/admin/restaurant/orders]",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdmin",
+          "name": "test_admin_forbidden_for_customer",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdminPanel",
+          "name": "test_dashboard_summary",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdminPanel",
+          "name": "test_dashboard_forbidden_for_non_admin[cust]",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdminPanel",
+          "name": "test_dashboard_forbidden_for_non_admin[seller]",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdminPanel",
+          "name": "test_dashboard_requires_auth",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdminPanel",
+          "name": "test_announcement_edit_and_validation",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdminPanel",
+          "name": "test_customer_cannot_change_roles",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestSecurity",
+          "name": "test_security_headers",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestSecurity",
+          "name": "test_register_cannot_choose_role",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestSecurity",
+          "name": "test_forged_token_rejected",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestSecurity",
+          "name": "test_login_bruteforce_is_rate_limited",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestSecurity",
+          "name": "test_invalid_input_rejected",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestSecurity",
+          "name": "test_customer_cannot_read_other_shop_orders",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestShopping",
+          "name": "test_variant_priced_from_selected_variant",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestShopping",
+          "name": "test_unknown_variant_rejected",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestShopping",
+          "name": "test_measured_quote_and_order",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestShopping",
+          "name": "test_quote_cannot_be_reused",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestShopping",
+          "name": "test_online_payment_disabled_without_keys",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestNotifications",
+          "name": "test_seller_gets_new_order_notification",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestNotifications",
+          "name": "test_customer_gets_status_notification_and_unread",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestNotifications",
+          "name": "test_notifications_are_owner_scoped",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestNotifications",
+          "name": "test_restaurant_status_notifications",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestNotifications",
+          "name": "test_read_all",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestNotifications",
+          "name": "test_requires_auth",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestNotifications",
+          "name": "test_mine_shape",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestNotifications",
+          "name": "test_unauthenticated_rejected",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestNotifications",
+          "name": "test_cannot_mark_other_users_notification",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestNotifications",
+          "name": "test_read_all_zeroes_unread",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestNotifications",
+          "name": "test_invalid_id_404",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdmin",
+          "name": "test_customer_forbidden_admin_routes",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestAdmin",
+          "name": "test_announcement_create_edit_deactivate",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestMeasured",
+          "name": "test_750g_sugar_price",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestMeasured",
+          "name": "test_invalid_amounts_rejected[700]",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestMeasured",
+          "name": "test_invalid_amounts_rejected[100]",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestMeasured",
+          "name": "test_invalid_amounts_rejected[6000]",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": ".TestMeasured",
+          "name": "test_invalid_amounts_rejected[0]",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": "",
+          "name": "test_t5_mongo_01_transaction_behavior",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": "",
+          "name": "test_t5_mongo_02_measured_stock_deduction",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": "",
+          "name": "test_t5_mongo_03_insufficient_stock_rejection",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": "",
+          "name": "test_t5_mongo_04_concurrent_order_protection",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": "",
+          "name": "test_t5_mongo_05_failed_order_creation_rolls_back",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": "",
+          "name": "test_t5_mongo_06_measured_precision_and_pricing",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": "",
+          "name": "test_t5_mongo_07_fixed_pack_compatibility",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": "",
+          "name": "test_t5_repeat_measured_order_e2e",
+          "status": "PASS",
+          "reason": null
+        },
+        {
+          "class": "",
+          "name": "test_t5_measured_import_apply_invalid_duplicate_and_rollback",
+          "status": "PASS",
+          "reason": null
+        }
+      ],
+      "database": "comein_disposable_test_review_01591e320f64420b",
+      "loopback_port": 40003,
+      "test_copies": [
+        {
+          "original": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_preview_runtime_e2e.py",
+          "copy": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/live-tests/test_preview_runtime_e2e.py",
+          "sha256": "63ae057dedb96604d498ceafea24ec5ab6b1bc9c81609359cf931d1e131bed6e",
+          "byte_identical": true
+        },
+        {
+          "original": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_batch_5task_runtime.py",
+          "copy": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/live-tests/test_batch_5task_runtime.py",
+          "sha256": "35b3215536d929fcd506479fae565713ee06f0490299ab1372ceb63e756de4d0",
+          "byte_identical": true
+        },
+        {
+          "original": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_iter_notifications_admin_measured.py",
+          "copy": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/live-tests/test_iter_notifications_admin_measured.py",
+          "sha256": "6ed2254af71c42db2b86140aed4d579ecd0cdcc5ca85ef267cc620df50a53571",
+          "byte_identical": true
+        },
+        {
+          "original": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_live_mongo_transactions.py",
+          "copy": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/live-tests/test_task5_live_mongo_transactions.py",
+          "sha256": "99e2cbaf0a8e1ade73294ed127c6ecb0f2acad4987aa896468bcea444846ef50",
+          "byte_identical": true
+        },
+        {
+          "original": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/seed_preview_test_accounts.py",
+          "copy": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/live-tests/seed_preview_test_accounts.py",
+          "sha256": "276a1a5d6a291db9351cec34daf1ff2474c4bb803a3b97645d92ef9d58520f1e",
+          "byte_identical": true
+        }
+      ],
+      "dotenv_files_read": false,
+      "test_copy_reason": "Byte-identical test copies execute against explicit process env;their fallback ROOT/backend/.env and ROOT/frontend/.env paths do not exist. No assertions changed.",
+      "provider_calls": "No provider bindings;backend socket guard allows onlyloopbacktestportandMongo27018",
+      "database_retention": "Database retained,no drops. Existingtask5teardowndeletesonlyitssyntheticfixtureswithinthisnewDB."
+    }
+  ],
+  "execution_counts": {
+    "PASS": 663,
+    "FAIL": 5,
+    "SKIPPED": 7
+  },
+  "unique_existing_case_counts": {
+    "PASS": 663,
+    "FAIL": 5,
+    "SKIPPED": 5
+  },
+  "unique_count_basis": "The two opt-in local payment/refund cases skipped in offline invocation were then executed successfully once in opt-in local invocation. Deduplicate those two skip occurrences;four optional-parser skipped cases remain,plus the additional legacy object-storage skip when that suite is included. Four live-module copies and the legacy copy are byte-identical to their originals and occur only in their respective live execution.",
+  "offline_skipped_cases": [
+    {
+      "class": "tests.test_grocery_refund_local_integration",
+      "name": "test_local_grocery_refund_authorization_accounting_and_retry",
+      "status": "SKIPPED",
+      "reason": "requires explicit local disposable payment-test opt-in"
+    },
+    {
+      "class": "tests.test_payment_webhook_local_integration",
+      "name": "test_local_signed_webhook_http_and_transaction_scenarios",
+      "status": "SKIPPED",
+      "reason": "requires explicit local disposable payment-test opt-in"
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_pdf_text_adapter_preserves_page_provenance",
+      "status": "SKIPPED",
+      "reason": "could not import 'pypdf': No module named 'pypdf'"
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_xlsx_processes_multiple_sheets_when_openpyxl_available",
+      "status": "SKIPPED",
+      "reason": "could not import 'openpyxl': No module named 'openpyxl'"
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_image_ocr_extracts_visible_text_without_promoting_fields",
+      "status": "SKIPPED",
+      "reason": "could not import 'PIL': No module named 'PIL'"
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_scanned_pdf_uses_optional_ocr_without_promoting_product_fields",
+      "status": "SKIPPED",
+      "reason": "could not import 'fitz': No module named 'fitz'"
+    }
+  ],
+  "legacy_remote_suite": {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/backend_test.py",
+    "status": "FAIL",
+    "result_file": "backend-legacy-result.json",
+    "log": "backend-legacy.log",
+    "junit": "backend-legacy.xml",
+    "counts": {
+      "PASS": 17,
+      "FAIL": 5,
+      "SKIPPED": 1
+    },
+    "exit_code": 1,
+    "pytest_failure_elements": 2,
+    "pytest_error_elements": 3,
+    "source_and_contract_assessment": "Duplicate registration409 contradicts legacy400 expectation. Required ProductIn.description absent from shared created_productfixture causes3setup errors. Legacy product-deletecreation omitsdescription/category_id then assumesid,causingKeyError. These are actual unsuccessful tests;no assertions rewritten. Order endpoint calls inside two fixture-dependent cases never reached."
+  },
+  "frontend_summary": [
+    {
+      "id": "FE-TSC",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --incremental false --pretty false",
+      "exit_code": 0,
+      "result": "PASS",
+      "error_count": 0,
+      "warning_count": 0,
+      "scope": "Current full project semantic TypeScript check,no emission/incremental write;notUIruntime",
+      "stdout_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-typecheck.log"
+    },
+    {
+      "id": "FE-ESLINT",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": "node node_modules/eslint/bin/eslint.js . --format json --no-cache",
+      "exit_code": 0,
+      "result": "PASS error gate;warnings remain",
+      "error_count": 0,
+      "warning_count": 10,
+      "linted_file_results": 111,
+      "stdout_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-eslint.json",
+      "stderr_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-eslint.stderr.log",
+      "scope": "Existingrules;no --fix/no cache/no warningsuppression"
+    },
+    {
+      "id": "FE-PLANNER",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": "node scripts/test-chand-party-planner.cjs",
+      "exit_code": 0,
+      "result": "PASS",
+      "reported_assertions_passed": 11,
+      "assertion_sites_observed_in_source": 13,
+      "count_caveat": "Existing stdout says11;source has13 top-level assert invocations including transpilation/shape guards. Exact rawoutput retained. No edit or inflated aggregate.",
+      "failed": 0,
+      "skipped": 0,
+      "stdout_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-planner.log",
+      "scope": "Pure in-memory CHAND planner helper;synthetic products,notactualAI/provider/cart purchase"
+    },
+    {
+      "id": "FE-NATIVE-MOCK",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": "node scripts/test-native-payment.cjs",
+      "exit_code": 0,
+      "result": "PASS",
+      "scenario_count": 5,
+      "failed": 0,
+      "skipped": 0,
+      "stdout_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-native-mock.log",
+      "scope": "Pure VM SDK adapter mock:no native module/device,binary,bank,provider,webhook or refund verification"
+    },
+    {
+      "id": "FE-CONFIG-GUARD",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": "node /workspace/come-in-current/evidence/resume-20261118/config-and-guard-check.cjs",
+      "exit_code": 0,
+      "result": "PASS",
+      "scenario_count": 9,
+      "failed": 0,
+      "skipped": 0,
+      "stdout_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-config-guard.log",
+      "scope": "Pure production URL config and cmd-guard boundary assertions;writes new unique /tmp/comein-guard-* scratch only;no actualconfiguration/dependency edit or network"
+    },
+    {
+      "id": "FE-WEB-EXPORT",
+      "cwd": "/tmp/comein-web-validation-grxizkha",
+      "command": "/workspace/come-in-tools/yarn/node_modules/.bin/yarn build:web --output-dir /workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export",
+      "exit_code": 0,
+      "result": "PASS",
+      "stdout_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-web-build.log",
+      "artifact_count": 100,
+      "artifact_manifest": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-web-export-manifest.json",
+      "scope": "Actual Expo web export from95hash-bound scratch source copies with existing pinned deps;not browser/device/provider/runtime testing"
+    }
+  ],
+  "frontend_details": "frontend-validation.json",
+  "source_bindings": {
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/catalogue_chand_adapter.py": "d46062e072c98333a5d4032ee88eecb3d1618a42bc113584860894d12e8065ee",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/catalogue_import_engine.py": "aa45e66150b4b2eca39e165eefccffbb5adde9e1337b20cf044f4db023aa8a9f",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/financial_rules.py": "572ee43ce5e4d775070b67ca73d0f2ce6fe4347395aaec622caeff680986b9e5",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/integrations/__init__.py": "ca2b225ec3d1b6a0e84fa20d7d7c225e87153ad2367cd911c38e0eee1b2b237e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/integrations/delivery_provider.py": "dc2f8ceec322c162907f461eb03282775b6108f23e05d2c7dddaa3a69f65f68e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/integrations/order_notifications.py": "80e78e5b6e4fa68d81cdb6219b862cbc0cc177a57f578e411d41abf1867da60a",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_config.py": "7c98c6cd6447d71db65dccbca7fc4688acc3862b13ce6104660c2e4a5bc8af1e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/payment_config.py": "91269aa376d204e31a235161c09be0f46409c6b6820ed788e1b4b8c92e8a967c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/payment_webhook.py": "f1870741c52e292e7ca019d508656670dbae886f52b065f65aa5a48de563b7a9",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/referral_rules.py": "e87665ccecb819854f6910c73c0f45fab66d0301a212e63097bcf47f33d4508b",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/refund_rules.py": "7d05702e7c36d8cd3e16d21e0e9d728cfb79a5c1ab7f8a5697eb9c24f3161afa",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/restaurant_pricing.py": "1f083ce73f8e6722b4578f0ba75edd68b295f1f5b6c3f4ae5061bd17da336583",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/restaurant_serviceability.py": "674b8f1d8e35d14f294ef3bfac6631cac959a12e41627d132469b9ddbb547258",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/security_config.py": "fe905d064168ec5cf76d2d4dfe9ec5dc656f7428a140cba15e45042f5d760001",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/backend_test.py": "a4e9c990c972790e4f6f6c9fd0aca31d280c3bdac5bc5a0ab9cc56d34d5935b9",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/seed_preview_test_accounts.py": "276a1a5d6a291db9351cec34daf1ff2474c4bb803a3b97645d92ef9d58520f1e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_assistant_context_contract.py": "50cf7bf7297fb06f2f0195767d3119f33494794b5bb2589a6944119e452cfa84",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_batch_5task_runtime.py": "35b3215536d929fcd506479fae565713ee06f0490299ab1372ceb63e756de4d0",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalog_import_security_contract.py": "2c965472655c0e5d33dc7a3d7bc2304f58f7b946a382f3d398a54fe5c99f0967",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalog_reference_minimum.py": "3c48248b23269dd47d1018b1af4d13b354a4f543f43c4f9a62ee8463034343fa",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_chand_adapter.py": "768425aecb161d3b5411db943d0f92f0121f99cd36d069090aa16bf9a97b6458",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_import_job_api_contract.py": "06d397b82f7c36763fb5fc79335c5d8cd539a9d2361aa47e56962c1d8243448f",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_import_workflow_contract.py": "ac041fdeecefe46ef166810f2978d7a7a62d77dae13e25bbe681884fbfdfb485",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_transaction_apply_offline.py": "28f2048b4d7b1b0be5f200d655a12aa19b691242d74182e5ca35203e90602a61",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_validator_migration.py": "0cd1aed9a921e2f0b94eefe2fcc3d550ca6fd32f68a8fb205da828a51b8ead6e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_demo_contract.py": "347ea51e9ca00a8b76bfeaa6b0bc6685a59da089a4a29cded9be8cdb6b03a06c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_feedback_contract.py": "f01889102344304592f8107ead6ddb190ba7344e8359b20e1ec26e373ee766be",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_localization_contract.py": "d28dba696672ee9e47d1b300cb8008e76b8bd3b21236979b163b718aac9ff797",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_media_contract.py": "689f9b926a29baf4d14ad2613dca247eebf7dffdab9a343b5bb38ffa8551b09e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_ollama_provider_contract.py": "9ba12d2c8fd7f967d1683f53d8844fbfdba7a06436c1584c6edca78baf5dad35",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_shopping_integration_contract.py": "9f2e79e05117bfc0fb8e771eee9f59f87a13e1d304747fd70661200ecff3fba2",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_delivery_partner_onboarding_contract.py": "7ba9cecec4b3e5f6b2db7308497f7c27070cca2940f89d6a5041c33eee3fb861",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_delivery_tracking_contract.py": "745d67212a79974aad4e9f77cbffd1378889efc9514e3920f23149a1f4e82b32",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_directory_only_category_contract.py": "ef74727b381a8315a3d5e9722c047342a4927e3cb8045bcc998110279c98f46b",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_final_payment_transition_races.py": "7dfb070f7429abfc49aa88a627f281c481156b547d9efe6306cb15ac1e6333be",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_financial_rules.py": "0a0c3478ab0ea28038f58100f3bfcd54c686fdb4328a263dd42b2d92659ed187",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_financial_security_contract.py": "b023d65b62390f66d20ce741f601f533c775795c07a1a471f69640b57db917de",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_frontend_contracts.py": "88729edf5570aa56e0a524caae9aeab10ef1e6c867182c916c4e923630fcbe41",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_functional_blockers_regression.py": "9fe007d9ef3f0839eac8b9cfd21dfd1e98e978887b0ccf56931818b38b5bd995",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_capture_transaction_offline.py": "98b6385f9722cba618a5d99cb7a692493fe475db49337e022da0f9f9d7321c84",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_checkout_security_contract.py": "2956c5ffe8a0b195ea84b6a2d0a441c2d7574a115fab4df92c4b5d613904e85c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_pay_at_shop_status_contract.py": "f26128aff897e1f8c555bca80f86d7a3d4c78e9993433458e6dd6c292d2dc66d",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_refund_eligibility.py": "9101564d1c0be2cef9d4c82f789e8938dc52a2b94f813ab3c463d71300e57338",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_refund_local_integration.py": "3f0fd3472a92534275a9b3c32d01b9fdac6152970a8aab714cdc013b71b2567f",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_home_services_remaining_contract.py": "63be79d5b2689ba70b935990437cc00febe85db33ed3d07aa9eb2e2fbfdb5b5f",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_image_upload_type_boundary.py": "9b53945200d6eb15ad4ed75de55e4fd03ce4e163b7ca58471c50c55b2669decd",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_iter_notifications_admin_measured.py": "6ed2254af71c42db2b86140aed4d579ecd0cdcc5ca85ef267cc620df50a53571",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_master_catalog_api_contract.py": "2c0a68e617520c3dd455acda883fb287b24bbcf9e8aa1c3894904989a2541014",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_master_catalog_seller_ui_contract.py": "897fdcd092512635af8988af715fc22416911d98afa62ea496c4fca196e3a274",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_backup_safety_offline.py": "58b359f05dfe73147a3594831556b3f1dc7ebe40af4393b899a1a0bc9daee6ee",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_config.py": "fff096c24a0f1a7c0bf74b24cde23767ffa3e1d89d97478728d32af7fa6d2eaa",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_portability_tool.py": "83ecfbec1df574fc06fd49c54cf1fe353321c7ebfb93d9b60ca013fce4de3784",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_transactions.py": "edb13ec2ce29af32a744f03886735e6c941bc1a6e32390ea3f35915fef023704",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_online_shop_product_listing_contract.py": "7831d414f412e54989867d2f7f62ecf38da77ad4380026edebdd48c7d0ad8ac7",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_p0_payment_checkout_completion.py": "aac547707930b2ede703c17c4cccc2be1baf901316296116a990a73751db593d",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_p0_restaurant_delivery_panel.py": "45eb0a82cdf5fa3e1bec75d0cf7a85275b88fa5a67e85ded138cf69301c3876c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_payment_environment_boundary.py": "03f900295de6de210561fe3b4d3d20fd84da908bab81925a8d215b9ea55f48f0",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_payment_webhook_local_integration.py": "d1811f5b465311bd08cfba5be16594e27eabca6dca461696d841f4d4676cb873",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_preview_runtime_e2e.py": "63ae057dedb96604d498ceafea24ec5ab6b1bc9c81609359cf931d1e131bed6e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_provider_adapter_contracts.py": "e25d0146b66ee9b64432493d7c23022f1a13e8a096b857d4d545fe5ae0dfce65",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_referral_implementation_contract.py": "e749067b2f7768e090f9f2934281ceceb50c2f7b9b3ebf7bd0db563378663532",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_referral_rules.py": "22db3efc5953096e74677d937e93ceb8d6fdf405b40a06ec58fe1cffdb30d960",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_api_contract.py": "a5cbf0085a4e83d6465ecf6932a946b4e4c4d3f99b57268a23d7fa4e7db24fbb",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_capture_transaction_offline.py": "fdf8de7ac76a630dd9b43ed79464e8cc06953281dd0199039c9e8f6b1494de2c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_pricing.py": "4c6998598dad7be39271af53f1c2ca17b8c2038ede7608c62c70534de845700c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_refund_webhook_transaction_offline.py": "c3970297a1b489b4d4e26eaa88a12a8a2fe2a1694484f2edc966ea70b88668d4",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_serviceability.py": "8f8085bce77efd00aa243b61300b9b236f47134372a3cb0f377ba125dc70e793",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_role_security_retail_import_contract.py": "c662f797e136190bcf29bee85ae0be16e4d04f25ce951c189a4e1cbfc8dfbfea",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shared_system_integration_contract.py": "0278c5ee3d818a731bb97f622490c1a79b18f0897527bf5ea6fe9c4597a1cc6e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shop_registration_browse_entrypoints.py": "0c4190d2cd94ff5af3209ad2fd07a8d7393f5b1515563530f13ad2c4f63c153d",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shopping_cart_variants_contract.py": "e040b403a3bf302bdc603f9f092d3948a9d5acd5f13310d36d0abe4ffd64ed97",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shopping_catalog_contract.py": "c090d00bae13d0f267900596e024e83ec51f6fad502738e6c166887bb07e1987",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shopping_rewards_redemption_contract.py": "1dfae876a6409a138e329dd8c66e19b38aff00e9f125da768c0beb41a3938988",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_standard_ui_image_shop_cta_contract.py": "45df4b3247f47a41b5b26c363cbdf75151546573cca5aff31cfa65b057b89eea",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_step1_final_delivery_partner_transactions_offline.py": "7557719eb9a3746bd6f374d56c44283396406ac21c61670697fe9b8a73442369",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_step1_final_refund_admin_offline.py": "f9dcb811e5ea98e83e8a4dd86e4f9eb36df9617ef4cd4740eaa7541642ea1b6b",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_step1_final_restore_index_profile_offline.py": "c326a30993a7d20817ff6ec7db89c966739687fe8f2b7ed501ea6d7fbf7ebef6",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_targeted_tasks_9_12_15_18_21.py": "188b24e701e1ad5adc6e987681c94dbc7725d70766f71f67fe10dfe26e98d249",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task10_payment_refund_notification_contract.py": "295dec77bb5c0891a4526e4de0ca04cff9bca96b7a7b7fd0c9fa7adf7f4f0e91",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task11_grocery_refund_status_contract.py": "049c4c08ee551f8a5c99b0a50677bccb66748879e1986475a86f05265e028b90",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task11_live_order_tracking_contract.py": "4409608fe859d1e77e2af419dc1d12c8c1d2ff4521ec2f95bd59d2091ba3e36d",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task12_customer_support_contract.py": "1b92dae8da9fe78e2001a47417848c52d12ec877d641c6de4c18c568ea54e4bf",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task13_seller_support_status_contract.py": "dca531bfad3d6ab44369d66e666537b275b47af49f09f9bec341eb75c7daedea",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task14_seller_support_ui_contract.py": "ab2b9a65e31e583af353e2221a5dcc806d2ce59ef874f669570349b8bfca13d0",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task16_production_cors_contract.py": "2b7f03aef63baa6d4a9287214eac08077e3fa586d6af4c1f31d42dea370e9b04",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task17_grocery_payment_gate_contract.py": "8ec19d148172f189ca1aa08ac10811e9a3b2ead7f191001a1395444c55078662",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task18_refund_safety_iteration3.py": "23ab4a264750c3b130e56bec4f8772d7a891972b36fde8b3cef3ffca43e6e346",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task19_seller_admin_workflows_contract.py": "259509f438227ccc84aa96e9a5278cc4db0bd09a60eb2056541c56e8ee9c8949",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task20_product_catalog_variants_stock_contract.py": "551af2a78fa572de763ea32f4c9dee9305cb92704f4ac335ad7f8f50601237a9",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task21_customer_shopping_workflow_contract.py": "b488f0df6ff591ae8c9e6c20566bce0dd99c6f6bc210794b3ed7d587de11e64e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task22_checkout_audit_contract.py": "06a858cecc8eaf430e89b8d3f82c28266a984a9704823422571fbf8bde63de8f",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task23_order_tracking_authorization_contract.py": "8b832c11381bd9dc97c4484366e1fcd56c72470b2e65897b38f87c9468f65382",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task24_repeat_order_contract.py": "ec7b00d8d37c1bf1e46aa24eea2e9daf285e9601206563befe7db9258ecaa94b",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_customer_measured_shopping_contract.py": "7e852b54f9cb8b41cbbe628993b8728d2b61f8e5e2170f1d7b73f08c53137eb8",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_live_mongo_transactions.py": "99e2cbaf0a8e1ade73294ed127c6ecb0f2acad4987aa896468bcea444846ef50",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_measured_import_contract.py": "2ecf5916ccb9983f94930c9db69845a0617ad765d5a26e35c868e04c812199fb",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_task7_ui_implementation_contract.py": "e6514698347b2fa500be113b2a170e1cbdf51f7af8f7ca5cc043c01dcafd3c98",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task9_order_actions_contract.py": "7dba730afa3fa39bca9b3d1e4fc7141a438e8435ba7f0541d3c2ccc3f39689bd",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_transaction_commit_retry.py": "3ca910cad4f85917780bbfcac54167650d979b64f8a5256523a732fcc3ae936a",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_universal_catalogue_import_engine.py": "e0bce41bc5c605f4046eaef324fb802f74b815d1dd268de209eae787b0a17e82",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_upload_allocation_bound.py": "242cd1bd61ff2d395338d82f62574c60f69fd1e54af961169935d8f5f37e6c77",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_webhook_envelope_security.py": "05165bdfa7180f77347d48cbfaaf152e4eaf9f7c14afec08f1987cf83de4e865",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/scripts/mongo/catalogue_audit_validator.py": "d98990088a4f2803828b68f08c4fc4c0ee95c9457e0d28a20acabe6df5e98a41",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/scripts/mongo/comein_mongo.py": "7296a9498f5037d2063bfb9af0b6d229e8aac24d680fe887a8270318e6d3a434",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/scripts/mongo/export_sanitized_preview_backup.py": "15e56ea455b3aaba09f1f464df37f49e18253febc222079584541a3fc99e6ba3",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/scripts/mongo/legacy_profile_disposable.py": "bcc4ea80d7322486ec08c5a147881f0d7a0c61bcea1a5593075f643ef3ebb4b5",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/scripts/mongo/verify_disposable_restore.py": "8162882f483d1056a8be97ed41697f8b575a2ab4e7e4d270f61d3fff1bac406b",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/pytest.ini": "6cb1fc884360a028c18965b664932f7caef56074ed2db617ae356876521b15b3",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/requirements.txt": "b6ea2378cf265d1d44b8c638a0fbbe92a507de63273f9bdc21334fbdcba194cb",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/package.json": "eec01c2532ab0f74ce42bb180e803c13c1e0781787cd5c867c1867dcc82cf863",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/yarn.lock": "29645e6b445f8bbda255b6a079558202a35e7993197bb93f69616cdcbb8d9ea2"
+  },
+  "test_source_bindings": [
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/backend_test.py",
+      "sha256": "a4e9c990c972790e4f6f6c9fd0aca31d280c3bdac5bc5a0ab9cc56d34d5935b9"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/seed_preview_test_accounts.py",
+      "sha256": "276a1a5d6a291db9351cec34daf1ff2474c4bb803a3b97645d92ef9d58520f1e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_assistant_context_contract.py",
+      "sha256": "50cf7bf7297fb06f2f0195767d3119f33494794b5bb2589a6944119e452cfa84"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_batch_5task_runtime.py",
+      "sha256": "35b3215536d929fcd506479fae565713ee06f0490299ab1372ceb63e756de4d0"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalog_import_security_contract.py",
+      "sha256": "2c965472655c0e5d33dc7a3d7bc2304f58f7b946a382f3d398a54fe5c99f0967"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalog_reference_minimum.py",
+      "sha256": "3c48248b23269dd47d1018b1af4d13b354a4f543f43c4f9a62ee8463034343fa"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_chand_adapter.py",
+      "sha256": "768425aecb161d3b5411db943d0f92f0121f99cd36d069090aa16bf9a97b6458"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_import_job_api_contract.py",
+      "sha256": "06d397b82f7c36763fb5fc79335c5d8cd539a9d2361aa47e56962c1d8243448f"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_import_workflow_contract.py",
+      "sha256": "ac041fdeecefe46ef166810f2978d7a7a62d77dae13e25bbe681884fbfdfb485"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_transaction_apply_offline.py",
+      "sha256": "28f2048b4d7b1b0be5f200d655a12aa19b691242d74182e5ca35203e90602a61"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_validator_migration.py",
+      "sha256": "0cd1aed9a921e2f0b94eefe2fcc3d550ca6fd32f68a8fb205da828a51b8ead6e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_demo_contract.py",
+      "sha256": "347ea51e9ca00a8b76bfeaa6b0bc6685a59da089a4a29cded9be8cdb6b03a06c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_feedback_contract.py",
+      "sha256": "f01889102344304592f8107ead6ddb190ba7344e8359b20e1ec26e373ee766be"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_localization_contract.py",
+      "sha256": "d28dba696672ee9e47d1b300cb8008e76b8bd3b21236979b163b718aac9ff797"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_media_contract.py",
+      "sha256": "689f9b926a29baf4d14ad2613dca247eebf7dffdab9a343b5bb38ffa8551b09e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_ollama_provider_contract.py",
+      "sha256": "9ba12d2c8fd7f967d1683f53d8844fbfdba7a06436c1584c6edca78baf5dad35"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_shopping_integration_contract.py",
+      "sha256": "9f2e79e05117bfc0fb8e771eee9f59f87a13e1d304747fd70661200ecff3fba2"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_delivery_partner_onboarding_contract.py",
+      "sha256": "7ba9cecec4b3e5f6b2db7308497f7c27070cca2940f89d6a5041c33eee3fb861"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_delivery_tracking_contract.py",
+      "sha256": "745d67212a79974aad4e9f77cbffd1378889efc9514e3920f23149a1f4e82b32"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_directory_only_category_contract.py",
+      "sha256": "ef74727b381a8315a3d5e9722c047342a4927e3cb8045bcc998110279c98f46b"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_final_payment_transition_races.py",
+      "sha256": "7dfb070f7429abfc49aa88a627f281c481156b547d9efe6306cb15ac1e6333be"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_financial_rules.py",
+      "sha256": "0a0c3478ab0ea28038f58100f3bfcd54c686fdb4328a263dd42b2d92659ed187"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_financial_security_contract.py",
+      "sha256": "b023d65b62390f66d20ce741f601f533c775795c07a1a471f69640b57db917de"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_frontend_contracts.py",
+      "sha256": "88729edf5570aa56e0a524caae9aeab10ef1e6c867182c916c4e923630fcbe41"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_functional_blockers_regression.py",
+      "sha256": "9fe007d9ef3f0839eac8b9cfd21dfd1e98e978887b0ccf56931818b38b5bd995"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_capture_transaction_offline.py",
+      "sha256": "98b6385f9722cba618a5d99cb7a692493fe475db49337e022da0f9f9d7321c84"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_checkout_security_contract.py",
+      "sha256": "2956c5ffe8a0b195ea84b6a2d0a441c2d7574a115fab4df92c4b5d613904e85c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_pay_at_shop_status_contract.py",
+      "sha256": "f26128aff897e1f8c555bca80f86d7a3d4c78e9993433458e6dd6c292d2dc66d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_refund_eligibility.py",
+      "sha256": "9101564d1c0be2cef9d4c82f789e8938dc52a2b94f813ab3c463d71300e57338"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_refund_local_integration.py",
+      "sha256": "3f0fd3472a92534275a9b3c32d01b9fdac6152970a8aab714cdc013b71b2567f"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_home_services_remaining_contract.py",
+      "sha256": "63be79d5b2689ba70b935990437cc00febe85db33ed3d07aa9eb2e2fbfdb5b5f"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_image_upload_type_boundary.py",
+      "sha256": "9b53945200d6eb15ad4ed75de55e4fd03ce4e163b7ca58471c50c55b2669decd"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_iter_notifications_admin_measured.py",
+      "sha256": "6ed2254af71c42db2b86140aed4d579ecd0cdcc5ca85ef267cc620df50a53571"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_master_catalog_api_contract.py",
+      "sha256": "2c0a68e617520c3dd455acda883fb287b24bbcf9e8aa1c3894904989a2541014"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_master_catalog_seller_ui_contract.py",
+      "sha256": "897fdcd092512635af8988af715fc22416911d98afa62ea496c4fca196e3a274"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_backup_safety_offline.py",
+      "sha256": "58b359f05dfe73147a3594831556b3f1dc7ebe40af4393b899a1a0bc9daee6ee"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_config.py",
+      "sha256": "fff096c24a0f1a7c0bf74b24cde23767ffa3e1d89d97478728d32af7fa6d2eaa"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_portability_tool.py",
+      "sha256": "83ecfbec1df574fc06fd49c54cf1fe353321c7ebfb93d9b60ca013fce4de3784"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_transactions.py",
+      "sha256": "edb13ec2ce29af32a744f03886735e6c941bc1a6e32390ea3f35915fef023704"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_online_shop_product_listing_contract.py",
+      "sha256": "7831d414f412e54989867d2f7f62ecf38da77ad4380026edebdd48c7d0ad8ac7"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_p0_payment_checkout_completion.py",
+      "sha256": "aac547707930b2ede703c17c4cccc2be1baf901316296116a990a73751db593d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_p0_restaurant_delivery_panel.py",
+      "sha256": "45eb0a82cdf5fa3e1bec75d0cf7a85275b88fa5a67e85ded138cf69301c3876c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_payment_environment_boundary.py",
+      "sha256": "03f900295de6de210561fe3b4d3d20fd84da908bab81925a8d215b9ea55f48f0"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_payment_webhook_local_integration.py",
+      "sha256": "d1811f5b465311bd08cfba5be16594e27eabca6dca461696d841f4d4676cb873"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_preview_runtime_e2e.py",
+      "sha256": "63ae057dedb96604d498ceafea24ec5ab6b1bc9c81609359cf931d1e131bed6e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_provider_adapter_contracts.py",
+      "sha256": "e25d0146b66ee9b64432493d7c23022f1a13e8a096b857d4d545fe5ae0dfce65"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_referral_implementation_contract.py",
+      "sha256": "e749067b2f7768e090f9f2934281ceceb50c2f7b9b3ebf7bd0db563378663532"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_referral_rules.py",
+      "sha256": "22db3efc5953096e74677d937e93ceb8d6fdf405b40a06ec58fe1cffdb30d960"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_api_contract.py",
+      "sha256": "a5cbf0085a4e83d6465ecf6932a946b4e4c4d3f99b57268a23d7fa4e7db24fbb"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_capture_transaction_offline.py",
+      "sha256": "fdf8de7ac76a630dd9b43ed79464e8cc06953281dd0199039c9e8f6b1494de2c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_pricing.py",
+      "sha256": "4c6998598dad7be39271af53f1c2ca17b8c2038ede7608c62c70534de845700c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_refund_webhook_transaction_offline.py",
+      "sha256": "c3970297a1b489b4d4e26eaa88a12a8a2fe2a1694484f2edc966ea70b88668d4"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_serviceability.py",
+      "sha256": "8f8085bce77efd00aa243b61300b9b236f47134372a3cb0f377ba125dc70e793"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_role_security_retail_import_contract.py",
+      "sha256": "c662f797e136190bcf29bee85ae0be16e4d04f25ce951c189a4e1cbfc8dfbfea"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shared_system_integration_contract.py",
+      "sha256": "0278c5ee3d818a731bb97f622490c1a79b18f0897527bf5ea6fe9c4597a1cc6e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shop_registration_browse_entrypoints.py",
+      "sha256": "0c4190d2cd94ff5af3209ad2fd07a8d7393f5b1515563530f13ad2c4f63c153d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shopping_cart_variants_contract.py",
+      "sha256": "e040b403a3bf302bdc603f9f092d3948a9d5acd5f13310d36d0abe4ffd64ed97"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shopping_catalog_contract.py",
+      "sha256": "c090d00bae13d0f267900596e024e83ec51f6fad502738e6c166887bb07e1987"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shopping_rewards_redemption_contract.py",
+      "sha256": "1dfae876a6409a138e329dd8c66e19b38aff00e9f125da768c0beb41a3938988"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_standard_ui_image_shop_cta_contract.py",
+      "sha256": "45df4b3247f47a41b5b26c363cbdf75151546573cca5aff31cfa65b057b89eea"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_step1_final_delivery_partner_transactions_offline.py",
+      "sha256": "7557719eb9a3746bd6f374d56c44283396406ac21c61670697fe9b8a73442369"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_step1_final_refund_admin_offline.py",
+      "sha256": "f9dcb811e5ea98e83e8a4dd86e4f9eb36df9617ef4cd4740eaa7541642ea1b6b"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_step1_final_restore_index_profile_offline.py",
+      "sha256": "c326a30993a7d20817ff6ec7db89c966739687fe8f2b7ed501ea6d7fbf7ebef6"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_targeted_tasks_9_12_15_18_21.py",
+      "sha256": "188b24e701e1ad5adc6e987681c94dbc7725d70766f71f67fe10dfe26e98d249"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task10_payment_refund_notification_contract.py",
+      "sha256": "295dec77bb5c0891a4526e4de0ca04cff9bca96b7a7b7fd0c9fa7adf7f4f0e91"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task11_grocery_refund_status_contract.py",
+      "sha256": "049c4c08ee551f8a5c99b0a50677bccb66748879e1986475a86f05265e028b90"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task11_live_order_tracking_contract.py",
+      "sha256": "4409608fe859d1e77e2af419dc1d12c8c1d2ff4521ec2f95bd59d2091ba3e36d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task12_customer_support_contract.py",
+      "sha256": "1b92dae8da9fe78e2001a47417848c52d12ec877d641c6de4c18c568ea54e4bf"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task13_seller_support_status_contract.py",
+      "sha256": "dca531bfad3d6ab44369d66e666537b275b47af49f09f9bec341eb75c7daedea"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task14_seller_support_ui_contract.py",
+      "sha256": "ab2b9a65e31e583af353e2221a5dcc806d2ce59ef874f669570349b8bfca13d0"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task16_production_cors_contract.py",
+      "sha256": "2b7f03aef63baa6d4a9287214eac08077e3fa586d6af4c1f31d42dea370e9b04"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task17_grocery_payment_gate_contract.py",
+      "sha256": "8ec19d148172f189ca1aa08ac10811e9a3b2ead7f191001a1395444c55078662"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task18_refund_safety_iteration3.py",
+      "sha256": "23ab4a264750c3b130e56bec4f8772d7a891972b36fde8b3cef3ffca43e6e346"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task19_seller_admin_workflows_contract.py",
+      "sha256": "259509f438227ccc84aa96e9a5278cc4db0bd09a60eb2056541c56e8ee9c8949"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task20_product_catalog_variants_stock_contract.py",
+      "sha256": "551af2a78fa572de763ea32f4c9dee9305cb92704f4ac335ad7f8f50601237a9"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task21_customer_shopping_workflow_contract.py",
+      "sha256": "b488f0df6ff591ae8c9e6c20566bce0dd99c6f6bc210794b3ed7d587de11e64e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task22_checkout_audit_contract.py",
+      "sha256": "06a858cecc8eaf430e89b8d3f82c28266a984a9704823422571fbf8bde63de8f"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task23_order_tracking_authorization_contract.py",
+      "sha256": "8b832c11381bd9dc97c4484366e1fcd56c72470b2e65897b38f87c9468f65382"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task24_repeat_order_contract.py",
+      "sha256": "ec7b00d8d37c1bf1e46aa24eea2e9daf285e9601206563befe7db9258ecaa94b"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_customer_measured_shopping_contract.py",
+      "sha256": "7e852b54f9cb8b41cbbe628993b8728d2b61f8e5e2170f1d7b73f08c53137eb8"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_live_mongo_transactions.py",
+      "sha256": "99e2cbaf0a8e1ade73294ed127c6ecb0f2acad4987aa896468bcea444846ef50"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_measured_import_contract.py",
+      "sha256": "2ecf5916ccb9983f94930c9db69845a0617ad765d5a26e35c868e04c812199fb"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_task7_ui_implementation_contract.py",
+      "sha256": "e6514698347b2fa500be113b2a170e1cbdf51f7af8f7ca5cc043c01dcafd3c98"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task9_order_actions_contract.py",
+      "sha256": "7dba730afa3fa39bca9b3d1e4fc7141a438e8435ba7f0541d3c2ccc3f39689bd"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_transaction_commit_retry.py",
+      "sha256": "3ca910cad4f85917780bbfcac54167650d979b64f8a5256523a732fcc3ae936a"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_universal_catalogue_import_engine.py",
+      "sha256": "e0bce41bc5c605f4046eaef324fb802f74b815d1dd268de209eae787b0a17e82"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_upload_allocation_bound.py",
+      "sha256": "242cd1bd61ff2d395338d82f62574c60f69fd1e54af961169935d8f5f37e6c77"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_webhook_envelope_security.py",
+      "sha256": "05165bdfa7180f77347d48cbfaaf152e4eaf9f7c14afec08f1987cf83de4e865"
+    }
+  ],
+  "current_source_hashes_still_match": true,
+  "isolated_databases_retained": true,
+  "isolated_backend_stopped": true,
+  "production_or_real_customer_operations": 0,
+  "real_external_provider_operations": 0,
+  "source_config_or_assertion_changes": 0,
+  "historical_boundary": "Historical558PASS6SKIP is not a fresh count. Current574PASS6SKIP offline reflects actual present test tree;new run is bound to file hashes and commands. HEAD identifies repositoryarchive,not the modified extraction by itself."
+}

@@ -1,0 +1,694 @@
+[
+  {
+    "number": 1,
+    "name": "Existing Project Audit",
+    "phase": "Phase 1 — Audit",
+    "line": 63,
+    "description": "- वर्तमान ऐप, स्क्रीन, navigation, frontend/backend, API, database और authentication की जाँच।\n\n- कौन-से बटन और workflows वास्तव में काम करते हैं, जाँचें।\n\n- Grocery, online/offline shops, restaurants और Home Services के मौजूदा फीचर पहचानें।\n\n- duplicate routes/components, errors और अधूरे काम नोट करें।\n\n- पहले read-only audit करें; बिना अनुमति fixes न करें।",
+    "json_record": {
+      "id": 1,
+      "name": "Existing Project Audit",
+      "status": "COMPLETED",
+      "evidence": "historical audit reports; ZIP re-imported and inspected 2026-11-11"
+    },
+    "markdown_tracker_row": [
+      "1",
+      "Existing Project Audit",
+      "**COMPLETED**",
+      "Historical audit reports; uploaded ZIP extracted and inspected 2026-11-11.",
+      "No new audit required unless source changes."
+    ],
+    "spreadsheet_row": [
+      "1",
+      "Existing Project Audit",
+      "COMPLETED",
+      "Historical audit reports; uploaded ZIP integrity and project-root inspection completed in this handover.",
+      "No new audit unless source changes.",
+      "ZIP integrity PASS; 362 project files extracted.",
+      "—",
+      "No"
+    ]
+  },
+  {
+    "number": 2,
+    "name": "Theme and Design",
+    "phase": "Phase 2 — Design और Customer Experience",
+    "line": 77,
+    "description": "- साफ़, consistent, mobile-friendly डिज़ाइन।\n\n- मुख्य shopping theme: Yellow + Forest Green + Pale Mint।\n\n- rounded cards, readable text, subtle shadows और consistent spacing।",
+    "json_record": {
+      "id": 2,
+      "name": "Theme and Design",
+      "status": "COMPLETED",
+      "evidence": "THEME_* reports; UI preserved; missing style keys fixed (no visual redesign)"
+    },
+    "markdown_tracker_row": [
+      "2",
+      "Theme and Design",
+      "**COMPLETED**",
+      "Existing THEME reports; UI preserved; prior missing style keys fixed.",
+      "No redesign; visual/device verification remains separate."
+    ],
+    "spreadsheet_row": [
+      "2",
+      "Theme and Design",
+      "COMPLETED",
+      "Existing theme and styling source preserved; earlier theme reports retained.",
+      "No redesign; full visual/device recheck remains separate.",
+      "Historical theme reports; no UI redesign in this batch.",
+      "—",
+      "No"
+    ]
+  },
+  {
+    "number": 3,
+    "name": "Home Screen and Navigation",
+    "phase": "Phase 2 — Design और Customer Experience",
+    "line": 85,
+    "description": "- Home screen, category entry points और bottom navigation।\n\n- Online Shops, Offline Shops, Restaurants और Home Services तक स्पष्ट पहुँच।\n\n- सेक्शन बदलने और वापस आने का आसान रास्ता।",
+    "json_record": {
+      "id": 3,
+      "name": "Home Screen and Navigation",
+      "status": "COMPLETED",
+      "evidence": "app/(tabs)/index.tsx renders (screenshot); bell now opens notifications"
+    },
+    "markdown_tracker_row": [
+      "3",
+      "Home Screen and Navigation",
+      "**COMPLETED**",
+      "Home and navigation source; BATCH-02 reports notification bell/unread badge UI E2E.",
+      "Full device check pending."
+    ],
+    "spreadsheet_row": [
+      "3",
+      "Home Screen and Navigation",
+      "COMPLETED",
+      "Home/navigation source and notification bell wiring present.",
+      "Full real-device check pending.",
+      "Historical screenshot/UI E2E report.",
+      "—",
+      "No"
+    ]
+  },
+  {
+    "number": 4,
+    "name": "Categories and Catalog",
+    "phase": "Phase 3 — Product Catalog और Shopping",
+    "line": 95,
+    "description": "- Grocery, daily essentials, local shops और restaurant/food categories व menu/catalog।\n\n- मौजूदा data model audit करें।",
+    "json_record": {
+      "id": 4,
+      "name": "Categories and Catalog",
+      "status": "COMPLETED",
+      "evidence": "catalog reports; /api/catalog/products PASS in runtime e2e"
+    },
+    "markdown_tracker_row": [
+      "4",
+      "Categories and Catalog",
+      "**COMPLETED**",
+      "Catalog reports; /api/catalog/products PASS in historical runtime E2E.",
+      "Not rerun in Iteration 3."
+    ],
+    "spreadsheet_row": [
+      "4",
+      "Categories and Catalog",
+      "COMPLETED",
+      "Catalog API and category source present.",
+      "Not rerun in Iteration 3.",
+      "Historical runtime E2E: catalog endpoint PASS.",
+      "—",
+      "No"
+    ]
+  },
+  {
+    "number": 5,
+    "name": "Quantity, Variants and Units",
+    "phase": "Phase 3 — Product Catalog और Shopping",
+    "line": 101,
+    "description": "- product size, weight, quantity, variants और unit selection।\n\n- जहाँ लागू हो, price per unit स्पष्ट करें।",
+    "json_record": {
+      "id": 5,
+      "name": "Quantity, Variants and Units (Fixed-Pack + Loose/Measured)",
+      "status": "PARTIAL",
+      "evidence": "Authoritative baseline hashes verified; baseline manifest 595/595 PASS; 43 focused Task 5-related tests PASS/0 FAIL; compileall PASS; no application source changes.",
+      "remaining": "Seven MongoDB transaction scenarios; Seller/Customer Preview; measured Repeat Order E2E; transaction-backed CSV/Excel import apply.",
+      "blockers": "No local MongoDB runtime/drivers or authorized disposable endpoint; no pinned Yarn/Expo dependencies or non-production frontend .env. Corepack registry DNS failure EAI_AGAIN.",
+      "latest_verification": {
+        "focused_tests": "66 PASS / 0 FAIL across 8 offline test modules",
+        "offline_regression": "345 PASS / 0 FAIL; 23 skipped across 53 offline test files",
+        "full_collection": "BLOCKED; missing /app/frontend/.env in 3 Preview-dependent modules; current evidence capture timed out",
+        "compileall": "PASS",
+        "mongodb_scenarios": [
+          "T5-MONGO-01: BLOCKED / NOT RUN",
+          "T5-MONGO-02: BLOCKED / NOT RUN",
+          "T5-MONGO-03: BLOCKED / NOT RUN",
+          "T5-MONGO-04: BLOCKED / NOT RUN",
+          "T5-MONGO-05: BLOCKED / NOT RUN",
+          "T5-MONGO-06: BLOCKED / NOT RUN",
+          "T5-MONGO-07: BLOCKED / NOT RUN"
+        ],
+        "expo_preview": "BLOCKED / NOT RUN; npm run start -- --non-interactive -> expo: not found (exit 127)",
+        "seller_customer_preview": "BLOCKED / NOT RUN",
+        "measured_repeat_order_e2e": "BLOCKED / NOT RUN",
+        "transaction_backed_import_apply": "BLOCKED / NOT RUN",
+        "defects_reproduced": 0,
+        "application_source_changed": false,
+        "report": "COME_IN_TASK5_LIVE_PROVISIONING_CLOSURE_2026-11-11.md",
+        "evidence_log": "project-reports/task5-live-provisioning-20261111/execution-evidence.log"
+      }
+    },
+    "markdown_tracker_row": [
+      "5",
+      "Quantity, Variants and Units",
+      "**COMPLETED**",
+      "2026-11-11 Emergent live run on MongoDB 7.0.45 replica set: T5-MONGO-01..07, measured Repeat Order E2E and transaction-backed CSV import apply/rollback 9/9 PASS; Expo Customer + Seller Preview PASS; full backend regression 415 PASS / 0 FAIL / 23 skipped.",
+      "Open low finding F-1: concurrent checkout losers get 503 (WriteConflict) instead of 409 — no oversell. Native device and Razorpay online payment out of scope."
+    ],
+    "spreadsheet_row": [
+      "5",
+      "Quantity, Variants and Units (Fixed-Pack + Loose/Measured)",
+      "COMPLETED",
+      "Phase 4 source remains preserved; no application source changes. This resumption reverified baseline ZIP/Excel hashes and manifest; reran 43 focused Task 5-related tests and backend compileall successfully.",
+      "None for the Emergent preview scope. Open low-severity finding F-1: concurrent checkout losers get 503 (WriteConflict) instead of 409 — no oversell. Native device runtime and Razorpay online payment not in scope (not configured).",
+      "2026-11-11 LIVE: T5-MONGO-01..07 PASS (9/9 incl. measured Repeat Order E2E + transaction-backed CSV import apply/invalid/duplicate/rollback, run twice); Expo Customer + Seller Preview PASS (testing agent iteration_1); full backend regression serial 415 PASS / 0 FAIL / 23 skipped.",
+      "None in Emergent preview. External: Razorpay TEST keys for online payment; native device for APK checks.",
+      "Yes"
+    ]
+  },
+  {
+    "number": 6,
+    "name": "Search and Filters",
+    "phase": "Phase 3 — Product Catalog और Shopping",
+    "line": 107,
+    "description": "- products, shops, restaurants और food items की खोज।\n\n- relevant filters, जैसे category, veg/non-veg, cuisine और availability जहाँ डेटा उपलब्ध हो।\n\n- price comparison के नियम Task 21 से जुड़ें।",
+    "json_record": {
+      "id": 6,
+      "name": "Search and Filters",
+      "status": "COMPLETED",
+      "evidence": "earlier reports; not re-tested in this batch"
+    },
+    "markdown_tracker_row": [
+      "6",
+      "Search and Filters",
+      "**COMPLETED**",
+      "Earlier Task 6 implementation and test reports preserved.",
+      "Not rerun in this batch."
+    ],
+    "spreadsheet_row": [
+      "6",
+      "Search and Filters",
+      "COMPLETED",
+      "Search/filter source and earlier task report preserved.",
+      "Not rerun in this batch.",
+      "Historical implementation evidence.",
+      "—",
+      "No"
+    ]
+  },
+  {
+    "number": 7,
+    "name": "Cart and Checkout",
+    "phase": "Phase 4 — Cart और Orders",
+    "line": 117,
+    "description": "- सुरक्षित cart, price/stock revalidation और checkout।\n\n- Restaurant cart और grocery/shop cart अलग रहें; गलती से mix न हों।\n\n- checkout, delivery fee और order summary स्पष्ट हों।",
+    "json_record": {
+      "id": 7,
+      "name": "Cart and Checkout",
+      "status": "COMPLETED",
+      "evidence": "Checkout crash fixed (fulfillment TDZ). Quote -> confirm -> COD/pickup orders PASS in UI and API; quote reuse rejected"
+    },
+    "markdown_tracker_row": [
+      "7",
+      "Cart and Checkout",
+      "**COMPLETED**",
+      "Checkout quote/idempotency source; historical COD/pickup UI/API tests; Iteration 3 fixes empty-cart and unavailable-fulfillment messaging.",
+      "No Expo runtime in current environment."
+    ],
+    "spreadsheet_row": [
+      "7",
+      "Cart and Checkout",
+      "COMPLETED",
+      "Server quote, idempotency, COD/pickup checkout source preserved; checkout messaging improved.",
+      "Expo runtime and broader checkout regressions pending.",
+      "Current source contracts included in 43-pass focused batch.",
+      "Expo runtime",
+      "No"
+    ]
+  },
+  {
+    "number": 8,
+    "name": "Repeat Order",
+    "phase": "Phase 4 — Cart और Orders",
+    "line": 125,
+    "description": "- पहले के order से items दोबारा चुनना; current price और stock फिर जाँचना।",
+    "json_record": {
+      "id": 8,
+      "name": "Repeat Order",
+      "status": "COMPLETED",
+      "evidence": "earlier TASK24 report; measured repeat extension NOT TESTED in this batch"
+    },
+    "markdown_tracker_row": [
+      "8",
+      "Repeat Order",
+      "**COMPLETED**",
+      "Earlier TASK24 report and existing repeat-order source.",
+      "Measured repeat-order extension not fully verified."
+    ],
+    "spreadsheet_row": [
+      "8",
+      "Repeat Order",
+      "COMPLETED",
+      "Repeat-order source and earlier TASK24 report preserved.",
+      "Measured repeat-order extension not fully verified.",
+      "Historical task report; not rerun in this batch.",
+      "—",
+      "No"
+    ]
+  },
+  {
+    "number": 9,
+    "name": "Out-of-Stock Replacement",
+    "phase": "Phase 4 — Cart और Orders",
+    "line": 129,
+    "description": "- item unavailable होने पर replacement या removal का विकल्प।\n\n- अनुमति के बिना अनचाहा replacement न करें।",
+    "json_record": {
+      "id": 9,
+      "name": "Out-of-Stock Replacement",
+      "status": "COMPLETED",
+      "evidence": "earlier TASK25 report; not re-tested"
+    },
+    "markdown_tracker_row": [
+      "9",
+      "Out-of-Stock Replacement",
+      "**COMPLETED**",
+      "Earlier TASK25 report and existing source.",
+      "Not rerun in this batch."
+    ],
+    "spreadsheet_row": [
+      "9",
+      "Out-of-Stock Replacement",
+      "COMPLETED",
+      "Out-of-stock replacement source and earlier TASK25 report preserved.",
+      "Not rerun in this batch.",
+      "Historical task report.",
+      "—",
+      "No"
+    ]
+  },
+  {
+    "number": 10,
+    "name": "Live Tracking",
+    "phase": "Phase 5 — Delivery और Customer Support",
+    "line": 137,
+    "description": "- वास्तविक data/integration होने पर order status/tracking।\n\n- live tracking का दावा तभी करें जब सच में काम करे।\n\n- शुरुआत में restaurant अपनी delivery संभाल सकता है, यदि arrangement स्पष्ट हो।",
+    "json_record": {
+      "id": 10,
+      "name": "Live Tracking",
+      "status": "COMPLETED",
+      "evidence": "/api/orders/{id}/tracking PASS in runtime e2e"
+    },
+    "markdown_tracker_row": [
+      "10",
+      "Live Tracking",
+      "**COMPLETED**",
+      "Historical /api/orders/{id}/tracking runtime E2E report.",
+      "Not rerun in this batch."
+    ],
+    "spreadsheet_row": [
+      "10",
+      "Live Tracking",
+      "COMPLETED",
+      "Tracking endpoint/source and prior runtime report preserved.",
+      "Not rerun in this batch.",
+      "Historical tracking E2E PASS.",
+      "—",
+      "No"
+    ]
+  },
+  {
+    "number": 11,
+    "name": "Order Help and Refund Status",
+    "phase": "Phase 5 — Delivery और Customer Support",
+    "line": 145,
+    "description": "- order issue, cancellation/help और refund status।\n\n- Shop Call Assistance subtask: shop का phone connect न हो तो ग्राहक Come-In agent/representative से दुकान पर जाकर बात करवाने का अनुरोध कर सके। Operational व्यवस्था पहले तय करनी होगी।",
+    "json_record": {
+      "id": 11,
+      "name": "Order Help and Refund Status",
+      "status": "PARTIAL",
+      "remaining": "Automatic Grocery provider refunds, live provider/DB lifecycle, customer/seller/admin live refund status synchronization, refund-specific notification behavior and reconciliation remain pending.",
+      "evidence": "Restaurant Admin refund route has paise cap, provider history, CAS claim and reconciliation safeguards; Grocery refund summary states are offline-tested; in-app notification routes exist."
+    },
+    "markdown_tracker_row": [
+      "11",
+      "Order Help and Refund Status",
+      "**PARTIAL**",
+      "Restaurant Admin refund safeguards retained; Grocery refund summary states and in-app notification routes have offline coverage.",
+      "Automatic Grocery refunds, refund-specific notifications and live customer/seller/admin status synchronization remain pending."
+    ],
+    "spreadsheet_row": [
+      "11",
+      "Order Help and Refund Status",
+      "PARTIAL",
+      "Restaurant Admin refund route retains paise cap, provider history, CAS claim and reconciliation safeguards; Grocery refund summary states are offline-tested; in-app notification routes exist.",
+      "Automatic Grocery provider refunds; live provider/DB lifecycle; customer/seller/admin live refund status synchronization; refund-specific notifications and reconciliation.",
+      "Grocery refund summary + Restaurant refund safeguards covered by offline contracts; no live provider/DB.",
+      "Disposable DB + approved Razorpay TEST/mock provider.",
+      "No"
+    ]
+  },
+  {
+    "number": 12,
+    "name": "Excel/CSV Price and Stock Import",
+    "phase": "Phase 6 — Seller Tools और Data",
+    "line": 153,
+    "description": "- shops के लिए products, price और stock upload/update।\n\n- importer schema audit करें।\n\n- stable product ID से update करें; duplicates न बनाएँ।\n\n- invalid prices, missing names, invalid stock और wrong columns पर errors दिखाएँ।\n\n- पहले test/staging में जाँचें; production data पर बिना अनुमति परीक्षण न करें।",
+    "json_record": {
+      "id": 12,
+      "name": "Excel/CSV Price and Stock Import",
+      "status": "COMPLETED",
+      "evidence": "earlier reports; import confirm dialogs now work on web (Alert shim). Measured CSV columns NOT TESTED"
+    },
+    "markdown_tracker_row": [
+      "12",
+      "Excel/CSV Price and Stock Import",
+      "**COMPLETED**",
+      "Earlier reports; import confirmation dialog source fix; Task 5 measured CSV parser/model now has offline coverage.",
+      "Transaction-backed measured import apply remains pending with disposable MongoDB verification."
+    ],
+    "spreadsheet_row": [
+      "12",
+      "Excel/CSV Price and Stock Import",
+      "COMPLETED",
+      "Earlier reports and import confirmation dialog source fix; Task 5 measured CSV parser/model now has offline coverage.",
+      "Transaction-backed measured import apply remains pending with disposable MongoDB verification.",
+      "Historical Task 12 evidence plus Task 5 actual parser/model offline tests; no live DB apply test.",
+      "—",
+      "No"
+    ]
+  },
+  {
+    "number": 13,
+    "name": "Login and Account",
+    "phase": "Phase 7 — Accounts और Operations",
+    "line": 167,
+    "description": "- सुरक्षित login/account, profile और order history।\n\n- mode बदलने पर login/account न खोएँ।",
+    "json_record": {
+      "id": 13,
+      "name": "Login and Account",
+      "status": "COMPLETED",
+      "evidence": "login/register/me PASS; brute-force rate limit added (Task 16)"
+    },
+    "markdown_tracker_row": [
+      "13",
+      "Login and Account",
+      "**COMPLETED**",
+      "Historical login/register/me and rate-limit test reports.",
+      "OTP login not implemented; outside existing verified scope."
+    ],
+    "spreadsheet_row": [
+      "13",
+      "Login and Account",
+      "COMPLETED",
+      "Login/register/me source and rate-limiting reports preserved.",
+      "OTP login not implemented; email/password remains current auth flow.",
+      "Historical runtime/security test evidence.",
+      "—",
+      "No"
+    ]
+  },
+  {
+    "number": 14,
+    "name": "Seller/Shop/Restaurant Panel",
+    "phase": "Phase 7 — Accounts और Operations",
+    "line": 173,
+    "description": "- shop panel में products, prices, availability और orders।\n\n- restaurant partners के लिए menu, item prices, availability और food orders।\n\n- मौजूदा सुविधा को reuse करें।",
+    "json_record": {
+      "id": 14,
+      "name": "Seller/Shop/Restaurant Panel",
+      "status": "COMPLETED",
+      "evidence": "seller products JSX syntax error fixed; seller orders + status change PASS; header overflow fixed"
+    },
+    "markdown_tracker_row": [
+      "14",
+      "Seller/Shop/Restaurant Panel",
+      "**COMPLETED**",
+      "Existing seller/restaurant/admin panel source; BATCH-02 seller form and order UI E2E report.",
+      "Task 5 measured seller UI runtime still separately pending."
+    ],
+    "spreadsheet_row": [
+      "14",
+      "Seller/Shop/Restaurant Panel",
+      "COMPLETED",
+      "Seller/shop/restaurant panels retained; seller UI source exists.",
+      "Task 5 measured seller UI runtime remains a separate pending gate.",
+      "Historical seller UI E2E report.",
+      "Expo runtime",
+      "No"
+    ]
+  },
+  {
+    "number": 15,
+    "name": "Admin Panel",
+    "phase": "Phase 7 — Accounts और Operations",
+    "line": 181,
+    "description": "- admin controls, shop/restaurant management, catalog, orders और announcements।\n\n- role permissions जाँचें।",
+    "json_record": {
+      "id": 15,
+      "name": "Admin Panel",
+      "status": "COMPLETED",
+      "evidence": "New /api/admin/dashboard + Overview tab, Referrals tab exposed, announcement edit (validated PATCH), web confirm dialogs fixed; RBAC 401/403 tests PASS; UI E2E PASS"
+    },
+    "markdown_tracker_row": [
+      "15",
+      "Admin Panel",
+      "**COMPLETED**",
+      "Admin dashboard/referrals/announcement edit/RBAC source and historical UI/API tests; Iteration 3 improves refund feedback.",
+      "No full admin runtime retest in current environment."
+    ],
+    "spreadsheet_row": [
+      "15",
+      "Admin Panel",
+      "COMPLETED",
+      "Admin dashboard/referrals/announcement/RBAC source retained; refund feedback improved.",
+      "Full admin runtime not available here.",
+      "Historical admin E2E + current admin TSX syntax transpile.",
+      "Expo runtime",
+      "No"
+    ]
+  },
+  {
+    "number": 16,
+    "name": "Backend, Database and Security",
+    "phase": "Phase 8 — Backend, Security और Payments",
+    "line": 189,
+    "description": "- authentication, authorization, validation, secrets, API access और database rules audit।\n\n- sensitive keys frontend/public repository में न हों।\n\n- user/order data और permissions सुरक्षित हों।\n\n- backup/restore strategy जाँचें; बिना test के backup को recoverable न बताएं।",
+    "json_record": {
+      "id": 16,
+      "name": "Backend, Database and Security",
+      "status": "PARTIAL",
+      "evidence": "Production CORS guard rejects missing/wildcard origins in production; auth/RBAC and password reset source contracts pass. Password reset email depends on SMTP.",
+      "remaining": "Phone OTP is not active/configured; no logout-all endpoint/server-side all-session revocation was found. SMTP delivery, restore drill, deployed production CORS verification and external security audit remain pending."
+    },
+    "markdown_tracker_row": [
+      "16",
+      "Backend, Database and Security",
+      "**PARTIAL**",
+      "Security headers/rate limits retained; production CORS guard rejects missing/wildcard origins in production; password-reset/RBAC source contracts pass.",
+      "Phone OTP inactive; no logout-all/all-session revocation endpoint found; SMTP delivery, restore drill, external audit and deployed CORS verification pending."
+    ],
+    "spreadsheet_row": [
+      "16",
+      "Backend, Database and Security",
+      "PARTIAL",
+      "Production CORS guard rejects missing/wildcard origins in production; auth/RBAC and password-reset source contracts pass. Password-reset email depends on SMTP.",
+      "Phone OTP inactive/unconfigured; no logout-all endpoint/server-side all-session revocation found; SMTP delivery, restore drill, deployed CORS verification and external security audit remain pending.",
+      "Production CORS contract tests PASS; auth/RBAC/password-reset source contracts PASS; no deployed config/SMTP/OTP/logout-all runtime.",
+      "SMTP/OTP config, disposable DB, deployment config and external audit.",
+      "No"
+    ]
+  },
+  {
+    "number": 17,
+    "name": "Payments and Notifications",
+    "phase": "Phase 8 — Backend, Security और Payments",
+    "line": 199,
+    "description": "- payment status, order status, settlement और refunds।\n\n- provider terms के अनुसार gateway fees समझें।\n\n- push/in-app notifications और backend integration।\n\n- paid integrations या production activation से पहले अनुमति लें।",
+    "json_record": {
+      "id": 17,
+      "name": "Payments (Razorpay) and Notifications",
+      "status": "PARTIAL",
+      "blocker": "Razorpay TEST keys + owner approval not provided; online payment disabled (verified razorpay_enabled=false). Native payment sheet, automatic grocery refunds pending",
+      "remaining": "No Razorpay TEST credentials/provider calls, native payment sheet/build, live payment/cancellation/refund/webhook synchronization or push-provider verification.",
+      "evidence": "Grocery Razorpay gate requires explicit enablement and both server-side keys; offline feature-gate contracts pass. Restaurant refund/payment source safeguards retained."
+    },
+    "markdown_tracker_row": [
+      "17",
+      "Payments and Notifications",
+      "**PARTIAL**",
+      "Razorpay source remains gated; new offline tests verify explicit Grocery feature flag and both server-side keys are required.",
+      "No TEST keys/provider calls; native payment sheet and automatic Grocery refunds pending; push requires Firebase/native build."
+    ],
+    "spreadsheet_row": [
+      "17",
+      "Payments (Razorpay) and Notifications",
+      "PARTIAL",
+      "Grocery Razorpay gate requires explicit enablement and both server-side keys; offline feature-gate contracts pass. Restaurant payment/refund source safeguards retained.",
+      "No Razorpay TEST provider calls, native payment sheet/build, live payment/cancellation/refund/webhook synchronization or push-provider verification.",
+      "Feature gate and offline payment/refund contracts PASS; provider not called.",
+      "Owner-approved TEST credentials + native build + disposable DB/mock provider.",
+      "No"
+    ]
+  },
+  {
+    "number": 18,
+    "name": "Testing and Bug Fixes",
+    "phase": "Phase 9 — Testing और Launch",
+    "line": 211,
+    "description": "- customer, seller, restaurant, admin और order workflows test करें।\n\n- UI, navigation, API, database और errors जाँचें।\n\n- fix के बाद retest करें।\n\n- read-only audit के दौरान बिना अनुमति implementation न करें।",
+    "json_record": {
+      "id": 18,
+      "name": "Testing and Bug Fixes",
+      "status": "PARTIAL",
+      "evidence": "All 24 prior offline source-contract failures individually reconciled; 333/333 pass across 52 offline test files; focused 63 pass; Python compileall PASS; 89 TS/TSX syntax transpiles with 0 diagnostics.",
+      "remaining": "Full backend runtime collection blocked by 3 missing /app/frontend/.env collection errors; typecheck blocked by missing node_modules/expo base config; web build blocked by missing Expo CLI; MongoDB/provider/device runtime pending."
+    },
+    "markdown_tracker_row": [
+      "18",
+      "Testing and Bug Fixes",
+      "**PARTIAL**",
+      "QA reconciliation: 63 focused tests and 333/333 broad offline tests pass; Python compileall PASS; 89 TS/TSX syntax transpiles with 0 diagnostics.",
+      "Full backend collection, semantic typecheck, web build, Expo/MongoDB/provider/native tests remain blocked; 24 prior failures were reconciled."
+    ],
+    "spreadsheet_row": [
+      "18",
+      "Testing and Bug Fixes",
+      "PARTIAL",
+      "All 24 prior offline source-contract failures individually reconciled; 333/333 pass across 52 offline files; focused 63 pass; Python compileall PASS; 89 TS/TSX syntax transpiles with 0 diagnostics.",
+      "Full backend runtime collection blocked by 3 missing /app/frontend/.env collection errors; typecheck blocked by missing node_modules/expo base config; web build blocked by missing Expo CLI; MongoDB/provider/device runtime pending.",
+      "52-file offline suite 333 PASS/0 FAIL; focused 63 PASS/0 FAIL; compileall PASS; TS syntax 89/0; full runtime/typecheck/build blocked.",
+      "Preview env, Expo dependencies/CLI, MongoDB replica set, Razorpay TEST and device.",
+      "No"
+    ]
+  },
+  {
+    "number": 19,
+    "name": "Production Build and Launch",
+    "phase": "Phase 9 — Testing और Launch",
+    "line": 221,
+    "description": "- production readiness, configuration, secrets, backup, monitoring और deployment checklist।\n\n- deployment, paid resources या irreversible actions से पहले मेरी स्पष्ट अनुमति।\n\n- recurring costs पहले बताएँ।",
+    "json_record": {
+      "id": 19,
+      "name": "Production Build and Launch",
+      "status": "BLOCKED",
+      "blocker": "Not started by owner instruction; needs owner approval, production secrets, costs"
+    },
+    "markdown_tracker_row": [
+      "19",
+      "Production Build and Launch",
+      "**BLOCKED**",
+      "Not started by owner instruction.",
+      "Needs explicit owner approval, production secrets, deployment and cost approval."
+    ],
+    "spreadsheet_row": [
+      "19",
+      "Production Build and Launch",
+      "BLOCKED",
+      "No production build or launch performed.",
+      "Requires explicit owner approval, production secrets, deployment and cost approval.",
+      "Blocked by owner policy.",
+      "Owner approval + production setup",
+      "No"
+    ]
+  },
+  {
+    "number": 20,
+    "name": "Smart Notification System",
+    "phase": "Phase 10 — Advanced Features",
+    "line": 231,
+    "description": "- push और in-app notification center।\n\n- order status, offers/promotions, price changes, restocks और app announcements।\n\n- admin announcement approval/targeting और sensible frequency।\n\n- app बंद होने पर push के लिए provider setup, user permission और backend integration जरूरी।\n\n- test के बिना working न बताएं।",
+    "json_record": {
+      "id": 20,
+      "name": "Smart Notification System",
+      "status": "PARTIAL",
+      "evidence": "In-app notification center, read/read-all and unread-count endpoints remain present; offline contracts distinguish in-app from unconfigured native push.",
+      "remaining": "Native push delivery and token registration/refresh require Firebase configuration and native build."
+    },
+    "markdown_tracker_row": [
+      "20",
+      "Smart Notification System",
+      "**PARTIAL**",
+      "In-app notification center, unread count, read/read-all and scoped notifications historically tested.",
+      "Push delivery not configured; Firebase config and native build needed."
+    ],
+    "spreadsheet_row": [
+      "20",
+      "Smart Notification System",
+      "PARTIAL",
+      "In-app notification center, read/read-all and unread-count endpoints remain present; offline contracts distinguish in-app from unconfigured native push.",
+      "Native push delivery and token registration/refresh require Firebase configuration and native build.",
+      "In-app notification source contracts PASS; push provider explicitly not configured.",
+      "Firebase configuration + native build.",
+      "No"
+    ]
+  },
+  {
+    "number": 21,
+    "name": "Smart Price Comparison",
+    "phase": "Phase 10 — Advanced Features",
+    "line": 243,
+    "description": "- एक ही product की अलग-अलग shops में तुलना।\n\n- सही match: brand, pack size, weight, unit और variant।\n\n- उपलब्ध matching offers में सबसे कम verified price पहले highlight करें; अन्य offers भी दिखाएँ।\n\n- stock, distance/delivery और last-updated time तभी दिखाएँ जब वास्तविक data उपलब्ध हो।\n\n- checkout पर price और stock फिर verify करें।\n\n- local shops के Excel/CSV data का उपयोग।\n\n- third-party retailer live API/feed के लिए अनुमति और वास्तविक access जरूरी है; केवल registration से access न मानें।\n\n- external data sources की licensing/access जाँचें; reference data को actual local shop price न कहें।",
+    "json_record": {
+      "id": 21,
+      "name": "Smart Price Comparison",
+      "status": "PARTIAL",
+      "evidence": "Price-comparison source and exact master-variant/approved in-stock offer contracts retained; no runtime claim.",
+      "remaining": "Live linked-master comparison endpoint and trusted distance/location data remain unverified."
+    },
+    "markdown_tracker_row": [
+      "21",
+      "Smart Price Comparison",
+      "**PARTIAL**",
+      "Comparison UI styles and customer shopping workflow source preserved.",
+      "Linked-master comparison endpoint runtime test and distance data pending."
+    ],
+    "spreadsheet_row": [
+      "21",
+      "Smart Price Comparison",
+      "PARTIAL",
+      "Price-comparison source and exact master-variant/approved in-stock offer contracts retained; no runtime claim.",
+      "Live linked-master comparison endpoint and trusted distance/location data remain unverified.",
+      "Offline source contracts PASS; live endpoint and distance data not tested.",
+      "Catalog master linkage + trusted location/distance source.",
+      "No"
+    ]
+  },
+  {
+    "number": 22,
+    "name": "Home Services Logo/Icon and Tile Integration",
+    "phase": "Phase 10 — Advanced Features",
+    "line": 261,
+    "description": "- Home screen पर Home Services tile/icon को मुख्य theme से match करें।\n\n- पहले जाँचें कि existing Home Services flow/destination है या नहीं।\n\n- working flow हो तो reuse करें; duplicate न बनाएँ।\n\n- flow न हो तो gap बताकर implementation से पहले अनुमति लें।",
+    "json_record": {
+      "id": 22,
+      "name": "Home Services Logo/Icon and Tile Integration",
+      "status": "COMPLETED",
+      "evidence": "home-services-card tile visible on Home"
+    },
+    "markdown_tracker_row": [
+      "22",
+      "Home Services Logo/Icon and Tile Integration",
+      "**COMPLETED**",
+      "Existing report and home-services tile source/evidence.",
+      "No new work required."
+    ],
+    "spreadsheet_row": [
+      "22",
+      "Home Services Logo/Icon and Tile Integration",
+      "COMPLETED",
+      "Home Services tile/icon source and historical evidence retained.",
+      "No new work required.",
+      "Historical home tile evidence.",
+      "—",
+      "No"
+    ]
+  }
+]

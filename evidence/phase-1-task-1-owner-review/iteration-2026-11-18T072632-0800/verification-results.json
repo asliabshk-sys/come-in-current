@@ -1,0 +1,50 @@
+{
+  "timestamp_Asia_Kolkata": "2026-11-19T14:01:27.274835+05:30",
+  "project": "COME-IN",
+  "repository": "/workspace/come-in-current",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "classifications": "File/identity/reference/source-metadata checks only;not application or external verification.",
+  "preservation_baselines": [
+    {
+      "baseline": "/workspace/come-in-current/evidence/phase-1-task-1-audit/protected-file-hashes-before.json",
+      "files_checked": 8150,
+      "mismatches": []
+    },
+    {
+      "baseline": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/preservation-before.json",
+      "files_checked": 8476,
+      "mismatches": []
+    },
+    {
+      "baseline": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/preservation-baseline.json",
+      "files_checked": 8504,
+      "mismatches": []
+    }
+  ],
+  "nested_baseline_sets_verified": true,
+  "original13reports_preserved": true,
+  "original5checkpoints_preserved": true,
+  "original_ZIP_and_inherited_patches_preserved": true,
+  "tracked_git_worktree_diff_empty": true,
+  "tracked_git_staged_diff_empty": true,
+  "git_status_outside_new_iteration_unchanged": true,
+  "generated_markdown_files": 5,
+  "generated_API_sections": 179,
+  "generated_model_sections": 60,
+  "claim_units": 93,
+  "gap_rows": 20,
+  "reference_targets_checked": 877,
+  "application_tests_executed": 0,
+  "DB_queries": 0,
+  "DB_writes": 0,
+  "provider_calls": 0,
+  "native_builds_or_device_tests": 0,
+  "originals_modified": 0,
+  "owner_approval": false,
+  "Task2_started": false,
+  "command": "python /workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/verify-final-review.py",
+  "last_completed_operation": "All baseline/Git/source-metadata/reference checks passed. Final manifest generated and verified at end of this same command.",
+  "next_action": "Stop for personal owner review. No tests,source fixes,Task2 or external operations authorized.",
+  "final_recommendation": "REVIEW PENDING — EVIDENCE GAPS REMAIN"
+}

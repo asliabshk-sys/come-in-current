@@ -1,0 +1,17 @@
+Collecting httpx==0.28.1 (from -r backend/requirements-test.txt (line 2))
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Requirement already satisfied: anyio in /workspace/come-in-tools/py311/lib/python3.11/site-packages (from httpx==0.28.1->-r backend/requirements-test.txt (line 2)) (4.16.0)
+Requirement already satisfied: certifi in /workspace/come-in-tools/py311/lib/python3.11/site-packages (from httpx==0.28.1->-r backend/requirements-test.txt (line 2)) (2026.10.23)
+Collecting httpcore==1.* (from httpx==0.28.1->-r backend/requirements-test.txt (line 2))
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Requirement already satisfied: idna in /workspace/come-in-tools/py311/lib/python3.11/site-packages (from httpx==0.28.1->-r backend/requirements-test.txt (line 2)) (3.20)
+Requirement already satisfied: h11>=0.16 in /workspace/come-in-tools/py311/lib/python3.11/site-packages (from httpcore==1.*->httpx==0.28.1->-r backend/requirements-test.txt (line 2)) (0.16.0)
+Requirement already satisfied: typing_extensions>=4.16.0 in /workspace/come-in-tools/py311/lib/python3.11/site-packages (from anyio->httpx==0.28.1->-r backend/requirements-test.txt (line 2)) (4.16.0)
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+Installing collected packages: httpcore, httpx
+
+Successfully installed httpcore-1.0.9 httpx-0.28.1
+
+[notice] A new release of pip is available: 26.2.2 -> 26.3
+[notice] To update, run: /workspace/come-in-tools/py311/bin/python3.11 -m pip install --upgrade pip

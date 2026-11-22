@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-11-18T07:19:17.327100-08:00",
+  "expected_identity_matched": true,
+  "protected_files_checked": 8476,
+  "original_files_changed": [],
+  "original_reports_and_old_manifest_unchanged": true,
+  "existing5checkpoints_and_roadmap_recovery_unchanged": true,
+  "original_ZIP_and_patch_unchanged": true,
+  "tracked_git_diff_empty": true,
+  "status_outside_new_review_folder_unchanged": true,
+  "claim_reference_lines_checked": 93,
+  "counts": {
+    "VERIFIED": 47,
+    "CONTRADICTED": 3,
+    "PARTIALLY VERIFIED": 30,
+    "BLOCKED": 7,
+    "UNVERIFIED": 6
+  },
+  "claim_denominator": 93,
+  "final_decision": "REVIEW PENDING",
+  "Task2_started": false,
+  "review_DB_queries": 0,
+  "review_DB_writes": 0,
+  "review_application_tests": 0,
+  "review_provider_calls": 0,
+  "configuration_and_dependencies_changed_by_review": false,
+  "limitations": "Hashes cover the stated baseline,not omitted actual secret .env/dependency trees. No values from secret env files read. Current review hashes cannot authenticate historical artifacts before they were captured."
+}

@@ -1,0 +1,5 @@
+{
+  "baseline_count": 8150,
+  "current_mismatches": [],
+  "scope": "Matches current bytes to supplied original-audit baseline;cannot reconstruct unlogged historical actions."
+}

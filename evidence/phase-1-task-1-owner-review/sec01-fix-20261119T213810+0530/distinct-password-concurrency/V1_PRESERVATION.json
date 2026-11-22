@@ -1,0 +1,8 @@
+{
+  "source_v1_runner": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/sec01_focused_regression.py",
+  "source_v1_SHA256": "71d15423b6bf06ce679af2b02456f53233a67ec324f655246855cf6775b70a85",
+  "v1_artifacts_untouched": true,
+  "new_runner": "sec01_focused_regression_v2.py",
+  "new_runner_SHA256": "523d84f49dfa6072059378752f0ca6326f99e0cee511ba58556f4adca9dd7afa",
+  "scope": "Only SEC01-06/07 contender passwords/assertions strengthened;remaining18case bodies retained,selected2cases run only. No protected source changes."
+}

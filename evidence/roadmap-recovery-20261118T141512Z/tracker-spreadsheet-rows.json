@@ -1,0 +1,1952 @@
+{
+  "xl/worksheets/sheet1.xml": [
+    [
+      "Task #",
+      "Master Task",
+      "Status",
+      "Implementation Evidence",
+      "Subtasks / Remaining Work",
+      "Tests / Verification Evidence",
+      "Dependencies / Blockers",
+      "Runtime Verified This Batch"
+    ],
+    [
+      "1",
+      "Existing Project Audit",
+      "COMPLETED",
+      "Historical audit reports; uploaded ZIP integrity and project-root inspection completed in this handover.",
+      "No new audit unless source changes.",
+      "ZIP integrity PASS; 362 project files extracted.",
+      "\u2014",
+      "No"
+    ],
+    [
+      "2",
+      "Theme and Design",
+      "COMPLETED",
+      "Existing theme and styling source preserved; earlier theme reports retained.",
+      "No redesign; full visual/device recheck remains separate.",
+      "Historical theme reports; no UI redesign in this batch.",
+      "\u2014",
+      "No"
+    ],
+    [
+      "3",
+      "Home Screen and Navigation",
+      "COMPLETED",
+      "Home/navigation source and notification bell wiring present.",
+      "Full real-device check pending.",
+      "Historical screenshot/UI E2E report.",
+      "\u2014",
+      "No"
+    ],
+    [
+      "4",
+      "Categories and Catalog",
+      "COMPLETED",
+      "Catalog API and category source present.",
+      "Not rerun in Iteration 3.",
+      "Historical runtime E2E: catalog endpoint PASS.",
+      "\u2014",
+      "No"
+    ],
+    [
+      "5",
+      "Quantity, Variants and Units (Fixed-Pack + Loose/Measured)",
+      "COMPLETED",
+      "Phase 4 source remains preserved; no application source changes. This resumption reverified baseline ZIP/Excel hashes and manifest; reran 43 focused Task 5-related tests and backend compileall successfully.",
+      "None for the Emergent preview scope. Open low-severity finding F-1: concurrent checkout losers get 503 (WriteConflict) instead of 409 \u2014 no oversell. Native device runtime and Razorpay online payment not in scope (not configured).",
+      "2026-11-11 LIVE: T5-MONGO-01..07 PASS (9/9 incl. measured Repeat Order E2E + transaction-backed CSV import apply/invalid/duplicate/rollback, run twice); Expo Customer + Seller Preview PASS (testing agent iteration_1); full backend regression serial 415 PASS / 0 FAIL / 23 skipped.",
+      "None in Emergent preview. External: Razorpay TEST keys for online payment; native device for APK checks.",
+      "Yes"
+    ],
+    [
+      "6",
+      "Search and Filters",
+      "COMPLETED",
+      "Search/filter source and earlier task report preserved.",
+      "Not rerun in this batch.",
+      "Historical implementation evidence.",
+      "\u2014",
+      "No"
+    ],
+    [
+      "7",
+      "Cart and Checkout",
+      "COMPLETED",
+      "Server quote, idempotency, COD/pickup checkout source preserved; checkout messaging improved.",
+      "Expo runtime and broader checkout regressions pending.",
+      "Current source contracts included in 43-pass focused batch.",
+      "Expo runtime",
+      "No"
+    ],
+    [
+      "8",
+      "Repeat Order",
+      "COMPLETED",
+      "Repeat-order source and earlier TASK24 report preserved.",
+      "Measured repeat-order extension not fully verified.",
+      "Historical task report; not rerun in this batch.",
+      "\u2014",
+      "No"
+    ],
+    [
+      "9",
+      "Out-of-Stock Replacement",
+      "COMPLETED",
+      "Out-of-stock replacement source and earlier TASK25 report preserved.",
+      "Not rerun in this batch.",
+      "Historical task report.",
+      "\u2014",
+      "No"
+    ],
+    [
+      "10",
+      "Live Tracking",
+      "COMPLETED",
+      "Tracking endpoint/source and prior runtime report preserved.",
+      "Not rerun in this batch.",
+      "Historical tracking E2E PASS.",
+      "\u2014",
+      "No"
+    ],
+    [
+      "11",
+      "Order Help and Refund Status",
+      "PARTIAL",
+      "Restaurant Admin refund route retains paise cap, provider history, CAS claim and reconciliation safeguards; Grocery refund summary states are offline-tested; in-app notification routes exist.",
+      "Automatic Grocery provider refunds; live provider/DB lifecycle; customer/seller/admin live refund status synchronization; refund-specific notifications and reconciliation.",
+      "Grocery refund summary + Restaurant refund safeguards covered by offline contracts; no live provider/DB.",
+      "Disposable DB + approved Razorpay TEST/mock provider.",
+      "No"
+    ],
+    [
+      "12",
+      "Excel/CSV Price and Stock Import",
+      "COMPLETED",
+      "Earlier reports and import confirmation dialog source fix; Task 5 measured CSV parser/model now has offline coverage.",
+      "Transaction-backed measured import apply remains pending with disposable MongoDB verification.",
+      "Historical Task 12 evidence plus Task 5 actual parser/model offline tests; no live DB apply test.",
+      "\u2014",
+      "No"
+    ],
+    [
+      "13",
+      "Login and Account",
+      "COMPLETED",
+      "Login/register/me source and rate-limiting reports preserved.",
+      "OTP login not implemented; email/password remains current auth flow.",
+      "Historical runtime/security test evidence.",
+      "\u2014",
+      "No"
+    ],
+    [
+      "14",
+      "Seller/Shop/Restaurant Panel",
+      "COMPLETED",
+      "Seller/shop/restaurant panels retained; seller UI source exists.",
+      "Task 5 measured seller UI runtime remains a separate pending gate.",
+      "Historical seller UI E2E report.",
+      "Expo runtime",
+      "No"
+    ],
+    [
+      "15",
+      "Admin Panel",
+      "COMPLETED",
+      "Admin dashboard/referrals/announcement/RBAC source retained; refund feedback improved.",
+      "Full admin runtime not available here.",
+      "Historical admin E2E + current admin TSX syntax transpile.",
+      "Expo runtime",
+      "No"
+    ],
+    [
+      "16",
+      "Backend, Database and Security",
+      "PARTIAL",
+      "Production CORS guard rejects missing/wildcard origins in production; auth/RBAC and password-reset source contracts pass. Password-reset email depends on SMTP.",
+      "Phone OTP inactive/unconfigured; no logout-all endpoint/server-side all-session revocation found; SMTP delivery, restore drill, deployed CORS verification and external security audit remain pending.",
+      "Production CORS contract tests PASS; auth/RBAC/password-reset source contracts PASS; no deployed config/SMTP/OTP/logout-all runtime.",
+      "SMTP/OTP config, disposable DB, deployment config and external audit.",
+      "No"
+    ],
+    [
+      "17",
+      "Payments (Razorpay) and Notifications",
+      "PARTIAL",
+      "Grocery Razorpay gate requires explicit enablement and both server-side keys; offline feature-gate contracts pass. Restaurant payment/refund source safeguards retained.",
+      "No Razorpay TEST provider calls, native payment sheet/build, live payment/cancellation/refund/webhook synchronization or push-provider verification.",
+      "Feature gate and offline payment/refund contracts PASS; provider not called.",
+      "Owner-approved TEST credentials + native build + disposable DB/mock provider.",
+      "No"
+    ],
+    [
+      "18",
+      "Testing and Bug Fixes",
+      "PARTIAL",
+      "All 24 prior offline source-contract failures individually reconciled; 333/333 pass across 52 offline files; focused 63 pass; Python compileall PASS; 89 TS/TSX syntax transpiles with 0 diagnostics.",
+      "Full backend runtime collection blocked by 3 missing /app/frontend/.env collection errors; typecheck blocked by missing node_modules/expo base config; web build blocked by missing Expo CLI; MongoDB/provider/device runtime pending.",
+      "52-file offline suite 333 PASS/0 FAIL; focused 63 PASS/0 FAIL; compileall PASS; TS syntax 89/0; full runtime/typecheck/build blocked.",
+      "Preview env, Expo dependencies/CLI, MongoDB replica set, Razorpay TEST and device.",
+      "No"
+    ],
+    [
+      "19",
+      "Production Build and Launch",
+      "BLOCKED",
+      "No production build or launch performed.",
+      "Requires explicit owner approval, production secrets, deployment and cost approval.",
+      "Blocked by owner policy.",
+      "Owner approval + production setup",
+      "No"
+    ],
+    [
+      "20",
+      "Smart Notification System",
+      "PARTIAL",
+      "In-app notification center, read/read-all and unread-count endpoints remain present; offline contracts distinguish in-app from unconfigured native push.",
+      "Native push delivery and token registration/refresh require Firebase configuration and native build.",
+      "In-app notification source contracts PASS; push provider explicitly not configured.",
+      "Firebase configuration + native build.",
+      "No"
+    ],
+    [
+      "21",
+      "Smart Price Comparison",
+      "PARTIAL",
+      "Price-comparison source and exact master-variant/approved in-stock offer contracts retained; no runtime claim.",
+      "Live linked-master comparison endpoint and trusted distance/location data remain unverified.",
+      "Offline source contracts PASS; live endpoint and distance data not tested.",
+      "Catalog master linkage + trusted location/distance source.",
+      "No"
+    ],
+    [
+      "22",
+      "Home Services Logo/Icon and Tile Integration",
+      "COMPLETED",
+      "Home Services tile/icon source and historical evidence retained.",
+      "No new work required.",
+      "Historical home tile evidence.",
+      "\u2014",
+      "No"
+    ]
+  ],
+  "xl/worksheets/sheet2.xml": [
+    [
+      "Task #",
+      "Task",
+      "Status",
+      "Evidence",
+      "Caveat"
+    ],
+    [
+      "1",
+      "Existing Project Audit",
+      "COMPLETED",
+      "Historical audit reports; uploaded ZIP integrity and project-root inspection completed in this handover.",
+      "No new audit unless source changes."
+    ],
+    [
+      "2",
+      "Theme and Design",
+      "COMPLETED",
+      "Existing theme and styling source preserved; earlier theme reports retained.",
+      "No redesign; full visual/device recheck remains separate."
+    ],
+    [
+      "3",
+      "Home Screen and Navigation",
+      "COMPLETED",
+      "Home/navigation source and notification bell wiring present.",
+      "Full real-device check pending."
+    ],
+    [
+      "4",
+      "Categories and Catalog",
+      "COMPLETED",
+      "Catalog API and category source present.",
+      "Not rerun in Iteration 3."
+    ],
+    [
+      "6",
+      "Search and Filters",
+      "COMPLETED",
+      "Search/filter source and earlier task report preserved.",
+      "Not rerun in this batch."
+    ],
+    [
+      "7",
+      "Cart and Checkout",
+      "COMPLETED",
+      "Server quote, idempotency, COD/pickup checkout source preserved; checkout messaging improved.",
+      "Expo runtime and broader checkout regressions pending."
+    ],
+    [
+      "8",
+      "Repeat Order",
+      "COMPLETED",
+      "Repeat-order source and earlier TASK24 report preserved.",
+      "Measured repeat-order extension not fully verified."
+    ],
+    [
+      "9",
+      "Out-of-Stock Replacement",
+      "COMPLETED",
+      "Out-of-stock replacement source and earlier TASK25 report preserved.",
+      "Not rerun in this batch."
+    ],
+    [
+      "10",
+      "Live Tracking",
+      "COMPLETED",
+      "Tracking endpoint/source and prior runtime report preserved.",
+      "Not rerun in this batch."
+    ],
+    [
+      "12",
+      "Excel/CSV Price and Stock Import",
+      "COMPLETED",
+      "CSV/Excel import source and confirmation flow preserved.",
+      "Measured CSV columns not tested."
+    ],
+    [
+      "13",
+      "Login and Account",
+      "COMPLETED",
+      "Login/register/me source and rate-limiting reports preserved.",
+      "OTP login not implemented; email/password remains current auth flow."
+    ],
+    [
+      "14",
+      "Seller/Shop/Restaurant Panel",
+      "COMPLETED",
+      "Seller/shop/restaurant panels retained; seller UI source exists.",
+      "Task 5 measured seller UI runtime remains a separate pending gate."
+    ],
+    [
+      "15",
+      "Admin Panel",
+      "COMPLETED",
+      "Admin dashboard/referrals/announcement/RBAC source retained; refund feedback improved.",
+      "Full admin runtime not available here."
+    ],
+    [
+      "22",
+      "Home Services Logo/Icon and Tile Integration",
+      "COMPLETED",
+      "Home Services tile/icon source and historical evidence retained.",
+      "No new work required."
+    ]
+  ],
+  "xl/worksheets/sheet3.xml": [
+    [
+      "Task #",
+      "Task",
+      "Status",
+      "Remaining Work",
+      "Dependency / Blocker",
+      "Next Recommended Action"
+    ],
+    [
+      "5",
+      "COMPLETED",
+      "2026-11-11 LIVE: T5-MONGO-01..07 PASS (9/9 incl. measured Repeat Order E2E + transaction-backed CSV import apply/invalid/duplicate/rollback, run twice); Expo Customer + Seller Preview PASS (testing agent iteration_1); full backend regression serial 415 PASS / 0 FAIL / 23 skipped.",
+      "None for the Emergent preview scope. Open low-severity finding F-1: concurrent checkout losers get 503 (WriteConflict) instead of 409 \u2014 no oversell. Native device runtime and Razorpay online payment not in scope (not configured).",
+      "None in Emergent preview. External: Razorpay TEST keys for online payment; native device for APK checks.",
+      "Optional: retry transactions on TransientTransactionError so concurrent losers receive 409 insufficient_stock (F-1)."
+    ],
+    [
+      "11",
+      "PARTIAL",
+      "Automatic Grocery provider refunds; live Restaurant/Grocery refund lifecycle; customer/seller/admin status synchronization; refund-specific in-app notifications and reconciliation.",
+      "Disposable DB + approved Razorpay TEST or mocked provider.",
+      "Use a mocked provider/disposable DB first; no production refund actions.",
+      "New Grocery refund summary tests pass; next validate refund provider lifecycle only with approved TEST setup."
+    ],
+    [
+      "16",
+      "PARTIAL",
+      "Password-reset SMTP delivery; OTP configuration/implementation; logout-all/all-session revocation; restore drill; deployed production CORS verification; external security audit.",
+      "SMTP/OTP provider configuration, disposable DB, deployment config and owner/security approval.",
+      "Do not claim OTP or logout-all support until implemented and tested.",
+      "Production wildcard/missing CORS now fails closed; next run restore drill on disposable DB and verify explicit production origins in deployment."
+    ],
+    [
+      "17",
+      "PARTIAL",
+      "Razorpay TEST payment/verify/webhook, cancellation/refund synchronization, native payment sheet and push notification integration.",
+      "Owner-approved TEST credentials + native build + disposable DB/mock provider.",
+      "Keep Grocery online payment disabled until safe TEST flow passes.",
+      "Feature-gate tests pass; keep payments disabled until owner-approved TEST credentials and native build are available."
+    ],
+    [
+      "18",
+      "PARTIAL",
+      "Full backend runtime collection, full TypeScript typecheck, web build, Expo runtime, MongoDB/provider/native-device regression.",
+      "/app/frontend/.env preview configuration, Expo dependencies/CLI, MongoDB replica set, provider TEST setup.",
+      "Re-run 52-file offline suite (333/333 PASS); run blocked suites only after prerequisites exist.",
+      "63 focused tests pass; 308/24 result from 52-file offline suite recorded separately; reconcile failures before claiming full suite green."
+    ],
+    [
+      "19",
+      "BLOCKED",
+      "Production build and launch.",
+      "Explicit owner approval, production secrets, deployment and cost approval.",
+      "Do not start without explicit approval.",
+      "Blocked by owner policy."
+    ],
+    [
+      "20",
+      "PARTIAL",
+      "Native push delivery; current in-app notification center/read-state remains available.",
+      "Firebase config + native build.",
+      "Next eligible task after current batch; verify push token registration and delivery using test devices.",
+      "Historical BATCH-02 runtime tests."
+    ],
+    [
+      "21",
+      "PARTIAL",
+      "Live linked-master price comparison endpoint verification and trusted distance/location data.",
+      "Approved catalog master linkage + reliable location/distance source.",
+      "Next eligible task after Task 20; validate exact master variant, approved in-stock offers and distance ordering.",
+      "Historical customer shopping E2E; comparison endpoint not tested."
+    ]
+  ],
+  "xl/worksheets/sheet4.xml": [
+    [
+      "Date / Batch",
+      "Test Group",
+      "Result",
+      "Scope / Notes"
+    ],
+    [
+      "2026-11-11 / Task 18 Iteration 3",
+      "Focused pytest",
+      "43 PASS / 0 FAIL",
+      "Five selected test files; database-free source and pure-helper contracts."
+    ],
+    [
+      "2026-11-11 / Task 18 Iteration 3",
+      "Python compilation",
+      "PASS",
+      "backend/server.py, backend/refund_rules.py, new Task 18 test."
+    ],
+    [
+      "2026-11-11 / Task 18 Iteration 3",
+      "TypeScript syntax transpilation",
+      "0 diagnostics",
+      "checkout.tsx, orders.tsx, admin.tsx; not a full typecheck or runtime."
+    ],
+    [
+      "2026-11-11 / Task 18 Iteration 3",
+      "Expo Preview",
+      "NOT RUN",
+      "Expo CLI, Yarn and frontend/node_modules absent; launchers would install dependencies."
+    ],
+    [
+      "2026-11-11 / Task 18 Iteration 3",
+      "MongoDB",
+      "NOT RUN",
+      "Motor, PyMongo, mongod and mongosh absent; no connection or writes."
+    ],
+    [
+      "2026-11-11 / Task 18 Iteration 3",
+      "Razorpay provider",
+      "NOT RUN",
+      "No TEST credentials used and no provider calls made."
+    ],
+    [
+      "2026-11-11 / Task 18 Iteration 3",
+      "Native device",
+      "NOT RUN",
+      "No native build/runtime."
+    ],
+    [
+      "Historical BATCH-02",
+      "Full reported test summary",
+      "393 PASS / 28 stale FAIL / 3 BLOCKED / 27 NOT TESTED",
+      "Historical Emergent report; not rerun or combined with current 43."
+    ],
+    [
+      "Historical BATCH-02",
+      "Backend runtime",
+      "61/61 PASS (reported)",
+      "Historical preview environment report; not independently rerun here."
+    ],
+    [
+      "Historical BATCH-02",
+      "Frontend E2E",
+      "13/13 PASS (reported)",
+      "Expo web 390x844; prior testing-agent report."
+    ],
+    [
+      "2026-11-11 / Five-task follow-through",
+      "Focused pytest",
+      "63 PASS / 0 FAIL",
+      "Nine selected files: Task 18 prior refund/checkout contracts plus new Task 5 measured import, Task 11 refund summary, Task 16 CORS and Task 17 payment-gate tests."
+    ],
+    [
+      "2026-11-11 / Five-task follow-through",
+      "Offline/source-contract regression",
+      "308 PASS / 24 FAIL",
+      "52 files; excludes live API/runtime files. Existing source-contract assertions require triage; not treated as runtime failures. Full suite is not green."
+    ],
+    [
+      "2026-11-11 / Five-task follow-through",
+      "Python compilation",
+      "PASS",
+      "server.py, refund_rules.py, security_config.py and four new test files."
+    ],
+    [
+      "2026-11-11 / Five-task follow-through",
+      "TypeScript syntax transpilation",
+      "89 files / 0 diagnostics",
+      "Global TypeScript transpileModule syntax check only; not a full typecheck."
+    ],
+    [
+      "2026-11-11 / Five-task follow-through",
+      "MongoDB / Razorpay / Expo / native device",
+      "NOT RUN",
+      "Motor/PyMongo/mongod/mongosh, Expo CLI/Yarn/node_modules and owner-approved TEST credentials unavailable; no installs, network retries, DB writes or provider calls."
+    ],
+    [
+      "2026-11-11 / QA reconciliation",
+      "Prior 24 failure reproduction",
+      "309 PASS / 24 FAIL",
+      "Same 52 offline files; baseline failure set reproduced before updating obsolete assertions."
+    ],
+    [
+      "2026-11-11 / QA reconciliation",
+      "24-test individual classification",
+      "24/24 reconciled",
+      "23 stale source-contract assertions updated; 1 missing frontend tooling script gap fixed; no test suppressed."
+    ],
+    [
+      "2026-11-11 / QA reconciliation",
+      "Broad offline/source-contract pytest",
+      "333 PASS / 0 FAIL",
+      "52 files; three preview/runtime suites excluded because they require /app/frontend/.env."
+    ],
+    [
+      "2026-11-11 / QA reconciliation",
+      "Focused pytest",
+      "63 PASS / 0 FAIL",
+      "Nine selected files; DB-free helper/model/source contracts."
+    ],
+    [
+      "2026-11-11 / QA reconciliation",
+      "Full backend collection",
+      "BLOCKED \u2014 3 errors",
+      "Runtime test modules require missing /app/frontend/.env; not application assertion failures."
+    ],
+    [
+      "2026-11-11 / QA reconciliation",
+      "Python compileall",
+      "PASS",
+      "All backend Python files compiled."
+    ],
+    [
+      "2026-11-11 / QA reconciliation",
+      "TypeScript syntax transpilation",
+      "89 files / 0 diagnostics",
+      "Syntax transpilation only; not semantic typecheck."
+    ],
+    [
+      "2026-11-11 / QA reconciliation",
+      "Frontend typecheck",
+      "BLOCKED",
+      "Script added; frontend/node_modules and expo/tsconfig.base absent."
+    ],
+    [
+      "2026-11-11 / QA reconciliation",
+      "Frontend web build",
+      "BLOCKED",
+      "Script added; Expo CLI absent (expo: not found)."
+    ],
+    [
+      "2026-11-11 / QA reconciliation",
+      "MongoDB / Razorpay / Expo device",
+      "NOT RUN / BLOCKED",
+      "No disposable replica set, approved TEST credentials, Expo runtime or native device session."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "Focused Task 5/import/cart/repeat-order selection",
+      "35 PASS / 0 FAIL",
+      "5 offline test modules; source/pure-helper contracts only; not live UI/DB."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "Offline regression",
+      "345 PASS / 0 FAIL",
+      "53 offline test files; Preview-dependent runtime suites excluded due missing /app/frontend/.env."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "Backend Python compileall",
+      "PASS",
+      "Syntax/bytecode compilation only; not DB/runtime verification."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "Expo Preview startup probe",
+      "BLOCKED / NOT RUN",
+      "npm run start -- --non-interactive returned expo: not found; no node_modules, Yarn or /app/frontend/.env."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "Seven MongoDB transaction scenarios",
+      "7 BLOCKED / NOT RUN",
+      "mongod/mongosh/Docker/Podman/motor/pymongo absent; no disposable replica set; no DB connection or writes."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "Seller / Customer measured shopping Preview",
+      "BLOCKED / NOT RUN",
+      "Expo CLI/dependencies and preview .env unavailable; no running UI session."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "Measured Repeat Order E2E + transaction-backed import apply",
+      "BLOCKED / NOT RUN",
+      "Requires Expo Preview and disposable transaction-capable MongoDB; neither available."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "MongoDB scenario 1 \u2014 transaction behavior",
+      "BLOCKED / NOT RUN",
+      "No disposable replica-set server/runtime or MongoDB drivers."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "MongoDB scenario 2 \u2014 stock deduction",
+      "BLOCKED / NOT RUN",
+      "No disposable replica-set server/runtime; no DB connection/writes."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "MongoDB scenario 3 \u2014 insufficient-stock rejection",
+      "BLOCKED / NOT RUN",
+      "No disposable replica-set server/runtime."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "MongoDB scenario 4 \u2014 concurrent order protection",
+      "BLOCKED / NOT RUN",
+      "No replica-set concurrency test environment."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "MongoDB scenario 5 \u2014 rollback on failed order creation",
+      "BLOCKED / NOT RUN",
+      "No disposable replica-set server/runtime."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "MongoDB scenario 6 \u2014 measured quantity precision",
+      "BLOCKED / NOT RUN",
+      "No replica-set runtime to inspect committed order/inventory quantities."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "MongoDB scenario 7 \u2014 Fixed-Pack compatibility",
+      "BLOCKED / NOT RUN",
+      "No disposable replica-set runtime for transactional checkout."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "Measured Repeat Order quantity/fresh quote/stock E2E",
+      "BLOCKED / NOT RUN",
+      "No Preview or disposable transaction-capable MongoDB."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "CSV/Excel measured import transaction apply + rollback",
+      "BLOCKED / NOT RUN",
+      "Parser contracts remain offline-tested; DB apply/rollback not run without disposable replica set."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Verification Follow-up",
+      "Runtime availability: MongoDB + Expo",
+      "BLOCKED",
+      "No mongod/mongosh/container runtime/drivers; no Expo CLI/dependencies/.env."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "Authoritative baseline checksum verification",
+      "PASS",
+      "ZIP and Excel SHA-256 exactly matched requested values and sidecars; originals unchanged."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "Baseline ZIP integrity and manifest",
+      "PASS",
+      "ZIP integrity PASS; separate extraction; internal manifest 450/450 hashes verified; workbook 8/8 sheets."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "MongoDB disposable replica-set provisioning",
+      "BLOCKED",
+      "mongod/mongosh, Docker/Podman/socket, PyMongo/Motor and authorized disposable endpoint unavailable; no DB connection/write."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "Expo Preview startup",
+      "BLOCKED / NOT RUN",
+      "npm run start -- --non-interactive returned sh: expo: not found (exit 127); frontend/node_modules and pinned Yarn cache absent."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "T5-MONGO-01 transaction behavior",
+      "BLOCKED / NOT RUN",
+      "No replica-set runtime; no synthetic DB setup, transaction or DB state evidence."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "T5-MONGO-02 measured order stock deduction",
+      "BLOCKED / NOT RUN",
+      "No isolated DB; stock deduction not executed."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "T5-MONGO-03 insufficient-stock rejection",
+      "BLOCKED / NOT RUN",
+      "No isolated DB; rejection and unchanged stock state not exercised."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "T5-MONGO-04 concurrent order protection",
+      "BLOCKED / NOT RUN",
+      "No replica set; concurrent order attempts not executed."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "T5-MONGO-05 failed order creation rollback",
+      "BLOCKED / NOT RUN",
+      "No transaction runtime; rollback not exercised."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "T5-MONGO-06 measured quantity precision/pricing",
+      "BLOCKED / NOT RUN",
+      "No committed order/stock readback; live precision and price persistence not checked."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "T5-MONGO-07 Fixed-Pack compatibility",
+      "BLOCKED / NOT RUN",
+      "No transaction-capable database; live checkout/stock compatibility not exercised."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "Seller measured product Preview",
+      "BLOCKED / NOT RUN",
+      "Expo Preview did not start; no running UI inspection."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "Customer measured shopping Preview",
+      "BLOCKED / NOT RUN",
+      "Expo Preview did not start; no running UI inspection."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "Measured Repeat Order E2E",
+      "BLOCKED / NOT RUN",
+      "Requires running customer app and isolated transaction-capable DB; neither available."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "Transaction-backed CSV/Excel measured import apply",
+      "BLOCKED / NOT RUN",
+      "Offline parsing tests only; no DB apply, duplicate transaction or rollback verification."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "Focused Task 5/import/cart/checkout/repeat-order tests",
+      "66 PASS / 0 FAIL",
+      "8 offline test modules; serial pytest with external options; repository pytest.ini unchanged."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "Broad offline regression",
+      "345 PASS / 0 FAIL; 23 skipped",
+      "53 offline test files; 3 Preview-dependent modules excluded due missing /app/frontend/.env."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "Unfiltered backend test collection",
+      "BLOCKED",
+      "Current capture exceeded 120-second limit; separate direct attempt reported 3 collection errors from missing /app/frontend/.env."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "Backend Python compileall",
+      "PASS",
+      "Compilation only; not live runtime verification."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "New Master ZIP integrity verification",
+      "PASS",
+      "Complete archive integrity check passed; no compressed-entry errors."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "New Master ZIP extraction and internal manifest",
+      "PASS",
+      "Separate extraction completed; final root MANIFEST.sha256 verifies all 595 listed files."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Provisioning",
+      "Final Excel Tracker verification",
+      "PASS",
+      "Reopened all 8 worksheets; embedded workbook byte-for-byte identical to downloadable tracker."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "Authoritative baseline SHA-256",
+      "PASS",
+      "Master ZIP and Excel hashes exactly matched requested values; originals preserved."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "Baseline ZIP internal manifest",
+      "PASS",
+      "595/595 entries verified with sha256sum -c MANIFEST.sha256."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "MongoDB provisioning investigation",
+      "BLOCKED",
+      "No mongod/mongosh, Docker/Podman/socket, PyMongo/Motor, or approved managed non-production endpoint/credentials."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "Expo pinned-runtime investigation",
+      "BLOCKED",
+      "Expo CLI and frontend/node_modules absent; project pins Yarn 1.22.22 and Expo 58.0.17. Corepack registry resolution failed EAI_AGAIN; no install attempted."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "Focused Task 5/import/cart/repeat-order tests",
+      "PASS",
+      "43 passed / 0 failed across six selected offline test modules; no live runtime coverage."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "Backend Python compileall",
+      "PASS",
+      "Compilation only; not MongoDB/API runtime verification."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "MongoDB T5-MONGO-01 transaction behavior",
+      "BLOCKED / NOT RUN",
+      "No disposable replica set; no DB setup, transaction or before/after state."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "MongoDB T5-MONGO-02 measured stock deduction",
+      "BLOCKED / NOT RUN",
+      "No disposable replica set; no stock mutation."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "MongoDB T5-MONGO-03 insufficient stock",
+      "BLOCKED / NOT RUN",
+      "No disposable replica set; rejection/state unchanged not exercised."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "MongoDB T5-MONGO-04 concurrent order protection",
+      "BLOCKED / NOT RUN",
+      "No replica set; concurrency test not executed."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "MongoDB T5-MONGO-05 failed order rollback",
+      "BLOCKED / NOT RUN",
+      "No transaction runtime; rollback not exercised."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "MongoDB T5-MONGO-06 measured precision/pricing",
+      "BLOCKED / NOT RUN",
+      "No DB commit/readback; persisted precision and quote not checked live."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "MongoDB T5-MONGO-07 Fixed-Pack compatibility",
+      "BLOCKED / NOT RUN",
+      "No transaction-capable DB; live checkout/stock compatibility not exercised."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "Seller and Customer Expo Preview",
+      "BLOCKED / NOT RUN",
+      "Expo CLI/dependencies unavailable; no running screens or API responses."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "Measured Repeat Order E2E",
+      "BLOCKED / NOT RUN",
+      "Requires running Preview and disposable MongoDB; neither available."
+    ],
+    [
+      "2026-11-11 / Task 5 Live Resumption",
+      "CSV/Excel transaction-backed import apply",
+      "BLOCKED / NOT RUN",
+      "Parser tests do not establish transaction apply; no disposable DB available."
+    ],
+    [
+      "2026-11-11 / MongoDB portability checkpoint",
+      "MongoDB health check",
+      "PASS",
+      "rs0 PRIMARY, MongoDB 7.0.45, FCV 7.0, transaction commit+abort verified, 54/54 indexes, 44 collections"
+    ],
+    [
+      "2026-11-11 / MongoDB portability checkpoint",
+      "Disposable test DB cycle",
+      "PASS",
+      "comein_disposable_test_<UTC> created, initialised, verified, dropped"
+    ],
+    [
+      "2026-11-11 / MongoDB portability checkpoint",
+      "Toolchain verification (scripts/verify-env.sh)",
+      "PASS",
+      "Node 24.19.0, Yarn 1.22.22, Python 3.11, Expo 58.0.17, RN 0.88.0, frozen lockfile install"
+    ],
+    [
+      "2026-11-11 / MongoDB portability checkpoint",
+      "Expo web preview",
+      "PASS (renders)",
+      "Home screen loads against live backend on Emergent preview URL"
+    ],
+    [
+      "2026-11-11 / Task 5 live MongoDB",
+      "T5-MONGO-01..07 + repeat order + import (test_task5_live_mongo_transactions.py)",
+      "9 PASS / 0 FAIL (x2)",
+      "Real rs0 transactions; DB readback; failure injection via temporary collection validator"
+    ],
+    [
+      "2026-11-11 / Task 5 live MongoDB",
+      "Expo Customer + Seller Preview (testing agent iteration_1)",
+      "PASS",
+      "Measured picker, server price, invalid amounts, cart separation + persistence, COD checkout, repeat order, seller measured product, CSV import preview"
+    ],
+    [
+      "2026-11-11 / Task 5 live MongoDB",
+      "Full backend regression (serial, -n 0)",
+      "415 PASS / 0 FAIL / 23 skipped",
+      "After portable sugar fixture fix; runtime e2e accounts seeded via seed_preview_test_accounts.py"
+    ],
+    [
+      "2026-11-11 / Restoration test",
+      "Checkpoint ZIP in clean directory (restoration_test.sh)",
+      "PASS",
+      "Same pod, separate dir/port 27019/dbpath/venv/yarn cache; NOT a new Emergent account"
+    ],
+    [
+      "2026-11-12 / Chand AI integration",
+      "Focused pytest",
+      "52 PASS / 0 FAIL",
+      "Eight files: Chand contracts + Task 5 measured/cart regression; run with -c /dev/null because repository pytest-xdist required plugin is unavailable."
+    ],
+    [
+      "2026-11-12 / Chand AI integration",
+      "Python compilation",
+      "PASS",
+      "backend/server.py py_compile."
+    ],
+    [
+      "2026-11-12 / Chand AI integration",
+      "TypeScript syntax transpilation",
+      "7 files / 0 diagnostics",
+      "chand.tsx, Home, Account, Request, Auth, ProductCard.tsx, catalog.ts; syntax only, not semantic typecheck."
+    ],
+    [
+      "2026-11-12 / Chand AI integration",
+      "Semantic typecheck / Expo runtime",
+      "BLOCKED",
+      "frontend/node_modules, Yarn and Expo dependencies unavailable; no dependency installation or network retry."
+    ],
+    [
+      "2026-11-12 / Chand AI integration",
+      "Live AI provider",
+      "BLOCKED",
+      "No configured provider credentials or reachable Ollama service."
+    ],
+    [
+      "2026-11-12 / Chand AI integration",
+      "Live MongoDB/catalog / checkout",
+      "NOT RUN",
+      "No non-production runtime DB configuration supplied in this working copy."
+    ],
+    [
+      "2026-11-12 / Chand AI integration",
+      "Native speech / photo / device UI",
+      "NOT RUN",
+      "No in-app STT package, image-picker/vision integration, native build or device runtime."
+    ]
+  ],
+  "xl/worksheets/sheet5.xml": [
+    [
+      "Bug ID",
+      "Finding",
+      "Fix Status",
+      "Files",
+      "Verification",
+      "Remaining Caveat"
+    ],
+    [
+      "BUG-12",
+      "Duplicate / over-cap Restaurant refund risk; provider-side/manual refund history not reconciled",
+      "IMPLEMENTED \u2014 TESTING REQUIRED",
+      "backend/server.py; backend/refund_rules.py",
+      "Pure helper + source contracts included in 43 PASS",
+      "No provider/DB runtime; existing partial refunds fail closed to manual reconciliation; Grocery refunds pending."
+    ],
+    [
+      "BUG-13",
+      "Checkout did not explain when delivery and pickup were both unavailable",
+      "IMPLEMENTED \u2014 TESTING REQUIRED",
+      "frontend/app/checkout.tsx",
+      "Source contract + TSX syntax transpile",
+      "Expo UI runtime pending."
+    ],
+    [
+      "BUG-14",
+      "Empty cart showed misleading payment-method warning",
+      "IMPLEMENTED \u2014 TESTING REQUIRED",
+      "frontend/app/checkout.tsx",
+      "Source contract + TSX syntax transpile",
+      "Expo UI runtime pending."
+    ],
+    [
+      "BUG-15",
+      "Grocery pickup orders displayed delivery wording",
+      "IMPLEMENTED \u2014 TESTING REQUIRED",
+      "frontend/app/orders.tsx",
+      "Source contract + TSX syntax transpile",
+      "Expo UI runtime pending."
+    ],
+    [
+      "BUG-16",
+      "Admin refund notice always said pending and did not show amounts",
+      "IMPLEMENTED \u2014 TESTING REQUIRED",
+      "frontend/app/admin.tsx",
+      "Source contract + TSX syntax transpile",
+      "Expo UI runtime pending."
+    ],
+    [
+      "QA-OPEN-01",
+      "Atta product image/description correction",
+      "PENDING",
+      "frontend/src/data/catalog.ts",
+      "Not changed",
+      "No verified/approved product asset available in archive."
+    ],
+    [
+      "QA-OPEN-02",
+      "Notification preference switches need testIDs",
+      "NOT FOUND IN CURRENT SOURCE",
+      "frontend source search",
+      "No matching preference switches found",
+      "No controls invented; revisit if a settings screen is added."
+    ],
+    [
+      "QA-OPEN-03",
+      "Historical stale contract tests",
+      "PARTIALLY ADDRESSED",
+      "backend/tests/test_grocery_checkout_security_contract.py; test_task10_payment_refund_notification_contract.py; test_task22_checkout_audit_contract.py",
+      "Refreshed relevant contracts; 43 selected tests pass",
+      "Full suite not rerun; current remaining stale count unknown."
+    ],
+    [
+      "QA-RECON-24",
+      "24 previously failing source-contract assertions were individually reconciled against current source.",
+      "RESOLVED \u2014 TESTS UPDATED",
+      "12 backend test modules",
+      "52-file offline suite 333 PASS / 0 FAIL; focused 63 PASS / 0 FAIL.",
+      "23 stale source contracts; no application bug/regression found; no tests suppressed."
+    ],
+    [
+      "TOOL-01",
+      "Frontend package lacked standard typecheck and web-build scripts.",
+      "FIXED \u2014 EXECUTION BLOCKED",
+      "frontend/package.json",
+      "Scripts added; typecheck attempted and blocked by missing Expo dependencies; web build blocked by missing Expo CLI.",
+      "Install/restore the approved project dependency set in a controlled environment before full checks."
+    ],
+    [
+      "TASK16-GAP-01",
+      "No logout-all/all-session revocation endpoint or active OTP login flow found.",
+      "PENDING \u2014 NOT IMPLEMENTED",
+      "backend/server.py; frontend/app/auth.tsx",
+      "Source inspection only.",
+      "Requires approved auth/session design and OTP provider configuration; do not claim support."
+    ],
+    [
+      "TASK11-GAP-01",
+      "Automatic Grocery refund lifecycle and refund-specific notification synchronization are not implemented/verified.",
+      "PENDING / BLOCKED",
+      "backend/server.py; frontend/app/orders.tsx",
+      "Offline summary-state tests only.",
+      "Requires disposable DB and approved Razorpay TEST/mock provider."
+    ],
+    [
+      "QA-T5-01",
+      "Task 5 live verification blocked by missing isolated MongoDB and Expo runtime (environment blocker; no confirmed product defect)",
+      "BLOCKED \u2014 VERIFICATION ONLY",
+      "No application source changed; no defect reproduced. Tracker/docs/evidence only; see COME_IN_TASK5_LIVE_PROVISIONING_CLOSURE_2026-11-11.md",
+      "Focused 66 PASS/0 FAIL; broad offline regression 345 PASS/0 FAIL with 23 skipped; compileall PASS. Live runtime unavailable.",
+      "All 7 MongoDB scenarios, Seller/Customer Preview, measured Repeat Order E2E and transaction-backed import apply BLOCKED / NOT RUN. Task 5 PARTIAL."
+    ],
+    [
+      "BUG-14",
+      "Measured picker kept stale amount for non-numeric/empty custom input",
+      "FIXED + VERIFIED",
+      "frontend/src/components/MeasuredQuantityPicker.tsx",
+      "Screenshot: 'abc' -> error + save disabled; empty -> preset",
+      "\u2014"
+    ],
+    [
+      "BUG-15",
+      "Seller measured hint said price field 'above'",
+      "FIXED",
+      "frontend/src/i18n/translations.ts (9 languages)",
+      "Source",
+      "\u2014"
+    ],
+    [
+      "BUG-16",
+      "Seller product form inputs lacked testIDs",
+      "FIXED",
+      "frontend/app/seller/products.tsx",
+      "Source",
+      "\u2014"
+    ],
+    [
+      "BUG-17",
+      "Hard-coded SUGAR_ID test data not portable",
+      "FIXED + VERIFIED",
+      "backend/tests/test_iter_notifications_admin_measured.py",
+      "12/12 PASS",
+      "\u2014"
+    ],
+    [
+      "F-1",
+      "Concurrent checkout losers receive 503 (WriteConflict) not 409",
+      "OPEN \u2014 LOW",
+      "backend/server.py create_order",
+      "T5-MONGO-04 (no oversell)",
+      "Retry on TransientTransactionError recommended"
+    ]
+  ],
+  "xl/worksheets/sheet6.xml": [
+    [
+      "Area",
+      "Required setting / component",
+      "Current status",
+      "Safety / next step"
+    ],
+    [
+      "Backend DB",
+      "MONGO_URL + DB_NAME",
+      "Required by backend; values not inspected",
+      "Use a separate disposable test DB/cluster; never production credentials."
+    ],
+    [
+      "Backend auth",
+      "JWT_SECRET; password reset SMTP; session revocation",
+      "PARTIAL \u2014 password-reset routes/source present; SMTP delivery unverified; no logout-all/all-session revocation endpoint found.",
+      "Use test-only secrets/SMTP; design and test server-side session invalidation before claiming logout-all."
+    ],
+    [
+      "MongoDB transaction tests",
+      "Motor + PyMongo + replica-set server",
+      "BLOCKED \u2014 no local MongoDB tools/runtime, Docker/Podman/socket, PyMongo/Motor, or authorized disposable managed replica-set endpoint/credentials in this execution.",
+      "Required external prerequisite: owner-authorized non-production replica-set URI + isolated DB name + test-only credentials supplied through secure environment configuration; verify replica-set status/transactions and cleanup before tests."
+    ],
+    [
+      "Frontend runtime",
+      "Node + Yarn 1.22.22 + Expo CLI + frontend/node_modules",
+      "BLOCKED \u2014 Node v22.16.0/npm 10.9.2 present; Yarn 1.22.22, Expo CLI and frontend/node_modules absent. Corepack registry lookup failed EAI_AGAIN; no package install attempted.",
+      "Required external prerequisite: approved dev workspace or offline cache containing project-pinned Yarn 1.22.22 and lockfile dependencies (Expo SDK 58.0.17 / RN 0.88.0), plus non-production frontend API .env. Do not change package versions."
+    ],
+    [
+      "Razorpay",
+      "RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET / RAZORPAY_WEBHOOK_SECRET",
+      "NOT PROVIDED / NOT USED",
+      "Owner-approved TEST credentials required; never put values in workbook or source."
+    ],
+    [
+      "Grocery online payments",
+      "GROCERY_ONLINE_PAYMENTS_ENABLED",
+      "Not enabled/verified in this handover",
+      "Keep disabled until TEST flow and owner approval."
+    ],
+    [
+      "Push notifications",
+      "Firebase google-services.json + native build",
+      "NOT CONFIGURED",
+      "Optional; in-app notifications remain available."
+    ],
+    [
+      "SMS / OTP",
+      "SMS provider credentials and OTP flow",
+      "NOT IMPLEMENTED",
+      "Do not invent an SMS provider; requires product/provider decision."
+    ],
+    [
+      "SMTP",
+      "SMTP_HOST / SMTP_PORT / SMTP_USER / SMTP_PASSWORD",
+      "Not configured in historical preview report",
+      "Password reset email needs approved SMTP configuration."
+    ],
+    [
+      "Production CORS",
+      "APP_ENV=production + explicit CORS_ORIGINS",
+      "Guard implemented and unit-tested; deployment values not inspected",
+      "Production rejects missing/wildcard origins; set exact comma-separated trusted frontend origins and verify in deployment before release."
+    ],
+    [
+      "Expo native payment",
+      "Native Razorpay module/payment sheet",
+      "PENDING",
+      "Requires native build and approved test setup."
+    ],
+    [
+      "OTP login",
+      "Phone OTP provider/configuration",
+      "NOT ACTIVE / NOT CONFIGURED",
+      "No OTP provider/configuration or verified login flow; do not claim OTP support."
+    ],
+    [
+      "All-session logout",
+      "Server-side session/token revocation",
+      "NOT FOUND / NOT IMPLEMENTED",
+      "Current frontend logout clears the local token; no logout-all API/server-side all-session revocation found."
+    ],
+    [
+      "MongoDB replica set",
+      "Single-node rs0 on 127.0.0.1:27018 (Emergent); mongo:7.0.45 Docker Compose template",
+      "PROVISIONED + VERIFIED (Emergent)",
+      "scripts/mongo/setup.sh; docs/mongodb/MONGODB_SETUP.md. Docker template NOT verified (no Docker)."
+    ],
+    [
+      "Expo start port",
+      "frontend/package.json start = expo start --port ${PORT:-8081}",
+      "CHANGED (script only, no dependency change)",
+      "Emergent supervisor exports PORT=3000"
+    ]
+  ],
+  "xl/worksheets/sheet7.xml": [
+    [
+      "Date",
+      "File",
+      "Change Summary",
+      "Backup / Evidence"
+    ],
+    [
+      "2026-11-11",
+      "backend/server.py",
+      "Refund amount cap, provider refund-history check, CAS claim, cumulative webhook refund accounting, full-refund-only ledger reversal, refund summary statuses.",
+      "Pre-change backup under backups/task18-qa-iteration3-prechange-20261111/backend/server.py"
+    ],
+    [
+      "2026-11-11",
+      "backend/refund_rules.py",
+      "New pure Decimal/paise and provider refund summary helpers.",
+      "New file; covered by 14 focused tests."
+    ],
+    [
+      "2026-11-11",
+      "frontend/app/checkout.tsx",
+      "Fulfillment unavailable/loading feedback; empty-cart payment warning guard.",
+      "Pre-change backup under backups/task18-qa-iteration3-prechange-20261111/frontend/app/checkout.tsx"
+    ],
+    [
+      "2026-11-11",
+      "frontend/app/orders.tsx",
+      "Pickup wording corrected for Grocery orders.",
+      "Pre-change backup under backups/task18-qa-iteration3-prechange-20261111/frontend/app/orders.tsx"
+    ],
+    [
+      "2026-11-11",
+      "frontend/app/admin.tsx",
+      "Provider refund status/amount feedback and blocked-state retry suppression.",
+      "Pre-change backup under backups/task18-qa-iteration3-prechange-20261111/frontend/app/admin.tsx"
+    ],
+    [
+      "2026-11-11",
+      "backend/tests/test_task18_refund_safety_iteration3.py",
+      "New database-free refund safety and UI source contract tests.",
+      "14 tests in current focused run."
+    ],
+    [
+      "2026-11-11",
+      "backend/tests/test_grocery_checkout_security_contract.py",
+      "Updated stale harness and current source assertions.",
+      "Pre-change copy in docs backup folder."
+    ],
+    [
+      "2026-11-11",
+      "backend/tests/test_task10_payment_refund_notification_contract.py",
+      "Updated refund route contract assertions.",
+      "Pre-change copy in docs backup folder."
+    ],
+    [
+      "2026-11-11",
+      "backend/tests/test_task22_checkout_audit_contract.py",
+      "Updated feature-gated Grocery payment assertions.",
+      "Pre-change copy in docs backup folder."
+    ],
+    [
+      "2026-11-11",
+      "Documentation + tracker",
+      "Task 18 QA report, checkpoint, blockers, history and Excel tracker.",
+      "See project reports and workbook."
+    ],
+    [
+      "2026-11-11",
+      "backend/security_config.py (new)",
+      "Added fail-closed production CORS environment parser; development wildcard default preserved.",
+      "Unit-tested in test_task16_production_cors_contract.py."
+    ],
+    [
+      "2026-11-11",
+      "backend/server.py",
+      "Wired CORS middleware to guarded environment parser; no route/payment/database behavior changed.",
+      "Pre-change backup: backups/task5-11-16-17-18-batch-prechange-20261111/backend/server.py."
+    ],
+    [
+      "2026-11-11",
+      "backend/.env.example",
+      "Documented APP_ENV=development and explicit production CORS requirement.",
+      "Pre-change backup: backups/task5-11-16-17-18-batch-prechange-20261111/backend/.env.example."
+    ],
+    [
+      "2026-11-11",
+      "backend/tests/test_task5_measured_import_contract.py",
+      "Added offline tests executing actual measured import parser and Pydantic MeasureIn model extracted from server AST.",
+      "New tests included in 63-pass focused run."
+    ],
+    [
+      "2026-11-11",
+      "backend/tests/test_task11_grocery_refund_status_contract.py",
+      "Added offline coverage for not-charged, under-review, pending, partial, reconciliation, refunded and failed Grocery refund states.",
+      "New tests included in 63-pass focused run."
+    ],
+    [
+      "2026-11-11",
+      "backend/tests/test_task16_production_cors_contract.py",
+      "Added production CORS wildcard/missing-origin fail-closed tests and server wiring assertion.",
+      "New tests included in 63-pass focused run."
+    ],
+    [
+      "2026-11-11",
+      "backend/tests/test_task17_grocery_payment_gate_contract.py",
+      "Added feature-flag and server-side Razorpay key gate tests.",
+      "New tests included in 63-pass focused run."
+    ],
+    [
+      "2026-11-11",
+      "backend/tests/* (12 contract modules)",
+      "Reconciled 24 stale source-contract failures against current behavior; no tests skipped/xfail/suppressed.",
+      "Pre-change copies in backups/qa-reconciliation-20261111/prechange/backend/tests/; final 333 offline PASS."
+    ],
+    [
+      "2026-11-11",
+      "frontend/package.json",
+      "Added standard typecheck and production web-build scripts.",
+      "Pre-change copy in backups/qa-reconciliation-20261111/prechange/frontend/package.json; both attempted, environment-blocked."
+    ],
+    [
+      "2026-11-11",
+      "COME_IN_QA_RECONCILIATION_2026-11-11.md",
+      "Individual classification of all 24 failures, environment errors and remaining runtime blockers.",
+      "333/333 offline PASS; full runtime collection blocked by missing /app/frontend/.env."
+    ],
+    [
+      "2026-11-11",
+      "COME_IN_QA_REPORT.md; COME_IN_PROJECT_CHECKPOINT.md; COME_IN_PENDING_TASKS.md; tracker JSON/MD/XLSX",
+      "Updated task statuses, QA results, auth/payment/refund blockers and next eligible task selection.",
+      "Pre-change docs/workbook backed up in backups/qa-reconciliation-20261111/prechange/docs/."
+    ],
+    [
+      "2026-11-11",
+      "backend/tests/test_task5_customer_measured_shopping_contract.py",
+      "Added 11 source-contract tests for customer measured picker, unit semantics, seller min/step/max, cart persistence/identity, Buy Now isolation, server quote, backend validation and transaction source path.",
+      "New test file; 29 focused Task 5/cart tests and 344 offline tests passed. Application source unchanged because Phase 4 was already present."
+    ],
+    [
+      "2026-11-11",
+      "COME_IN_TASK5_PHASE4_EXECUTION_REPORT_2026-11-11.md + tracker/QA docs",
+      "Recorded baseline verification, Phase 4 source evidence, test results, seven MongoDB blockers and final PARTIAL status.",
+      "Pre-change copies in backups/task5-phase4-execution-20261111/prechange/; no Task 11 or other main task started."
+    ],
+    [
+      "2026-11-11",
+      "Task 5 live verification follow-up + tracker/QA docs",
+      "Reverified Final V2 baseline; 35 focused and 345 offline tests pass; all live DB/Expo gates blocked; no app source changed.",
+      "Pre-change copies under backups/task5-live-verification-20261111/prechange/; report: COME_IN_TASK5_LIVE_VERIFICATION_2026-11-11.md"
+    ],
+    [
+      "2026-11-11",
+      "Task 5 live provisioning closure attempt",
+      "Verified only the authoritative live-verification baseline; extracted separately; manifest 450/450 PASS. Focused 66 PASS; offline 345 PASS/23 skipped; compileall PASS. No app source changed and no defect reproduced.",
+      "MongoDB/Expo provisioning blocked; all seven transaction scenarios and remaining live workflows BLOCKED / NOT RUN. Report: COME_IN_TASK5_LIVE_PROVISIONING_CLOSURE_2026-11-11.md. Pre-change docs/workbook saved under backups/task5-live-provisioning-20261111/prechange/."
+    ],
+    [
+      "2026-11-11",
+      "Task 5 live resumption baseline/runtime investigation",
+      "Located and verified the exact 11 Nov closure ZIP and tracker; extracted separate working copy; verified 595/595 manifest; rechecked local provisioning. Reran 43 focused offline tests and compileall. No app source changed.",
+      "All MongoDB/Expo live checks remain BLOCKED / NOT RUN. Report: COME_IN_TASK5_LIVE_RESUMPTION_2026-11-11.md. Pre-change project-record copies under backups/task5-live-resumption-20261111/prechange/."
+    ],
+    [
+      "2026-11-11",
+      "infra/mongodb/*, scripts/mongo/*",
+      "MongoDB portability package: replica-set templates, init/health/tx/testdb scripts, supervisor + compose configs",
+      "New files"
+    ],
+    [
+      "2026-11-11",
+      "docs/mongodb/*",
+      "Setup, schema/validation, transactions, versions, troubleshooting, Expo environment docs",
+      "New files"
+    ],
+    [
+      "2026-11-11",
+      "scripts/verify-env.sh, scripts/release/*",
+      "Environment verification; Master ZIP builder with secret scan + extraction verification; tracker updater",
+      "New files"
+    ],
+    [
+      "2026-11-11",
+      "frontend/package.json, backend/.env.example",
+      "start script honours PORT; .env.example documents replica-set URLs",
+      "Pre-change copy: backups/mongodb-portability-20261111/prechange"
+    ],
+    [
+      "2026-11-11",
+      "backend/tests/test_task5_live_mongo_transactions.py",
+      "New live transaction suite (7 scenarios + repeat order + import) with teardown cleanup",
+      "New file"
+    ],
+    [
+      "2026-11-11",
+      "frontend MeasuredQuantityPicker / translations / seller products; backend sugar fixture",
+      "BUG-14..17 fixes",
+      "Baseline copies in backups/mongodb-portability-20261111/prechange"
+    ],
+    [
+      "2026-11-12",
+      "backend/server.py",
+      "Chand public catalog context now returns product image/brand/category/variant/Task5 measured metadata and shop-declared fulfillment; accepts bounded non-persistent 8-turn provider history; COME-IN-only multilingual/budget safety prompt.",
+      "Authoritative baseline preserved; covered by focused source-contract tests."
+    ],
+    [
+      "2026-11-12",
+      "frontend/app/chand.tsx",
+      "Existing Chand UI now renders live catalog ProductCard recommendations, maps Fixed-Pack/Measured contracts, session history, retry state, moon-heart accent and keyboard dictation focus affordance.",
+      "Original Master ZIP remains unchanged; 52 focused tests / 7 syntax transpiles."
+    ],
+    [
+      "2026-11-12",
+      "frontend/app/(tabs)/index.tsx",
+      "Removed old Request Anything Home card; retained single Chand home entry; header microphone opens Chand voice typing route.",
+      "Home/entry source-contract test."
+    ],
+    [
+      "2026-11-12",
+      "frontend/app/(tabs)/account.tsx",
+      "Account Request Anything shortcut now opens shared Chand route.",
+      "Account/entry source-contract test."
+    ],
+    [
+      "2026-11-12",
+      "frontend/app/request.tsx; frontend/app/auth.tsx",
+      "Preserved pickup/drop request workflow under Pickup & Drop Request label and removed obsolete signup copy.",
+      "Existing /requests/anything API preserved and linked from Chand."
+    ],
+    [
+      "2026-11-12",
+      "frontend/src/components/ProductCard.tsx; frontend/src/data/catalog.ts",
+      "Added safe missing-image placeholder handling and optional shop-declared fulfillment metadata.",
+      "Existing cart/ProductCard behavior reused."
+    ],
+    [
+      "2026-11-12",
+      "backend/tests/test_chand_shopping_integration_contract.py",
+      "Added focused source contracts for catalog cards, Task5 fields, route replacement, session context, retry and preserved pickup/drop.",
+      "Included in 52 PASS focused run."
+    ],
+    [
+      "2026-11-12",
+      "Documentation and Master Tracker",
+      "Updated Chand setup/status, execution report, Markdown/JSON/Excel tracker and changelog.",
+      "Full dated Master ZIP and SHA-256 sidecar."
+    ]
+  ],
+  "xl/worksheets/sheet8.xml": [
+    [
+      "Artifact",
+      "Date",
+      "SHA-256 / Integrity",
+      "Status / Notes"
+    ],
+    [
+      "Authoritative baseline ZIP \u2014 COME-IN-MASTER-COMPLETE-TASK5-MONGODB_2026-11-11 2.zip",
+      "2026-11-11",
+      "9d871f9f04551017a5322a275ddbd63a353f2ed24d13be9cd57831d9c27738f6; 5,148,397 bytes; ZIP integrity PASS",
+      "Exact expected checksum matched; original archive preserved unchanged."
+    ],
+    [
+      "New Task 18 Iteration 3 Master ZIP",
+      "2026-11-11",
+      "See adjacent .sha256 sidecar",
+      "Created after workbook/docs finalization; original baseline untouched."
+    ],
+    [
+      "Pre-change source backups",
+      "2026-11-11",
+      "Per-file bytes preserved",
+      "backups/task18-qa-iteration3-prechange-20261111/"
+    ],
+    [
+      "Pre-change documentation backups",
+      "2026-11-11",
+      "Per-file bytes preserved",
+      "backups/task18-qa-iteration3-docs-prechange-20261111/"
+    ],
+    [
+      "Internal baseline MANIFEST.sha256",
+      "2026-11-11",
+      "422 entries; sha256sum -c PASS",
+      "Regenerated for this complete working copy; all manifest entries verified."
+    ],
+    [
+      "Git repository",
+      "2026-11-11",
+      "NOT PRESENT",
+      "No .git directory or history included in uploaded ZIP."
+    ],
+    [
+      "Five-task follow-through pre-change source backups",
+      "2026-11-11",
+      "Byte-preserved",
+      "backups/task5-11-16-17-18-batch-prechange-20261111/backend/"
+    ],
+    [
+      "Five-task follow-through pre-change docs backups",
+      "2026-11-11",
+      "Byte-preserved",
+      "backups/task5-11-16-17-18-batch-prechange-20261111/docs/"
+    ],
+    [
+      "New five-task follow-through Master ZIP",
+      "2026-11-11",
+      "See adjacent .sha256 sidecar",
+      "Created after workbook/docs finalization; original Master ZIP preserved."
+    ],
+    [
+      "QA reconciliation pre-change copies",
+      "2026-11-11",
+      "Per-file bytes preserved",
+      "backups/qa-reconciliation-20261111/prechange/ \u2014 test modules, package.json, tracker and reports."
+    ],
+    [
+      "New QA reconciliation Master ZIP",
+      "2026-11-11",
+      "See adjacent .sha256 sidecar",
+      "Created from separate working copy after QA/docs/tracker update; original input ZIP preserved."
+    ],
+    [
+      "New Task 5 Phase 4 verification Master ZIP",
+      "2026-11-11",
+      "SHA-256 recorded in adjacent .sha256 sidecar after final packaging",
+      "Created from accepted QA reconciliation baseline plus Task 5 Phase 4 test/report/tracker updates; original baseline ZIP and tracker preserved."
+    ],
+    [
+      "Updated Excel Master Tracker",
+      "2026-11-11",
+      "SHA-256 recorded in adjacent .sha256 sidecar after final workbook save",
+      "Eight original worksheets retained; Task 5 remains PARTIAL; QA, blockers, evidence and implementation history updated."
+    ],
+    [
+      "Task 5 live verification Master ZIP",
+      "2026-11-11",
+      "SHA-256 in adjacent .sha256 sidecar",
+      "Built from Final V2 baseline; ZIP integrity and internal manifest verified after extraction."
+    ],
+    [
+      "Task 5 live verification Excel Tracker",
+      "2026-11-11",
+      "SHA-256 in adjacent .sha256 sidecar",
+      "Final V2 workbook structure retained; all 8 worksheets reopened and verified; embedded copy byte-matched."
+    ],
+    [
+      "Task 5 live provisioning closure pre-change copies",
+      "2026-11-11",
+      "13 project records/workbook copied byte-preserving",
+      "backups/task5-live-provisioning-20261111/prechange/"
+    ],
+    [
+      "Task 5 live provisioning closure Master ZIP",
+      "2026-11-11",
+      "SHA-256 in adjacent sidecar; ZIP integrity PASS; final manifest 595/595 PASS after separate extraction.",
+      "Created from authoritative live-verification baseline in separate working directory; originals unchanged."
+    ],
+    [
+      "Task 5 live provisioning closure Excel Tracker",
+      "2026-11-11",
+      "SHA-256 in adjacent sidecar; 8/8 worksheets reopened; embedded copy byte-matched.",
+      "Workbook structure and established sheets preserved; Task 5 remains PARTIAL."
+    ],
+    [
+      "Task 5 live resumption baseline ZIP",
+      "2026-11-11",
+      "62855aa27b16aebac160a4add609b5d6b88e8f2d2fc46327ebffb0ae0384e7ae",
+      "Exact requested baseline verified; original unchanged; separate extraction; 595/595 internal manifest PASS."
+    ],
+    [
+      "Task 5 live resumption baseline Excel",
+      "2026-11-11",
+      "fccd83280867977f13908805a89b01b69856a6546039ef0678b00bd968170883",
+      "Exact requested baseline verified; original unchanged; 8 worksheets preserved."
+    ],
+    [
+      "Task 5 live resumption pre-change copies",
+      "2026-11-11",
+      "Byte-preserving copies",
+      "Project records/workbook copied before update under backups/task5-live-resumption-20261111/prechange/."
+    ],
+    [
+      "Task 5 live resumption Master ZIP",
+      "2026-11-11",
+      "SHA-256 in adjacent .sha256 sidecar",
+      "Complete application source/tests/docs and updated tracker; ZIP integrity and extracted manifest verification required."
+    ],
+    [
+      "Task 5 live resumption Excel Tracker",
+      "2026-11-11",
+      "SHA-256 in adjacent .sha256 sidecar",
+      "Updated 8-sheet workbook; embedded copy must byte-match downloadable workbook."
+    ],
+    [
+      "COME-IN-MONGODB-PORTABLE-CHECKPOINT ZIP",
+      "2026-11-11",
+      "See adjacent .sha256 sidecar",
+      "Intermediate checkpoint after MongoDB provisioning; manifest verified after separate-directory extraction"
+    ],
+    [
+      "COME-IN-MASTER-COMPLETE-TASK5-MONGODB ZIP",
+      "2026-11-11",
+      "See adjacent .sha256 sidecar",
+      "Final Master ZIP; preserves MongoDB portability package; manifest verified after separate-directory extraction"
+    ],
+    [
+      "New Chand AI complete-source Master ZIP",
+      "2026-11-12",
+      "See external .sha256 sidecar (checksum not embedded to avoid self-reference).",
+      "Created from separate working copy; integrity and required-source presence verified after packaging. Chand feature status PARTIAL."
+    ]
+  ],
+  "xl/worksheets/sheet9.xml": [
+    [
+      "#",
+      "Deliverable",
+      "Location",
+      "Status",
+      "Verification"
+    ],
+    [
+      "1",
+      "MongoDB setup documentation",
+      "docs/mongodb/MONGODB_SETUP.md",
+      "DONE",
+      "Followed in Emergent workspace"
+    ],
+    [
+      "2",
+      "Replica-set configuration",
+      "infra/mongodb/mongod-rs0.conf, rs-init.js, supervisor-mongodb-rs0.conf, docker-compose.yml",
+      "DONE",
+      "rs-init + supervisor VERIFIED; compose NOT VERIFIED (no Docker)"
+    ],
+    [
+      "3",
+      "Database initialization script",
+      "scripts/mongo/comein_mongo.py init",
+      "DONE",
+      "44 collections / 54 indexes created"
+    ],
+    [
+      "4",
+      "Collection + index initialization",
+      "parsed from backend/server.py _startup (no drift)",
+      "DONE",
+      "health: indexes_missing = []"
+    ],
+    [
+      "5",
+      "Schema & validation documentation",
+      "docs/mongodb/SCHEMA_AND_VALIDATION.md",
+      "DONE",
+      "No $jsonSchema validators exist in app contract (documented)"
+    ],
+    [
+      "6",
+      "Transaction configuration documentation",
+      "docs/mongodb/TRANSACTIONS.md",
+      "DONE",
+      "tx-verify PASS"
+    ],
+    [
+      "7",
+      "Environment-variable template",
+      "backend/.env.example, frontend/.env.example, infra/mongodb/.env.example",
+      "DONE",
+      "Placeholders only; secret scan PASS"
+    ],
+    [
+      "8",
+      "Database connection configuration",
+      "backend/server.py L73-79 (MONGO_URL, DB_NAME) documented",
+      "DONE",
+      "Backend connected to rs0"
+    ],
+    [
+      "9",
+      "Dependency & version documentation",
+      "docs/mongodb/VERSIONS.md",
+      "DONE",
+      "verify-env.sh PASS"
+    ],
+    [
+      "10",
+      "MongoDB health-check script",
+      "scripts/mongo/comein_mongo.py health",
+      "DONE",
+      "PASS"
+    ],
+    [
+      "11",
+      "Automated setup & verification",
+      "scripts/mongo/setup.sh, scripts/verify-env.sh",
+      "DONE",
+      "PASS in Emergent workspace"
+    ],
+    [
+      "12",
+      "Troubleshooting guide",
+      "docs/mongodb/TROUBLESHOOTING.md",
+      "DONE",
+      "\u2014"
+    ],
+    [
+      "13",
+      "Expo environment portability",
+      "docs/mongodb/EXPO_ENVIRONMENT.md, frontend/yarn.lock",
+      "DONE",
+      "frozen-lockfile install PASS"
+    ],
+    [
+      "14",
+      "Restoration procedure + automated test",
+      "docs/mongodb/RESTORATION_PROCEDURE.md, scripts/release/restoration_test.sh",
+      "DONE",
+      "Checkpoint ZIP PASS in clean directory"
+    ],
+    [
+      "15",
+      "Master ZIP builder (manifest, secret scan, extraction verify)",
+      "scripts/release/build_master_zip.py",
+      "DONE",
+      "Checkpoint + final ZIPs verified"
+    ],
+    [
+      "Step",
+      "Restoration step",
+      "Automated?",
+      "Needs external credentials/infra?",
+      "Result"
+    ],
+    [
+      "1",
+      "Upload Master ZIP",
+      "No (manual)",
+      "No",
+      "PASS (checkpoint ZIP downloaded via public link, sha256 matched)"
+    ],
+    [
+      "2",
+      "Extract application",
+      "Yes",
+      "No",
+      "PASS \u2014 manifest 504/504"
+    ],
+    [
+      "3",
+      "Read setup instructions",
+      "No (manual)",
+      "No",
+      "PASS \u2014 docs/mongodb present"
+    ],
+    [
+      "4",
+      "Configure authorised test credentials",
+      "Partly (templates + random local secrets)",
+      "Local: No; Atlas: Yes",
+      "PASS (local)"
+    ],
+    [
+      "5",
+      "Provision replica set",
+      "Yes (setup.sh)",
+      "mongod 7.0.x binary (present in Emergent image)",
+      "PASS \u2014 rs0 PRIMARY on :27019"
+    ],
+    [
+      "6",
+      "Initialise indexes/config",
+      "Yes",
+      "No",
+      "PASS \u2014 44 collections / 54 indexes"
+    ],
+    [
+      "7",
+      "Verify connectivity",
+      "Yes",
+      "No",
+      "PASS"
+    ],
+    [
+      "8",
+      "Verify transactions",
+      "Yes",
+      "No",
+      "PASS \u2014 commit visible, abort rolled back; disposable DB dropped"
+    ],
+    [
+      "9",
+      "Run health check",
+      "Yes",
+      "No",
+      "PASS \u2014 ok true; backend /api/ ok; verify-env PASS"
+    ],
+    [
+      "note",
+      "Clean environment = separate directory on the same Emergent pod. New Emergent account, Docker Compose and Atlas were NOT tested."
+    ]
+  ],
+  "xl/worksheets/sheet10.xml": [
+    [
+      "CHAND AI \u2014 FEATURE TRACKER",
+      "Status",
+      "Evidence / Notes"
+    ],
+    [
+      "Overall status",
+      "PARTIAL",
+      "Phase 3 final integration source added; not fully live or production ready. Report: project-reports/CHAND_AI_PHASE_3_FINAL_INTEGRATION_REPORT_2026-11-12.md"
+    ],
+    [
+      "Shared Chand UI and route",
+      "IMPLEMENTED",
+      "Existing chand.tsx upgraded; Home/Account/header open shared /chand route."
+    ],
+    [
+      "Catalog product cards",
+      "IMPLEMENTED \u2014 SOURCE",
+      "Uses public /assistant/context results and existing ProductCard/cart/product-detail behavior. Live DB runtime not run."
+    ],
+    [
+      "Task 5 Fixed-Pack / Measured",
+      "IMPLEMENTED \u2014 SOURCE",
+      "Maps existing sell_by/measure and reuses existing product detail/quote/cart workflow; Task 5 source not rewritten."
+    ],
+    [
+      "AI provider",
+      "BLOCKED \u2014 LIVE",
+      "Existing backend OpenAI-compatible/Ollama adapter; no credentials or reachable provider supplied."
+    ],
+    [
+      "Voice shopping",
+      "IMPLEMENTED \u2014 SOURCE / DEVICE NOT RUN",
+      "Expo Audio microphone permission, native record/stop/cancel, 90-second cap, Auto/Hindi/English, authenticated transcription and editable transcript review; device codec/provider verification pending."
+    ],
+    [
+      "Photo shopping",
+      "IMPLEMENTED \u2014 SOURCE / DEVICE NOT RUN",
+      "Expo ImagePicker camera/gallery permission, capture/select, preview, replace/cancel, authenticated vision upload, recognized clues, live catalog matches and explicit confirmation; device verification pending."
+    ],
+    [
+      "Budget list planner",
+      "IMPLEMENTED \u2014 SOURCE / LIVE CHECKOUT NOT RUN",
+      "Live fixed-pack, variants and Task 5 measured items; editable quantity/removal; catalog refresh, measured server quote and stock checks before existing Cart transfer. Checkout remains authoritative."
+    ],
+    [
+      "Budget list optimizer/editor",
+      "PARTIAL \u2014 FIXED-PACK SLICE",
+      "Editable fixed-pack live catalog list, quantity +/- and remove; budget cap guard; transfer to existing Cart. Measured/variants and optimization remain outstanding."
+    ],
+    [
+      "Feedback and Admin review",
+      "IMPLEMENTED \u2014 SOURCE / LIVE DB NOT RUN",
+      "Authenticated feedback API, idempotency, per-user 5/hour cap, common contact/OTP-pattern redaction; admin-only review/status endpoints and UI. MongoDB runtime not run."
+    ],
+    [
+      "Conversation persistence",
+      "NOT IMPLEMENTED",
+      "Only bounded 8-turn in-request context; not stored."
+    ],
+    [
+      "Focused tests",
+      "PASS",
+      "130 passed / 0 failed across 19 Chand, Task 5, Restaurant, Cart, Checkout and Support regression modules."
+    ],
+    [
+      "Python compile",
+      "PASS",
+      "backend/server.py compiled."
+    ],
+    [
+      "TS/TSX syntax transpilation",
+      "PASS",
+      "89 frontend TS/TSX files, 0 syntax diagnostics; syntax only, not semantic typecheck."
+    ],
+    [
+      "Expo / semantic typecheck",
+      "BLOCKED",
+      "frontend/node_modules and expo/tsconfig.base unavailable. Expo CLI not installed; package lock refresh blocked by registry DNS."
+    ],
+    [
+      "Live DB/provider/device regression",
+      "BLOCKED / NOT RUN",
+      "No owner AI credentials/reachable provider, separate non-production MongoDB replica set, Android/iOS build toolchain or native device in this environment."
+    ],
+    [
+      "Live DB/provider/device regression",
+      "BLOCKED / NOT RUN",
+      "No provider credentials/reachable endpoint, test MongoDB or native device runtime in this environment."
+    ],
+    [
+      "Birthday / party planner",
+      "PARTIAL \u2014 GUIDED CATALOG PLANNER",
+      "Occasion, guest count and budget prompts query public catalog; returned products can be added to editable variant/measured budget list and confirmed to Cart. Deterministic per-guest optimizer/structured substitutions remain incomplete."
+    ],
+    [
+      "Expo native dependencies / lockfile",
+      "PARTIAL \u2014 DECLARED / INSTALL BLOCKED",
+      "expo-image-picker ~58.0.10 and expo-audio ~58.0.12 declared; app config plugins added. yarn.lock not regenerated because Yarn unavailable and Corepack registry DNS returned EAI_AGAIN."
+    ],
+    [
+      "Final integration report",
+      "CREATED",
+      "project-reports/CHAND_AI_PHASE_3_FINAL_INTEGRATION_REPORT_2026-11-12.md; overall Chand status remains PARTIAL."
+    ]
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/delivery-partner/provider-status",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/delivery-partner/application",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "method": "GET",
+      "path": "/delivery-partner/application/mine",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "method": "POST",
+      "path": "/delivery-partner/application/submit",
+      "expected": 409,
+      "actual": 409
+    },
+    {
+      "method": "POST",
+      "path": "/delivery-partner/otp/request",
+      "expected": 503,
+      "actual": 503
+    },
+    {
+      "method": "GET",
+      "path": "/delivery-partner/admin/applications",
+      "expected": 403,
+      "actual": 403
+    },
+    {
+      "method": "GET",
+      "path": "/delivery-partner/admin/applications",
+      "expected": 200,
+      "actual": 200
+    },
+    {
+      "method": "GET",
+      "path": "/delivery-partner/access",
+      "expected": 403,
+      "actual": 403
+    },
+    {
+      "method": "GET",
+      "path": "/delivery-partner/application/mine",
+      "expected": 401,
+      "actual": 401
+    },
+    {
+      "method": "GET",
+      "path": "/delivery-partner/application/mine",
+      "expected": 200,
+      "actual": 200
+    }
+  ],
+  "scope": "local synthetic identities; external verification remains disabled"
+}

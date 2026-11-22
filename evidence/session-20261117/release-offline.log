@@ -1,0 +1,97 @@
+bringing up nodes...
+bringing up nodes...
+
+.....F...FF..............................F........s..ss....F.........s.. [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+........................................................................ [ 57%]
+........................................................................ [ 71%]
+........................................................................ [ 85%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_auth_persistence_failure_is_not_silently_accepted ____________
+[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+    def test_auth_persistence_failure_is_not_silently_accepted():
+        auth = (ROOT / "frontend/src/store/auth.tsx").read_text()
+        assert "const saved = await storage.secureSet(TOKEN_KEY, token)" in auth
+        assert "could not save the session securely" in auth
+>       assert "Keep an already-hydrated user signed in through transient network/5xx errors" in auth
+E       assert 'Keep an already-hydrated user signed in through transient network/5xx errors' in '// Come In — Auth context.\n//\n// Loads a persisted bearer token on mount, exposes:\n//   - user: null (loading) | u... = useContext(AuthContext);\n  if (!ctx) throw new Error("useAuth must be inside <AuthProvider>");\n  return ctx;\n}\n'
+
+tests/test_frontend_contracts.py:43: AssertionError
+__________ test_shopping_home_theme_contract_and_separate_mode_routes __________
+[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+    def test_shopping_home_theme_contract_and_separate_mode_routes():
+        home = (ROOT / "frontend/app/(tabs)/index.tsx").read_text()
+        theme = (ROOT / "frontend/src/theme.ts").read_text()
+        tabs = (ROOT / "frontend/app/(tabs)/_layout.tsx").read_text()
+        shops = (ROOT / "frontend/app/shops.tsx").read_text()
+        for marker in (
+            'testID="home-filter-button"',
+            'testID="online-shops-card"',
+            'testID="offline-shops-card"',
+            'testID="restaurant-mode-card"',
+            'testID="home-services-card"',
+            'testID="request-anything-card"',
+            '{CATEGORIES.map((item) => (',
+            'testID="header-language"',
+            'testID="header-voice-search"',
+            'testID="fresh-groceries-banner"',
+            'router.push("/restaurant")',
+            'router.push("/services")',
+        ):
+>           assert marker in home
+E           assert 'testID="request-anything-card"' in 'import Feather from "@react-native-vector-icons/feather";\nimport { Image } from "expo-image";\nimport { LinearGradie...lignItems: "center",\n  },\n  modalBtnText: { fontSize: 15, fontWeight: "800", color: colors.onBrandPrimary },\n}));\n'
+
+tests/test_frontend_contracts.py:84: AssertionError
+______ test_bakery_has_no_fabricated_sample_inventory_and_voice_is_honest ______
+[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+    def test_bakery_has_no_fabricated_sample_inventory_and_voice_is_honest():
+        catalog = (ROOT / "frontend/src/data/catalog.ts").read_text()
+        home = (ROOT / "frontend/app/(tabs)/index.tsx").read_text()
+        assert 'id: "bakery"' in catalog
+        assert 'id: "p-bakery-bread"' not in catalog
+        assert 'name: "Fresh Bread Loaf"' not in catalog
+>       assert 'Voice search unavailable' in home
+E       assert 'Voice search unavailable' in 'import Feather from "@react-native-vector-icons/feather";\nimport { Image } from "expo-image";\nimport { LinearGradie...lignItems: "center",\n  },\n  modalBtnText: { fontSize: 15, fontWeight: "800", color: colors.onBrandPrimary },\n}));\n'
+
+tests/test_frontend_contracts.py:103: AssertionError
+_ test_shared_logout_clears_the_same_token_and_existing_roles_remain_authoritative _
+[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+    def test_shared_logout_clears_the_same_token_and_existing_roles_remain_authoritative():
+        assert "const logout = useCallback(async () =>" in AUTH_STORE
+        assert "await clearToken()" in AUTH_STORE
+>       assert 'type Role = "customer" | "shopkeeper" | "admin"' in AUTH_STORE
+E       assert 'type Role = "customer" | "shopkeeper" | "admin"' in '// Come In — Auth context.\n//\n// Loads a persisted bearer token on mount, exposes:\n//   - user: null (loading) | u... = useContext(AuthContext);\n  if (!ctx) throw new Error("useAuth must be inside <AuthProvider>");\n  return ctx;\n}\n'
+
+tests/test_shared_system_integration_contract.py:111: AssertionError
+______ test_csv_formula_like_cells_are_preserved_as_untrusted_source_text ______
+[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+    def test_csv_formula_like_cells_are_preserved_as_untrusted_source_text():
+        payload = b"name,description\n=HYPERLINK(\"https://bad.invalid\",\"click\"),=cmd|\"/C calc\"\n"
+        record = process_file("untrusted.csv", payload).records[0]
+>       assert record["raw_values"]["name"].startswith("=HYPERLINK")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'name'
+
+tests/test_universal_catalogue_import_engine.py:136: KeyError
+=============================== warnings summary ===============================
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+  /workspace/come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_frontend_contracts.py::test_auth_persistence_failure_is_not_silently_accepted
+FAILED tests/test_frontend_contracts.py::test_shopping_home_theme_contract_and_separate_mode_routes
+FAILED tests/test_frontend_contracts.py::test_bakery_has_no_fabricated_sample_inventory_and_voice_is_honest
+FAILED tests/test_shared_system_integration_contract.py::test_shared_logout_clears_the_same_token_and_existing_roles_remain_authoritative
+FAILED tests/test_universal_catalogue_import_engine.py::test_csv_formula_like_cells_are_preserved_as_untrusted_source_text
+5 failed, 496 passed, 4 skipped, 2 warnings in 34.79s

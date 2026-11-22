@@ -1,0 +1,61 @@
+bringing up nodes...
+bringing up nodes...
+
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_image_upload_bounds_read_before_rejecting_oversize ____________
+[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+    def test_image_upload_bounds_read_before_rejecting_oversize():
+        source = Path(__file__).parents[1] / "server.py"
+        node = next(n for n in ast.parse(source.read_text()).body if isinstance(n, ast.AsyncFunctionDef) and n.name == "upload_image")
+        node.decorator_list = []; node.args.defaults = []
+        for arg in node.args.args: arg.annotation = None
+        maximum = 5 * 1024 * 1024
+        env = {"ALLOWED_IMAGE": {"image/png"}, "MAX_UPLOAD_BYTES": maximum, "HTTPException": HTTPException}
+        exec(compile(ast.Module(body=[node], type_ignores=[]), str(source), "exec"), env)
+        read_limits = []
+        async def read(size=-1):
+            read_limits.append(size)
+            return b"x" * (maximum + 1)
+        async def run():
+            with pytest.raises(HTTPException) as error:
+                await env["upload_image"](SimpleNamespace(content_type="image/png", read=read), {"id": "local-owner"})
+            assert error.value.status_code == 400
+            assert read_limits == [maximum + 1]
+>       asyncio.run(run())
+
+tests/test_upload_allocation_bound.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        with pytest.raises(HTTPException) as error:
+            await env["upload_image"](SimpleNamespace(content_type="image/png", read=read), {"id": "local-owner"})
+        assert error.value.status_code == 400
+>       assert read_limits == [maximum + 1]
+E       assert [-1] == [5242881]
+E         
+E         At index 0 diff: -1 != 5242881
+E         Use -v to get more diff
+
+tests/test_upload_allocation_bound.py:27: AssertionError
+=============================== warnings summary ===============================
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+  /workspace/come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_upload_allocation_bound.py::test_image_upload_bounds_read_before_rejecting_oversize
+1 failed, 2 warnings in 0.77s

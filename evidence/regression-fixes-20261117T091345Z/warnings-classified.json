@@ -1,0 +1,254 @@
+[
+  {
+    "file": ".expo/types/router.d.ts",
+    "line": 1,
+    "rule": "unused-eslint-disable-directive",
+    "message": "Unused eslint-disable directive (no problems were reported)."
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 24,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'Alert' is defined but never used."
+  },
+  {
+    "file": "app/+not-found.tsx",
+    "line": 4,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'StyleSheet' is defined but never used."
+  },
+  {
+    "file": "app/auth.tsx",
+    "line": 14,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'StyleSheet' is defined but never used."
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 13,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'StyleSheet' is defined but never used."
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 5,
+    "rule": "import/no-duplicates",
+    "message": "'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/build/index.js' imported multiple times."
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 7,
+    "rule": "import/no-duplicates",
+    "message": "'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/build/index.js' imported multiple times."
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 98,
+    "rule": "@typescript-eslint/array-type",
+    "message": "Array type using 'Array<T>' is forbidden. Use 'T[]' instead."
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 103,
+    "rule": "@typescript-eslint/array-type",
+    "message": "Array type using 'Array<T>' is forbidden. Use 'T[]' instead."
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 104,
+    "rule": "@typescript-eslint/array-type",
+    "message": "Array type using 'Array<T>' is forbidden. Use 'T[]' instead."
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 105,
+    "rule": "@typescript-eslint/array-type",
+    "message": "Array type using 'Array<T>' is forbidden. Use 'T[]' instead."
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 106,
+    "rule": "@typescript-eslint/array-type",
+    "message": "Array type using 'Array<T>' is forbidden. Use 'T[]' instead."
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 191,
+    "rule": "react-hooks/exhaustive-deps",
+    "message": "React Hook useMemo has an unnecessary dependency: 'lang'. Either exclude it or remove the dependency array."
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 88,
+    "rule": "react-hooks/exhaustive-deps",
+    "message": "React Hook useEffect has missing dependencies: 'hasDemoItems', 'hasMixedShops', and 'shopIds'. Either include them or remove the dependency array."
+  },
+  {
+    "file": "app/delivery-partner.tsx",
+    "line": 3,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'Alert' is defined but never used."
+  },
+  {
+    "file": "app/referral-dashboard.tsx",
+    "line": 4,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'Alert' is defined but never used."
+  },
+  {
+    "file": "app/referral.tsx",
+    "line": 4,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'StyleSheet' is defined but never used."
+  },
+  {
+    "file": "app/referral.tsx",
+    "line": 13,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'user' is assigned a value but never used."
+  },
+  {
+    "file": "app/restaurant/[id].tsx",
+    "line": 12,
+    "rule": "react-hooks/exhaustive-deps",
+    "message": "React Hook useEffect has a missing dependency: 'local'. Either include it or remove the dependency array."
+  },
+  {
+    "file": "app/restaurant/cart.tsx",
+    "line": 1,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'useEffect' is defined but never used."
+  },
+  {
+    "file": "app/restaurant/categories.tsx",
+    "line": 2,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'View' is defined but never used."
+  },
+  {
+    "file": "app/restaurant/categories.tsx",
+    "line": 3,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'RESTAURANTS' is defined but never used."
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 72,
+    "rule": "react-hooks/exhaustive-deps",
+    "message": "React Hook useEffect has a missing dependency: 'user'. Either include it or remove the dependency array."
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 13,
+    "rule": "react-hooks/exhaustive-deps",
+    "message": "React Hook useCallback has a missing dependency: 'selected'. Either include it or remove the dependency array."
+  },
+  {
+    "file": "app/restaurant/orders/index.tsx",
+    "line": 19,
+    "rule": "@typescript-eslint/array-type",
+    "message": "Array type using 'Array<T>' is forbidden. Use 'T[]' instead."
+  },
+  {
+    "file": "app/restaurant/orders/index.tsx",
+    "line": 51,
+    "rule": "react-hooks/exhaustive-deps",
+    "message": "React Hook useCallback has a missing dependency: 'user'. Either include it or remove the dependency array."
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 63,
+    "rule": "@typescript-eslint/array-type",
+    "message": "Array type using 'Array<T>' is forbidden. Use 'T[]' instead."
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 304,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'saved' is assigned a value but never used."
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 13,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'CATEGORIES' is assigned a value but never used."
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 21,
+    "rule": "react-hooks/exhaustive-deps",
+    "message": "React Hook useEffect has a missing dependency: 'loadDashboard'. Either include it or remove the dependency array."
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 5,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'useMemo' is defined but never used."
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 6,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'Platform' is defined but never used."
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 17,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'filterShops' is defined but never used."
+  },
+  {
+    "file": "scripts/cmd-guard/modes.js",
+    "line": 45,
+    "rule": "no-unused-vars",
+    "message": "'e' is defined but never used. Allowed unused caught errors must match /^_/u."
+  },
+  {
+    "file": "scripts/cmd-guard/rules.js",
+    "line": 36,
+    "rule": "no-unused-vars",
+    "message": "'e' is defined but never used. Allowed unused caught errors must match /^_/u."
+  },
+  {
+    "file": "src/components/MeasuredQuantityPicker.tsx",
+    "line": 45,
+    "rule": "react-hooks/exhaustive-deps",
+    "message": "React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array."
+  },
+  {
+    "file": "src/components/ProductCard.tsx",
+    "line": 3,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'StyleSheet' is defined but never used."
+  },
+  {
+    "file": "src/components/QuantityStepper.tsx",
+    "line": 3,
+    "rule": "@typescript-eslint/no-unused-vars",
+    "message": "'StyleSheet' is defined but never used."
+  },
+  {
+    "file": "src/components/SellerMeasuredFields.tsx",
+    "line": 17,
+    "rule": "@typescript-eslint/array-type",
+    "message": "Array type using 'Array<T>' is forbidden. Use 'T[]' instead."
+  },
+  {
+    "file": "src/data/catalog.ts",
+    "line": 367,
+    "rule": "@typescript-eslint/array-type",
+    "message": "Array type using 'Array<T>' is forbidden. Use 'T[]' instead."
+  },
+  {
+    "file": "src/lib/chand-party-planner.ts",
+    "line": 88,
+    "rule": "@typescript-eslint/array-type",
+    "message": "Array type using 'Array<T>' is forbidden. Use 'T[]' instead."
+  },
+  {
+    "file": "src/restaurant/useDiscoveryAddress.ts",
+    "line": 64,
+    "rule": "react-hooks/exhaustive-deps",
+    "message": "React Hook useCallback has a missing dependency: 'user'. Either include it or remove the dependency array."
+  }
+]

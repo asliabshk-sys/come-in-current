@@ -1,0 +1,11 @@
+{
+  "app": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+  "completed": "Recovered all checkpoints/reports/Git. Fresh resource audit. Android scratch native prebuild PASS but SDK/adb stops build; iOS build refused on Linux. MIME spoof/empty upload8 failures reproduced; matching-format file signatures added before storage. Backend restarted with guard;12 real local HTTP/auth/config checks PASS. Full external validation/security/TEST procedure report and all reports updated.",
+  "tests": "New focused selection25PASS0FAIL0SKIP;12 real local HTTP checksPASS. BEFORE8FAIL reproductions retained. Android/iOS commands exit1 environment BLOCKED. Historical suites not rerun.",
+  "blockers": "No JDK compiler/Android SDK/build tools/adb/emulator/KVM/USB device; no macOS/Xcode/CocoaPods/iPhone; no Razorpay TEST credentials/mode/webhook bindings; restricted network excludes Razorpay; no actual production infrastructure/configuration access.",
+  "files": "backend/server.py upload-signature guard; new backend/tests/test_image_upload_type_boundary.py; checkpoint/report/evidence docs only. Original frontend untouched; native generation isolated in scratch.",
+  "services": "MongoDB retained up;FastAPI8001 restarted with final upload guard;Expo3000 retained,HTTP200. No provider operation.",
+  "last_operation": "Source/file-signature fix verified by25 focused tests and12 HTTP checks;native attempt logs/inventory/external release report saved.",
+  "running": "Only retained MongoDB/FastAPI/Expo services. No test/build running;native retry safe only after prerequisites;do not rerun completed suites or overwrite scratch outputs.",
+  "next_action": "Developer/owner provision native JDK/SDK+Android device and macOS/Xcode+iPhone;securely bind official Razorpay TEST credentials and owned HTTPS webhook/allowed egress,then execute TEST-only procedure in EXTERNAL_VALIDATION_REPORT.md. Production owner supplies authorized read-only TLS/DB/secret/backup/ingress evidence. No LIVE/production money,paid build,commit/push/deploy/publish."
+}

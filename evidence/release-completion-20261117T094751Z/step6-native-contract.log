@@ -1,0 +1,24 @@
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /already open/. Input:
+
+'Error: Payment was not confirmed. Check the server payment status before retrying.'
+
+    at async /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/scripts/test-native-payment.cjs:21:3 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: Error: Payment was not confirmed. Check the server payment status before retrying.
+      at Object.openCheckout (evalmachine.<anonymous>:58:15)
+      at async waitForActual (node:assert:646:5)
+      at async strict.rejects (node:assert:769:25)
+      at async /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/scripts/test-native-payment.cjs:21:3,
+  expected: /already open/,
+  operator: 'rejects',
+  diff: 'simple'
+}
+evalmachine.<anonymous>:58
+        throw new Error(detail.code === 0 ? "Payment window closed. Check the server payment status before retrying." :
+              ^
+
+Error: Payment was not confirmed. Check the server payment status before retrying.
+    at Object.openCheckout (evalmachine.<anonymous>:58:15)
+
+Node.js v24.22.1

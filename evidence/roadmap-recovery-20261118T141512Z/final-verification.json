@@ -1,0 +1,36 @@
+{
+  "protected_files_unchanged": 647,
+  "all8_archive_document_copies_match": true,
+  "originalZIP_and_patch_unchanged": true,
+  "tracked_git_files_unchanged": true,
+  "report_sections_verified": 14,
+  "definitions_verified": 22,
+  "checkpoint_files": {
+    "COME_IN_LIVE_CHECKPOINT.md": {
+      "read_verified": true,
+      "bytes": 121356,
+      "sha256": "56afaff01f4778254398b9681634767702ee09a432e571f29c50675f70cc40e5"
+    },
+    "COME_IN_MASTER_TASK_TRACKER.md": {
+      "read_verified": true,
+      "bytes": 160425,
+      "sha256": "8884194a347de4b4af99bb807ef53180cf79a4bce89f7b955a110070fb0ececf"
+    },
+    "COME_IN_DECISIONS_AND_BLOCKERS.md": {
+      "read_verified": true,
+      "bytes": 137554,
+      "sha256": "a09d6d51cdd107a2311ff8a9e3940ae2fdfd6a52ca0fa2d3ad2d1f787426107b"
+    },
+    "COME_IN_SESSION_LOG.md": {
+      "read_verified": true,
+      "bytes": 131493,
+      "sha256": "e4cd1cf4dd91206eda4b3d7f602dff39f8ce850227fe9dce974a75fc538933df"
+    },
+    "COME_IN_NEXT_SESSION_RESUME_PROMPT.md": {
+      "read_verified": true,
+      "bytes": 5135,
+      "sha256": "6ffac46abc3ef8b0c38bff8890dea790fccd41973655fb5e21fecafe671b70ce"
+    }
+  },
+  "task2_started": false
+}

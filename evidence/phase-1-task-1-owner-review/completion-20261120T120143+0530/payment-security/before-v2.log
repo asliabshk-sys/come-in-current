@@ -1,0 +1,31 @@
+S7-restaurant-create-nonblocking FAIL Blocking provider I/O occupied the event loop
+S7-restaurant-verify-nonblocking FAIL Blocking provider I/O occupied the event loop
+S7-restaurant-refund-nonblocking FAIL Blocking provider I/O occupied the event loop
+S7-grocery-create-nonblocking FAIL Blocking provider I/O occupied the event loop
+S7-grocery-verify-nonblocking FAIL Blocking provider I/O occupied the event loop
+S7-grocery-refund-nonblocking FAIL Blocking provider I/O occupied the event loop
+S7-restaurant-create-success PASS 
+S7-restaurant-verify-success PASS 
+S7-restaurant-refund-success PASS 
+S7-grocery-create-success PASS 
+S7-grocery-verify-success PASS 
+S7-grocery-refund-success PASS 
+S7-restaurant-create-failure PASS 
+S7-restaurant-verify-failure PASS 
+S7-restaurant-refund-failure PASS 
+S7-grocery-create-failure PASS 
+S7-grocery-verify-failure PASS 
+S7-grocery-refund-failure PASS 
+S7-cancel FAIL Cancellation was blocked behind provider I/O
+S7-ownership PASS 
+S7-refund-role PASS 
+S8-declared-oversize FAIL Declared oversized body was not rejected413
+S8-stream-oversize-missing FAIL Actual oversized chunked body was not rejected413
+S8-stream-oversize-forged FAIL Actual oversized chunked body was not rejected413
+S8-exact-limit PASS 
+S8-invalid-signature PASS 
+S8-missing-configuration PASS 
+S8-malformed-json PASS 
+S8-duplicate PASS 
+S8-body-size-before-signature FAIL Unauthenticated oversized payload reached HMAC
+{"stage": "before-v2", "counts": {"PASS": 19, "FAIL": 11, "ERROR": 0, "SKIPPED": 0}}

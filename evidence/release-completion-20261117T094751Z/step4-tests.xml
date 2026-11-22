@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="48" time="4.625" timestamp="2026-11-17T09:59:30.429540+00:00" hostname="bca3ee959444"><testcase classname="tests.test_webhook_envelope_security" name="test_exact_signed_bytes_and_event_header_are_required" time="0.001" /><testcase classname="tests.test_webhook_envelope_security" name="test_invalid_envelopes_are_rejected[payload0]" time="0.001" /><testcase classname="tests.test_webhook_envelope_security" name="test_invalid_envelopes_are_rejected[None]" time="0.001" /><testcase classname="tests.test_webhook_envelope_security" name="test_invalid_envelopes_are_rejected[7]" time="0.000" /><testcase classname="tests.test_webhook_envelope_security" name="test_invalid_envelopes_are_rejected[payload3]" time="0.001" /><testcase classname="tests.test_webhook_envelope_security" name="test_invalid_envelopes_are_rejected[payload4]" time="0.000" /><testcase classname="tests.test_webhook_envelope_security" name="test_invalid_envelopes_are_rejected[payload5]" time="0.000" /><testcase classname="tests.test_webhook_envelope_security" name="test_invalid_envelopes_are_rejected[payload6]" time="0.000" /><testcase classname="tests.test_webhook_envelope_security" name="test_malformed_payment_evidence_never_becomes_capture[amount-True]" time="0.001" /><testcase classname="tests.test_webhook_envelope_security" name="test_malformed_payment_evidence_never_becomes_capture[amount--1]" time="0.000" /><testcase classname="tests.test_webhook_envelope_security" name="test_malformed_payment_evidence_never_becomes_capture[amount-2000]" time="0.000" /><testcase classname="tests.test_webhook_envelope_security" name="test_malformed_payment_evidence_never_becomes_capture[currency-USD]" time="0.000" /><testcase classname="tests.test_webhook_envelope_security" name="test_malformed_payment_evidence_never_becomes_capture[id-../unrelated]" time="0.000" /><testcase classname="tests.test_webhook_envelope_security" name="test_malformed_payment_evidence_never_becomes_capture[order_id-None]" time="0.000" /><testcase classname="tests.test_webhook_envelope_security" name="test_malformed_payment_evidence_never_becomes_capture[status-failed]" time="0.000" /><testcase classname="tests.test_webhook_envelope_security" name="test_unknown_signed_event_can_be_audited_without_business_dispatch" time="0.000" /><testcase classname="tests.test_webhook_envelope_security" name="test_invalid_json_and_wrong_secret_are_rejected" time="0.000" /><testcase classname="tests.test_payment_webhook_local_integration" name="test_local_signed_webhook_http_and_transaction_scenarios" time="0.888"><failure message="pymongo.errors.OperationFailure: db name must be at most 63 characters, found: 64, full error: {'ok': 0.0, 'errmsg': 'db name must be at most 63 characters, found: 64', 'code': 73, 'codeName': 'InvalidNamespace', '$clusterTime': {'clusterTime': Timestamp(1794909568, 1), 'signature': {'hash': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00', 'keyId': 0}}, 'operationTime': Timestamp(1794909568, 1)}">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7f1545dc3350&gt;
+
+    def test_local_signed_webhook_http_and_transaction_scenarios(monkeypatch):
+        if os.environ.get("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
+            pytest.skip("requires explicit local disposable payment-test opt-in")
+        import httpx
+        import server
+        from bson import ObjectId
+        from motor.motor_asyncio import AsyncIOMotorClient
+        from pymongo import MongoClient
+        from scripts.mongo.comein_mongo import init_db
+    
+        uri = "mongodb://127.0.0.1:27018/?replicaSet=rs0"
+        name = "comein_disposable_test_webhooks_" + uuid4().hex
+        sync = MongoClient(uri, serverSelectionTimeoutMS=3000)
+        assert sync.admin.command("hello")["setName"] == "rs0"
+&gt;       init_db(sync[name]); sync.close()
+        ^^^^^^^^^^^^^^^^^^^
+
+tests/test_payment_webhook_local_integration.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../scripts/mongo/comein_mongo.py:132: in init_db
+    preflight = preflight_unique_indexes(db)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../scripts/mongo/comein_mongo.py:191: in preflight_unique_indexes
+    duplicate_groups = list(db[spec["collection"]].aggregate(pipeline, maxTimeMS=max_time_ms))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py:3016: in aggregate
+    return self._aggregate(
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/_csot.py:126: in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py:2913: in _aggregate
+    return self._database.client._retryable_read(
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py:2061: in _retryable_read
+    return self._retry_internal(
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/_csot.py:126: in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py:2022: in _retry_internal
+    ).run()
+      ^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py:2890: in run
+    res = self._read() if self._is_read else self._write()
+          ^^^^^^^^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py:3130: in _read
+    return self._func(self._session, self._server, conn, read_pref)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/aggregation.py:163: in get_cursor
+    result = conn.command(
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/helpers.py:51: in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/pool.py:396: in command
+    return run_command(
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/command_runner.py:440: in run_command
+    docs, _, _ = _run_command(
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/command_runner.py:214: in _run_command
+    helpers_shared._check_command_response(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = {'ok': 0.0, 'errmsg': 'db name must be at most 63 characters, found: 64', 'code': 73, 'codeName': 'InvalidNamespace', ...}
+max_wire_version = 21, allowable_errors = None, parse_write_concern_error = True
+pool_opts = None
+
+    def _check_command_response(
+        response: _DocumentOut,
+        max_wire_version: Optional[int],
+        allowable_errors: Optional[Container[Union[int, str]]] = None,
+        parse_write_concern_error: bool = False,
+        pool_opts: Optional[PoolOptions] = None,
+    ) -&gt; None:
+        """Check the response to a command for errors."""
+        if "ok" not in response:
+            # Server didn't recognize our message as a command.
+            raise OperationFailure(
+                response.get("$err"),  # type: ignore[arg-type]
+                response.get("code"),
+                response,
+                max_wire_version,
+            )
+    
+        if parse_write_concern_error and "writeConcernError" in response:
+            _error = response["writeConcernError"]
+            _labels = response.get("errorLabels")
+            if _labels:
+                _error.update({"errorLabels": _labels})
+            _raise_write_concern_error(_error)
+    
+        if response["ok"]:
+            return
+    
+        details = response
+        errmsg = details["errmsg"]
+        code = details.get("code")
+    
+        # For allowable errors, only check for error messages when the code is not
+        # included.
+        if allowable_errors:
+            if code is not None:
+                if code in allowable_errors:
+                    return
+            elif errmsg in allowable_errors:
+                return
+    
+        # Server is "not primary" or "recovering"
+        if code is not None:
+            if code in _NOT_PRIMARY_CODES:
+                raise NotPrimaryError(errmsg, response)
+        elif HelloCompat.LEGACY_ERROR in errmsg or "node is recovering" in errmsg:
+            raise NotPrimaryError(errmsg, response)
+    
+        # Other errors
+        # findAndModify with upsert can raise duplicate key error
+        if code in (11000, 11001, 12582):
+            raise DuplicateKeyError(errmsg, code, response, max_wire_version)
+        elif code == 50:
+            # Append timeout details to MaxTimeMSExpired responses.
+            if pool_opts:
+                timeout_details = _get_timeout_details(pool_opts)
+                errmsg += format_timeout_details(timeout_details)
+            raise ExecutionTimeout(errmsg, code, response, max_wire_version)
+        elif code == 43:
+            raise CursorNotFound(errmsg, code, response, max_wire_version)
+    
+&gt;       raise OperationFailure(errmsg, code, response, max_wire_version)
+E       pymongo.errors.OperationFailure: db name must be at most 63 characters, found: 64, full error: {'ok': 0.0, 'errmsg': 'db name must be at most 63 characters, found: 64', 'code': 73, 'codeName': 'InvalidNamespace', '$clusterTime': {'clusterTime': Timestamp(1794909568, 1), 'signature': {'hash': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00', 'keyId': 0}}, 'operationTime': Timestamp(1794909568, 1)}
+
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py:327: OperationFailure</failure></testcase><testcase classname="tests.test_restaurant_refund_webhook_transaction_offline" name="test_processed_refund_commits_both_documents_and_repeat_is_idempotent" time="0.007" /><testcase classname="tests.test_restaurant_refund_webhook_transaction_offline" name="test_second_document_write_failure_rolls_back_first_document" time="0.006" /><testcase classname="tests.test_restaurant_refund_webhook_transaction_offline" name="test_out_of_order_failed_event_cannot_downgrade_provider_confirmed_completion" time="0.009" /><testcase classname="tests.test_restaurant_refund_webhook_transaction_offline" name="test_pending_then_processed_moves_both_documents_together" time="0.007" /><testcase classname="tests.test_restaurant_refund_webhook_transaction_offline" name="test_conflicting_duplicate_refund_id_flags_both_for_reconciliation" time="0.006" /><testcase classname="tests.test_restaurant_refund_webhook_transaction_offline" name="test_oversized_provider_total_fails_closed_without_partial_writes" time="0.007" /><testcase classname="tests.test_restaurant_refund_webhook_transaction_offline" name="test_failed_status_does_not_count_toward_refunded_total" time="0.006" /><testcase classname="tests.test_restaurant_refund_webhook_transaction_offline" name="test_unknown_commit_does_not_make_second_provider_call_or_double_refund" time="0.007" /><testcase classname="tests.test_restaurant_refund_webhook_transaction_offline" name="test_ledger_failure_aborts_payment_and_order_updates_together" time="0.009" /><testcase classname="tests.test_task10_payment_refund_notification_contract" name="test_refund_is_admin_only_and_requires_verified_paid_gateway_payment" time="0.061" /><testcase classname="tests.test_task10_payment_refund_notification_contract" name="test_refund_claim_prevents_concurrent_duplicate_and_blocks_ambiguous_retry" time="0.111" /><testcase classname="tests.test_task10_payment_refund_notification_contract" name="test_refund_completion_requires_provider_status_and_id" time="0.169" /><testcase classname="tests.test_task10_payment_refund_notification_contract" name="test_payment_verification_and_webhook_still_require_server_confirmation" time="0.100" /><testcase classname="tests.test_task10_payment_refund_notification_contract" name="test_notification_provider_fails_closed_without_claiming_delivery" time="0.000" /><testcase classname="tests.test_shared_system_integration_contract" name="test_shopping_and_restaurant_share_one_auth_provider_and_token_store" time="0.001" /><testcase classname="tests.test_shared_system_integration_contract" name="test_saved_addresses_are_authenticated_and_scoped_to_the_signed_in_user" time="0.142" /><testcase classname="tests.test_shared_system_integration_contract" name="test_restaurant_checkout_reuses_saved_address_ids_and_defaults_without_faking_gps" time="0.000" /><testcase classname="tests.test_shared_system_integration_contract" name="test_backend_resolves_saved_address_by_authenticated_owner_and_validates_delivery_availability" time="0.069" /><testcase classname="tests.test_shared_system_integration_contract" name="test_restaurant_orders_reuse_authenticated_customer_order_contract_and_idempotency" time="0.088" /><testcase classname="tests.test_shared_system_integration_contract" name="test_shared_tracking_endpoint_supports_restaurant_orders_without_fake_coordinates" time="0.137" /><testcase classname="tests.test_shared_system_integration_contract" name="test_restaurant_payment_ui_does_not_claim_success_or_call_gateway_without_sdk" time="0.234" /><testcase classname="tests.test_shared_system_integration_contract" name="test_shared_logout_clears_the_same_token_and_existing_roles_remain_authoritative" time="0.052" /><testcase classname="tests.test_shared_system_integration_contract" name="test_no_shared_notification_delivery_provider_is_claimed_by_current_source" time="0.476" /><testcase classname="tests.test_shared_system_integration_contract" name="test_restaurant_payment_intents_reuse_existing_gateway_order_and_reject_closed_orders" time="0.084" /><testcase classname="tests.test_shared_system_integration_contract" name="test_restaurant_payment_verification_requires_gateway_captured_payment_lookup" time="0.074" /><testcase classname="tests.test_shared_system_integration_contract" name="test_restaurant_checkout_uses_backend_configured_pincode_serviceability" time="0.071" /><testcase classname="tests.test_shared_system_integration_contract" name="test_captured_webhook_never_resurrects_cancelled_restaurant_order" time="0.081" /><testcase classname="tests.test_shared_system_integration_contract" name="test_payment_failure_retry_and_late_capture_paths_are_guarded" time="0.146" /><testcase classname="tests.test_shared_system_integration_contract" name="test_restaurant_discovery_uses_shared_saved_address_and_refreshes_pincode_filter" time="0.002" /><testcase classname="tests.test_shared_system_integration_contract" name="test_discovery_address_handles_missing_or_invalid_pincode_without_claiming_serviceability" time="0.001" /></testsuite></testsuites>

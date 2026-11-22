@@ -1,0 +1,14 @@
+{
+  "first_attempt": "before-results.json",
+  "first_counts": {
+    "PASS": 11,
+    "FAIL": 13,
+    "ERROR": 1,
+    "SKIPPED": 0
+  },
+  "root_cause": "Synthetic fixture e-mail had uppercase UTC run-id characters,while real login/forgot normalizes email lowercase before DB lookup. Login failed setup and SMTP tests didnotreachtheknownaccountflow.",
+  "correction": "Only canonicalize synthetic fixture email to lowercase. All25invariant/assertion bodies unchanged;productioncandidate/baselineunchanged.",
+  "old_runner_SHA256": "24bebc9dfd2aa60a7979b0def7f34eb3147642e9c152ec1c0f92873cbc704e99",
+  "new_runner_SHA256": "216aa94f7efa3148bff787909b168f4c37498ebef4783bf50d8f6f2230ce307a",
+  "next": "Run v2sameharnessagainstbeforebackupandcandidate;retainallattempt1artifactsandDB."
+}

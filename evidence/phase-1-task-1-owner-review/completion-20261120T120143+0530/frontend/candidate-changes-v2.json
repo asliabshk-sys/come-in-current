@@ -1,0 +1,26 @@
+[
+  {
+    "relative_path": "frontend/app/checkout.tsx",
+    "actual_source_path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/checkout.tsx",
+    "before_SHA256": "bb20b859e7b917cafbededaa16594407b2eab02400ccd1e7d94e5ac6dc2d81b0",
+    "candidate_SHA256": "8f12eed16e2b906f1b1432d962abd6ee43690b8ec6592acf1d73ab8f5e649466",
+    "reason": "checkout derived eligibility dependencies",
+    "JSX_source_unchanged": true
+  },
+  {
+    "relative_path": "frontend/app/services.tsx",
+    "actual_source_path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/services.tsx",
+    "before_SHA256": "69fc7fe5dc8e39ab210d42db6820195340b5df5fb2f4d38f812e3f52242d2d7d",
+    "candidate_SHA256": "8257c7cae48bf3eebb763b6174abfc13457798d3ca6391c7bc0fddc63fdb0b4e",
+    "reason": "cancel stale account-bound dashboard responses and manual refresh ownership",
+    "JSX_source_unchanged": true
+  },
+  {
+    "relative_path": "frontend/src/restaurant/useDiscoveryAddress.ts",
+    "actual_source_path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/useDiscoveryAddress.ts",
+    "before_SHA256": "2cb454769b2d66f329c2e4874716808a7ebb831d9d3b52e916d6a867ae13713f",
+    "candidate_SHA256": "6ef259adde7a61e38d145ffb965b3100be42e635c049f2371aa695e2946237cd",
+    "reason": "ignore stale persisted-address completion after focused-account lifecycle cleanup",
+    "JSX_source_unchanged": true
+  }
+]

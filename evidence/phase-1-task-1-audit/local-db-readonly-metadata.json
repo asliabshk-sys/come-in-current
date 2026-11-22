@@ -1,0 +1,1362 @@
+{
+  "status": "RUNTIME VERIFIED read-only metadata only",
+  "target": "previously identified local disposable DB",
+  "replica_set": "rs0",
+  "is_primary": true,
+  "collections": [
+    {
+      "name": "referrals",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "referred_user_id": 1
+          },
+          "name": "referred_user_id_1",
+          "unique": true
+        },
+        {
+          "v": 2,
+          "key": {
+            "referrer_id": 1,
+            "status": 1
+          },
+          "name": "referrer_id_1_status_1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "qualifying_order_id": 1
+          },
+          "name": "qualifying_order_id_1",
+          "unique": true,
+          "partialFilterExpression": {
+            "qualifying_order_id": {
+              "$type": "string"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "request_anything",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    },
+    {
+      "name": "catalog_price_audit",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    },
+    {
+      "name": "restaurant_carts",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "user_id": 1
+          },
+          "name": "user_id_1",
+          "unique": true
+        }
+      ]
+    },
+    {
+      "name": "master_products",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    },
+    {
+      "name": "payout_bank_accounts",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "beneficiary_type": 1,
+            "beneficiary_id": 1
+          },
+          "name": "beneficiary_type_1_beneficiary_id_1",
+          "unique": true
+        }
+      ]
+    },
+    {
+      "name": "financial_ledger",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "idempotency_key": 1
+          },
+          "name": "idempotency_key_1",
+          "unique": true
+        },
+        {
+          "v": 2,
+          "key": {
+            "beneficiary_user_id": 1,
+            "recorded_at": -1
+          },
+          "name": "beneficiary_user_id_1_recorded_at_-1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "order_id": 1,
+            "recorded_at": -1
+          },
+          "name": "order_id_1_recorded_at_-1"
+        }
+      ]
+    },
+    {
+      "name": "settlement_requests",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "beneficiary_user_id": 1,
+            "created_at": -1
+          },
+          "name": "beneficiary_user_id_1_created_at_-1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "beneficiary_user_id": 1,
+            "beneficiary_type": 1,
+            "beneficiary_id": 1,
+            "idempotency_key": 1
+          },
+          "name": "beneficiary_user_id_1_beneficiary_type_1_beneficiary_id_1_idempotency_key_1",
+          "unique": true
+        },
+        {
+          "v": 2,
+          "key": {
+            "status": 1,
+            "created_at": -1
+          },
+          "name": "status_1_created_at_-1"
+        }
+      ]
+    },
+    {
+      "name": "financial_audit",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "created_at": -1
+          },
+          "name": "created_at_-1"
+        }
+      ]
+    },
+    {
+      "name": "referral_rewards",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "reward_key": 1
+          },
+          "name": "reward_key_1",
+          "unique": true
+        },
+        {
+          "v": 2,
+          "key": {
+            "referrer_id": 1,
+            "status": 1
+          },
+          "name": "referrer_id_1_status_1"
+        }
+      ]
+    },
+    {
+      "name": "password_resets",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "expires_at": 1
+          },
+          "name": "expires_at_1",
+          "expireAfterSeconds": 0
+        }
+      ]
+    },
+    {
+      "name": "referral_link_events",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "referrer_id": 1,
+            "created_at": -1
+          },
+          "name": "referrer_id_1_created_at_-1"
+        }
+      ]
+    },
+    {
+      "name": "restock_alerts",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "product_id": 1,
+            "active": 1
+          },
+          "name": "product_id_1_active_1"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": "off",
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "customer_id": 1
+          },
+          "name": "customer_id_1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "shop_id": 1
+          },
+          "name": "shop_id_1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "grocery_idempotency_scope": 1
+          },
+          "name": "grocery_idempotency_scope_1",
+          "unique": true,
+          "sparse": true
+        }
+      ]
+    },
+    {
+      "name": "catalogue_import_audit",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "apply_key": 1
+          },
+          "name": "apply_key_1",
+          "unique": true,
+          "partialFilterExpression": {
+            "apply_key": {
+              "$type": "string"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "status_checks",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    },
+    {
+      "name": "notifications",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "user_id": 1,
+            "created_at": -1
+          },
+          "name": "user_id_1_created_at_-1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "user_id": 1,
+            "read": 1
+          },
+          "name": "user_id_1_read_1"
+        }
+      ]
+    },
+    {
+      "name": "grocery_quotes",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "expires_at": 1
+          },
+          "name": "expires_at_1",
+          "expireAfterSeconds": 0
+        },
+        {
+          "v": 2,
+          "key": {
+            "scope": 1,
+            "status": 1
+          },
+          "name": "scope_1_status_1"
+        }
+      ]
+    },
+    {
+      "name": "service_providers",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "owner_id": 1
+          },
+          "name": "owner_id_1",
+          "unique": true,
+          "sparse": true
+        }
+      ]
+    },
+    {
+      "name": "shops",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "owner_id": 1
+          },
+          "name": "owner_id_1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "status": 1
+          },
+          "name": "status_1"
+        }
+      ]
+    },
+    {
+      "name": "delivery_partner_audit",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "application_id": 1,
+            "created_at": -1
+          },
+          "name": "application_id_1_created_at_-1"
+        }
+      ]
+    },
+    {
+      "name": "restaurants",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "owner_id": 1
+          },
+          "name": "owner_id_1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "status": 1,
+            "available": 1,
+            "city": 1
+          },
+          "name": "status_1_available_1_city_1"
+        }
+      ]
+    },
+    {
+      "name": "retail_price_import_history",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    },
+    {
+      "name": "delivery_partner_applications",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "user_id": 1
+          },
+          "name": "user_id_1",
+          "unique": true
+        },
+        {
+          "v": 2,
+          "key": {
+            "referral_code": 1
+          },
+          "name": "referral_code_1",
+          "unique": true,
+          "sparse": true
+        },
+        {
+          "v": 2,
+          "key": {
+            "status": 1,
+            "updated_at": -1
+          },
+          "name": "status_1_updated_at_-1"
+        }
+      ]
+    },
+    {
+      "name": "users",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "email": 1
+          },
+          "name": "email_1",
+          "unique": true
+        },
+        {
+          "v": 2,
+          "key": {
+            "referral_code": 1
+          },
+          "name": "referral_code_1",
+          "unique": true,
+          "sparse": true
+        }
+      ]
+    },
+    {
+      "name": "home_service_settings",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "key": 1
+          },
+          "name": "key_1",
+          "unique": true
+        }
+      ]
+    },
+    {
+      "name": "retail_price_offers",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    },
+    {
+      "name": "_portability_healthcheck",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    },
+    {
+      "name": "agent_assist",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    },
+    {
+      "name": "restaurant_payments",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "gateway_order_id": 1
+          },
+          "name": "gateway_order_id_1",
+          "unique": true,
+          "sparse": true
+        }
+      ]
+    },
+    {
+      "name": "service_appointments",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "customer_id": 1,
+            "created_at": -1
+          },
+          "name": "customer_id_1_created_at_-1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "provider_id": 1,
+            "created_at": -1
+          },
+          "name": "provider_id_1_created_at_-1"
+        }
+      ]
+    },
+    {
+      "name": "referral_ledger",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "idempotency_key": 1
+          },
+          "name": "idempotency_key_1",
+          "unique": true,
+          "sparse": true
+        },
+        {
+          "v": 2,
+          "key": {
+            "user_id": 1,
+            "created_at": -1
+          },
+          "name": "user_id_1_created_at_-1"
+        }
+      ]
+    },
+    {
+      "name": "restaurant_orders",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "customer_id": 1,
+            "created_at": -1
+          },
+          "name": "customer_id_1_created_at_-1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "restaurant_id": 1,
+            "created_at": -1
+          },
+          "name": "restaurant_id_1_created_at_-1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "customer_id": 1,
+            "idempotency_key": 1
+          },
+          "name": "customer_id_1_idempotency_key_1",
+          "unique": true
+        }
+      ]
+    },
+    {
+      "name": "restaurant_menu",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "restaurant_id": 1,
+            "available": 1
+          },
+          "name": "restaurant_id_1_available_1"
+        }
+      ]
+    },
+    {
+      "name": "announcements",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    },
+    {
+      "name": "restaurant_payment_events",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "event_id": 1
+          },
+          "name": "event_id_1",
+          "unique": true,
+          "sparse": true
+        }
+      ]
+    },
+    {
+      "name": "assistant_rate_limits",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "rate_key": 1
+          },
+          "name": "rate_key_1",
+          "unique": true
+        },
+        {
+          "v": 2,
+          "key": {
+            "expires_at": 1
+          },
+          "name": "expires_at_1",
+          "expireAfterSeconds": 0
+        }
+      ]
+    },
+    {
+      "name": "settlement_order_allocations",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "order_key": 1
+          },
+          "name": "order_key_1",
+          "unique": true
+        },
+        {
+          "v": 2,
+          "key": {
+            "settlement_id": 1
+          },
+          "name": "settlement_id_1"
+        }
+      ]
+    },
+    {
+      "name": "restaurant_support",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "user_id": 1,
+            "created_at": -1
+          },
+          "name": "user_id_1_created_at_-1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "user_id": 1,
+            "request_id": 1
+          },
+          "name": "user_id_1_request_id_1",
+          "unique": true,
+          "partialFilterExpression": {
+            "request_id": {
+              "$type": "string"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "retail_price_price_audit",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    },
+    {
+      "name": "referral_audit",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "created_at": -1
+          },
+          "name": "created_at_-1"
+        }
+      ]
+    },
+    {
+      "name": "restaurant_reviews",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "restaurant_id": 1,
+            "customer_id": 1
+          },
+          "name": "restaurant_id_1_customer_id_1",
+          "unique": true
+        }
+      ]
+    },
+    {
+      "name": "addresses",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "user_id": 1,
+            "is_default": -1
+          },
+          "name": "user_id_1_is_default_-1"
+        }
+      ]
+    },
+    {
+      "name": "delivery_partner_referrals",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "referred_application_id": 1
+          },
+          "name": "referred_application_id_1",
+          "unique": true
+        },
+        {
+          "v": 2,
+          "key": {
+            "referrer_application_id": 1,
+            "created_at": -1
+          },
+          "name": "referrer_application_id_1_created_at_-1"
+        }
+      ]
+    },
+    {
+      "name": "chand_feedback",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "user_id": 1,
+            "created_at": -1
+          },
+          "name": "user_id_1_created_at_-1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "user_id": 1,
+            "request_id": 1
+          },
+          "name": "user_id_1_request_id_1",
+          "unique": true
+        },
+        {
+          "v": 2,
+          "key": {
+            "status": 1,
+            "created_at": -1
+          },
+          "name": "status_1_created_at_-1"
+        }
+      ]
+    },
+    {
+      "name": "files",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "owner_id": 1
+          },
+          "name": "owner_id_1"
+        }
+      ]
+    },
+    {
+      "name": "home_service_slot_reservations",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "provider_id": 1,
+            "slot_key": 1
+          },
+          "name": "provider_id_1_slot_key_1",
+          "unique": true
+        }
+      ]
+    },
+    {
+      "name": "catalogue_import_jobs",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    },
+    {
+      "name": "grocery_payments",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    },
+    {
+      "name": "auth_rate_limits",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "expires_at": 1
+          },
+          "name": "expires_at_1",
+          "expireAfterSeconds": 0
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": "off",
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        },
+        {
+          "v": 2,
+          "key": {
+            "shop_id": 1
+          },
+          "name": "shop_id_1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "owner_id": 1
+          },
+          "name": "owner_id_1"
+        },
+        {
+          "v": 2,
+          "key": {
+            "catalogue_import_job_id": 1,
+            "catalogue_import_record_index": 1
+          },
+          "name": "catalogue_import_job_id_1_catalogue_import_record_index_1",
+          "unique": true,
+          "partialFilterExpression": {
+            "catalogue_import_job_id": {
+              "$type": "string"
+            },
+            "catalogue_import_record_index": {
+              "$type": "int"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "catalog_import_history",
+      "type": "collection",
+      "validator_present": false,
+      "validationLevel": null,
+      "indexes": [
+        {
+          "v": 2,
+          "key": {
+            "_id": 1
+          },
+          "name": "_id_"
+        }
+      ]
+    }
+  ],
+  "record_data_read": false,
+  "writes": 0,
+  "production_access": false,
+  "commands": [
+    "hello",
+    "listCollections",
+    "listIndexes"
+  ]
+}

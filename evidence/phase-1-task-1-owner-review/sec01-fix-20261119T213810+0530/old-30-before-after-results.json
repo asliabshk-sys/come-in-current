@@ -1,0 +1,65 @@
+[
+  {
+    "phase": "before",
+    "started_UTC": "2026-11-19T16:12:03.257134+00:00",
+    "finished_UTC": "2026-11-19T16:12:14.114718+00:00",
+    "command": [
+      "/workspace/come-in-tools/py311/bin/python",
+      "-B",
+      "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-runner-compatible.py"
+    ],
+    "cwd": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530",
+    "source_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/before/backend/server.py",
+    "source_SHA256_before": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+    "source_SHA256_after": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+    "exit_code": 1,
+    "counts": {
+      "PASS": 23,
+      "FAIL": 7,
+      "ERROR": 0,
+      "SKIPPED": 0
+    },
+    "database_retained": "comein_reset_sec01_compat_20261119t161203z_35dcae00a0",
+    "fail_cases": [
+      "RESET-10",
+      "RESET-16",
+      "RESET-17",
+      "RESET-18",
+      "RESET-19",
+      "RESET-27",
+      "RESET-30"
+    ],
+    "error_cases": [],
+    "result_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-before/password-reset-results-v2.json"
+  },
+  {
+    "phase": "after",
+    "started_UTC": "2026-11-19T16:12:14.116467+00:00",
+    "finished_UTC": "2026-11-19T16:12:24.736646+00:00",
+    "command": [
+      "/workspace/come-in-tools/py311/bin/python",
+      "-B",
+      "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-runner-compatible.py"
+    ],
+    "cwd": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530",
+    "source_path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+    "source_SHA256_before": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+    "source_SHA256_after": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+    "exit_code": 1,
+    "counts": {
+      "PASS": 26,
+      "FAIL": 4,
+      "ERROR": 0,
+      "SKIPPED": 0
+    },
+    "database_retained": "comein_reset_sec01_compat_20261119t161214z_3a4efd6dcb",
+    "fail_cases": [
+      "RESET-10",
+      "RESET-19",
+      "RESET-27",
+      "RESET-30"
+    ],
+    "error_cases": [],
+    "result_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-after/password-reset-results-v2.json"
+  }
+]

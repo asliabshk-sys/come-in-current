@@ -1,0 +1,20 @@
+{
+  "mongo_url": "REDACTED",
+  "db_name": "comein_disposable_test_onboarding",
+  "checked_at": "2026-11-17T09:47:51.578068+00:00",
+  "ping": true,
+  "server_version": "7.0.45",
+  "replica_set": "rs0",
+  "is_writable_primary": true,
+  "fcv": "7.0",
+  "transactions": {
+    "commit_visible": true,
+    "abort_rolled_back": true,
+    "ok": true
+  },
+  "indexes_expected": 67,
+  "indexes_missing": [],
+  "indexes_ok": true,
+  "collections_with_declared_indexes": 39,
+  "ok": true
+}

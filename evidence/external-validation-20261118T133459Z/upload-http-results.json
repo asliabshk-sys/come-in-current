@@ -1,0 +1,20 @@
+{
+  "passed": 12,
+  "failed": 0,
+  "skipped": 0,
+  "checks": [
+    "existing local customer authenticated; token not persisted",
+    "unauthenticated upload401",
+    "image/jpeg empty/spoof rejected400 before storage",
+    "image/jpeg empty/spoof rejected400 before storage",
+    "image/png empty/spoof rejected400 before storage",
+    "image/png empty/spoof rejected400 before storage",
+    "image/gif empty/spoof rejected400 before storage",
+    "image/gif empty/spoof rejected400 before storage",
+    "image/webp empty/spoof rejected400 before storage",
+    "image/webp empty/spoof rejected400 before storage",
+    "/grocery/payments/config unconfigured fails closed",
+    "/restaurant/payments/config unconfigured fails closed"
+  ],
+  "scope": "Local real HTTP/auth negative uploads and config GET; no object upload/provider payment/refund/webhook delivery attempted"
+}

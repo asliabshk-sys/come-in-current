@@ -1,0 +1,33 @@
+--- a/frontend/app/services.tsx
++++ b/frontend/app/services.tsx
+@@ -1,7 +1,7 @@
+ import Feather from "@react-native-vector-icons/feather";
+ import * as Linking from "expo-linking";
+ import { useLocalSearchParams, useRouter } from "expo-router";
+-import { useEffect, useRef, useState } from "react";
++import { useCallback, useEffect, useRef, useState } from "react";
+ import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+ import { useSafeAreaInsets } from "react-native-safe-area-context";
+ import { api } from "@/src/lib/api";
+@@ -16,8 +16,19 @@
+  const [rows,setRows]=useState<Provider[]>([]),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[error,setError]=useState("");
+  const [register,setRegister]=useState(params.openRegistration === "1"),[name,setName]=useState(""),[category,setCategory]=useState("Plumber"),[phone,setPhone]=useState(""),[experience,setExperience]=useState("0"),[tasks,setTasks]=useState(""),[area,setArea]=useState(""),[description,setDescription]=useState(""),[charge,setCharge]=useState(""),[visitFee,setVisitFee]=useState("0"),[cashAfterService,setCashAfterService]=useState(true),[cashVisitFee,setCashVisitFee]=useState(false);
+  const [mine,setMine]=useState<Provider|null>(null),[appointments,setAppointments]=useState<Appointment[]>([]),[customerAppointments,setCustomerAppointments]=useState<Appointment[]>([]),[reschedule,setReschedule]=useState<Record<string,string>>({}),[savingAction,setSavingAction]=useState(false); const fileInputRef=useRef<any>(null);
+- const loadDashboard=()=>{if(!user)return; Promise.all([api.get<Provider|null>("/home-services/providers/mine"),api.get<Appointment[]>("/home-services/appointments/provider"),api.get<Appointment[]>("/home-services/appointments/mine")]).then(([p,a,c])=>{setMine(p);if(p){setName(p.full_name||"");setPhone(p.phone||"");setCategory(p.category||"Plumber");setExperience(String(p.experience_years||0));setTasks((p.tasks||[]).join(", "));setArea(p.service_area||"");setDescription(p.description||"");setCharge(p.service_charge==null?"":String(p.service_charge));setVisitFee(String(p.visit_fee??0));setCashAfterService((p.payment_preferences||["cash_after_service"]).includes("cash_after_service"));setCashVisitFee((p.payment_preferences||[]).includes("cash_visit_fee"));}setAppointments(a);setCustomerAppointments(c);}).catch((e:any)=>setError(e?.message||"Could not load provider dashboard"));};
+- useEffect(()=>{loadDashboard()},[user?.id]);
++ const dashboardUserId=user?.id;
++ const dashboardScope=useRef<{userId:string|undefined;active:boolean}|null>(null);
++ const loadDashboard=useCallback(()=>{
++  const scope=dashboardScope.current;
++  if(!dashboardUserId||!scope?.active||scope.userId!==dashboardUserId)return;
++  Promise.all([api.get<Provider|null>("/home-services/providers/mine"),api.get<Appointment[]>("/home-services/appointments/provider"),api.get<Appointment[]>("/home-services/appointments/mine")]).then(([p,a,c])=>{if(!scope.active)return;setMine(p);if(p){setName(p.full_name||"");setPhone(p.phone||"");setCategory(p.category||"Plumber");setExperience(String(p.experience_years||0));setTasks((p.tasks||[]).join(", "));setArea(p.service_area||"");setDescription(p.description||"");setCharge(p.service_charge==null?"":String(p.service_charge));setVisitFee(String(p.visit_fee??0));setCashAfterService((p.payment_preferences||["cash_after_service"]).includes("cash_after_service"));setCashVisitFee((p.payment_preferences||[]).includes("cash_visit_fee"));}setAppointments(a);setCustomerAppointments(c);}).catch((e:any)=>{if(scope.active)setError(e?.message||"Could not load provider dashboard");});
++ },[dashboardUserId]);
++ useEffect(()=>{
++  const scope={userId:dashboardUserId,active:true};
++  dashboardScope.current=scope;
++  loadDashboard();
++  return()=>{scope.active=false};
++ },[dashboardUserId,loadDashboard]);
+  const [previousRegistrationParam,setPreviousRegistrationParam]=useState(params.openRegistration);
+  if(previousRegistrationParam!==params.openRegistration){setPreviousRegistrationParam(params.openRegistration);if(params.openRegistration === "1")setRegister(true);}
+  const [selected,setSelected]=useState<Provider|null>(null),[service,setService]=useState(""),[date,setDate]=useState(""),[address,setAddress]=useState(""),[notes,setNotes]=useState("");

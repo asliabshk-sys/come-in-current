@@ -1,0 +1,984 @@
+{
+  "result": "PASS",
+  "exit_code": 0,
+  "source_binding_95": [
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/_layout.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/(tabs)/_layout.tsx",
+      "sha256": "a3482d454745d4335d3aa1eee4d4b53ebb0cc55c26a240e37fdc0c259105cd73"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/account.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/(tabs)/account.tsx",
+      "sha256": "7566864cafb5516b0767094c5199ca449865987e8dd4f82b6416fc157904a59e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/cart.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/(tabs)/cart.tsx",
+      "sha256": "46a7fb33cd58c41fd458223f5f1e9d5764c8659cb4aff861617450bcee0f209d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/categories.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/(tabs)/categories.tsx",
+      "sha256": "be13823e513d9ab22d22ba8a8cb2dd45e2f06e2c2d9a911f173178b1a62b265d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/(tabs)/index.tsx",
+      "sha256": "62682994c1c885b0334d363cff1060f5a78b61352b3173f8bc222a2bd5919657"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/search.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/(tabs)/search.tsx",
+      "sha256": "49d729c2a04ee184a8df3715571b8cc88180701ddf6b904003b531ef73d62f99"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/+html.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/+html.tsx",
+      "sha256": "5d7c888914b4fe9d302967bb867059b98f7f457a3891ce011e6e4a9849c9a792"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/+not-found.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/+not-found.tsx",
+      "sha256": "98df243531bcd19fca8dfe9499a99836993da1855de9c185410937d41a200e74"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/_layout.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/_layout.tsx",
+      "sha256": "a384996331e509b25de63de87e68eb08595532b82e99e116179a479527df3c05"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/addresses.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/addresses.tsx",
+      "sha256": "b21314d98938794b5d9c1b47b6ce56130a7a9672e1a75170cade9d6261e3f3c9"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/admin-delivery-partners.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/admin-delivery-partners.tsx",
+      "sha256": "e0da25fc52b9adf3172492b7d874959315e50961140bf3921fab452e454bd07e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/admin-earnings.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/admin-earnings.tsx",
+      "sha256": "6e0b68c48576a38fd1c87e720a531bd6aff3834434f4af4d474045c962a98c66"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/admin.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/admin.tsx",
+      "sha256": "0f281894c0b9168556d31cc44b0203d714cebc43c31381718ff35bb6b0cb7021"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/auth.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/auth.tsx",
+      "sha256": "659f752a8f5cfda19a3667a1cb547542102f2bfd34f70e94a78438c3d06d4fbb"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/become-seller.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/become-seller.tsx",
+      "sha256": "c0b688b9c98880dea5d315f29ee7af17e70d891c4624989f63c4a28df36d6afd"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/category/[slug].tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/category/[slug].tsx",
+      "sha256": "6b0172853580f1901421f50565caf377d6e556ba228c7cf4f5b0d1d4acedc1dd"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/chand.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/chand.tsx",
+      "sha256": "3789bf027ee8ef8e3a0a4fa1a6972219bd019af9b8d06c9ba270412cba980fea"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/checkout.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/checkout.tsx",
+      "sha256": "bb20b859e7b917cafbededaa16594407b2eab02400ccd1e7d94e5ac6dc2d81b0"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/delivery-address.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/delivery-address.tsx",
+      "sha256": "702268be825f74a9bea47e9a8445dd81460d346f1c6f59666d038f2510911f53"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/delivery-partner.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/delivery-partner.tsx",
+      "sha256": "095e7aa47fe97d607a80570af7652c025de1cfd273c27a8e5240d73b31ff1993"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/index.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/index.tsx",
+      "sha256": "bdcaf585d82447d77ae63599499e5f0b8a67af2577e6b69a8c65138bf3015fca"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/language.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/language.tsx",
+      "sha256": "a1df71f3108c83cb1570883b2ccc7e7d5e2395a9b7019cb6b4d7ac9d5a81756c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/notifications.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/notifications.tsx",
+      "sha256": "f5068e725296b8ed20d20bf334d18872f5d97b5039956eddaaaa1af99f281b73"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/order-tracking.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/order-tracking.tsx",
+      "sha256": "dd7548a11c6fbb66823b3f52952bd4521a3ccb6b2c53ad45e7f0cd69548c4dcd"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/orders.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/orders.tsx",
+      "sha256": "89e29f44f3a25fafa926c1bf3e063b48c2227e9fcbe5662419b25285d16cb396"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/password-reset.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/password-reset.tsx",
+      "sha256": "d2bb6580b8bf48b7ec8ad25f1151b01683fa6aecf53ae7159845d0f2ac163a39"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/payment-methods.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/payment-methods.tsx",
+      "sha256": "9944a34fc268ec4e0b26e468eaf15f9d69127f15412c02d29175e0a28ef35aeb"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/product/[id].tsx",
+      "sha256": "b2ffbb560288b209ad55c0329040f39cd4a9b89d2626ee7fd357efc202aa7409"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/referral-dashboard.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/referral-dashboard.tsx",
+      "sha256": "afc7b243babe250a9ab830e5e6ccf16ed954ce584d7232f1f846523d78be8581"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/referral.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/referral.tsx",
+      "sha256": "428254c165b7df98b374b22f1945d71aa78e2c99d81416cb7c926860ad4c7dd8"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/request.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/request.tsx",
+      "sha256": "3e5b3cc97901b0f12dc86cac60852d196b027b0a2dd6d509354ecc1e4562126f"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/[id].tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/[id].tsx",
+      "sha256": "a8b650fb8d27cc03a6a3faa5ffb6864e7ca5785877fdd72bbb7d5eda972e2fea"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/account.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/account.tsx",
+      "sha256": "1199797d551cf07872327827241acfc3e0caeda2c0409640a23c0f0e096924ed"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/addresses.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/addresses.tsx",
+      "sha256": "e58cf69394368886cef5204ada9f4a8d57ea56afa1eab38037f3ef0a8c8a3b7d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/cart.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/cart.tsx",
+      "sha256": "f1e382c7a5e31798f9a6306da88cc2b700436178642d982d426854baa2718834"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/categories.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/categories.tsx",
+      "sha256": "55667009218c11ffa50f8fb1db1fb2f9bb16569d6cc27fd61255f2eb62ae35e4"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/checkout.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/checkout.tsx",
+      "sha256": "47e4a7f154b2a7606576f4d2a609a17c24d1c35b1a492caf5920e9408e9207f7"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/dashboard.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/dashboard.tsx",
+      "sha256": "9961ef968bbc01fb2403452113beca551c9ae3742dc10f3d12c16fe810362a9b"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/index.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/index.tsx",
+      "sha256": "c4b34423e7250b9354621d49379c3532db35d4b4385d8b07f17f4faebf83edcf"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/menu.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/menu.tsx",
+      "sha256": "2b99545e869a5d51a6bd5b981a46edf3e11c34e981b520a98e7b6597d9e849cc"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/order-confirmation.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/order-confirmation.tsx",
+      "sha256": "0998f7cd47587875248e583bd78946e174f8d698b0ef6d9e65ff42765cec7033"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/orders/[id].tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/orders/[id].tsx",
+      "sha256": "4fd236838a478f6cf331b181e396a95883973f606cc922753b00cf0b2aa103c3"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/orders/index.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/orders/index.tsx",
+      "sha256": "979d6cdc3ee7b3644b22c353399a4ecdc37862766ad31ef5b5dffd06295c514d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/search.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/search.tsx",
+      "sha256": "67f2e1da417ec010c6c61d4a573cc29945ca33db3f23e5028c5db9e78b237b4c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/support.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/restaurant/support.tsx",
+      "sha256": "048dae6a532e82a548a67881e2e6ff16b0e69fad8b69841f864173f44f084e90"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/retail-prices.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/retail-prices.tsx",
+      "sha256": "27751094cfc92471666f15923ce6539425d24ce300c1649e8ddaa8b63fdb5202"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/orders.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/seller/orders.tsx",
+      "sha256": "2b6b13ccd18f50fbb949ff6063fd6a650aa191bfead27799b033875318ae3884"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/products.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/seller/products.tsx",
+      "sha256": "4e1e8ab6f7e878c22ea408a79432f6572110cbcb12e6c901f36a48f2d717ebc7"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/support.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/seller/support.tsx",
+      "sha256": "da3c4741142206a7d5d6dcf311be25c865615c69050317ce4d6620c58dc67a0e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller-earnings.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/seller-earnings.tsx",
+      "sha256": "94cbda2608a6e90fe69532f3672d7a4e814410f94300fc6e1de5bd8bb7bca7b1"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/services.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/services.tsx",
+      "sha256": "69fc7fe5dc8e39ab210d42db6820195340b5df5fb2f4d38f812e3f52242d2d7d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/shop/[id].tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/shop/[id].tsx",
+      "sha256": "0112e5c6ba65dbd024800e052322737768eb73ea21be9a6221cb35ff30293cf2"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/shops.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/app/shops.tsx",
+      "sha256": "70bbb00b155166bae4dd23ea4571f56d786bdb9ff2b237f4b43612c396372984"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/AnnouncementBanner.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/components/AnnouncementBanner.tsx",
+      "sha256": "cc4efbdfd040566135e41af3cd89d363c3ef65c72a5bcef3d473ae648d3b9b83"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/BrandLogo.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/components/BrandLogo.tsx",
+      "sha256": "710524d8890642d7c3306a4be335afe665214eda9024f1ef51f48d6435d9c98f"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/GroceryOnlinePayment.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/components/GroceryOnlinePayment.tsx",
+      "sha256": "14b53a2152e7092ef97207c4b1f03e658216d1cbfdfd6192dc46b73d97ee9be5"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/MeasuredQuantityPicker.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/components/MeasuredQuantityPicker.tsx",
+      "sha256": "99d807f0e3c9c622ce7d4c11b5c3853b553454cf58e7c6cbb528139079a55264"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/ProductCard.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/components/ProductCard.tsx",
+      "sha256": "cb05ca1e015def539adb0dffc817559de548a8bb3f8b61e1190a1b170c51849f"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/QuantityStepper.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/components/QuantityStepper.tsx",
+      "sha256": "0a1668f664280f964e0494cf79de098ac440287f4a3b773f67397d3dd5e4dd1e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/RestockAlertButton.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/components/RestockAlertButton.tsx",
+      "sha256": "438ca9d97b19959f7e7344590228e159fddc8fd010fa7a79e2aa72d097bb204a"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/SellerMeasuredFields.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/components/SellerMeasuredFields.tsx",
+      "sha256": "50dd60c689b73735a0fb0f2e4fcfa5f048099bf1e90f948e90ec33639aa39d48"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/error-boundary.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/components/error-boundary.tsx",
+      "sha256": "5fef573fc6c628acc2350d9147597cd1b6ff831cbcffc177ebb2d17b1c5165cd"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/data/catalog-reference.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/data/catalog-reference.ts",
+      "sha256": "5b71f901a61aeaa45619df746fa10a258fb902743f8e487cd24eef6389c4796d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/data/catalog.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/data/catalog.ts",
+      "sha256": "37c0cc02355d1d8cecc0d3a40967875b420d9e6225e7debb6963347dec2cc2c2"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/data/shops.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/data/shops.ts",
+      "sha256": "26e98e9d7a8942d54e53e612d3930089d39544340231cbd5124f8100814dab4c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/data/useCatalogProducts.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/data/useCatalogProducts.ts",
+      "sha256": "9b48c9c43496ee56f174ccdc3c6a0c9f50da340b91d380717e8730fc42396b19"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/i18n/index.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/i18n/index.tsx",
+      "sha256": "c84e0341a6ba928e280c10a8e6f7f1f5f0dbc3d2be4fe7efe59cdd825ced060a"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/i18n/translations.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/i18n/translations.ts",
+      "sha256": "6afbf0cf3fbcadae914503569f1623d73ef174e3d9119a43034a50364008dc68"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/api.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/lib/api.ts",
+      "sha256": "5eb84c952369340f047e44b38a5bc3b90068802530daa6d772ff456297b28a0c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/chand-party-planner.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/lib/chand-party-planner.ts",
+      "sha256": "00fec9786c749ed02ed126d7f54026ee8c81218811f3c76192a6b0de5fe08285"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/measure.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/lib/measure.ts",
+      "sha256": "7c7152b0fd246c6498a7feffa17a7e1da4cb4166a253962e2f05ae383c4ef626"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/razorpay-checkout.native.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/lib/razorpay-checkout.native.ts",
+      "sha256": "69575525f94fd2041e3bc2f4446ab26f3eec14b6685b7f4115678071592027e7"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/razorpay-checkout.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/lib/razorpay-checkout.ts",
+      "sha256": "ffd002ad2c172c6b416b98ed01fc3248c6f40f5dd2ee9129862397f2506fe880"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/razorpay.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/lib/razorpay.ts",
+      "sha256": "e0e41ac6ab6087fcdb05d782e91eb91103db4c9ef18914991d173f0112e97aa9"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/react-native-razorpay.d.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/lib/react-native-razorpay.d.ts",
+      "sha256": "a5e3bc9b967a07dae0587a1f4f92e5cee4a06aed0bc4935eec822b533f8f7103"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/navigation.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/navigation.ts",
+      "sha256": "60b3fc096cd315ef09fe5f9362187de6c64114ccabc21f9e985e9fcbcf00075a"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/query-client.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/query-client.ts",
+      "sha256": "5add7aa5aaa5794543b70fe1e5851ababe9918daf343a3e40953343abad55379"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantCard.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/restaurant/RestaurantCard.tsx",
+      "sha256": "f0fe2acd67c2879fdb6e1d5f453c7a0609aa7781de4c783c3db2e68a8b606e88"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantModeShell.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/restaurant/RestaurantModeShell.tsx",
+      "sha256": "ff0f404d7b9955ecc03fcac6057f9629c3fa42318b258b9bbb48f7aff5c37ae2"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantNav.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/restaurant/RestaurantNav.tsx",
+      "sha256": "8c35e6151a212b0a157d378528664b8016aedb1b1cddb2927f9169d8262fef46"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantPage.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/restaurant/RestaurantPage.tsx",
+      "sha256": "5fa41449d6d19f86db7119eb1711b6837417c6ec41a01a39cc5ae51e433421fe"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/api.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/restaurant/api.ts",
+      "sha256": "a3c17abe3e494a18e6669a8b6e267a37f8c84b62f99bc70112a9fa5eceb62d9a"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/cart.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/restaurant/cart.ts",
+      "sha256": "609a594ed03fce9f0e80e10c46e1a386aef41c07876bba46ef9815b53625279e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/data.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/restaurant/data.ts",
+      "sha256": "558b18ed31b0b213c4572b9bca04360f4f28e181f6023e6082daf38d215166d0"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/theme.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/restaurant/theme.ts",
+      "sha256": "2123bebc3fe3cc87e15012dce2a5da2f0084e2ff8ca9320d9f5f15588d71700e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/useDiscoveryAddress.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/restaurant/useDiscoveryAddress.ts",
+      "sha256": "2cb454769b2d66f329c2e4874716808a7ebb831d9d3b52e916d6a867ae13713f"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/store/auth.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/store/auth.tsx",
+      "sha256": "d5931dfe1e81234b34a280c2ed3726fbb949cae315bdf8aaf6e2fd687ea1b8b8"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/store/cart.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/store/cart.tsx",
+      "sha256": "a3361399507f3b609301ffe083da5ec8cbcd473de4389d4fa8a22170d90c6c35"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/store/location.tsx",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/store/location.tsx",
+      "sha256": "19904dbbf8f58ef0bbafddc6ef094ea74f72727187d120bc8cb5a49626b4e9be"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/theme.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/theme.ts",
+      "sha256": "2d2375508d53cf2e10c8824652328330a4359cc900072bef5c14b25fe3629067"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/alert.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/utils/alert.ts",
+      "sha256": "b84943bcc5e6194dd2e316d812f3a0bf880f79b5d921d95d3f4eff418fd5ee17"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/storage/index.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/utils/storage/index.ts",
+      "sha256": "99a605a86752495ea234e3724e1bb80198663860d9e988ffc2bd2a2ed4e783e1"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/storage/index.web.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/utils/storage/index.web.ts",
+      "sha256": "20cc49ebd12eb74e4b906ac9daf92ed862330e70c663eed53bfb38e324e92d37"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/storage/storage-base.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/utils/storage/storage-base.ts",
+      "sha256": "dd3aee0836f120049f403bca2c99398f945a557d88f64566e11fb805973c4559"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/upload.ts",
+      "copy": "/tmp/comein-web-validation-grxizkha/src/utils/upload.ts",
+      "sha256": "4cb8f97a9ba38bd14e1b87080958aa5b4ead09a8ad011bf940efd06af852c59f"
+    }
+  ],
+  "artifact_count": 100,
+  "artifacts": [
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/css/native-tabs.module-55ce705d99cc7a8e9d8dbb7dd284d2a6.css",
+      "bytes": 2540,
+      "sha256": "b08f276a0a6e1b35fdaf4a6b99ebeeabb4dae4cf52246e7d768a0bd8045d56a9"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/+not-found-6711dc4060ef73e9c74d0286f99ce480.js",
+      "bytes": 1472,
+      "sha256": "fed9cb7ef02bc247fea823a22883384f582edade2df6559080335502dea33a3b"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/[id]-220b069fb63e649e7155396eab96fc94.js",
+      "bytes": 5583,
+      "sha256": "a2703b46c0fefca8d7a775858b472dbedfaea4586a646ff6e3e0b2e798ba6434"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/[id]-5c205dfca14ceb3d993bbb774d3dfe1c.js",
+      "bytes": 13038,
+      "sha256": "700b7094e12245fe94ce3e35d790bcde68de0a842e3fa1256a8a489f017b91db"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/[id]-b32cec64035a5374e47ade6124307946.js",
+      "bytes": 22528,
+      "sha256": "1fa1cef6831e15a42a8db1f2e7cdbd6c44f4f9a6802282c7c00038dcda0afd6f"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/[id]-b646f4a3d7125c6725c80d98f9616249.js",
+      "bytes": 4353,
+      "sha256": "cd87013c147398696b133fc91dc1994898ae423d78957dfe903bf606cbf90776"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/[slug]-608a578eb48fcff82f5b343ba0cd05a2.js",
+      "bytes": 3313,
+      "sha256": "43ad26d97da5a7e45231f9dfbde541c60c3fa84b1046d85d3aa128573dc82a68"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/__common-e3b38e1723a5b54f0c450b114e37461d.js",
+      "bytes": 423312,
+      "sha256": "7fa1428701103565ad97e1608ca83abbbe5f003f5da312e763e272a5c992235f"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/__expo-metro-runtime-8c088df87a31e4e6accd81c554ec290d.js",
+      "bytes": 3751,
+      "sha256": "80e3ab02b3bac22608cdf29a2e3cc1270616a695bbe479f7f500941e8d2bbe41"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/_layout-1c8f7598653c9b867b802b35c3315ed2.js",
+      "bytes": 48742,
+      "sha256": "d049181552321aae1f37c19786b5d67c869420e569aa9cef3db16619575acd98"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/_layout-3284071a55f62ea6724e31cc9a70a8e3.js",
+      "bytes": 1183903,
+      "sha256": "6f60acd5d197011ea7180168c050b19896323bbe52e51cfe8b4a9362d694f818"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/account-76f8fe6a8062c59797439e9d97605b92.js",
+      "bytes": 271,
+      "sha256": "557253e4de4c432b19925b89c3722c263b00fd65ee4ecba790b854859196884b"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/account-b609a974a8aed309911fe1483133c2fe.js",
+      "bytes": 10097,
+      "sha256": "77849352dfc070495c9a9a7282e622a26aefb65154ef5dde2ef19157052de037"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/addresses-18e74a5407d49f6b9b1471d2b86d976a.js",
+      "bytes": 266,
+      "sha256": "4f5dc38008b610441cc894edca3095a3b472adf4cb752ca26d917b2d17e09bb4"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/addresses-90e8837b9e8736b9d0693a94fd54ccee.js",
+      "bytes": 3586,
+      "sha256": "4634c68bd7048ac9ef55ebd6c86de6d053c076b03cce35e60e6540005192fd46"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/admin-delivery-partners-e26d40cabd54ce2c10cce027bcc9c4ff.js",
+      "bytes": 4462,
+      "sha256": "ac3975a0ad126135a4a980b8fcca43c51cc31646d3bc82abdedd87cac4a85c95"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/admin-e28b4db21e68ecf6cba67591854b8668.js",
+      "bytes": 41771,
+      "sha256": "8d45f1a59ea2c3131d23996b886014cd20aa02a8a38c5ffded4c2a827362dfe2"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/admin-earnings-9cadbd4f0bad8c6b1daedb749c5824c0.js",
+      "bytes": 17854,
+      "sha256": "037710a60574a229303b2e10d85c4efd6326c1157efdb573fd4eeb2dd1c3445b"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/auth-2a0fb90d6f0dcd42cf56cca171526f81.js",
+      "bytes": 6415,
+      "sha256": "5c7bf4825f0b3873e24fbb8b7d515fba99a147bdca342723825e5d56d4d38715"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/become-seller-69fb1a85f09d58d6ed768c391bfd0798.js",
+      "bytes": 17034,
+      "sha256": "4c714875d2abb60821b9c8022574be97de44d54dbda6a0f8e97394697deb3fd4"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/cart-41ac224c7e1bcc19c0134b2777fa8235.js",
+      "bytes": 3666,
+      "sha256": "f726434954636765a6fe21b616fe502c306a153c392d74d5240170abd5cf3a2a"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/cart-6245e09f70cf1f9e953ebadc5c887e9f.js",
+      "bytes": 14662,
+      "sha256": "78b4f235c1663307c8104bdd7f71e27bb0bdc473cce2163a08ab70b6d2a32d40"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/categories-78e5eef6599981e0e22e57cd511c9751.js",
+      "bytes": 2352,
+      "sha256": "f05eb71f8a2bfae6665a1572dc2a2cefc0fc7a04ee9ea53f1fa4a7a66e5918f1"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/chand-80f012da21b8a2abba1953ce80fdf223.js",
+      "bytes": 109670,
+      "sha256": "073517410d63a76e14548df31cb8d1ac4574a52815361bb66bbb44abb4fb0bb2"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/checkout-59440e5caf58bb3897cb14b1b8371db7.js",
+      "bytes": 20696,
+      "sha256": "60fc2cfb60e04051ddf7bbd2e9bde4d9072cbce7c7435976ec0ec03cd864a2c6"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/checkout-ad0626b7f01b55d7231e32f7484b1f2f.js",
+      "bytes": 9531,
+      "sha256": "a98db017d1a9cba7f00ffef51ca2156a858476870daedb1a3e31f17700417ae0"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/dashboard-e9e44d8430468b1165d6c646d23521f4.js",
+      "bytes": 13470,
+      "sha256": "6b555c50a040edf335a920e018b2bf21486485a5ec69ea1297969c46fcac2fbb"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/delivery-address-a1b0f38f2d61988b6804a349ee3742b0.js",
+      "bytes": 7069,
+      "sha256": "b85dfb63fa8bb67d5057cedc42794974f299c4d267ce2b957ff2d96d44e0752c"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/delivery-partner-052023113dac6fa37780eb8c51ea30d1.js",
+      "bytes": 8331,
+      "sha256": "6c060793e66b991da8e37740fb0c133aefeb251c36e95099b5ea95ed4bfcad61"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/entry-ced0defcb01c5401a5385265b0e5a85c.js",
+      "bytes": 1116282,
+      "sha256": "a3b80336bc73d9295949b8fc1e25608db45c49cfff21e2bf288fafe84e531c5f"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/index-95cae7c932dc7d3c0cceeefdd33dbd2e.js",
+      "bytes": 5872,
+      "sha256": "fe2ec03df717206810e1401b21435944b456e7c94b241f4efe15c6488ee56524"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/index-b881b73fc507bc99663108b0edd6317c.js",
+      "bytes": 263,
+      "sha256": "b1fcd99e7b2d5f0d5e2e3580e7b2efcd4313ab4921218a3214639e79c1571d34"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/index-e7fd6cf80c4215f21154742ed0147e94.js",
+      "bytes": 25446,
+      "sha256": "494f158fe22487337104aabe792013b4de3f89c0f5f87978c9ad980e915403eb"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/index-fd9ec9a2570b210063261a5f0dbbdf89.js",
+      "bytes": 3776,
+      "sha256": "ea1f0991538e2ab9027fe632e06c9c1e7ac2db2e95f9e4188c93f7a8c3f93cda"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/language-be69f21d1448be44916743b81d8f6db8.js",
+      "bytes": 3506,
+      "sha256": "e3557befd8a4d79e325592239b1233ddc3f847a6f9aba0dfff45be35ab0cedd1"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/menu-ad8ee24b8472a1705f09d9dfd7ab0666.js",
+      "bytes": 241,
+      "sha256": "68b68de768817e91fa11e1449065ed0b173ea9d6a506415e6b08cb6244da3b77"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/notifications-9aa3af9a8d2b897546a6d9f15f829138.js",
+      "bytes": 4031,
+      "sha256": "96ecd372a70fc62f691396394d776ec40659443b28977a44338789911c9faf0b"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/order-confirmation-c588e242478173ad6631dcfb0c86fb7b.js",
+      "bytes": 1516,
+      "sha256": "871097dcdb1b7f9f4906f9d52214868889eebfcbdc85bc410507815fc8ac6d43"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/order-tracking-0cb5a7091319f16ad26c9132f57d2c7a.js",
+      "bytes": 6601,
+      "sha256": "9f57e4c42d38761509ab7687eb9d9f1c69b60f2f8d62b03caa4cda08872b4c86"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/orders-15639b19b8d2cd5ee35ff3ae7839b710.js",
+      "bytes": 10326,
+      "sha256": "024710c29a954fbbe64bcff28efd33ffdc6b6adec0217d1081036728d897ebf2"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/orders-650647aaa3de48dc14097236d30fa6e2.js",
+      "bytes": 7111,
+      "sha256": "4a471a149a872da9d95eb30be4a4d4ea9be2ca7c497c9abd1a7dd0645acf7aff"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/password-reset-b2ae0e17794129fff5776ea472742b43.js",
+      "bytes": 2652,
+      "sha256": "65daaf08f988b7ca07be9937eace2dffe652f4f1254ad39ac4c148aa24f97ecc"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/payment-methods-ebceb0d7eb81bab16a54490d45064d83.js",
+      "bytes": 3788,
+      "sha256": "ea6c99d6ceec991811a43d739fd342ff1d635c4765a6411f85139ce79a1b327c"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/products-0a54e3e2476986d18384473cb3929030.js",
+      "bytes": 41654,
+      "sha256": "3d1171bc79dbd2332999f864339a85e4ca8c4aa2d332db02eb5acd77038ede22"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/referral-c10b87a5700d466b038e5c5ee35f63f5.js",
+      "bytes": 2818,
+      "sha256": "ddd9c4d0e80211a67478ddb8fd2eb2633d07a5f2dc0f1745e063ef9a0410a701"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/referral-dashboard-b5873fbc7e9c6704c86653d674c9cafa.js",
+      "bytes": 8818,
+      "sha256": "bf987f163cceb9aaa6e1e1b75adfc48965283a69474977373e761b5a8746037f"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/request-4c869ab659a5b2f7390515b10a36eafc.js",
+      "bytes": 9002,
+      "sha256": "76e6b7452820982fdde87a642584f35939ddd90c84cebb1b8a518b44f5edd0d6"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/retail-prices-1b690844db011ded8450b08aa840d5f0.js",
+      "bytes": 4793,
+      "sha256": "40c8e210b4fca24c517299e637b526186f394b1d06983e9fe0104c5a39975cbe"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/search-83549bf20ce6d22b93b1bbef447baa81.js",
+      "bytes": 4527,
+      "sha256": "6094b22db4fe29da8ab7b7c2d3d8a9f6c02a1252ec1549b2c5f16c25829b5a9e"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/search-97dfb32f91dff607fa578bca6b784b3c.js",
+      "bytes": 3409,
+      "sha256": "23b4348f71b263070213b18e0553700dc4ad474e14dda24680820dc58017b779"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/seller-earnings-3bd228f292da07164784555b7f777286.js",
+      "bytes": 13822,
+      "sha256": "38db61f8907e4f33f0fb2f3cd9336961d80694016f4cb3cc9da224997e3e9c37"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/services-2a74947bc1db211acff3a5f7a6be4d4e.js",
+      "bytes": 16501,
+      "sha256": "776ab253ebfddd959479798e436a544aa69754838ae59407e2b653cffd194316"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/shops-71261f760fdf5802b7c82f2a22fccc8e.js",
+      "bytes": 9223,
+      "sha256": "7ea50bd0e64de0c9d28fc350dbd8436f29e1a3f64ca5666e7d6251d146e89afd"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/support-6849e92b37e9a0697b1cc736b81fc70c.js",
+      "bytes": 432,
+      "sha256": "27cab0cca2f17d7fb68e972f15619cf249eec4bd440ed5477620ff66dc734946"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/_expo/static/js/web/support-b19d7a463b48edb33c02698401a60e31.js",
+      "bytes": 6962,
+      "sha256": "cdbcd971682ad064480bc9c980234d2564a0f46043594e1f286ee8d48597ee7f"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@react-native-vector-icons/feather/fonts/Feather.ca4b48e04dc1ce10bfbddb262c8b835f.ttf",
+      "bytes": 55596,
+      "sha256": "02b88ead91ade5710d7ca18edb43a6965a71d93732c06f290cc07a6dd249e987"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/arrow_down.017bc6ba3fc25503e5eb5e53826d48a8.png",
+      "bytes": 9456,
+      "sha256": "6deca32b56b97fa1fa87facd6996b46cc45190a553400e7febdf1d2093099b57"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/error.d1ea1496f9057eb392d5bbf3732a61b7.png",
+      "bytes": 469,
+      "sha256": "c15ec72a74d13957211808313d5c35deb7f7606c6d22dbddceb0000d4e0547ad"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/file.19eeb73b9593a38f8e9f418337fc7d10.png",
+      "bytes": 138,
+      "sha256": "a69a2edb5b6c60b8433d5b6d23c69f520ccd8a602f3f60e7996e489718bc175c"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/forward.d8b800c443b8972542883e0b9de2bdc6.png",
+      "bytes": 188,
+      "sha256": "708a79cf561b8a2a4850ce0254584d3a5231046be08fb7fadf4b6edfdb31178b"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/pkg.ab19f4cbc543357183a20571f68380a3.png",
+      "bytes": 364,
+      "sha256": "27f4d229d440925bf7212d5dfffa45d596b2c7b3bb2905c96b839b2081a1dbeb"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/back-icon-mask.0a328cd9c1afd0afe8e3b1ec5165b1b4.png",
+      "bytes": 653,
+      "sha256": "9adb8c5efca932e2b732b293da813bd2e31952263056bce9e2517fec0f0b6a76"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png",
+      "bytes": 207,
+      "sha256": "84cf5eb3b20250f69e0e4733beb4da5f417f0682892a5ad1b5e62570753c21b1"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/clear-icon.c94f6478e7ae0cdd9f15de1fcb9e5e55.png",
+      "bytes": 220,
+      "sha256": "d03a5cd7a66ef10c5147916f9d5878b2d0a0a5ad46f405a31cd9967efaa55afd"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/clear-icon.c94f6478e7ae0cdd9f15de1fcb9e5e55@2x.png",
+      "bytes": 334,
+      "sha256": "ab5613d2ce70fa67c5926e831353664945199fc195fa6fe76c5fe3cec452e31a"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/clear-icon.c94f6478e7ae0cdd9f15de1fcb9e5e55@3x.png",
+      "bytes": 502,
+      "sha256": "c4e54e6a0a7de636aa153378fbc62ea4a41695bfedf807f90df7b18ffd733f67"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/clear-icon.c94f6478e7ae0cdd9f15de1fcb9e5e55@4x.png",
+      "bytes": 645,
+      "sha256": "c86bb485eee687e06c500fc4234f51a6784b4530c2ae11d0c76481110bce3105"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/close-icon.808e1b1b9b53114ec2838071a7e6daa7.png",
+      "bytes": 141,
+      "sha256": "b1bc1810ca23e2c38cd76971c43591d726161061240d8b792b05757196ddb528"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/close-icon.808e1b1b9b53114ec2838071a7e6daa7@2x.png",
+      "bytes": 201,
+      "sha256": "cbdf9213e55f65c48d076acd8423b7c9aee4f1b81101ff6c95a38c4cd8a86461"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/close-icon.808e1b1b9b53114ec2838071a7e6daa7@3x.png",
+      "bytes": 266,
+      "sha256": "d05c9d30d79f45a78e5585a2e7ec67c6a06a883dd9137e1d5059e8c87b33ce76"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/close-icon.808e1b1b9b53114ec2838071a7e6daa7@4x.png",
+      "bytes": 332,
+      "sha256": "2325c53a73e54c438cbbc60dffdd8b513d471ba42e2f56713ef404b95e0ca1fc"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/search-icon.286d67d3f74808a60a78d3ebf1a5fb57.png",
+      "bytes": 928,
+      "sha256": "5d075e0c287c4f4441b5b5c8fc7ea5cd27c11bb617ecea09755955bcb1889083"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/sitemap.412dd9275b6b48ad28f5e3d81bb1f626.png",
+      "bytes": 465,
+      "sha256": "acf691957a3bcce7d195856dce98a5cf14dce10bea28aa5c10b3550c078e23b5"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/unmatched.20e71bdf79e3a97bf55fd9e164041578.png",
+      "bytes": 4752,
+      "sha256": "efc79da3c4c97dfb1571bff6202958ab0529c5aa31e8392600578b3e359d1447"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/branding/come-in-official-app-icon-from-reference.5a1d67bcf4d962f4377220b824502f60.png",
+      "bytes": 42622,
+      "sha256": "9373ba8487c00eedd3bfa5a449fbc803582ca5663165aad85f88172baf6ca72f"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/branding/come-in-official-logo-from-reference.2eddcaf4edc278b066c5d5a02e4c2c85.png",
+      "bytes": 102319,
+      "sha256": "35a408a14fac60ce3a5abc889eb9060c0cd35c4ed72db311e8bf3d0ccd444183"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/illustrations/home-services.8d9200b63f1aaf6aac3a0347ab8af468.png",
+      "bytes": 47499,
+      "sha256": "b2625ec81f25865c03e7132ca4f807776d77e0c4fb0c477705001f57247a7499"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/illustrations/offline-shops.2de92785ae1464b81a00524e261e38a7.png",
+      "bytes": 27434,
+      "sha256": "952ee4077ba849eba732c5a69332c4f7229f66bdf7fb26692d7c4e7327135b25"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/illustrations/online-shops.ed03b85c3018a314983412eca36aef8f.png",
+      "bytes": 32255,
+      "sha256": "6febf6dd2b8595dee34a33f415a4bc4e0a20ddbf95f5358ba04903d269dc6587"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/illustrations/restaurants.abaf9b4dcb072bc086d5e85964cfcdf2.png",
+      "bytes": 36779,
+      "sha256": "be61e192c708e12f2e006286a2e0b6b27fa30ad084369cf30244e5d77ce12c35"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/atta-rice-dal.b985cc6eaeea0b37501ee5be5ddf7cc6.png",
+      "bytes": 3098,
+      "sha256": "25e943eee89cd05121a1d29a7562e4a312ad768732b5c50fd9b3ee111c375782"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/baby-care.59ba528c31ac786c2f725acb9014958c.png",
+      "bytes": 3944,
+      "sha256": "254bb99d74b92e51eee4d592e4835a8ab28917bbcaed944c25a54776b03f7d43"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/bakery.1efa2cd9ccaf161c1f581592527a6507.png",
+      "bytes": 2676,
+      "sha256": "8c01c04ad930b9f6d7a3e3a2579482629ca0e8f357c7dcf8d4dae6aae16b38ce"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/beverages.db536fc07542bd807e6af70e5592639c.png",
+      "bytes": 2596,
+      "sha256": "143e0e81ca84e529dc3ff4dc97e162aebb7fa20ac1b7db047d812244dfa66696"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/dairy-breakfast.d1aab0047bf1ae41f8dbe9cbdc040c14.png",
+      "bytes": 2182,
+      "sha256": "d439466c838efe96951c92f6dfb5d9a4674da38321a1c296c2b5ac8bf02265d8"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/eggs.4b30845402729d56214275dc68fa7f44.png",
+      "bytes": 4449,
+      "sha256": "88db9bc1ce455f4cf97470eaf0aa8b1e471e292b72271fb4d48e8b1650912734"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/frozen-foods.ba7203009910e0b3fd22934060af2a4d.png",
+      "bytes": 4162,
+      "sha256": "5243f83738e27f4863a5876b477153b65a7986fcdfdbe249a2ca129452ee8e67"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/fruits-veggies.82d349b5d14ddeb3bc6707347621bef9.png",
+      "bytes": 2562,
+      "sha256": "6a3191f8437d0b663d53690eee5bd1d95a0155d2b444ff2843a3b2f21e258c83"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/fruits.8562be3d03bc4b017619f524f2fbbdf1.png",
+      "bytes": 4782,
+      "sha256": "7cdcbd0deb7bf120f7e9b8053d30874010fbdd2d78aecb465591c949138e0e98"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/household.e0a6e80ce14bd17cef9ef5c4f19a90fd.png",
+      "bytes": 1908,
+      "sha256": "8905d77d009ee4c07d2adade9d43323f119035f52079e2874168e8d3123de99a"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/masalas-oils.c8815a863ef604e196007dfbe9ffbbeb.png",
+      "bytes": 2648,
+      "sha256": "e82fae97a433e79fcedf1a3b161fcbc8af855704cc7e9be720f42342d85eb8fc"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/packaged-foods.777920edfd2299ed60aba65b3971cc0d.png",
+      "bytes": 3696,
+      "sha256": "d26269dfe277e8fb038f5a4f76f9623a2fc0bc90527ace0c8d38e50eebaf6a52"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/personal-care.a85f3dc695b6289e08bf527f9310b9f8.png",
+      "bytes": 1961,
+      "sha256": "d3bd99443fe7b78f33f12a83eb358fb0b1b99a618b0b4c6120a1744b18ccf66b"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/pet-supplies.9d9157a6a184ac8a1712b212af5abb14.png",
+      "bytes": 4659,
+      "sha256": "aed2ee1df009b0c1fb3bdbf202f1fef0fa353688f3acd00b0702789b7d70c7a9"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/snacks.b5a270211e19ce500a7d3359f1e6653c.png",
+      "bytes": 2356,
+      "sha256": "d61c4b01dd8202d71b8bb0deaa5b21a9faf4e217041828aa7b1b44c22ea67c07"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/stationery.52693d9eb6fe0f961b9b21f02491019e.png",
+      "bytes": 4276,
+      "sha256": "ecb9cea6a1c813004b7d8a3c21271ab9d1c4314c8106c4291cd2b4928f67e73a"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/assets/assets/images/placeholders/tea-coffee.f3bf8e4f20127a234040282ed4ff2241.png",
+      "bytes": 4271,
+      "sha256": "4cc191016c28d4de03bd515bb4f49ded77197780449a614ec874f0d9829bb8c6"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/favicon.ico",
+      "bytes": 14510,
+      "sha256": "f0a9a9aac6492320ca6a6b17a3486036a733c0edf2e511644b3f12c7ec6bd4e5"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/index.html",
+      "bytes": 1621,
+      "sha256": "87279dbb2c3128396334a720d63ce5310dffc4e460436fc71a50889e19e3dd8d"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export/metadata.json",
+      "bytes": 49,
+      "sha256": "aa5f19cc84d41c0f8c70ececb2bc82e863227ea1e121632aca879eb616056991"
+    }
+  ]
+}

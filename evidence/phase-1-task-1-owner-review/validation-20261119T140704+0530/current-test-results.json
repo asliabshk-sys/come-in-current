@@ -1,0 +1,80 @@
+{
+  "scope": "Six final suite outcomes;not earlier harness attempts. Two offline opt-in skips laterpassed locally,so unique final cases remove those two skip observations.",
+  "suites": [
+    {
+      "scope": "Existing offline backend/contracts",
+      "artifact": "backend-offline.xml",
+      "PASS": 574,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIPPED": 6,
+      "total": 580
+    },
+    {
+      "scope": "Local ASGI/Mongo payment/refund;providers mocked",
+      "artifact": "backend-local-payments.xml",
+      "PASS": 2,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIPPED": 0,
+      "total": 2
+    },
+    {
+      "scope": "Isolated HTTP/Mongo four-module regression",
+      "artifact": "backend-live.xml",
+      "PASS": 70,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIPPED": 0,
+      "total": 70
+    },
+    {
+      "scope": "Legacy backend,unchanged assertions",
+      "artifact": "backend-legacy.xml",
+      "PASS": 17,
+      "FAIL": 2,
+      "ERROR": 3,
+      "SKIPPED": 1,
+      "total": 23
+    },
+    {
+      "scope": "Password reset actual functions + real disposable Mongo",
+      "artifact": "password-reset-junit-v2.xml",
+      "PASS": 23,
+      "FAIL": 7,
+      "ERROR": 0,
+      "SKIPPED": 0,
+      "total": 30
+    },
+    {
+      "scope": "Broad helpers/models;synthetic DB doubles,independent reproduction",
+      "artifact": "broad-security-reproduced.xml",
+      "PASS": 49,
+      "FAIL": 1,
+      "ERROR": 0,
+      "SKIPPED": 0,
+      "total": 50
+    }
+  ],
+  "invocation_outcomes": {
+    "PASS": 735,
+    "FAIL": 10,
+    "ERROR": 3,
+    "SKIPPED": 7,
+    "total": 755
+  },
+  "unique_final_case_outcomes": {
+    "PASS": 735,
+    "FAIL": 10,
+    "ERROR": 3,
+    "SKIPPED": 5,
+    "total": 753
+  },
+  "FAIL_semantics": "For owner validation status,the10assertionFAILplus3fixtureERRORare13unsuccessfulcases. Raw XML retains the distinction.",
+  "diagnostic_attempts_NOT_summed": [
+    "password-reset-junit.xml",
+    "broad-security-isolated.xml",
+    "broad-security-isolated-v2.xml"
+  ],
+  "frontend_check_counts": "Six frontend command checks are separate;planner stdout reports11assertions but13assertcall sites were found. JShelper counts are not added to Python testcase totals."
+}

@@ -1,0 +1,365 @@
+{
+  "workstream": "OLD related regression and historical30securityrunner compatibility",
+  "timestamp_Asia_Kolkata": "2026-11-19T21:44:08.792562+05:30",
+  "repository": "/workspace/come-in-current",
+  "application": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "source_fix_owner": "parent only;this workstream edits zero protectedfiles",
+  "existing_related": {
+    "started_UTC": "2026-11-19T16:12:40.393776+00:00",
+    "finished_UTC": "2026-11-19T16:12:46.176802+00:00",
+    "command": [
+      "/workspace/come-in-tools/py311/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_transactions.py",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_transaction_commit_retry.py",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_api_contract.py",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_frontend_contracts.py",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shared_system_integration_contract.py",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_capture_transaction_offline.py",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_capture_transaction_offline.py",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_refund_webhook_transaction_offline.py",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_final_payment_transition_races.py",
+      "-q",
+      "-n",
+      "0",
+      "-p",
+      "no:cacheprovider",
+      "-p",
+      "old_related_network_guard",
+      "--junitxml=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-related-existing.xml",
+      "--basetemp=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-related-existing-tmp"
+    ],
+    "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend",
+    "exit_code": 0,
+    "counts": {
+      "PASS": 78,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIPPED": 0
+    },
+    "modules": [
+      "test_mongo_transactions.py",
+      "test_transaction_commit_retry.py",
+      "test_restaurant_api_contract.py",
+      "test_frontend_contracts.py",
+      "test_shared_system_integration_contract.py",
+      "test_grocery_capture_transaction_offline.py",
+      "test_restaurant_capture_transaction_offline.py",
+      "test_restaurant_refund_webhook_transaction_offline.py",
+      "test_final_payment_transition_races.py"
+    ],
+    "bindings_before": {
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/pytest.ini": "6cb1fc884360a028c18965b664932f7caef56074ed2db617ae356876521b15b3",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_transactions.py": "edb13ec2ce29af32a744f03886735e6c941bc1a6e32390ea3f35915fef023704",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_transaction_commit_retry.py": "3ca910cad4f85917780bbfcac54167650d979b64f8a5256523a732fcc3ae936a",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_api_contract.py": "a5cbf0085a4e83d6465ecf6932a946b4e4c4d3f99b57268a23d7fa4e7db24fbb",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_frontend_contracts.py": "88729edf5570aa56e0a524caae9aeab10ef1e6c867182c916c4e923630fcbe41",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shared_system_integration_contract.py": "0278c5ee3d818a731bb97f622490c1a79b18f0897527bf5ea6fe9c4597a1cc6e",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_capture_transaction_offline.py": "98b6385f9722cba618a5d99cb7a692493fe475db49337e022da0f9f9d7321c84",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_capture_transaction_offline.py": "fdf8de7ac76a630dd9b43ed79464e8cc06953281dd0199039c9e8f6b1494de2c",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_refund_webhook_transaction_offline.py": "c3970297a1b489b4d4e26eaa88a12a8a2fe2a1694484f2edc966ea70b88668d4",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_final_payment_transition_races.py": "7dfb070f7429abfc49aa88a627f281c481156b547d9efe6306cb15ac1e6333be"
+    },
+    "bindings_after": {
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/pytest.ini": "6cb1fc884360a028c18965b664932f7caef56074ed2db617ae356876521b15b3",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_transactions.py": "edb13ec2ce29af32a744f03886735e6c941bc1a6e32390ea3f35915fef023704",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_transaction_commit_retry.py": "3ca910cad4f85917780bbfcac54167650d979b64f8a5256523a732fcc3ae936a",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_api_contract.py": "a5cbf0085a4e83d6465ecf6932a946b4e4c4d3f99b57268a23d7fa4e7db24fbb",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_frontend_contracts.py": "88729edf5570aa56e0a524caae9aeab10ef1e6c867182c916c4e923630fcbe41",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shared_system_integration_contract.py": "0278c5ee3d818a731bb97f622490c1a79b18f0897527bf5ea6fe9c4597a1cc6e",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_capture_transaction_offline.py": "98b6385f9722cba618a5d99cb7a692493fe475db49337e022da0f9f9d7321c84",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_capture_transaction_offline.py": "fdf8de7ac76a630dd9b43ed79464e8cc06953281dd0199039c9e8f6b1494de2c",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_refund_webhook_transaction_offline.py": "c3970297a1b489b4d4e26eaa88a12a8a2fe2a1694484f2edc966ea70b88668d4",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_final_payment_transition_races.py": "7dfb070f7429abfc49aa88a627f281c481156b547d9efe6306cb15ac1e6333be"
+    },
+    "protected_source_or_test_edits_by_runner": false,
+    "network_guard": "allsocketconnect/create_connectiondeniedinthisprocess",
+    "rationale": "Existingtransactionhelper/retryandsharedauth/API/frontendcontractspluspayment/refundtransactioncallbackschecktheexistinghelperandunrelatedcriticalroutesafterreset_passwordonlychanges;nofull574or70rerun."
+  },
+  "old_30_before_after": [
+    {
+      "phase": "before",
+      "started_UTC": "2026-11-19T16:12:03.257134+00:00",
+      "finished_UTC": "2026-11-19T16:12:14.114718+00:00",
+      "command": [
+        "/workspace/come-in-tools/py311/bin/python",
+        "-B",
+        "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-runner-compatible.py"
+      ],
+      "cwd": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530",
+      "source_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/before/backend/server.py",
+      "source_SHA256_before": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+      "source_SHA256_after": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+      "exit_code": 1,
+      "counts": {
+        "PASS": 23,
+        "FAIL": 7,
+        "ERROR": 0,
+        "SKIPPED": 0
+      },
+      "database_retained": "comein_reset_sec01_compat_20261119t161203z_35dcae00a0",
+      "fail_cases": [
+        "RESET-10",
+        "RESET-16",
+        "RESET-17",
+        "RESET-18",
+        "RESET-19",
+        "RESET-27",
+        "RESET-30"
+      ],
+      "error_cases": [],
+      "result_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-before/password-reset-results-v2.json"
+    },
+    {
+      "phase": "after",
+      "started_UTC": "2026-11-19T16:12:14.116467+00:00",
+      "finished_UTC": "2026-11-19T16:12:24.736646+00:00",
+      "command": [
+        "/workspace/come-in-tools/py311/bin/python",
+        "-B",
+        "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-runner-compatible.py"
+      ],
+      "cwd": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530",
+      "source_path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "source_SHA256_before": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+      "source_SHA256_after": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+      "exit_code": 1,
+      "counts": {
+        "PASS": 26,
+        "FAIL": 4,
+        "ERROR": 0,
+        "SKIPPED": 0
+      },
+      "database_retained": "comein_reset_sec01_compat_20261119t161214z_3a4efd6dcb",
+      "fail_cases": [
+        "RESET-10",
+        "RESET-19",
+        "RESET-27",
+        "RESET-30"
+      ],
+      "error_cases": [],
+      "result_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-after/password-reset-results-v2.json"
+    }
+  ],
+  "case_receipts_for_authorized_defect": {
+    "RESET-16": {
+      "before": {
+        "id": "RESET-16",
+        "invariant": "At most one concurrent request can consume the same reset token",
+        "scope": "local MongoDB function integration",
+        "status": "FAIL",
+        "duration_seconds": 0.827408,
+        "failure": "Two concurrent requests both accepted the same single-use token",
+        "observations": {
+          "accepted_resets": 2,
+          "matching_valid_reads": 2,
+          "token_used_afterwards": true,
+          "controlled_interleaving": "Both actual MongoDB token reads finish before either function resumes"
+        }
+      },
+      "after": {
+        "id": "RESET-16",
+        "invariant": "At most one concurrent request can consume the same reset token",
+        "scope": "local MongoDB function integration",
+        "status": "PASS",
+        "duration_seconds": 0.802937,
+        "failure": null,
+        "observations": {
+          "accepted_resets": 1,
+          "matching_valid_reads": 2,
+          "token_used_afterwards": true,
+          "controlled_interleaving": "Both actual MongoDB token reads finish before either function resumes"
+        }
+      }
+    },
+    "RESET-17": {
+      "before": {
+        "id": "RESET-17",
+        "invariant": "A failure between password write and token write leaves no partial state or reusable token",
+        "scope": "local MongoDB function integration",
+        "status": "FAIL",
+        "duration_seconds": 0.809729,
+        "failure": "Password changed but token stayed unused; same token retry accepted",
+        "observations": {
+          "injected_exception_escaped": true,
+          "password_changed_before_failure": true,
+          "token_unused_after_failure": true,
+          "same_token_retry_accepted": true,
+          "fault_scope": "Fault immediately after actual users.update_one; nontransactional BEFORE commits that write, transactional AFTER must abort both writes"
+        }
+      },
+      "after": {
+        "id": "RESET-17",
+        "invariant": "A failure between password write and token write leaves no partial state or reusable token",
+        "scope": "local MongoDB function integration",
+        "status": "PASS",
+        "duration_seconds": 0.805744,
+        "failure": null,
+        "observations": {
+          "injected_exception_escaped": true,
+          "password_changed_before_failure": false,
+          "token_unused_after_failure": true,
+          "same_token_retry_accepted": true,
+          "fault_scope": "Fault immediately after actual users.update_one; nontransactional BEFORE commits that write, transactional AFTER must abort both writes"
+        }
+      }
+    },
+    "RESET-18": {
+      "before": {
+        "id": "RESET-18",
+        "invariant": "Reset cannot report success for a missing target account",
+        "scope": "local MongoDB function integration",
+        "status": "FAIL",
+        "duration_seconds": 0.566214,
+        "failure": "Reset reports success when users.update_one matches zero accounts",
+        "observations": {
+          "success_reported": true,
+          "token_consumed": true
+        }
+      },
+      "after": {
+        "id": "RESET-18",
+        "invariant": "Reset cannot report success for a missing target account",
+        "scope": "local MongoDB function integration",
+        "status": "PASS",
+        "duration_seconds": 0.537626,
+        "failure": null,
+        "observations": {
+          "success_reported": false,
+          "token_consumed": false
+        }
+      }
+    }
+  },
+  "unrelated_failures_retained": {
+    "RESET-10": "Malformed SMTP_PORT cleanup LOW subissue;out of SEC01HIGH atomicity scope",
+    "RESET-19": "SEC02sessionrevocationMEDIUM",
+    "RESET-27": "SEC04throttleraceMEDIUM",
+    "RESET-30": "SEC06bcrypt72byteLOW"
+  },
+  "compatibility": {
+    "original_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/validate_password_reset.py",
+    "original_SHA256": "79952bdfc4bc80b54cb54709728eb9d80e299e469460c4ca50d3edc492ea27fd",
+    "adapted_SHA256": "35dce6bb6dd30c633ab74130adc36ee35c7e11cf3a45388f92a0ca47e150a6d6",
+    "original_require_calls": 55,
+    "adapted_require_calls": 56,
+    "all_original_invariant_assertions_preserved": true,
+    "new_assertions": 1,
+    "source_changes": 0,
+    "adaptations": [
+      "Source/output path selections point at immutable before backup or current protected source;new unique DB prefix.",
+      "Actual existing run_transaction helper and Motor client supplied to extracted globals.",
+      "RESET17samefault-after-password-write invariant:execute real users.update_one thenraise;session forwards so actual AFTER transaction abort is tested. Before source still commits and fails.",
+      "RESET18accept intendedHTTP400rejection before existing no-false-success assertion;otherwisecorrectfixwouldbe misreported as harnessERROR."
+    ],
+    "all_original_require_calls_preserved_with_multiplicity": true
+  },
+  "scope_limits": [
+    "The30runnerexecutes actualASTfunctions withrealMotor/Mongo,butnotHTTPmiddlewareorSMTPdelivery.",
+    "Related78casesareoldofflinecontracts/helpertests,notnative/provider orallUIacceptance.",
+    "BEFORE uses immutable saved source backup;a runtimebaseline,not a claimednewexecutionagainstGitHEAD.",
+    "Failureafterpasswordwrite injection moved to realusers.update_one returningthenraising so thesamepartial-state invariant is validforoldandnewtransactionordering.",
+    "Alloriginal55requireassertionspreservedwithmultiplicity;extra400guardacceptsintendedmissing-userrejectionwithout weakeningno-successassertion."
+  ],
+  "protected_source_modified_by_this_workstream": false,
+  "production_or_real_customer_operations": false,
+  "global_Mongo_failpoints": false,
+  "packages_installed": false,
+  "application_tests_running": false,
+  "next_action": "Parent consolidates SEC01focused/concurrency results and verifies allpreservation/manifests;no other findingfix authorized.",
+  "artifacts": [
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-runner-original.py",
+      "SHA256": "79952bdfc4bc80b54cb54709728eb9d80e299e469460c4ca50d3edc492ea27fd",
+      "bytes": 33866
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-runner-compatible.py",
+      "SHA256": "35dce6bb6dd30c633ab74130adc36ee35c7e11cf3a45388f92a0ca47e150a6d6",
+      "bytes": 34450
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-runner-harness.diff",
+      "SHA256": "5b21210cc4ea0acfe9d0d90fa92e4ce3d63357e69fc06cbc7db316b108b83a48",
+      "bytes": 4164
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-runner-compatibility.json",
+      "SHA256": "0b252375c277a6ecab530bfc9feada623295b70cda5cf83637f576a0eeb3dd21",
+      "bytes": 1133
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/run-old-related-regression.py",
+      "SHA256": "fab11c53fb77de9e0cc5bc3ef3268f097b27025fef62abffd6033e57f46450e5",
+      "bytes": 1550
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-before-after-results.json",
+      "SHA256": "5206e9e2ce130e259b820eb6e952864e17feca141d46ef3adff3311fe6a1c333",
+      "bytes": 2580
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-before/password-reset-results-v2.json",
+      "SHA256": "c985d904720bf3eb2c0e84d97a51ac793e17ee2650d0132fbb8e6d0b990d4166",
+      "bytes": 20462
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-before/password-reset-junit-v2.xml",
+      "SHA256": "5f6da79edb316833ab71a718f07d3093db838b55947b1b8b4817dd0940c584af",
+      "bytes": 5519
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-before/execution.log",
+      "SHA256": "fa0e611cbdab3251c6001143b6d8d0ccc818b1ed7239c03b16898a664052616a",
+      "bytes": 2403
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-after/password-reset-results-v2.json",
+      "SHA256": "568fe92462615207fa46b26adfb216f22bdd2631078a0b387fdd3712f45e9bcd",
+      "bytes": 20240
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-after/password-reset-junit-v2.xml",
+      "SHA256": "a8d8b62bb1c0b3bdeb5ec32fceed7e02313a302062cc13a273bcd35d29e4913b",
+      "bytes": 5198
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-30-after/execution.log",
+      "SHA256": "61a2e2f0f91e48e26fb26f3da4701802358a1c7ac2da440de6091590c13c2044",
+      "bytes": 2403
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/run-existing-related.py",
+      "SHA256": "c98490f8077f4a7c87262b46589d414752b02fcea26a7066a66110fb164088a3",
+      "bytes": 2500
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old_related_network_guard.py",
+      "SHA256": "7469ba90901cadc35ca771871fb8d0cf95a4c11c20cb7d588abee9f92ad8a79e",
+      "bytes": 165
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-related-existing-results.json",
+      "SHA256": "333a70fcd59c1cf451b51066ff1253348aac5eca3014c099be408d78d15144e0",
+      "bytes": 7101
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-related-existing.log",
+      "SHA256": "4c14b20e367877693a2ae341b92265434b24d489d1dc2b6a3b6d179e56a40672",
+      "bytes": 615
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/old-related-existing.xml",
+      "SHA256": "7f1ac2799495c0988b05c8f3ebd7a5f44c0236ed329022a570aac664a2b9f312",
+      "bytes": 12225
+    }
+  ]
+}

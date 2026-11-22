@@ -1,0 +1,20 @@
+{
+  "status": "COMPLETE bounded read-only investigation",
+  "original30": "NOT FOUND",
+  "canonical_definitions": 22,
+  "later_report_numbers": [
+    23,
+    24,
+    25
+  ],
+  "unrecovered": [
+    26,
+    27,
+    28,
+    29,
+    30
+  ],
+  "next_action": "STOP;wait for explicit user approval/scope for Task2",
+  "application_tests_rerun": 0,
+  "report": "/workspace/come-in-current/COME_IN_TASK_1_ORIGINAL_ROADMAP_RECOVERY.md"
+}

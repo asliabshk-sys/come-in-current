@@ -1,0 +1,66 @@
+{
+  "before_source_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "candidate_source_SHA256": "3c4a5f258f1af0c06245b2bec0a9262c7a733da9b638ba39f21c26a67945d379",
+  "changed_functions": [
+    "create_restaurant_payment_intent",
+    "verify_restaurant_payment",
+    "razorpay_webhook",
+    "admin_refund_restaurant_order",
+    "admin_refund_grocery_order",
+    "create_grocery_payment_intent",
+    "verify_grocery_payment"
+  ],
+  "offload_sites": [
+    {
+      "function": "create_restaurant_payment_intent",
+      "original_line": 5029,
+      "operation": "http_requests.post",
+      "replacement": "await asyncio.to_thread(lambda: http_requests.post(\"https://api.razorpay.com/v1/orders\",auth=(key_id,key_secret),json={\"amount\":int(round(order[\"total\"]*100)),\"currency\":\"INR\",\"receipt\":order[\"ref\"],\"notes\":{\"comein_order_id\":str(order[\"_id\"])}},timeout=15))"
+    },
+    {
+      "function": "verify_restaurant_payment",
+      "original_line": 5087,
+      "operation": "http_requests.get",
+      "replacement": "await asyncio.to_thread(lambda: http_requests.get(\n            f\"https://api.razorpay.com/v1/payments/{body.razorpay_payment_id}\",\n            auth=(key_id,secret), timeout=15,\n        ))"
+    },
+    {
+      "function": "admin_refund_restaurant_order",
+      "original_line": 5726,
+      "operation": "_fetch_razorpay_refunds",
+      "replacement": "await asyncio.to_thread(_fetch_razorpay_refunds, payment[\"gateway_payment_id\"], key_id, secret)"
+    },
+    {
+      "function": "admin_refund_restaurant_order",
+      "original_line": 5767,
+      "operation": "requests.post",
+      "replacement": "await asyncio.to_thread(lambda: requests.post(\n            f\"https://api.razorpay.com/v1/payments/{payment['gateway_payment_id']}/refund\",\n            auth=(key_id, secret),\n            json={\"amount\": eligible_paise, \"notes\": {\"comein_order_id\": str(oid)}},\n            timeout=15,\n        ))"
+    },
+    {
+      "function": "admin_refund_grocery_order",
+      "original_line": 6311,
+      "operation": "_fetch_razorpay_refunds",
+      "replacement": "await asyncio.to_thread(_fetch_razorpay_refunds, payment[\"gateway_payment_id\"], settings.key_id, settings.key_secret)"
+    },
+    {
+      "function": "admin_refund_grocery_order",
+      "original_line": 6326,
+      "operation": "requests.post",
+      "replacement": "await asyncio.to_thread(lambda: requests.post(f\"https://api.razorpay.com/v1/payments/{payment['gateway_payment_id']}/refund\",\n            auth=(settings.key_id, settings.key_secret), json={\"amount\": eligible,\n            \"notes\": {\"comein_order_id\": str(oid), \"request_id\": body.request_id}}, timeout=15))"
+    },
+    {
+      "function": "create_grocery_payment_intent",
+      "original_line": 6391,
+      "operation": "http_requests.post",
+      "replacement": "await asyncio.to_thread(lambda: http_requests.post(\"https://api.razorpay.com/v1/orders\", auth=(key_id, key_secret), json={\"amount\": amount_paise, \"currency\": \"INR\", \"receipt\": order[\"ref\"], \"notes\": {\"comein_order_id\": str(oid), \"order_kind\": \"grocery\"}}, timeout=15))"
+    },
+    {
+      "function": "verify_grocery_payment",
+      "original_line": 6512,
+      "operation": "http_requests.get",
+      "replacement": "await asyncio.to_thread(lambda: http_requests.get(f\"https://api.razorpay.com/v1/payments/{body.razorpay_payment_id}\", auth=(key_id, secret), timeout=15))"
+    }
+  ],
+  "imports_or_schema_or_routes_changed": false,
+  "actual_source_modified": false,
+  "scope": "SEC07 andSEC08 candidate only;all provider tests local mocks. ActualRazorpay/nativevalidation DEFERRED."
+}

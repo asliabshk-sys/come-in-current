@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "checks": [
+    "CHAND entry present; obsolete Request Anything card absent",
+    "All four existing discovery modes retained",
+    "Primary assistant entry opens existing editable CHAND route",
+    "Home microphone opens CHAND voice typing and focuses input",
+    "No unconditional obsolete voice-unavailable alert"
+  ],
+  "pageErrors": [],
+  "scope": "Web route/focus behavior only; no native microphone permission or provider request attempted"
+}

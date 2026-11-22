@@ -1,0 +1,538 @@
+[
+  {
+    "collection": "notifications",
+    "line": 5840,
+    "matching_live_indexes": [
+      "user_id_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "assistant_rate_limits",
+    "line": 5841,
+    "matching_live_indexes": [
+      "rate_key_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "assistant_rate_limits",
+    "line": 5842,
+    "matching_live_indexes": [
+      "expires_at_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "chand_feedback",
+    "line": 5843,
+    "matching_live_indexes": [
+      "user_id_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "chand_feedback",
+    "line": 5844,
+    "matching_live_indexes": [
+      "user_id_1_request_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "chand_feedback",
+    "line": 5845,
+    "matching_live_indexes": [
+      "status_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "notifications",
+    "line": 5846,
+    "matching_live_indexes": [
+      "user_id_1_read_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "auth_rate_limits",
+    "line": 5847,
+    "matching_live_indexes": [
+      "expires_at_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restock_alerts",
+    "line": 5848,
+    "matching_live_indexes": [
+      "product_id_1_active_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "users",
+    "line": 5849,
+    "matching_live_indexes": [
+      "email_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "users",
+    "line": 5850,
+    "matching_live_indexes": [
+      "referral_code_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "referrals",
+    "line": 5851,
+    "matching_live_indexes": [
+      "referred_user_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "referrals",
+    "line": 5852,
+    "matching_live_indexes": [
+      "referrer_id_1_status_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "referrals",
+    "line": 5853,
+    "matching_live_indexes": [
+      "qualifying_order_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "referral_rewards",
+    "line": 5854,
+    "matching_live_indexes": [
+      "reward_key_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "referral_rewards",
+    "line": 5855,
+    "matching_live_indexes": [
+      "referrer_id_1_status_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "referral_ledger",
+    "line": 5856,
+    "matching_live_indexes": [
+      "idempotency_key_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "referral_ledger",
+    "line": 5857,
+    "matching_live_indexes": [
+      "user_id_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "referral_audit",
+    "line": 5858,
+    "matching_live_indexes": [
+      "created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "referral_link_events",
+    "line": 5859,
+    "matching_live_indexes": [
+      "referrer_id_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "payout_bank_accounts",
+    "line": 5860,
+    "matching_live_indexes": [
+      "beneficiary_type_1_beneficiary_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "settlement_requests",
+    "line": 5861,
+    "matching_live_indexes": [
+      "beneficiary_user_id_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "settlement_requests",
+    "line": 5862,
+    "matching_live_indexes": [
+      "beneficiary_user_id_1_beneficiary_type_1_beneficiary_id_1_idempotency_key_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "settlement_requests",
+    "line": 5863,
+    "matching_live_indexes": [
+      "status_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "settlement_order_allocations",
+    "line": 5864,
+    "matching_live_indexes": [
+      "order_key_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "settlement_order_allocations",
+    "line": 5865,
+    "matching_live_indexes": [
+      "settlement_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "financial_audit",
+    "line": 5866,
+    "matching_live_indexes": [
+      "created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "financial_ledger",
+    "line": 5867,
+    "matching_live_indexes": [
+      "idempotency_key_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "financial_ledger",
+    "line": 5868,
+    "matching_live_indexes": [
+      "beneficiary_user_id_1_recorded_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "financial_ledger",
+    "line": 5869,
+    "matching_live_indexes": [
+      "order_id_1_recorded_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "shops",
+    "line": 5870,
+    "matching_live_indexes": [
+      "owner_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "shops",
+    "line": 5871,
+    "matching_live_indexes": [
+      "status_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "products",
+    "line": 5872,
+    "matching_live_indexes": [
+      "shop_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "products",
+    "line": 5873,
+    "matching_live_indexes": [
+      "owner_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "products",
+    "line": 5875,
+    "matching_live_indexes": [
+      "catalogue_import_job_id_1_catalogue_import_record_index_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "catalogue_import_audit",
+    "line": 5880,
+    "matching_live_indexes": [
+      "apply_key_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "orders",
+    "line": 5883,
+    "matching_live_indexes": [
+      "customer_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "orders",
+    "line": 5884,
+    "matching_live_indexes": [
+      "shop_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "orders",
+    "line": 5885,
+    "matching_live_indexes": [
+      "grocery_idempotency_scope_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "grocery_quotes",
+    "line": 5886,
+    "matching_live_indexes": [
+      "expires_at_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "grocery_quotes",
+    "line": 5887,
+    "matching_live_indexes": [
+      "scope_1_status_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "files",
+    "line": 5888,
+    "matching_live_indexes": [
+      "owner_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restaurants",
+    "line": 5889,
+    "matching_live_indexes": [
+      "owner_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restaurants",
+    "line": 5890,
+    "matching_live_indexes": [
+      "status_1_available_1_city_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restaurant_menu",
+    "line": 5891,
+    "matching_live_indexes": [
+      "restaurant_id_1_available_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "addresses",
+    "line": 5892,
+    "matching_live_indexes": [
+      "user_id_1_is_default_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restaurant_orders",
+    "line": 5893,
+    "matching_live_indexes": [
+      "customer_id_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restaurant_orders",
+    "line": 5894,
+    "matching_live_indexes": [
+      "restaurant_id_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restaurant_orders",
+    "line": 5895,
+    "matching_live_indexes": [
+      "customer_id_1_idempotency_key_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restaurant_payments",
+    "line": 5896,
+    "matching_live_indexes": [
+      "gateway_order_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restaurant_payment_events",
+    "line": 5897,
+    "matching_live_indexes": [
+      "event_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restaurant_reviews",
+    "line": 5898,
+    "matching_live_indexes": [
+      "restaurant_id_1_customer_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "password_resets",
+    "line": 5899,
+    "matching_live_indexes": [
+      "expires_at_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restaurant_support",
+    "line": 5900,
+    "matching_live_indexes": [
+      "user_id_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restaurant_support",
+    "line": 5901,
+    "matching_live_indexes": [
+      "user_id_1_request_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "restaurant_carts",
+    "line": 5902,
+    "matching_live_indexes": [
+      "user_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "service_providers",
+    "line": 5903,
+    "matching_live_indexes": [
+      "owner_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "service_appointments",
+    "line": 5904,
+    "matching_live_indexes": [
+      "customer_id_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "service_appointments",
+    "line": 5905,
+    "matching_live_indexes": [
+      "provider_id_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "home_service_slot_reservations",
+    "line": 5907,
+    "matching_live_indexes": [
+      "provider_id_1_slot_key_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "home_service_settings",
+    "line": 5908,
+    "matching_live_indexes": [
+      "key_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "delivery_partner_applications",
+    "line": 7010,
+    "matching_live_indexes": [
+      "user_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "delivery_partner_applications",
+    "line": 7011,
+    "matching_live_indexes": [
+      "referral_code_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "delivery_partner_applications",
+    "line": 7012,
+    "matching_live_indexes": [
+      "status_1_updated_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "delivery_partner_audit",
+    "line": 7013,
+    "matching_live_indexes": [
+      "application_id_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "delivery_partner_referrals",
+    "line": 7014,
+    "matching_live_indexes": [
+      "referred_application_id_1"
+    ],
+    "status": "VERIFIED metadata"
+  },
+  {
+    "collection": "delivery_partner_referrals",
+    "line": 7015,
+    "matching_live_indexes": [
+      "referrer_application_id_1_created_at_-1"
+    ],
+    "status": "VERIFIED metadata"
+  }
+]

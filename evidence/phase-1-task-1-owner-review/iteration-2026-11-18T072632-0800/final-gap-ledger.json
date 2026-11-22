@@ -1,0 +1,367 @@
+{
+  "scope": "20 evidence/owner-decision gap assertions,not vulnerabilities or task completion counts",
+  "timestamp": "2026-11-19T13:59:07.329884+05:30",
+  "classifications": {
+    "VERIFIED": 5,
+    "PARTIALLY VERIFIED": 7,
+    "CONTRADICTED": 1,
+    "UNVERIFIED": 3,
+    "BLOCKED": 4
+  },
+  "gaps": [
+    {
+      "gap_id": "R01",
+      "classification": "VERIFIED",
+      "claim_assessed": "Five omitted conditional leaves and all destination files are source-mapped.",
+      "documentation_disposition": "Source inventory documentation gap CLOSED:113 literal leaves=107 unconditional occurrences+six leaves of three ternaries;old108 included only one of the six conditional leaves.",
+      "underlying_acceptance": "Actual handler execution, rendered screens, permissions and navigation remain UNVERIFIED.",
+      "evidence": [
+        "REPORT_BY_REPORT_REVIEW.md:F05",
+        "EVIDENCE_GAP_REGISTER.md:R01"
+      ],
+      "required_closure_evidence_or_decision": "Use the frontend branch addendum for all113leaves;do not equate file existence with working navigation.",
+      "responsible_party": "Owner/reviewer",
+      "iteration_evidence": [
+        "navigation-closure.json",
+        "FINAL_NAVIGATION_AND_API_INVENTORY.md"
+      ]
+    },
+    {
+      "gap_id": "R02",
+      "classification": "PARTIALLY VERIFIED",
+      "claim_assessed": "Href and dynamic destination inventory coverage.",
+      "documentation_disposition": "All five href attributes and14 dynamic non-back arguments have a source disposition;12 entity templates and one finite RestaurantNav list are bounded. The auth next parameter remains unbounded in this inspection.",
+      "underlying_acceptance": "Dynamic values, allowed-return policy, encoding, permissions and runtime navigation remain open. Owner/security review must define allowed return targets;no exploit inferred.",
+      "evidence": [
+        "REPORT_BY_REPORT_REVIEW.md:F07/F13",
+        "OWNER_APPROVAL_CHECKLIST.md:12"
+      ],
+      "required_closure_evidence_or_decision": "Frontend peer branch/context analysis plus owner-approved allowed-return policy;no attack or navigation simulation.",
+      "responsible_party": "Owner/reviewer",
+      "iteration_evidence": [
+        "navigation-closure.json",
+        "FINAL_NAVIGATION_AND_API_INVENTORY.md"
+      ]
+    },
+    {
+      "gap_id": "R03",
+      "classification": "VERIFIED",
+      "claim_assessed": "Special-file public-path qualification.",
+      "documentation_disposition": "Documentation gap CLOSED:layout/document/fallback files are not ordinary public URL proof;the original mistaken fields remain unchanged.",
+      "underlying_acceptance": "Router/runtime acceptance remains open;no route change is required for this additive correction.",
+      "evidence": [
+        "OWNER_REVIEW_MASTER_REPORT.md:27",
+        "EVIDENCE_GAP_REGISTER.md:R03"
+      ],
+      "required_closure_evidence_or_decision": "No app-route change required to make this documentary correction;owner reviews qualified inventory.",
+      "responsible_party": "Owner/reviewer",
+      "iteration_evidence": [
+        "navigation-closure.json",
+        "FINAL_NAVIGATION_AND_API_INVENTORY.md"
+      ]
+    },
+    {
+      "gap_id": "R04",
+      "classification": "VERIFIED",
+      "claim_assessed": "All179 explicit API signatures,defaults and constraint expressions are inventoried from source.",
+      "documentation_disposition": "Source metadata gap CLOSED:387 parameters,216 Python defaults,27 Query parameters across19 endpoints,60 model declarations with fields/validators and all explicit response decorators are recorded. All179 method/path/function triples match the original inventory.",
+      "underlying_acceptance": "Generated OpenAPI, helper errors, dependency effects, serialization and request/response behavior remain UNVERIFIED;source metadata is not runtime acceptance.",
+      "evidence": [
+        "REPORT_BY_REPORT_REVIEW.md:B06",
+        "EVIDENCE_GAP_REGISTER.md:R04"
+      ],
+      "required_closure_evidence_or_decision": "Use source-derived endpoint defaults/constraint addendum;avoid falsely treating historical schema count as behavioral validation.",
+      "responsible_party": "Owner/reviewer",
+      "iteration_evidence": [
+        "complete-api-inventory.json",
+        "FINAL_NAVIGATION_AND_API_INVENTORY.md"
+      ]
+    },
+    {
+      "gap_id": "R05",
+      "classification": "CONTRADICTED",
+      "claim_assessed": "The original SEC-01 related test pointer supports reset coverage.",
+      "documentation_disposition": "Citation correction supplied additively:the named functional-blocker file has zero reset assertions;restaurant contract lines33-34 establish route presence only. Original incorrect pointer is preserved.",
+      "underlying_acceptance": "No atomic consumption, rollback, concurrency, SMTP delivery or revocation passing evidence was found. HIGH remains OPEN.",
+      "evidence": [
+        "OWNER_REVIEW_MASTER_REPORT.md:28",
+        "SECURITY_FINDINGS_REVIEW.md:SEC-01",
+        "EVIDENCE_GAP_REGISTER.md:R05"
+      ],
+      "required_closure_evidence_or_decision": "Correct only in additive documentation;actual one-time token/concurrency/rollback evidence and owner disposition still required.",
+      "responsible_party": "Owner/reviewer",
+      "iteration_evidence": [
+        "reset-flow-validation.json",
+        "FINAL_SECURITY_VALIDATION_REPORT.md"
+      ]
+    },
+    {
+      "gap_id": "R06",
+      "classification": "PARTIALLY VERIFIED",
+      "claim_assessed": "GET-based probe safety coverage.",
+      "documentation_disposition": "Source safety addendum records81 GET handlers and three potential local/transitive Mongo write paths,including the previously omitted admin detail access-audit write. No GETs called.",
+      "underlying_acceptance": "Absence of a recognized write site is not a purity guarantee:dynamic/external helpers,aliases and telemetry are not exhaustively resolved. Any future probe needs operation-specific review.",
+      "evidence": [
+        "OWNER_REVIEW_MASTER_REPORT.md:34",
+        "REPORT_BY_REPORT_REVIEW.md:B10"
+      ],
+      "required_closure_evidence_or_decision": "Trace direct/transitive writes before authorizing runtime probes;do not invoke referral GETs now.",
+      "responsible_party": "Owner/reviewer",
+      "iteration_evidence": [
+        "get-side-effect-inventory.json",
+        "FINAL_NAVIGATION_AND_API_INVENTORY.md"
+      ]
+    },
+    {
+      "gap_id": "R07",
+      "classification": "VERIFIED",
+      "claim_assessed": "Preservation coverage is now bounded accurately",
+      "documentation_disposition": "Documentation clarification CLOSED:old8150baseline=8128app+20root+2patch;no root/evidence. Prior8476baseline adds326root/evidence files;current8504baseline adds28previous-review files. Exactsets remain distinct;broader original wording is not rewritten.",
+      "underlying_acceptance": "Past integrity of excluded files cannot be retroactively established. Current and prior owner-review hash equality is current prospective preservation only.",
+      "evidence": [
+        "PHASE_1_TASK_1_MASTER_AUDIT_REPORT.md:19(original overbroadclaim)",
+        "protected-file-hashes-before.json",
+        "preservation-before.json",
+        "iteration preservation-baseline.json",
+        "final-preservation-verification.json"
+      ],
+      "required_closure_evidence_or_decision": "Owner acknowledges exact exclusions/time boundaries. No backdating current hashes;trusted historical capture required if excluded-file history matters.",
+      "responsible_party": "Owner/reviewer",
+      "iteration_evidence": [
+        "provenance-gap-dispositions.json",
+        "FINAL_PRESERVATION_VERIFICATION.md"
+      ]
+    },
+    {
+      "gap_id": "R08",
+      "classification": "UNVERIFIED",
+      "claim_assessed": "Historical test runs are authenticated and source/environment bound",
+      "documentation_disposition": "Documentation clarification CLOSED:39currentXMLhashes are read/recorded and match prior owner-review captures;this is not an original execution/source attestation. Existing suite timestamps are self-reported historical fields.",
+      "underlying_acceptance": "Historical execution/source/environment/command acceptance remains OPEN;fresh tests not allowed/run.",
+      "evidence": [
+        "PHASE_1_TASK_1_EVIDENCE_MANIFEST.json:test_artifact_references",
+        "database-history-review-notes.json:current_historical_artifact_hashes/timestamp_limitations",
+        "REVIEW_EVIDENCE_MANIFEST.json:historical_test_artifacts"
+      ],
+      "required_closure_evidence_or_decision": "Trusted contemporaneous per-run artifact hash plus source/buildcommit/hash,exactcommand/environment/isolation scope and failures/skips. If unavailable,retain HISTORICAL evidence;do not fabricate a binding.",
+      "responsible_party": "Developer/QA/evidence custodian and owner",
+      "iteration_evidence": [
+        "provenance-gap-dispositions.json",
+        "FINAL_PRESERVATION_VERIFICATION.md"
+      ]
+    },
+    {
+      "gap_id": "R09",
+      "classification": "PARTIALLY VERIFIED",
+      "claim_assessed": "DB snapshot capture provenance",
+      "documentation_disposition": "Documentation clarification CLOSED:script identifies local rs0/disposable target;metadataJSON has no capturetime/rawhello/rawvalidatoroptions. Audit manifest finalizationtime is not DB capturetime. No new DB query performed.",
+      "underlying_acceptance": "Exact historical capture provenance and current DB metadata acceptance remain OPEN.",
+      "evidence": [
+        "read-only-db-metadata.py:9-16",
+        "local-db-readonly-metadata.json:2-16",
+        "PHASE_1_TASK_1_API_AND_DATABASE_INVENTORY.md:208-212",
+        "REPORT_BY_REPORT_REVIEW.md:B17/P09"
+      ],
+      "required_closure_evidence_or_decision": "Use a separately authorized scoped/timestamped redacted metadata capture or trusted original capture logs. Current query cannot prove historical state.",
+      "responsible_party": "DB/evidence custodian and owner",
+      "iteration_evidence": [
+        "provenance-gap-dispositions.json",
+        "FINAL_PRESERVATION_VERIFICATION.md"
+      ]
+    },
+    {
+      "gap_id": "R10",
+      "classification": "VERIFIED",
+      "claim_assessed": "Validator absence is limited to the inspected saved snapshot",
+      "documentation_disposition": "Documentation clarification CLOSED:no nonempty validator observed in52savedcollectionflags. bool(options.validator) collapses absent vs empty{}. Neither this nor Pydantic constraints prove current/global/production validator state.",
+      "underlying_acceptance": "Current/production collection-validator acceptance remains OPEN and UNVERIFIED;no new DB capture.",
+      "evidence": [
+        "PHASE_1_TASK_1_API_AND_DATABASE_INVENTORY.md:212",
+        "read-only-db-metadata.py:15",
+        "local-db-readonly-metadata.json",
+        "REPORT_BY_REPORT_REVIEW.md:B15-B16"
+      ],
+      "required_closure_evidence_or_decision": "Owner accepts bounded wording or authorizes appropriate non-production/read-only metadata evidence with rawredacted relevant options. Do not migrate schemas.",
+      "responsible_party": "Owner/reviewer",
+      "iteration_evidence": [
+        "provenance-gap-dispositions.json",
+        "FINAL_PRESERVATION_VERIFICATION.md"
+      ]
+    },
+    {
+      "gap_id": "R11",
+      "classification": "PARTIALLY VERIFIED",
+      "claim_assessed": "Configuration/dependency preservation is proven",
+      "documentation_disposition": "Documentation clarification CLOSED:actual secret.env files,node_modules/dependency trees and selected runtime caches are excluded;covered templates/config bytes match. Old8150andlater8476/8504are not unlimited filesystem/environment preservation proofs.",
+      "underlying_acceptance": "Uncaptured actual configuration/dependency state and prior history remain OPEN;no secret values read or current settings changed.",
+      "evidence": [
+        "PHASE_1_TASK_1_FINAL_CHECKLIST.md:34",
+        "REPORT_BY_REPORT_REVIEW.md:C04",
+        "final-preservation-verification.json:limitations",
+        "initial-identity.json:excluded"
+      ],
+      "required_closure_evidence_or_decision": "Define safe non-secret config/version/presence attestation and secure custody evidence if required. Never expose credentials,read production secrets or backdate hashes.",
+      "responsible_party": "Configuration/security custodian and owner",
+      "iteration_evidence": [
+        "provenance-gap-dispositions.json",
+        "FINAL_PRESERVATION_VERIFICATION.md"
+      ]
+    },
+    {
+      "gap_id": "R12",
+      "classification": "BLOCKED",
+      "claim_assessed": "Unresolved HIGH reset finding may be closed",
+      "documentation_disposition": "Documentation/citation correction does not close risk. Source pattern remains a HIGH review item;no owner risk disposition or isolated failure/race evidence supplied.",
+      "underlying_acceptance": "HIGH remains OPEN;no implementation or closure approval inferred.",
+      "evidence": [
+        "SECURITY_FINDINGS_REVIEW.md:SEC-01",
+        "OWNER_APPROVAL_CHECKLIST.md:14",
+        "EVIDENCE_GAP_REGISTER.md:R12"
+      ],
+      "required_closure_evidence_or_decision": "Personal owner priority/risk decision and separately authorized scoped validation/remediation;not authorized in this read-only iteration.",
+      "responsible_party": "Owner/reviewer",
+      "iteration_evidence": [
+        "FINAL_SECURITY_VALIDATION_REPORT.md"
+      ]
+    },
+    {
+      "gap_id": "R13",
+      "classification": "PARTIALLY VERIFIED",
+      "claim_assessed": "Other security severity/impact acceptance",
+      "documentation_disposition": "Previous review qualifies ingress/revocation/limiter/bcrypt/asyncHTTP/bodylimit assumptions;security peer must maintain evidence-based severity discussion.",
+      "underlying_acceptance": "Actualdeployment/policy/burst/load/transport exploitability and risk acceptance remain OPEN.",
+      "evidence": [
+        "SECURITY_FINDINGS_REVIEW.md",
+        "EVIDENCE_GAP_REGISTER.md:R13"
+      ],
+      "required_closure_evidence_or_decision": "Operation-specific owner acceptance criteria and approved isolated evidence;no attack/loadtest/fix now.",
+      "responsible_party": "Owner/reviewer",
+      "iteration_evidence": [
+        "FINAL_SECURITY_VALIDATION_REPORT.md"
+      ]
+    },
+    {
+      "gap_id": "R14",
+      "classification": "UNVERIFIED",
+      "claim_assessed": "All buttons/workflows work",
+      "documentation_disposition": "Documentation clarification CLOSED:579bindings and17historical browserchecks are bounded evidence,not whole-workflow acceptance.",
+      "underlying_acceptance": "All-action/state/error/permission runtime matrix remains OPEN.",
+      "evidence": [
+        "PHASE_1_TASK_1_MASTER_AUDIT_REPORT.md:31-33,98-104",
+        "OWNER_REVIEW_MASTER_REPORT.md:51"
+      ],
+      "required_closure_evidence_or_decision": "Owner-approved disposable workflow test plan and actual scoped outputs;no UI/API/data mutations in this review.",
+      "responsible_party": "Owner/reviewer",
+      "iteration_evidence": [
+        "FINAL_OWNER_DECISION_READINESS.md"
+      ]
+    },
+    {
+      "gap_id": "R15",
+      "classification": "BLOCKED",
+      "claim_assessed": "Actual native Android/iOS binary and physical-device validation",
+      "documentation_disposition": "Documentation clarification CLOSED:priorAndroidnativeprebuild ends missingSDK/adb;prioriOSattempt rejectsLinux. JSbundle/autolink proof is explicitly separate. These are prior observations,not a fresh19Novtoolchain inventory.",
+      "underlying_acceptance": "No corresponding successful native compilation/device evidence supplied;native acceptance OPEN.",
+      "evidence": [
+        "evidence/external-validation-20261118T133459Z/native-evidence.json",
+        "android-build-attempt.log",
+        "ios-build-attempt.log",
+        "EVIDENCE_GAP_REGISTER.md:R15"
+      ],
+      "required_closure_evidence_or_decision": "Authorized host/JDK/SDK/Xcode/signing/device,source-bound developmentbuild artifacts/device logs,and required actualscenario results. No paidbuild/sign/distribute/install now.",
+      "responsible_party": "Native developer/device custodian and owner",
+      "iteration_evidence": [
+        "FINAL_OWNER_DECISION_READINESS.md"
+      ]
+    },
+    {
+      "gap_id": "R16",
+      "classification": "BLOCKED",
+      "claim_assessed": "Actual external providers TEST delivery and settlement validated",
+      "documentation_disposition": "Documentation clarification CLOSED:mocks and local signed messages are not actualRazorpayTEST payment/webhook/refund orAI/STT/push/SMTP/objectdelivery. Prior0binding/restricted-egress record is historical;no freshcredential/network probe.",
+      "underlying_acceptance": "Actual provider/configuration/delivery/settlement acceptance remains OPEN.",
+      "evidence": [
+        "PHASE_1_TASK_1_MASTER_AUDIT_REPORT.md:80-94",
+        "evidence/external-validation-20261118T133459Z/managed-environment-summary.json",
+        "backend/tests/test_payment_webhook_local_integration.py:34-39,123-148",
+        "backend/tests/test_grocery_refund_local_integration.py:25-38"
+      ],
+      "required_closure_evidence_or_decision": "Secure authorizedTEST/nonproductionconfiguration plus genuine provider-issued references/delivery/status evidence bound tosource/order/platform scenarios. Never useLIVE/realcustomerpayments orrequestsecretsinchat.",
+      "responsible_party": "Owner/provider integration custodian",
+      "iteration_evidence": [
+        "FINAL_OWNER_DECISION_READINESS.md"
+      ]
+    },
+    {
+      "gap_id": "R17",
+      "classification": "BLOCKED",
+      "claim_assessed": "Actual production security/configuration validated",
+      "documentation_disposition": "Documentation clarification CLOSED:sourceguards/localDB/syntheticTLS/backupdrill are not actualproductionTLS/CORS/DBgrants/secrets/retention/log/abusecontrols. No productionaccess was performed.",
+      "underlying_acceptance": "Production acceptance remains OPEN;actual infrastructure evidence unavailable.",
+      "evidence": [
+        "PHASE_1_TASK_1_API_AND_DATABASE_INVENTORY.md:420",
+        "OWNER_REVIEW_MASTER_REPORT.md:51",
+        "EVIDENCE_GAP_REGISTER.md:R17"
+      ],
+      "required_closure_evidence_or_decision": "Authorized read-only production evidence/access forTLS,CORS,DBroles/firewalls,secretcustody/rotation,backupretention/RPO/RTO/log/ingresscontrols. No deploymentorconfigurationchanges.",
+      "responsible_party": "Production/security custodian and owner",
+      "iteration_evidence": [
+        "FINAL_OWNER_DECISION_READINESS.md"
+      ]
+    },
+    {
+      "gap_id": "R18",
+      "classification": "PARTIALLY VERIFIED",
+      "claim_assessed": "Data/reference/transaction/financial consistency established",
+      "documentation_disposition": "Documentation clarification CLOSED:67strictindexmatches52collectionmetadata are structuralsnapshotfacts;run_transaction/source and oldscenario results exist. Noapplicationrecords were inspected by audit/thisreview.",
+      "underlying_acceptance": "Currentrecord/orphan/inventory/financialconsistency,transactionfailurecoverage and recoverability acceptance remain OPEN;metadata is insufficient.",
+      "evidence": [
+        "PHASE_1_TASK_1_API_AND_DATABASE_INVENTORY.md:414-420",
+        "index-metadata-comparison.json",
+        "existing-test-result-index.json",
+        "REPORT_BY_REPORT_REVIEW.md:B18"
+      ],
+      "required_closure_evidence_or_decision": "Trustedsource-bound historical relevant scenarioresults orseparatelyauthorized disposablechecks;production recovery policy/evidence fromcustodian. NeverwriteDB/runtransactionprobes inthisscope.",
+      "responsible_party": "DB/QA/financial custodian and owner",
+      "iteration_evidence": [
+        "provenance-gap-dispositions.json",
+        "FINAL_PRESERVATION_VERIFICATION.md"
+      ]
+    },
+    {
+      "gap_id": "R19",
+      "classification": "PARTIALLY VERIFIED",
+      "claim_assessed": "Delivery/guest/replacement operational scope accepted",
+      "documentation_disposition": "Source-present pieces and explicitly pending full-lifecycle flows are distinguished in priorreports;no businesspolicy invented.",
+      "underlying_acceptance": "Owner product/operational lifecycle decisions remain OPEN.",
+      "evidence": [
+        "EVIDENCE_GAP_REGISTER.md:R19",
+        "PHASE_1_TASK_1_GAP_AND_BLOCKER_REGISTER.md:G04/G07/G08/G16"
+      ],
+      "required_closure_evidence_or_decision": "Ownerdefinesmandatoryacceptancescope andauthorizedfuturework;do not invent refund/replacement/deliverypolicy.",
+      "responsible_party": "Owner/reviewer",
+      "iteration_evidence": [
+        "FINAL_OWNER_DECISION_READINESS.md"
+      ]
+    },
+    {
+      "gap_id": "R20",
+      "classification": "UNVERIFIED",
+      "claim_assessed": "Remote main and remaining quality/advisory gates are newlyverified",
+      "documentation_disposition": "Documentation clarification CLOSED:origin/localHEAD/ZIP/currentextractionrelationship is separate from remote freshness;retainedTypeScript0/ESLint0errors10warnings are historical. Optionalvenvpackageabsence comes from savedauditinventory,not a new19Novenvironmentassertion.",
+      "underlying_acceptance": "Currentremotequality/advisory and optionalfeatureacceptance remain OPEN;no fetch/network/install/upgrade/newtests performed.",
+      "evidence": [
+        "workspace-provenance.json:remote_main_verified=false",
+        "runtime-dependency-inventory.json",
+        "evidence/resume-20261118/typecheck.log",
+        "REPORT_BY_REPORT_REVIEW.md:G13-G15"
+      ],
+      "required_closure_evidence_or_decision": "Owner scopesauthorizedread-onlyremote/evidence/advisoryreview and featuremandatorydependencies;do not infer newgreenresults from unchangedsource or upgrade/install/reset.",
+      "responsible_party": "Owner/developer/quality custodian",
+      "iteration_evidence": [
+        "provenance-gap-dispositions.json",
+        "FINAL_PRESERVATION_VERIFICATION.md"
+      ]
+    }
+  ]
+}

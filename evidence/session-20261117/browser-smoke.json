@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "checks": [
+    "public shopping home renders",
+    "Restaurant Mode navigation and isolated shell render",
+    "Restaurant return navigation preserves Shopping home",
+    "CUSTOMER real UI login and /orders render",
+    "CUSTOMER authenticated /delivery-partner render",
+    "SELLER real UI login and /seller/products render",
+    "SELLER authenticated /seller/support render",
+    "RESTO real UI login and /restaurant/dashboard render",
+    "RESTO authenticated /restaurant/orders render",
+    "ADMIN real UI login and /admin render",
+    "ADMIN authenticated /admin-delivery-partners render"
+  ],
+  "pageErrors": [],
+  "scope": "Real web login/navigation/render smoke; no native devices or external provider calls"
+}

@@ -1,0 +1,283 @@
+{
+  "source": "comein_disposable_test_release_20261117t094751z",
+  "restore_target": "comein_disposable_test_release_20261117t094751z_restored",
+  "checks": {
+    "validator_install": {
+      "collection": "catalogue_import_audit",
+      "created": false
+    },
+    "invalid_document_rejected": true,
+    "second_write_failure_rolls_back_first": true,
+    "unique_index_enforced": true,
+    "index_duplicate_preflight": true,
+    "validator_restored": true
+  },
+  "init": {
+    "collections_total": 51,
+    "collections_created": 51,
+    "indexes_ensured": 67,
+    "indexes_verified": 67
+  },
+  "restore": {
+    "verified": true,
+    "collections": [
+      {
+        "collection": "addresses",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "agent_assist",
+        "documents": 0,
+        "indexes": 1
+      },
+      {
+        "collection": "announcements",
+        "documents": 0,
+        "indexes": 1
+      },
+      {
+        "collection": "assistant_rate_limits",
+        "documents": 0,
+        "indexes": 3
+      },
+      {
+        "collection": "auth_rate_limits",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "catalog_import_history",
+        "documents": 0,
+        "indexes": 1
+      },
+      {
+        "collection": "catalog_price_audit",
+        "documents": 0,
+        "indexes": 1
+      },
+      {
+        "collection": "catalogue_import_audit",
+        "documents": 1,
+        "indexes": 2
+      },
+      {
+        "collection": "catalogue_import_jobs",
+        "documents": 0,
+        "indexes": 1
+      },
+      {
+        "collection": "chand_feedback",
+        "documents": 0,
+        "indexes": 4
+      },
+      {
+        "collection": "delivery_partner_applications",
+        "documents": 0,
+        "indexes": 4
+      },
+      {
+        "collection": "delivery_partner_audit",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "delivery_partner_referrals",
+        "documents": 0,
+        "indexes": 3
+      },
+      {
+        "collection": "files",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "financial_audit",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "financial_ledger",
+        "documents": 0,
+        "indexes": 4
+      },
+      {
+        "collection": "grocery_payments",
+        "documents": 0,
+        "indexes": 1
+      },
+      {
+        "collection": "grocery_quotes",
+        "documents": 0,
+        "indexes": 3
+      },
+      {
+        "collection": "home_service_settings",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "home_service_slot_reservations",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "master_products",
+        "documents": 0,
+        "indexes": 1
+      },
+      {
+        "collection": "notifications",
+        "documents": 0,
+        "indexes": 3
+      },
+      {
+        "collection": "orders",
+        "documents": 0,
+        "indexes": 4
+      },
+      {
+        "collection": "password_resets",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "payout_bank_accounts",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "products",
+        "documents": 0,
+        "indexes": 4
+      },
+      {
+        "collection": "referral_audit",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "referral_ledger",
+        "documents": 0,
+        "indexes": 3
+      },
+      {
+        "collection": "referral_link_events",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "referral_rewards",
+        "documents": 0,
+        "indexes": 3
+      },
+      {
+        "collection": "referrals",
+        "documents": 0,
+        "indexes": 4
+      },
+      {
+        "collection": "request_anything",
+        "documents": 0,
+        "indexes": 1
+      },
+      {
+        "collection": "restaurant_carts",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "restaurant_menu",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "restaurant_orders",
+        "documents": 0,
+        "indexes": 4
+      },
+      {
+        "collection": "restaurant_payment_events",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "restaurant_payments",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "restaurant_reviews",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "restaurant_support",
+        "documents": 0,
+        "indexes": 3
+      },
+      {
+        "collection": "restaurants",
+        "documents": 0,
+        "indexes": 3
+      },
+      {
+        "collection": "restock_alerts",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "retail_price_import_history",
+        "documents": 0,
+        "indexes": 1
+      },
+      {
+        "collection": "retail_price_offers",
+        "documents": 0,
+        "indexes": 1
+      },
+      {
+        "collection": "retail_price_price_audit",
+        "documents": 0,
+        "indexes": 1
+      },
+      {
+        "collection": "service_appointments",
+        "documents": 0,
+        "indexes": 3
+      },
+      {
+        "collection": "service_providers",
+        "documents": 0,
+        "indexes": 2
+      },
+      {
+        "collection": "settlement_order_allocations",
+        "documents": 0,
+        "indexes": 3
+      },
+      {
+        "collection": "settlement_requests",
+        "documents": 0,
+        "indexes": 4
+      },
+      {
+        "collection": "shops",
+        "documents": 0,
+        "indexes": 3
+      },
+      {
+        "collection": "status_checks",
+        "documents": 0,
+        "indexes": 1
+      },
+      {
+        "collection": "users",
+        "documents": 1,
+        "indexes": 3
+      }
+    ],
+    "issues": []
+  },
+  "ok": true
+}

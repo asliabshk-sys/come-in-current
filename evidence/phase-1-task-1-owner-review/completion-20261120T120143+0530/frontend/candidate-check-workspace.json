@@ -1,0 +1,11 @@
+{
+  "scratch": "/tmp/comein-task1-frontend-candidate-1lhj7hr7",
+  "actual_source_edited": false,
+  "dependencies": "existingpinnednode_modulessymlink",
+  "private_env_copied": false,
+  "original_expo_edited": false,
+  "candidate_files": [
+    "app/checkout.tsx",
+    "app/services.tsx"
+  ]
+}

@@ -1,0 +1,25 @@
+[
+  {
+    "local_route": "/grocery/payments/config",
+    "http_status": 200,
+    "configuration_status_only": {
+      "razorpay_enabled": false
+    }
+  },
+  {
+    "local_route": "/restaurant/payments/config",
+    "http_status": 200,
+    "configuration_status_only": {
+      "razorpay_enabled": false
+    }
+  },
+  {
+    "local_route": "/assistant/health",
+    "http_status": 200,
+    "configuration_status_only": {
+      "configured": false,
+      "live_probe": false,
+      "speech_to_text_configured": false
+    }
+  }
+]

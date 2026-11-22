@@ -1,0 +1,316 @@
+{
+  "project": "COME-IN",
+  "stage": "before-v2",
+  "started_UTC": "2026-11-20T06:40:25.440175+00:00",
+  "finished_UTC": "2026-11-20T06:40:27.383462+00:00",
+  "source_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/payment-security/before-server.py",
+  "source_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "source_SHA256_after": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "runner_SHA256": "a7b64f0bd853d7a01dbc175100c1f4648fd69bad9b135b42d28a57e4c0ae5c68",
+  "command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-B",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/payment-security/validate_payment_security.py",
+    "--stage",
+    "before-v2",
+    "--source",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/payment-security/before-server.py"
+  ],
+  "counts": {
+    "PASS": 19,
+    "FAIL": 11,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "cases": [
+    {
+      "id": "S7-restaurant-create-nonblocking",
+      "invariant": "All restaurant create provider calls run off the event loop",
+      "status": "FAIL",
+      "failure": "Blocking provider I/O occupied the event loop",
+      "observations": {
+        "calls": 1,
+        "event_loop_progressed": false,
+        "all_provider_calls_off_main_thread": false,
+        "timeouts_preserved": true
+      }
+    },
+    {
+      "id": "S7-restaurant-verify-nonblocking",
+      "invariant": "All restaurant verify provider calls run off the event loop",
+      "status": "FAIL",
+      "failure": "Blocking provider I/O occupied the event loop",
+      "observations": {
+        "calls": 1,
+        "event_loop_progressed": false,
+        "all_provider_calls_off_main_thread": false,
+        "timeouts_preserved": true
+      }
+    },
+    {
+      "id": "S7-restaurant-refund-nonblocking",
+      "invariant": "All restaurant refund provider calls run off the event loop",
+      "status": "FAIL",
+      "failure": "Blocking provider I/O occupied the event loop",
+      "observations": {
+        "calls": 2,
+        "event_loop_progressed": false,
+        "all_provider_calls_off_main_thread": false,
+        "timeouts_preserved": true
+      }
+    },
+    {
+      "id": "S7-grocery-create-nonblocking",
+      "invariant": "All grocery create provider calls run off the event loop",
+      "status": "FAIL",
+      "failure": "Blocking provider I/O occupied the event loop",
+      "observations": {
+        "calls": 1,
+        "event_loop_progressed": false,
+        "all_provider_calls_off_main_thread": false,
+        "timeouts_preserved": true
+      }
+    },
+    {
+      "id": "S7-grocery-verify-nonblocking",
+      "invariant": "All grocery verify provider calls run off the event loop",
+      "status": "FAIL",
+      "failure": "Blocking provider I/O occupied the event loop",
+      "observations": {
+        "calls": 1,
+        "event_loop_progressed": false,
+        "all_provider_calls_off_main_thread": false,
+        "timeouts_preserved": true
+      }
+    },
+    {
+      "id": "S7-grocery-refund-nonblocking",
+      "invariant": "All grocery refund provider calls run off the event loop",
+      "status": "FAIL",
+      "failure": "Blocking provider I/O occupied the event loop",
+      "observations": {
+        "calls": 2,
+        "event_loop_progressed": false,
+        "all_provider_calls_off_main_thread": false,
+        "timeouts_preserved": true
+      }
+    },
+    {
+      "id": "S7-restaurant-create-success",
+      "invariant": "Existing restaurant create response/state contract with local provider mock",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "provider_mock_calls": 1
+      }
+    },
+    {
+      "id": "S7-restaurant-verify-success",
+      "invariant": "Existing restaurant verify response/state contract with local provider mock",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "provider_mock_calls": 1
+      }
+    },
+    {
+      "id": "S7-restaurant-refund-success",
+      "invariant": "Existing restaurant refund response/state contract with local provider mock",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "provider_mock_calls": 2
+      }
+    },
+    {
+      "id": "S7-grocery-create-success",
+      "invariant": "Existing grocery create response/state contract with local provider mock",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "provider_mock_calls": 1
+      }
+    },
+    {
+      "id": "S7-grocery-verify-success",
+      "invariant": "Existing grocery verify response/state contract with local provider mock",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "provider_mock_calls": 1
+      }
+    },
+    {
+      "id": "S7-grocery-refund-success",
+      "invariant": "Existing grocery refund response/state contract with local provider mock",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "provider_mock_calls": 2
+      }
+    },
+    {
+      "id": "S7-restaurant-create-failure",
+      "invariant": "Existing restaurant create timeout failure remains safe",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "status": 502
+      }
+    },
+    {
+      "id": "S7-restaurant-verify-failure",
+      "invariant": "Existing restaurant verify timeout failure remains safe",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "status": 502
+      }
+    },
+    {
+      "id": "S7-restaurant-refund-failure",
+      "invariant": "Existing restaurant refund timeout failure remains safe",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "status": 502
+      }
+    },
+    {
+      "id": "S7-grocery-create-failure",
+      "invariant": "Existing grocery create timeout failure remains safe",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "status": 502
+      }
+    },
+    {
+      "id": "S7-grocery-verify-failure",
+      "invariant": "Existing grocery verify timeout failure remains safe",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "status": 502
+      }
+    },
+    {
+      "id": "S7-grocery-refund-failure",
+      "invariant": "Existing grocery refund timeout failure remains safe",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "status": 502
+      }
+    },
+    {
+      "id": "S7-cancel",
+      "invariant": "Cancellation releases event loop without confirming payment or replaying provider request",
+      "status": "FAIL",
+      "failure": "Cancellation was blocked behind provider I/O",
+      "observations": {
+        "cancelled_while_provider_pending": false,
+        "provider_calls": 1,
+        "retry_rejected": false
+      }
+    },
+    {
+      "id": "S7-ownership",
+      "invariant": "Unrelated customer cannot create another customer payment intent",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "S7-refund-role",
+      "invariant": "Non-admin Grocery refund rejected before provider access",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "S8-declared-oversize",
+      "invariant": "Declared oversize rejected before body,HMAC,JSON or DB work",
+      "status": "FAIL",
+      "failure": "Declared oversized body was not rejected413",
+      "observations": {
+        "HMAC_calls": 1,
+        "body_reads": 1,
+        "stream_chunks_read": 0
+      }
+    },
+    {
+      "id": "S8-stream-oversize-missing",
+      "invariant": "Actual bytes enforce bound despite missing/forged Content-Length",
+      "status": "FAIL",
+      "failure": "Actual oversized chunked body was not rejected413",
+      "observations": {
+        "HMAC_calls": 1,
+        "body_reads": 1,
+        "stream_chunks_read": 0
+      }
+    },
+    {
+      "id": "S8-stream-oversize-forged",
+      "invariant": "Actual bytes enforce bound despite missing/forged Content-Length",
+      "status": "FAIL",
+      "failure": "Actual oversized chunked body was not rejected413",
+      "observations": {
+        "HMAC_calls": 1,
+        "body_reads": 1,
+        "stream_chunks_read": 0
+      }
+    },
+    {
+      "id": "S8-exact-limit",
+      "invariant": "Exactly1MiB valid raw JSON keeps its signature and event processing",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "S8-invalid-signature",
+      "invariant": "Invalid signature rejected without JSON or DB effects",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "S8-missing-configuration",
+      "invariant": "Existing503 configuration rejection precedes request reads",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "S8-malformed-json",
+      "invariant": "Signed malformed JSON remains rejected400 without DB writes",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "S8-duplicate",
+      "invariant": "Valid duplicate event remains idempotent without a second audit write",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "S8-body-size-before-signature",
+      "invariant": "Oversized invalid-signature input is size-rejected before HMAC",
+      "status": "FAIL",
+      "failure": "Unauthenticated oversized payload reached HMAC",
+      "observations": {}
+    }
+  ],
+  "actual_provider_calls": 0,
+  "database_calls": 0,
+  "native_validation": false,
+  "scope": "Actual handler/helper AST bodies;in-memory DB/state/provider mocks,network denied. No HTTP middleware/dependency-injection/realMongo/provider settlement proof.",
+  "limitations": [
+    "Thread cancellation does not stop the blocking mock;existing operation claim prevents unsafe replay and payment remains unconfirmed.",
+    "Production ingress body caps are not tested.",
+    "Real Razorpay/Android/iOS validation is explicitly DEFERRED."
+  ]
+}

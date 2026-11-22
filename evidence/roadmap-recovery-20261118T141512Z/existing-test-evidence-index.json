@@ -1,0 +1,947 @@
+[
+  {
+    "path": "/workspace/come-in-current/evidence/session-20261117/frontend-group-regression.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "63",
+        "time": "3.078",
+        "timestamp": "2026-11-17T08:49:58.304638+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/session-20261117/transaction-regression.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "1",
+        "skipped": "0",
+        "tests": "52",
+        "time": "3.733",
+        "timestamp": "2026-11-17T08:44:44.935425+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/session-20261117/release-offline.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "5",
+        "skipped": "4",
+        "tests": "505",
+        "time": "34.803",
+        "timestamp": "2026-11-17T09:00:25.345305+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_customer_can_read_own_order_but_historical_seller_owner_requires_current_role",
+        "time": "0.037"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_location_write_requires_current_seller_role_and_current_ownership",
+        "time": "0.034"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_read_remains_authenticated_and_terminal_orders_do_not_expose_location",
+        "time": "0.033"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_location_write_remains_limited_to_active_non_pickup_delivery",
+        "time": "0.033"
+      }
+    ],
+    "task24_cases": [
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_is_customer_grocery_history_action_and_never_auto_submits",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_aggregates_duplicate_product_variant_rows_before_stock_checks",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_resolves_current_live_product_and_exact_variant_not_old_price",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_checks_existing_cart_stock_and_quantity_limit_without_partial_adds",
+        "time": "0.001"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_uses_normal_cart_then_checkout_requests_a_fresh_authoritative_quote",
+        "time": "0.001"
+      }
+    ]
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/session-20261117/frontend-effects-regression.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "107",
+        "time": "5.637",
+        "timestamp": "2026-11-17T08:58:28.605813+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/session-20261117/seller-support-contract-final.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "5",
+        "time": "0.494",
+        "timestamp": "2026-11-17T09:05:04.600192+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/session-20261117/state-group-regression.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "45",
+        "time": "1.866",
+        "timestamp": "2026-11-17T08:53:01.253335+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/session-20261117/live-after-fix.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "70",
+        "time": "9.642",
+        "timestamp": "2026-11-17T08:46:06.225606+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/session-20261117/release-offline-final.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "4",
+        "skipped": "4",
+        "tests": "505",
+        "time": "45.930",
+        "timestamp": "2026-11-17T09:03:00.046180+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_customer_can_read_own_order_but_historical_seller_owner_requires_current_role",
+        "time": "0.092"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_location_write_requires_current_seller_role_and_current_ownership",
+        "time": "0.097"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_read_remains_authenticated_and_terminal_orders_do_not_expose_location",
+        "time": "0.091"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_location_write_remains_limited_to_active_non_pickup_delivery",
+        "time": "0.093"
+      }
+    ],
+    "task24_cases": [
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_is_customer_grocery_history_action_and_never_auto_submits",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_aggregates_duplicate_product_variant_rows_before_stock_checks",
+        "time": "0.001"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_resolves_current_live_product_and_exact_variant_not_old_price",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_checks_existing_cart_stock_and_quantity_limit_without_partial_adds",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_uses_normal_cart_then_checkout_requests_a_fresh_authoritative_quote",
+        "time": "0.000"
+      }
+    ]
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/session-20261117/transaction-regression-v2.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "52",
+        "time": "5.120",
+        "timestamp": "2026-11-17T08:45:09.556386+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/session-20261117/remaining-runtime.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "61",
+        "time": "5.592",
+        "timestamp": "2026-11-17T08:34:11.054102+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/session-20261117/auth-contract-correction.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "9",
+        "time": "1.880",
+        "timestamp": "2026-11-17T09:01:56.741822+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step3-tests.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "30",
+        "time": "2.439",
+        "timestamp": "2026-11-17T09:54:32.373710+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step9-payment-v2.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "78",
+        "time": "7.495",
+        "timestamp": "2026-11-17T10:20:57.816035+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step5-tests.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "0",
+        "time": "0.008",
+        "timestamp": "2026-11-17T10:10:34.571365+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-tests-v2.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "48",
+        "time": "8.761",
+        "timestamp": "2026-11-17T10:00:06.714995+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step1-live.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "70",
+        "time": "9.479",
+        "timestamp": "2026-11-17T09:48:07.463618+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step9-payment.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "0",
+        "tests": "78",
+        "time": "4.447",
+        "timestamp": "2026-11-17T10:20:33.399228+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step5-tests-v2.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "50",
+        "time": "7.727",
+        "timestamp": "2026-11-17T10:10:53.981523+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-final.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "62",
+        "time": "5.565",
+        "timestamp": "2026-11-17T10:03:25.232767+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-tests.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "1",
+        "skipped": "0",
+        "tests": "48",
+        "time": "4.625",
+        "timestamp": "2026-11-17T09:59:30.429540+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/three-failures-after.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "3",
+        "time": "0.077",
+        "timestamp": "2026-11-17T09:15:24.609966+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/csv-focused.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "8",
+        "time": "0.068",
+        "timestamp": "2026-11-17T09:14:24.008321+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/three-failures-before.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "3",
+        "skipped": "0",
+        "tests": "3",
+        "time": "0.057",
+        "timestamp": "2026-11-17T09:13:46.165158+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/relevant-regression.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "4",
+        "tests": "96",
+        "time": "3.637",
+        "timestamp": "2026-11-17T09:17:07.795784+00:00",
+        "hostname": "bca3ee959444"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/external-validation-20261118T133459Z/upload-types-before.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "8",
+        "skipped": "0",
+        "tests": "8",
+        "time": "1.783",
+        "timestamp": "2026-11-18T13:36:52.433912+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/external-validation-20261118T133459Z/upload-security-after.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "25",
+        "time": "3.071",
+        "timestamp": "2026-11-18T13:37:38.548339+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/security-races-before.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "4",
+        "skipped": "0",
+        "tests": "4",
+        "time": "1.533",
+        "timestamp": "2026-11-18T13:22:31.668987+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/backend-final.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "1",
+        "skipped": "6",
+        "tests": "564",
+        "time": "31.268",
+        "timestamp": "2026-11-18T13:23:45.698295+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_customer_can_read_own_order_but_historical_seller_owner_requires_current_role",
+        "time": "0.033"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_location_write_requires_current_seller_role_and_current_ownership",
+        "time": "0.032"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_read_remains_authenticated_and_terminal_orders_do_not_expose_location",
+        "time": "0.034"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_location_write_remains_limited_to_active_non_pickup_delivery",
+        "time": "0.033"
+      }
+    ],
+    "task24_cases": [
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_is_customer_grocery_history_action_and_never_auto_submits",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_aggregates_duplicate_product_variant_rows_before_stock_checks",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_resolves_current_live_product_and_exact_variant_not_old_price",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_checks_existing_cart_stock_and_quantity_limit_without_partial_adds",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_uses_normal_cart_then_checkout_requests_a_fresh_authoritative_quote",
+        "time": "0.000"
+      }
+    ]
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/payment-local.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "78",
+        "time": "8.279",
+        "timestamp": "2026-11-18T13:20:26.013737+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/backend-full.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "6",
+        "tests": "559",
+        "time": "35.620",
+        "timestamp": "2026-11-18T13:18:58.261920+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_customer_can_read_own_order_but_historical_seller_owner_requires_current_role",
+        "time": "0.067"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_location_write_requires_current_seller_role_and_current_ownership",
+        "time": "0.050"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_read_remains_authenticated_and_terminal_orders_do_not_expose_location",
+        "time": "0.041"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_location_write_remains_limited_to_active_non_pickup_delivery",
+        "time": "0.042"
+      }
+    ],
+    "task24_cases": [
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_is_customer_grocery_history_action_and_never_auto_submits",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_aggregates_duplicate_product_variant_rows_before_stock_checks",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_resolves_current_live_product_and_exact_variant_not_old_price",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_checks_existing_cart_stock_and_quantity_limit_without_partial_adds",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_uses_normal_cart_then_checkout_requests_a_fresh_authoritative_quote",
+        "time": "0.000"
+      }
+    ]
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/contract-focused.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "24",
+        "time": "2.650",
+        "timestamp": "2026-11-18T13:20:06.480649+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/backend-final-v2.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "6",
+        "tests": "564",
+        "time": "32.190",
+        "timestamp": "2026-11-18T13:25:23.275822+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_customer_can_read_own_order_but_historical_seller_owner_requires_current_role",
+        "time": "0.035"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_location_write_requires_current_seller_role_and_current_ownership",
+        "time": "0.034"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_read_remains_authenticated_and_terminal_orders_do_not_expose_location",
+        "time": "0.035"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_location_write_remains_limited_to_active_non_pickup_delivery",
+        "time": "0.034"
+      }
+    ],
+    "task24_cases": [
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_is_customer_grocery_history_action_and_never_auto_submits",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_aggregates_duplicate_product_variant_rows_before_stock_checks",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_resolves_current_live_product_and_exact_variant_not_old_price",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_checks_existing_cart_stock_and_quantity_limit_without_partial_adds",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_uses_normal_cart_then_checkout_requests_a_fresh_authoritative_quote",
+        "time": "0.000"
+      }
+    ]
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/security-races-after.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "28",
+        "time": "2.685",
+        "timestamp": "2026-11-18T13:23:10.051980+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/security-final-focused.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "5",
+        "time": "1.123",
+        "timestamp": "2026-11-18T13:23:44.317153+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/security-tracking-final.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "17",
+        "time": "1.741",
+        "timestamp": "2026-11-18T13:24:54.575700+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/live-regression.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "70",
+        "time": "9.625",
+        "timestamp": "2026-11-18T13:20:25.773575+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/affected-local-final.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "7",
+        "time": "5.576",
+        "timestamp": "2026-11-18T13:25:23.245605+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/live-regression-final.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "70",
+        "time": "9.343",
+        "timestamp": "2026-11-18T13:25:37.302305+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [],
+    "task24_cases": []
+  },
+  {
+    "path": "/workspace/come-in-current/evidence/resume-20261118/backend-full-v2.xml",
+    "suites": [
+      {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "6",
+        "tests": "559",
+        "time": "32.255",
+        "timestamp": "2026-11-18T13:20:38.725101+00:00",
+        "hostname": "4fa0f8dc6b53"
+      }
+    ],
+    "task23_cases": [
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_customer_can_read_own_order_but_historical_seller_owner_requires_current_role",
+        "time": "0.033"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_location_write_requires_current_seller_role_and_current_ownership",
+        "time": "0.032"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_read_remains_authenticated_and_terminal_orders_do_not_expose_location",
+        "time": "0.033"
+      },
+      {
+        "classname": "tests.test_task23_order_tracking_authorization_contract",
+        "name": "test_tracking_location_write_remains_limited_to_active_non_pickup_delivery",
+        "time": "0.033"
+      }
+    ],
+    "task24_cases": [
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_is_customer_grocery_history_action_and_never_auto_submits",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_aggregates_duplicate_product_variant_rows_before_stock_checks",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_resolves_current_live_product_and_exact_variant_not_old_price",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_checks_existing_cart_stock_and_quantity_limit_without_partial_adds",
+        "time": "0.000"
+      },
+      {
+        "classname": "tests.test_task24_repeat_order_contract",
+        "name": "test_repeat_order_uses_normal_cart_then_checkout_requests_a_fresh_authoritative_quote",
+        "time": "0.001"
+      }
+    ]
+  }
+]

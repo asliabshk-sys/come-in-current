@@ -1,0 +1,3 @@
+SEC01-06 FAIL Two distinct-password consumers did not produce exactly one success and one400
+SEC01-07 FAIL An eight-way distinct-password round did not have exactly one winner
+{"stage": "before", "counts": {"PASS": 0, "FAIL": 2, "ERROR": 0, "SKIPPED": 0}, "database_retained": "comein_sec01_focused_before_20261119t161909z_192ba489"}

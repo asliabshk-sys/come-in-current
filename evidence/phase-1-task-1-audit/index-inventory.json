@@ -1,0 +1,820 @@
+[
+  {
+    "collection": "notifications",
+    "line": 5840,
+    "keys": [
+      [
+        "user_id",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "assistant_rate_limits",
+    "line": 5841,
+    "keys": "rate_key",
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "assistant_rate_limits",
+    "line": 5842,
+    "keys": "expires_at",
+    "options": {
+      "expireAfterSeconds": 0
+    }
+  },
+  {
+    "collection": "chand_feedback",
+    "line": 5843,
+    "keys": [
+      [
+        "user_id",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "chand_feedback",
+    "line": 5844,
+    "keys": [
+      [
+        "user_id",
+        1
+      ],
+      [
+        "request_id",
+        1
+      ]
+    ],
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "chand_feedback",
+    "line": 5845,
+    "keys": [
+      [
+        "status",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "notifications",
+    "line": 5846,
+    "keys": [
+      [
+        "user_id",
+        1
+      ],
+      [
+        "read",
+        1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "auth_rate_limits",
+    "line": 5847,
+    "keys": "expires_at",
+    "options": {
+      "expireAfterSeconds": 0
+    }
+  },
+  {
+    "collection": "restock_alerts",
+    "line": 5848,
+    "keys": [
+      [
+        "product_id",
+        1
+      ],
+      [
+        "active",
+        1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "users",
+    "line": 5849,
+    "keys": "email",
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "users",
+    "line": 5850,
+    "keys": "referral_code",
+    "options": {
+      "unique": true,
+      "sparse": true
+    }
+  },
+  {
+    "collection": "referrals",
+    "line": 5851,
+    "keys": "referred_user_id",
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "referrals",
+    "line": 5852,
+    "keys": [
+      [
+        "referrer_id",
+        1
+      ],
+      [
+        "status",
+        1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "referrals",
+    "line": 5853,
+    "keys": "qualifying_order_id",
+    "options": {
+      "unique": true,
+      "partialFilterExpression": {
+        "qualifying_order_id": {
+          "$type": "string"
+        }
+      }
+    }
+  },
+  {
+    "collection": "referral_rewards",
+    "line": 5854,
+    "keys": "reward_key",
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "referral_rewards",
+    "line": 5855,
+    "keys": [
+      [
+        "referrer_id",
+        1
+      ],
+      [
+        "status",
+        1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "referral_ledger",
+    "line": 5856,
+    "keys": "idempotency_key",
+    "options": {
+      "unique": true,
+      "sparse": true
+    }
+  },
+  {
+    "collection": "referral_ledger",
+    "line": 5857,
+    "keys": [
+      [
+        "user_id",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "referral_audit",
+    "line": 5858,
+    "keys": [
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "referral_link_events",
+    "line": 5859,
+    "keys": [
+      [
+        "referrer_id",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "payout_bank_accounts",
+    "line": 5860,
+    "keys": [
+      [
+        "beneficiary_type",
+        1
+      ],
+      [
+        "beneficiary_id",
+        1
+      ]
+    ],
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "settlement_requests",
+    "line": 5861,
+    "keys": [
+      [
+        "beneficiary_user_id",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "settlement_requests",
+    "line": 5862,
+    "keys": [
+      [
+        "beneficiary_user_id",
+        1
+      ],
+      [
+        "beneficiary_type",
+        1
+      ],
+      [
+        "beneficiary_id",
+        1
+      ],
+      [
+        "idempotency_key",
+        1
+      ]
+    ],
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "settlement_requests",
+    "line": 5863,
+    "keys": [
+      [
+        "status",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "settlement_order_allocations",
+    "line": 5864,
+    "keys": "order_key",
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "settlement_order_allocations",
+    "line": 5865,
+    "keys": [
+      [
+        "settlement_id",
+        1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "financial_audit",
+    "line": 5866,
+    "keys": [
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "financial_ledger",
+    "line": 5867,
+    "keys": "idempotency_key",
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "financial_ledger",
+    "line": 5868,
+    "keys": [
+      [
+        "beneficiary_user_id",
+        1
+      ],
+      [
+        "recorded_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "financial_ledger",
+    "line": 5869,
+    "keys": [
+      [
+        "order_id",
+        1
+      ],
+      [
+        "recorded_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "shops",
+    "line": 5870,
+    "keys": "owner_id",
+    "options": {}
+  },
+  {
+    "collection": "shops",
+    "line": 5871,
+    "keys": "status",
+    "options": {}
+  },
+  {
+    "collection": "products",
+    "line": 5872,
+    "keys": "shop_id",
+    "options": {}
+  },
+  {
+    "collection": "products",
+    "line": 5873,
+    "keys": "owner_id",
+    "options": {}
+  },
+  {
+    "collection": "products",
+    "line": 5875,
+    "keys": [
+      [
+        "catalogue_import_job_id",
+        1
+      ],
+      [
+        "catalogue_import_record_index",
+        1
+      ]
+    ],
+    "options": {
+      "unique": true,
+      "partialFilterExpression": {
+        "catalogue_import_job_id": {
+          "$type": "string"
+        },
+        "catalogue_import_record_index": {
+          "$type": "int"
+        }
+      }
+    }
+  },
+  {
+    "collection": "catalogue_import_audit",
+    "line": 5880,
+    "keys": "apply_key",
+    "options": {
+      "unique": true,
+      "partialFilterExpression": {
+        "apply_key": {
+          "$type": "string"
+        }
+      }
+    }
+  },
+  {
+    "collection": "orders",
+    "line": 5883,
+    "keys": "customer_id",
+    "options": {}
+  },
+  {
+    "collection": "orders",
+    "line": 5884,
+    "keys": "shop_id",
+    "options": {}
+  },
+  {
+    "collection": "orders",
+    "line": 5885,
+    "keys": "grocery_idempotency_scope",
+    "options": {
+      "unique": true,
+      "sparse": true
+    }
+  },
+  {
+    "collection": "grocery_quotes",
+    "line": 5886,
+    "keys": "expires_at",
+    "options": {
+      "expireAfterSeconds": 0
+    }
+  },
+  {
+    "collection": "grocery_quotes",
+    "line": 5887,
+    "keys": [
+      [
+        "scope",
+        1
+      ],
+      [
+        "status",
+        1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "files",
+    "line": 5888,
+    "keys": "owner_id",
+    "options": {}
+  },
+  {
+    "collection": "restaurants",
+    "line": 5889,
+    "keys": "owner_id",
+    "options": {}
+  },
+  {
+    "collection": "restaurants",
+    "line": 5890,
+    "keys": [
+      [
+        "status",
+        1
+      ],
+      [
+        "available",
+        1
+      ],
+      [
+        "city",
+        1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "restaurant_menu",
+    "line": 5891,
+    "keys": [
+      [
+        "restaurant_id",
+        1
+      ],
+      [
+        "available",
+        1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "addresses",
+    "line": 5892,
+    "keys": [
+      [
+        "user_id",
+        1
+      ],
+      [
+        "is_default",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "restaurant_orders",
+    "line": 5893,
+    "keys": [
+      [
+        "customer_id",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "restaurant_orders",
+    "line": 5894,
+    "keys": [
+      [
+        "restaurant_id",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "restaurant_orders",
+    "line": 5895,
+    "keys": [
+      [
+        "customer_id",
+        1
+      ],
+      [
+        "idempotency_key",
+        1
+      ]
+    ],
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "restaurant_payments",
+    "line": 5896,
+    "keys": "gateway_order_id",
+    "options": {
+      "unique": true,
+      "sparse": true
+    }
+  },
+  {
+    "collection": "restaurant_payment_events",
+    "line": 5897,
+    "keys": "event_id",
+    "options": {
+      "unique": true,
+      "sparse": true
+    }
+  },
+  {
+    "collection": "restaurant_reviews",
+    "line": 5898,
+    "keys": [
+      [
+        "restaurant_id",
+        1
+      ],
+      [
+        "customer_id",
+        1
+      ]
+    ],
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "password_resets",
+    "line": 5899,
+    "keys": "expires_at",
+    "options": {
+      "expireAfterSeconds": 0
+    }
+  },
+  {
+    "collection": "restaurant_support",
+    "line": 5900,
+    "keys": [
+      [
+        "user_id",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "restaurant_support",
+    "line": 5901,
+    "keys": [
+      [
+        "user_id",
+        1
+      ],
+      [
+        "request_id",
+        1
+      ]
+    ],
+    "options": {
+      "unique": true,
+      "partialFilterExpression": {
+        "request_id": {
+          "$type": "string"
+        }
+      }
+    }
+  },
+  {
+    "collection": "restaurant_carts",
+    "line": 5902,
+    "keys": "user_id",
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "service_providers",
+    "line": 5903,
+    "keys": "owner_id",
+    "options": {
+      "unique": true,
+      "sparse": true
+    }
+  },
+  {
+    "collection": "service_appointments",
+    "line": 5904,
+    "keys": [
+      [
+        "customer_id",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "service_appointments",
+    "line": 5905,
+    "keys": [
+      [
+        "provider_id",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "home_service_slot_reservations",
+    "line": 5907,
+    "keys": [
+      [
+        "provider_id",
+        1
+      ],
+      [
+        "slot_key",
+        1
+      ]
+    ],
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "home_service_settings",
+    "line": 5908,
+    "keys": "key",
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "delivery_partner_applications",
+    "line": 7010,
+    "keys": "user_id",
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "delivery_partner_applications",
+    "line": 7011,
+    "keys": "referral_code",
+    "options": {
+      "unique": true,
+      "sparse": true
+    }
+  },
+  {
+    "collection": "delivery_partner_applications",
+    "line": 7012,
+    "keys": [
+      [
+        "status",
+        1
+      ],
+      [
+        "updated_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "delivery_partner_audit",
+    "line": 7013,
+    "keys": [
+      [
+        "application_id",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  },
+  {
+    "collection": "delivery_partner_referrals",
+    "line": 7014,
+    "keys": "referred_application_id",
+    "options": {
+      "unique": true
+    }
+  },
+  {
+    "collection": "delivery_partner_referrals",
+    "line": 7015,
+    "keys": [
+      [
+        "referrer_application_id",
+        1
+      ],
+      [
+        "created_at",
+        -1
+      ]
+    ],
+    "options": {}
+  }
+]

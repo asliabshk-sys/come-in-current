@@ -1,0 +1,126 @@
+bringing up nodes...
+bringing up nodes...
+
+FFFFFFFF                                                                 [100%]
+=================================== FAILURES ===================================
+______ test_declared_image_mime_cannot_store_non_image_bytes[-image/jpeg] ______
+[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+mime = 'image/jpeg', data = b''
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"<html>not an image</html>"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+>       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed
+______ test_declared_image_mime_cannot_store_non_image_bytes[-image/png] _______
+[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+mime = 'image/png', data = b''
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"<html>not an image</html>"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+>       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed
+______ test_declared_image_mime_cannot_store_non_image_bytes[-image/gif] _______
+[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+mime = 'image/gif', data = b''
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"<html>not an image</html>"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+>       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed
+______ test_declared_image_mime_cannot_store_non_image_bytes[-image/webp] ______
+[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+mime = 'image/webp', data = b''
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"<html>not an image</html>"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+>       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed
+_ test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/jpeg] _
+[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+mime = 'image/jpeg', data = b'<html>not an image</html>'
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"<html>not an image</html>"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+>       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed
+_ test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/png] _
+[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+mime = 'image/png', data = b'<html>not an image</html>'
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"<html>not an image</html>"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+>       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed
+_ test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/gif] _
+[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+mime = 'image/gif', data = b'<html>not an image</html>'
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"<html>not an image</html>"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+>       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed
+_ test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/webp] _
+[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+mime = 'image/webp', data = b'<html>not an image</html>'
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"<html>not an image</html>"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+>       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed
+=============================== warnings summary ===============================
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+  /workspace/come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_image_upload_type_boundary.py::test_declared_image_mime_cannot_store_non_image_bytes[-image/jpeg]
+FAILED tests/test_image_upload_type_boundary.py::test_declared_image_mime_cannot_store_non_image_bytes[-image/png]
+FAILED tests/test_image_upload_type_boundary.py::test_declared_image_mime_cannot_store_non_image_bytes[-image/gif]
+FAILED tests/test_image_upload_type_boundary.py::test_declared_image_mime_cannot_store_non_image_bytes[-image/webp]
+FAILED tests/test_image_upload_type_boundary.py::test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/jpeg]
+FAILED tests/test_image_upload_type_boundary.py::test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/png]
+FAILED tests/test_image_upload_type_boundary.py::test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/gif]
+FAILED tests/test_image_upload_type_boundary.py::test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/webp]
+8 failed, 2 warnings in 1.78s

@@ -1,0 +1,36 @@
+--- a/frontend/src/restaurant/useDiscoveryAddress.ts
++++ b/frontend/src/restaurant/useDiscoveryAddress.ts
+@@ -29,6 +29,7 @@
+ 
+ export function useDiscoveryAddress() {
+   const { user } = useAuth();
++  const discoveryUserId = user?.id;
+   const { location } = useLocationCtx();
+   const [addresses, setAddresses] = useState<DiscoveryAddress[]>([]);
+   const [selectedAddressId, setSelectedAddressId] = useState('');
+@@ -37,7 +38,7 @@
+ 
+   useFocusEffect(useCallback(() => {
+     let active = true;
+-    if (!user) {
++    if (!discoveryUserId) {
+       setAddresses([]);
+       setSelectedAddressId('');
+       setError('Sign in to use your saved delivery addresses for restaurant discovery.');
+@@ -52,6 +53,7 @@
+         setAddresses(safeRows);
+         let persistedId = '';
+         try { persistedId = (await storage.getItem<string>(SELECTED_ADDRESS_KEY, '')) ?? ''; } catch { /* fall back to the account default */ }
++        if (!active) return;
+         setSelectedAddressId((current) => safeRows.some((row) => row.id === current)
+           ? current
+           : (safeRows.find((row) => row.id === persistedId) || safeRows.find((row) => row.is_default) || safeRows[0])?.id || '');
+@@ -61,7 +63,7 @@
+       .catch((e: any) => { if (active) setError(e?.message || 'Saved addresses could not be loaded. Check your connection and retry.'); })
+       .finally(() => { if (active) setLoading(false); });
+     return () => { active = false; };
+-  }, [user?.id]));
++  }, [discoveryUserId]));
+ 
+   const chooseAddress = useCallback((id: string) => {
+     setSelectedAddressId(id);

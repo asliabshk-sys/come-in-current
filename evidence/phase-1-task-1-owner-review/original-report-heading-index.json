@@ -1,0 +1,424 @@
+[
+  {
+    "report": "PHASE_1_TASK_1_API_AND_DATABASE_INVENTORY.md",
+    "headings": [
+      {
+        "line": 1,
+        "text": "# PHASE 1 TASK 1 \u2014 API and Database Inventory"
+      },
+      {
+        "line": 9,
+        "text": "## Architecture and extraction"
+      },
+      {
+        "line": 15,
+        "text": "## Full endpoint inventory"
+      },
+      {
+        "line": 199,
+        "text": "## Permission and contract review"
+      },
+      {
+        "line": 208,
+        "text": "## Database architecture and read-only observation"
+      },
+      {
+        "line": 214,
+        "text": "## Collection inventory (no records read)"
+      },
+      {
+        "line": 271,
+        "text": "## Complete source index declaration inventory"
+      },
+      {
+        "line": 343,
+        "text": "## Pydantic model inventory"
+      },
+      {
+        "line": 412,
+        "text": "## Relationships, transactions and consistency"
+      }
+    ],
+    "line_count": 420,
+    "text_read": true
+  },
+  {
+    "report": "PHASE_1_TASK_1_FINAL_CHECKLIST.md",
+    "headings": [
+      {
+        "line": 1,
+        "text": "# PHASE 1 TASK 1 \u2014 Final Checklist"
+      }
+    ],
+    "line_count": 37,
+    "text_read": true
+  },
+  {
+    "report": "PHASE_1_TASK_1_GAP_AND_BLOCKER_REGISTER.md",
+    "headings": [
+      {
+        "line": 1,
+        "text": "# PHASE 1 TASK 1 \u2014 Gap and Blocker Register"
+      }
+    ],
+    "line_count": 28,
+    "text_read": true
+  },
+  {
+    "report": "PHASE_1_TASK_1_MASTER_AUDIT_REPORT.md",
+    "headings": [
+      {
+        "line": 1,
+        "text": "# PHASE 1 TASK 1 \u2014 Master Existing Project Audit"
+      },
+      {
+        "line": 9,
+        "text": "## Executive summary"
+      },
+      {
+        "line": 15,
+        "text": "## Workspace, Git, ZIP and preservation"
+      },
+      {
+        "line": 21,
+        "text": "## Architecture and project structure"
+      },
+      {
+        "line": 29,
+        "text": "## Frontend and UI findings"
+      },
+      {
+        "line": 35,
+        "text": "## Backend/API findings"
+      },
+      {
+        "line": 41,
+        "text": "## Database findings"
+      },
+      {
+        "line": 47,
+        "text": "## Authentication and permission findings"
+      },
+      {
+        "line": 53,
+        "text": "## Customer workflow map (source vsruntime)"
+      },
+      {
+        "line": 68,
+        "text": "## Seller,Restaurant,Admin,Delivery and HomeServices workflow map"
+      },
+      {
+        "line": 76,
+        "text": "## Security findings"
+      },
+      {
+        "line": 80,
+        "text": "## Integration inventory"
+      },
+      {
+        "line": 96,
+        "text": "## Existing tests vsfresh checks"
+      },
+      {
+        "line": 102,
+        "text": "## Limitations,approval and completion gate"
+      }
+    ],
+    "line_count": 104,
+    "text_read": true
+  },
+  {
+    "report": "PHASE_1_TASK_1_SCREEN_AND_ROUTE_INVENTORY.md",
+    "headings": [
+      {
+        "line": 1,
+        "text": "# PHASE 1 TASK 1 \u2014 Screen, Route and Action Inventory"
+      },
+      {
+        "line": 9,
+        "text": "## Scope and interpretation"
+      },
+      {
+        "line": 17,
+        "text": "## Complete app route/layout inventory"
+      },
+      {
+        "line": 75,
+        "text": "## Aliases, duplicates, obsolete routes and gaps"
+      },
+      {
+        "line": 87,
+        "text": "## Per-screen API, navigation and state evidence"
+      },
+      {
+        "line": 91,
+        "text": "### `/(tabs)/_layout` \u2014 [frontend/app/(tabs)/_layout.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/_layout.tsx:1>)"
+      },
+      {
+        "line": 99,
+        "text": "### `/(tabs)/account` \u2014 [frontend/app/(tabs)/account.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/account.tsx:1>)"
+      },
+      {
+        "line": 124,
+        "text": "### `/(tabs)/cart` \u2014 [frontend/app/(tabs)/cart.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/cart.tsx:1>)"
+      },
+      {
+        "line": 132,
+        "text": "### `/(tabs)/categories` \u2014 [frontend/app/(tabs)/categories.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/categories.tsx:1>)"
+      },
+      {
+        "line": 140,
+        "text": "### `/(tabs)/index` \u2014 [frontend/app/(tabs)/index.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx:1>)"
+      },
+      {
+        "line": 152,
+        "text": "### `/(tabs)/search` \u2014 [frontend/app/(tabs)/search.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/search.tsx:1>)"
+      },
+      {
+        "line": 160,
+        "text": "### `/+html` \u2014 [frontend/app/+html.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/+html.tsx:1>)"
+      },
+      {
+        "line": 168,
+        "text": "### `/+not-found` \u2014 [frontend/app/+not-found.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/+not-found.tsx:1>)"
+      },
+      {
+        "line": 176,
+        "text": "### `/_layout` \u2014 [frontend/app/_layout.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/_layout.tsx:1>)"
+      },
+      {
+        "line": 184,
+        "text": "### `/addresses` \u2014 [frontend/app/addresses.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/addresses.tsx:1>)"
+      },
+      {
+        "line": 192,
+        "text": "### `/admin-delivery-partners` \u2014 [frontend/app/admin-delivery-partners.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/admin-delivery-partners.tsx:1>)"
+      },
+      {
+        "line": 203,
+        "text": "### `/admin-earnings` \u2014 [frontend/app/admin-earnings.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/admin-earnings.tsx:1>)"
+      },
+      {
+        "line": 211,
+        "text": "### `/admin` \u2014 [frontend/app/admin.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/admin.tsx:1>)"
+      },
+      {
+        "line": 229,
+        "text": "### `/auth` \u2014 [frontend/app/auth.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/auth.tsx:1>)"
+      },
+      {
+        "line": 237,
+        "text": "### `/become-seller` \u2014 [frontend/app/become-seller.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/become-seller.tsx:1>)"
+      },
+      {
+        "line": 245,
+        "text": "### `/category/[slug]` \u2014 [frontend/app/category/[slug].tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/category/[slug].tsx:1>)"
+      },
+      {
+        "line": 253,
+        "text": "### `/chand` \u2014 [frontend/app/chand.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/chand.tsx:1>)"
+      },
+      {
+        "line": 265,
+        "text": "### `/checkout` \u2014 [frontend/app/checkout.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/checkout.tsx:1>)"
+      },
+      {
+        "line": 287,
+        "text": "### `/delivery-address` \u2014 [frontend/app/delivery-address.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/delivery-address.tsx:1>)"
+      },
+      {
+        "line": 295,
+        "text": "### `/delivery-partner` \u2014 [frontend/app/delivery-partner.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/delivery-partner.tsx:1>)"
+      },
+      {
+        "line": 303,
+        "text": "### `/index` \u2014 [frontend/app/index.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/index.tsx:1>)"
+      },
+      {
+        "line": 311,
+        "text": "### `/language` \u2014 [frontend/app/language.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/language.tsx:1>)"
+      },
+      {
+        "line": 319,
+        "text": "### `/notifications` \u2014 [frontend/app/notifications.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/notifications.tsx:1>)"
+      },
+      {
+        "line": 333,
+        "text": "### `/order-tracking` \u2014 [frontend/app/order-tracking.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/order-tracking.tsx:1>)"
+      },
+      {
+        "line": 341,
+        "text": "### `/orders` \u2014 [frontend/app/orders.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/orders.tsx:1>)"
+      },
+      {
+        "line": 349,
+        "text": "### `/password-reset` \u2014 [frontend/app/password-reset.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/password-reset.tsx:1>)"
+      },
+      {
+        "line": 357,
+        "text": "### `/payment-methods` \u2014 [frontend/app/payment-methods.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/payment-methods.tsx:1>)"
+      },
+      {
+        "line": 365,
+        "text": "### `/product/[id]` \u2014 [frontend/app/product/[id].tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx:1>)"
+      },
+      {
+        "line": 376,
+        "text": "### `/referral-dashboard` \u2014 [frontend/app/referral-dashboard.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/referral-dashboard.tsx:1>)"
+      },
+      {
+        "line": 384,
+        "text": "### `/referral` \u2014 [frontend/app/referral.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/referral.tsx:1>)"
+      },
+      {
+        "line": 392,
+        "text": "### `/request` \u2014 [frontend/app/request.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/request.tsx:1>)"
+      },
+      {
+        "line": 400,
+        "text": "### `/restaurant/[id]` \u2014 [frontend/app/restaurant/[id].tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/[id].tsx:1>)"
+      },
+      {
+        "line": 408,
+        "text": "### `/restaurant/account` \u2014 [frontend/app/restaurant/account.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/account.tsx:1>)"
+      },
+      {
+        "line": 416,
+        "text": "### `/restaurant/addresses` \u2014 [frontend/app/restaurant/addresses.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/addresses.tsx:1>)"
+      },
+      {
+        "line": 424,
+        "text": "### `/restaurant/cart` \u2014 [frontend/app/restaurant/cart.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/cart.tsx:1>)"
+      },
+      {
+        "line": 432,
+        "text": "### `/restaurant/categories` \u2014 [frontend/app/restaurant/categories.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/categories.tsx:1>)"
+      },
+      {
+        "line": 440,
+        "text": "### `/restaurant/checkout` \u2014 [frontend/app/restaurant/checkout.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/checkout.tsx:1>)"
+      },
+      {
+        "line": 485,
+        "text": "### `/restaurant/dashboard` \u2014 [frontend/app/restaurant/dashboard.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/dashboard.tsx:1>)"
+      },
+      {
+        "line": 493,
+        "text": "### `/restaurant/index` \u2014 [frontend/app/restaurant/index.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/index.tsx:1>)"
+      },
+      {
+        "line": 501,
+        "text": "### `/restaurant/menu` \u2014 [frontend/app/restaurant/menu.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/menu.tsx:1>)"
+      },
+      {
+        "line": 509,
+        "text": "### `/restaurant/order-confirmation` \u2014 [frontend/app/restaurant/order-confirmation.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/order-confirmation.tsx:1>)"
+      },
+      {
+        "line": 517,
+        "text": "### `/restaurant/orders/[id]` \u2014 [frontend/app/restaurant/orders/[id].tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/orders/[id].tsx:1>)"
+      },
+      {
+        "line": 525,
+        "text": "### `/restaurant/orders/index` \u2014 [frontend/app/restaurant/orders/index.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/orders/index.tsx:1>)"
+      },
+      {
+        "line": 533,
+        "text": "### `/restaurant/search` \u2014 [frontend/app/restaurant/search.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/search.tsx:1>)"
+      },
+      {
+        "line": 541,
+        "text": "### `/restaurant/support` \u2014 [frontend/app/restaurant/support.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/support.tsx:1>)"
+      },
+      {
+        "line": 549,
+        "text": "### `/retail-prices` \u2014 [frontend/app/retail-prices.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/retail-prices.tsx:1>)"
+      },
+      {
+        "line": 563,
+        "text": "### `/seller/orders` \u2014 [frontend/app/seller/orders.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/orders.tsx:1>)"
+      },
+      {
+        "line": 578,
+        "text": "### `/seller/products` \u2014 [frontend/app/seller/products.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/products.tsx:1>)"
+      },
+      {
+        "line": 605,
+        "text": "### `/seller/support` \u2014 [frontend/app/seller/support.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/support.tsx:1>)"
+      },
+      {
+        "line": 621,
+        "text": "### `/seller-earnings` \u2014 [frontend/app/seller-earnings.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller-earnings.tsx:1>)"
+      },
+      {
+        "line": 630,
+        "text": "### `/services` \u2014 [frontend/app/services.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/services.tsx:1>)"
+      },
+      {
+        "line": 638,
+        "text": "### `/shop/[id]` \u2014 [frontend/app/shop/[id].tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/shop/[id].tsx:1>)"
+      },
+      {
+        "line": 646,
+        "text": "### `/shops` \u2014 [frontend/app/shops.tsx](</workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/shops.tsx:1>)"
+      },
+      {
+        "line": 692,
+        "text": "## Complete event/button binding index"
+      }
+    ],
+    "line_count": 1276,
+    "text_read": true
+  },
+  {
+    "report": "PHASE_1_TASK_1_SECURITY_FINDINGS.md",
+    "headings": [
+      {
+        "line": 1,
+        "text": "# PHASE 1 TASK 1 \u2014 Security Findings"
+      },
+      {
+        "line": 9,
+        "text": "## Severity summary and review boundary"
+      },
+      {
+        "line": 13,
+        "text": "## SEC-01 \u2014 HIGH \u2014 Password-reset token consumption and password update are not atomic"
+      },
+      {
+        "line": 22,
+        "text": "## SEC-02 \u2014 MEDIUM \u2014 Seven-day access JWTs have no server-side session/password-version revocation"
+      },
+      {
+        "line": 31,
+        "text": "## SEC-03 \u2014 MEDIUM \u2014 IP rate-limit identity trusts caller-supplied X-Forwarded-For"
+      },
+      {
+        "line": 40,
+        "text": "## SEC-04 \u2014 MEDIUM \u2014 Authentication throttle check and increment are separate operations"
+      },
+      {
+        "line": 49,
+        "text": "## SEC-05 \u2014 MEDIUM \u2014 Legacy diagnostic status endpoint permits anonymous persistent writes"
+      },
+      {
+        "line": 58,
+        "text": "## SEC-06 \u2014 LOW \u2014 Password character limits exceed bcrypt byte limit"
+      },
+      {
+        "line": 67,
+        "text": "## SEC-07 \u2014 LOW \u2014 Blocking provider HTTP inside async payment routes"
+      },
+      {
+        "line": 76,
+        "text": "## SEC-08 \u2014 MEDIUM \u2014 Webhook size check occurs after whole request body is buffered"
+      },
+      {
+        "line": 85,
+        "text": "## Controls found and limits"
+      }
+    ],
+    "line_count": 94,
+    "text_read": true
+  }
+]

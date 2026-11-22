@@ -1,0 +1,43 @@
+{
+  "COME_IN_LIVE_CHECKPOINT.md": {
+    "saved_read_verified": true,
+    "sha256": "c6cd4ef1e46e2a2405001728b6657be8a9635676fa02d20f88fb7161da38b218",
+    "bytes": 117170
+  },
+  "COME_IN_MASTER_TASK_TRACKER.md": {
+    "saved_read_verified": true,
+    "sha256": "8e55d2dcb575990bba2a1c0f5fc5ab3ab9010c2a48c9eeda4a13f2c54de71748",
+    "bytes": 156239
+  },
+  "COME_IN_DECISIONS_AND_BLOCKERS.md": {
+    "saved_read_verified": true,
+    "sha256": "83d13fb4bf9dbe26075452b6529e95d2e16830b38dd7a0960e1c7cca7ceb60d8",
+    "bytes": 133368
+  },
+  "COME_IN_SESSION_LOG.md": {
+    "saved_read_verified": true,
+    "sha256": "2b7b55ecc8595fa861f462894d55405337af26dd9225652ecb050bd272e9f54b",
+    "bytes": 127307
+  },
+  "COME_IN_NEXT_SESSION_RESUME_PROMPT.md": {
+    "saved_read_verified": true,
+    "sha256": "80b24660dd1c890f4cfb5d27ae777b99ab10ba9d2414268b2b8bd24a1376c41e",
+    "bytes": 6347
+  },
+  "COME_IN_RELEASE_READINESS.md": {
+    "saved_read_verified": true
+  },
+  "FINAL_REGRESSION_REPORT.md": {
+    "saved_read_verified": true
+  },
+  "EXTERNAL_VALIDATION_REPORT.md": {
+    "saved_read_verified": true
+  },
+  "preservation": {
+    "tracked_files_unchanged": true,
+    "frontend_files_hash_verified": 111,
+    "reverse_patch_check": "PASS",
+    "focused_tests": "25PASS0FAIL0SKIP",
+    "local_HTTP": "12PASS0FAIL0SKIP"
+  }
+}

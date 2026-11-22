@@ -1,0 +1,54 @@
+{
+  "tag": "20261117T094751Z",
+  "app": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+  "evidence": "/workspace/come-in-current/evidence/resume-20261118",
+  "git_branch": "work",
+  "git_head": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "initial_git_status": "?? AGENTS.md\n?? COME_IN_DECISIONS_AND_BLOCKERS.md\n?? COME_IN_LIVE_CHECKPOINT.md\n?? COME_IN_MASTER_TASK_TRACKER.md\n?? COME_IN_NEXT_SESSION_RESUME_PROMPT.md\n?? COME_IN_RELEASE_READINESS.md\n?? COME_IN_SESSION_LOG.md\n?? evidence/\n?? patches/\n",
+  "steps": {
+    "1": {
+      "status": "COMPLETE",
+      "summary": "Fresh actual MongoDB7.0.45 (not claimed8.0.38) rs0 PRIMARY; health commit/abort and67 indexes PASS;70 live tests PASS;6 real isolated storage/uniqueness/validator/backup-restore checks PASS (51 collections),5 real financial/refund/capture checks PASS. New synthetic DBs retained; no DB drops/resets."
+    },
+    "2": {
+      "status": "COMPLETE",
+      "summary": "Audited frontend/backend intent/signatures/capture/refund/webhook/retry flows. Web online Grocery present; Restaurant customer UI currently COD/pickup despite backend Razorpay. Native helper web-only; TEST-mode enforcement missing; webhook payload/event identity robustness gaps. Platform architecture matrix saved."
+    },
+    "3": {
+      "status": "PARTIAL",
+      "summary": "Central payment_config.py enforces explicit mode/key/environment consistency, production rejects TEST and nonproduction rejects LIVE; all current payment/refund/webhook paths and startup gated. Placeholder-only env example updated.30 focused tests PASS. Actual TEST credential/provider verification BLOCKED; no credentials invented/configured."
+    },
+    "4": {
+      "status": "PARTIAL",
+      "summary": "Raw-body signature and strict schema/event-ID checks, conflicting-ID body hashes, race-safe event audit, Grocery/Restaurant failed/captured ordering and gateway-intent claim/reuse implemented.62 tests PASS including real local ASGI+Mongo transactions and MOCK provider intent race/retry. Initial47pass/1fixture failure (DBname64chars) fixed with unique shorter names; old logs retained. Real Razorpay delivery BLOCKED, not claimed."
+    },
+    "5": {
+      "status": "PARTIAL",
+      "summary": "Eligible captured Razorpay/cancelled Grocery admin full-refund API + scoped admin visibility, atomic claim/audit/history/dedupe/uncertain handling, partial/full observed refund accounting and shared webhook reconciliation implemented. COD/manual/active/delivered/unsupported partial initiation excluded; Restaurant policy unchanged.50 focused/local mock-provider+real Mongo/ASGI/auth tests PASS. Earlier wrong test filename produced0 tests, corrected selection retained. Real settlement BLOCKED; arbitrary refund policies not invented."
+    },
+    "6": {
+      "status": "PARTIAL",
+      "summary": "Official react-native-razorpay3.0.0 pinned with Yarn/Expo; native platform adapter, concurrent checkout guard, cancellation/failure handling, lifecycle backend refresh, shared Grocery/Restaurant verification and merchant/server-gated Restaurant online option implemented. TypeScript0 errors;5 mocked SDK contract checks PASS. Native binary compatibility and actual provider/device verification remain BLOCKED. First harness module-mock shape failed, corrected without weakening assertions."
+    },
+    "7": {
+      "status": "PARTIAL",
+      "summary": "Expo introspected Android package/manifest/permissions and Android Hermes JS bundle export PASS(exit0); official module autolink source inspected. No javac/Android SDK/sdkmanager/gradle/adb/emulator/device/signing; APK/AAB compilation and real native flow BLOCKED. Existing identifier preserved, owner confirmation required. Fresh18Nov bundle/config/autolink PASS; native SDK/compiler/device still absent."
+    },
+    "8": {
+      "status": "PARTIAL",
+      "summary": "iOS Hermes JS bundle export PASS(exit0), scheme/bundle ID/Info.plist/official podspec reviewed. Linux lacks macOS/Xcode/CocoaPods/iOS simulator/device/signing; no IPA/native compile/device PASS claimed. Missing microphone description and permissive ATS found; queued Step10 source security fixes. Fresh18Nov plist microphone/production ATS + autolink/bundle PASS; actual native compile/device still blocked."
+    },
+    "9": {
+      "status": "PARTIAL",
+      "summary": "78 focused tests PASS (8 dependency/lifespan deprecation warnings), including signed LOCAL HTTP webhook delivery + real isolated Mongo + in-process provider mock.5 native-adapter mocked contracts PASS. Comprehensive A\u2013T matrix recorded. First command76pass/2 import-path failures; corrected PYTHONPATH run78pass. Actual TEST transactions/webhook delivery/native devices remain BLOCKED."
+    },
+    "10": {
+      "status": "PARTIAL",
+      "summary": "Safe source/regression work finished:558offlinePASS/6SKIP,70livePASS,78focusedPASS,7finalaffectedPASS;TypeScript0;ESLint0errors/10warnings;web+Android/iOS JS exportsPASS;Home5+roles12browserPASS. Reproduced/fixed Restaurant cancel/retry race4cases and bounded upload1case;security review saved. Real provider/native/production gates BLOCKED;4 optional feature tests unverified."
+    }
+  },
+  "next_action": "Provision owned native development-build toolchains/devices and secure isolated Razorpay TEST bindings per platform/environment reports; no actual payment/refund/publish without authorization. Optional feature skips and9 hook warnings require scoped follow-up if included release scope.",
+  "last_operation": "Final source patch reverse-applicability PASS; all release reports saved; all five checkpoints saved/read verified. Final558offline/70live/78focused/7affectedPASS,TypeScript0,ESLint0errors10warnings,browser17PASS. No interrupted operation.",
+  "running": "Only retained MongoDB27018,FastAPI8001,Expo3000 services; no tests/builds intentionally running.",
+  "changed_files": "See resume-source-changes.json (new confirmed security fixes, guard catch correction and stronger stale contracts),source-changes.json (cumulative),and final Git status. All inherited changes preserved."
+}

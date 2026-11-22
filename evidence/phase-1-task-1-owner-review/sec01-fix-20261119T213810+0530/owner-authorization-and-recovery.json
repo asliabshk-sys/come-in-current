@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-11-19T21:38:10.023274+05:30",
+  "repo": "/workspace/come-in-current",
+  "application": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "scope": "Owner authorizes minimal SEC-01 HIGH token reuse/concurrency/partial-write correction and focused disposable-DB regression. No other finding/schema/UI/API/architecture/source change authorized.",
+  "allowed_existing_source_files": [
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py"
+  ],
+  "before_SHA256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+  "protected_baseline_count": 8746,
+  "prior_baseline_mismatches": [],
+  "previous_master_manifest_SHA256": "24de73630bdcd28412a0b270e32ac5da7f88e61bb4ce85f2c2a405d17f563588"
+}

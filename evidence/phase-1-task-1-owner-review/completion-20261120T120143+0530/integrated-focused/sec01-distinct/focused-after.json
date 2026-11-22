@@ -1,0 +1,177 @@
+{
+  "project": "COME-IN",
+  "scope": "SEC-01 focused before/after function integration on real local disposable MongoDB",
+  "stage": "after",
+  "started_UTC": "2026-11-20T13:02:49.538505+00:00",
+  "finished_UTC": "2026-11-20T13:03:04.848560+00:00",
+  "source": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+  "source_SHA256": "b2274f00cd35c2f92f6e385fceeb025a3f66761cc0cef10741f8477a6f020f84",
+  "source_SHA256_after": "b2274f00cd35c2f92f6e385fceeb025a3f66761cc0cef10741f8477a6f020f84",
+  "extracted_symbols": [
+    {
+      "symbol": "now_utc",
+      "start": 186,
+      "end": 187,
+      "segment_SHA256": "b5b3b166a075dd0a7626b565559e48f77795e8b85cfeec2e1b72279c78bc6be4"
+    },
+    {
+      "symbol": "BCRYPT_ROUNDS",
+      "start": 230,
+      "end": 230,
+      "segment_SHA256": "d7a2a166193a93961d5a6d99bc44a34e975899a7423096d582b9c3a7a4947a07"
+    },
+    {
+      "symbol": "hash_password",
+      "start": 235,
+      "end": 242,
+      "segment_SHA256": "376794bb7080a1b58668cc37b58c0acb3d7deaa9d6e8f26a580394ee96b2f643"
+    },
+    {
+      "symbol": "verify_password",
+      "start": 245,
+      "end": 259,
+      "segment_SHA256": "9c34fa3aa894acbbd42a2f030bd6ef99ead6715d6699a3f334372c9cca73deaa"
+    },
+    {
+      "symbol": "ResetPasswordIn",
+      "start": 1181,
+      "end": 1183,
+      "segment_SHA256": "104ef456ca0108c907ee7a20f1190a67ccce93acf40f03c9bba1bd022037ae5f"
+    },
+    {
+      "symbol": "reset_password",
+      "start": 1224,
+      "end": 1250,
+      "segment_SHA256": "4531f062c49654737edc9705980d96d8b273aed5a79d0236cd66264a6aa1a0d8"
+    },
+    {
+      "symbol": "_object_id_or_404",
+      "start": 4776,
+      "end": 4780,
+      "segment_SHA256": "76594bc127b80ce318eaadffcbdf24bbc70e0006e7d2ff6b7d7bf3e1b5f384a8"
+    }
+  ],
+  "transaction_helper": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py",
+  "transaction_helper_SHA256": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30",
+  "runner_SHA256": "523d84f49dfa6072059378752f0ca6326f99e0cee511ba58556f4adca9dd7afa",
+  "python": "3.11.18 (main, Oct 26 2026, 14:05:07) [Clang 23.1.3 ]",
+  "executable": "/workspace/come-in-tools/py311/bin/python",
+  "versions": {
+    "motor": "3.7.1",
+    "pymongo": "4.18.2",
+    "bcrypt": "4.1.3",
+    "pydantic": "2.14.3",
+    "fastapi": "0.110.1"
+  },
+  "database": "comein_sec01_focused_after_20261120t130249z_5248e24b",
+  "replica_set": "rs0",
+  "counts": {
+    "PASS": 2,
+    "FAIL": 0,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "cases": [
+    {
+      "id": "SEC01-06",
+      "invariant": "Two synchronized distinct-password contenders have one winner whose credential alone persists",
+      "status": "PASS",
+      "seconds": 1.3984964510018472,
+      "failure": null,
+      "observations": {
+        "contenders": 2,
+        "synchronized_preflight_reads": 2,
+        "accepted": 1,
+        "rejected400": 1,
+        "successful_contender_indices": [
+          0
+        ],
+        "authenticating_contender_indices": [
+          0
+        ],
+        "stored_hash_matches_only_successful_contender": true
+      }
+    },
+    {
+      "id": "SEC01-07",
+      "invariant": "Three rounds of eight distinct-password contenders persist only the actual winner credential",
+      "status": "PASS",
+      "seconds": 13.299459752000985,
+      "failure": null,
+      "observations": {
+        "rounds": [
+          {
+            "round": 1,
+            "contenders": 8,
+            "accepted": 1,
+            "rejected400": 7,
+            "successful_contender_indices": [
+              4
+            ],
+            "authenticating_contender_indices": [
+              4
+            ],
+            "stored_hash_matches_only_successful_contender": true
+          },
+          {
+            "round": 2,
+            "contenders": 8,
+            "accepted": 1,
+            "rejected400": 7,
+            "successful_contender_indices": [
+              1
+            ],
+            "authenticating_contender_indices": [
+              1
+            ],
+            "stored_hash_matches_only_successful_contender": true
+          },
+          {
+            "round": 3,
+            "contenders": 8,
+            "accepted": 1,
+            "rejected400": 7,
+            "successful_contender_indices": [
+              1
+            ],
+            "authenticating_contender_indices": [
+              1
+            ],
+            "stored_hash_matches_only_successful_contender": true
+          }
+        ]
+      }
+    }
+  ],
+  "retained_records": {
+    "users": 2,
+    "reset_records": 4
+  },
+  "command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-B",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/distinct-password-concurrency/sec01_focused_regression_v2.py",
+    "--stage",
+    "after",
+    "--source",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+    "--cases",
+    "SEC01-06",
+    "SEC01-07"
+  ],
+  "safety": {
+    "source_modified": false,
+    "production_access": false,
+    "provider_calls": 0,
+    "global_failpoints": 0,
+    "DB_drops": 0,
+    "raw_tokens_passwords_or_secrets_written": false,
+    "database_retained": true
+  },
+  "limitations": [
+    "Function bodies and model source are actual AST extraction;API decorators alone removed;not full HTTP routing/middleware integration.",
+    "Authentication throttle is an isolated no-op to keep this focused suite from changing or adjudicating SEC-04;old broader suite separately verifies it.",
+    "Collection fault wrappers forward actual Motor sessions and inject deterministic one-shot local errors;no global Mongo failpoint or provider call.",
+    "Commit-acknowledgement and session-unavailable paths are controlled client-boundary faults over the real replica-set session,not actual network outages or a standalone server."
+  ]
+}

@@ -1,0 +1,275 @@
+{
+  "started_UTC": "2026-11-20T13:00:38.385192+00:00",
+  "finished_UTC": "2026-11-20T13:00:40.033285+00:00",
+  "stage": "after",
+  "source": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+  "source_SHA256": "b2274f00cd35c2f92f6e385fceeb025a3f66761cc0cef10741f8477a6f020f84",
+  "source_SHA256_after": "b2274f00cd35c2f92f6e385fceeb025a3f66761cc0cef10741f8477a6f020f84",
+  "runner_SHA256": "b55765f553c5b06a600e616ffc3124711d5502f02eb090ecae4c5fd2f2694591",
+  "helper_SHA256": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30",
+  "counts": {
+    "PASS": 27,
+    "FAIL": 0,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "cases": [
+    {
+      "id": "IP01",
+      "invariant": "Default ignores caller-supplied forwarded address",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP02",
+      "invariant": "Untrusted connected peer cannot spoof even with a configured proxy",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP03",
+      "invariant": "Owned direct proxy forwards a single valid client",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP04",
+      "invariant": "First untrusted hop stops spoofed leftmost address",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP05",
+      "invariant": "Multiple explicitly trusted proxy hops resolve client",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP06",
+      "invariant": "Malformed proxy configuration fails closed",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP07",
+      "invariant": "Universal IPv4 trust is rejected",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP08",
+      "invariant": "Universal IPv6 trust is rejected",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP09",
+      "invariant": "Invalid forwarded IP falls back to connected peer",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP10",
+      "invariant": "Invalid chain member rejects the entire chain",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP11",
+      "invariant": "IPv6 trusted proxy/client chain works",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP12",
+      "invariant": "No forwarding header preserves socket peer",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP13",
+      "invariant": "Overlong forwarding header fails closed",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "IP14",
+      "invariant": "No valid proxy match preserves peer",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "identity_matches_expected_boundary": true
+      }
+    },
+    {
+      "id": "RATE01",
+      "invariant": "Forgot serial subject boundary rejects sixth without incrementing either counter",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "RATE02",
+      "invariant": "Reset IP boundary remains50attempts per configured window",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "RATE03",
+      "invariant": "Two near-cap concurrent requests admit exactly one",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "allowed": 1,
+        "rejected429": 1,
+        "counts": [
+          1,
+          5
+        ]
+      }
+    },
+    {
+      "id": "RATE04",
+      "invariant": "Twenty first-bucket concurrent requests admit only five for one subject",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "allowed": 5,
+        "rejected429": 15,
+        "counts": [
+          5,
+          5
+        ]
+      }
+    },
+    {
+      "id": "RATE05",
+      "invariant": "Forty different subjects sharing an IP admit only its25forgot slots",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "allowed": 25,
+        "rejected429": 15
+      }
+    },
+    {
+      "id": "RATE06",
+      "invariant": "Subject rejection rolls back an earlier IP increment",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "RATE07",
+      "invariant": "IP rejection does not charge a separate subject",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "RATE08",
+      "invariant": "Second-key failure leaves both counters unchanged and clean retry succeeds",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "RATE09",
+      "invariant": "An already capped IP cannot create a new subject bucket",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "LOGIN01",
+      "invariant": "Twenty legitimate successes do not consume failed-login budgets",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "LOGIN02",
+      "invariant": "Ten failed logins count and the next is429",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "LOGIN03",
+      "invariant": "Concurrent final failed-login slot admits only one password check",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "failed401": 1,
+        "capped429": 1
+      }
+    },
+    {
+      "id": "LOGIN04",
+      "invariant": "Successful login releases original captured bucket even after window rollover",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    }
+  ],
+  "database_retained": "comein_rate_proxy_after_20261120t130038z_8e8bc6cd",
+  "replica_set": "rs0",
+  "command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-B",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/rate-proxy/rate_proxy_validation_v3.py",
+    "--stage",
+    "after",
+    "--source",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py"
+  ],
+  "scope": "Actual source functions/model AST with real Motor/Mongo and existing unchanged transaction helper. Login password checker/JWT creation are explicit in-memory doubles;noHTTP/router/provider/productionvalidation.",
+  "safety": {
+    "protected_source_changes": 0,
+    "credentials_or_raw_PII_saved": false,
+    "global_failpoints": 0,
+    "DB_drops": 0,
+    "external_provider_calls": 0,
+    "native_operations": 0
+  }
+}

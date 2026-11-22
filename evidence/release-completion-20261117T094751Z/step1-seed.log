@@ -1,0 +1,3 @@
+COMEIN_TEST_CUSTOMER: continuation.customer@comein-preview.com -> customer
+COMEIN_TEST_SELLER: continuation.seller@comein-preview.com -> shopkeeper
+COMEIN_TEST_RESTO: continuation.resto@comein-preview.com -> shopkeeper

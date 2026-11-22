@@ -1,0 +1,5 @@
+yarn run v1.22.22
+warning Skipping preferred cache folder "/home/agent/.cache/yarn" because it is not writable.
+warning Selected the next writable cache folder in the list, will be "/tmp/.yarn-cache-1000".
+$ tsc --noEmit
+Done in 9.76s.

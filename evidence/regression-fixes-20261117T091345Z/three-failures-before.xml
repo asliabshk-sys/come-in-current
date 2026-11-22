@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="3" time="0.057" timestamp="2026-11-17T09:13:46.165158+00:00" hostname="bca3ee959444"><testcase classname="tests.test_universal_catalogue_import_engine" name="test_csv_formula_like_cells_are_preserved_as_untrusted_source_text" time="0.001"><failure message="KeyError: 'name'">def test_csv_formula_like_cells_are_preserved_as_untrusted_source_text():
+        payload = b"name,description\n=HYPERLINK(\"https://bad.invalid\",\"click\"),=cmd|\"/C calc\"\n"
+        record = process_file("untrusted.csv", payload).records[0]
+&gt;       assert record["raw_values"]["name"].startswith("=HYPERLINK")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'name'
+
+tests/test_universal_catalogue_import_engine.py:136: KeyError</failure></testcase><testcase classname="tests.test_frontend_contracts" name="test_shopping_home_theme_contract_and_separate_mode_routes" time="0.001"><failure message="assert 'testID=&quot;request-anything-card&quot;' in 'import Feather from &quot;@react-native-vector-icons/feather&quot;;\nimport { Image } from &quot;expo-image&quot;;\nimport { LinearGradie...lignItems: &quot;center&quot;,\n  },\n  modalBtnText: { fontSize: 15, fontWeight: &quot;800&quot;, color: colors.onBrandPrimary },\n}));\n'">def test_shopping_home_theme_contract_and_separate_mode_routes():
+        home = (ROOT / "frontend/app/(tabs)/index.tsx").read_text()
+        theme = (ROOT / "frontend/src/theme.ts").read_text()
+        tabs = (ROOT / "frontend/app/(tabs)/_layout.tsx").read_text()
+        shops = (ROOT / "frontend/app/shops.tsx").read_text()
+        for marker in (
+            'testID="home-filter-button"',
+            'testID="online-shops-card"',
+            'testID="offline-shops-card"',
+            'testID="restaurant-mode-card"',
+            'testID="home-services-card"',
+            'testID="request-anything-card"',
+            '{CATEGORIES.map((item) =&gt; (',
+            'testID="header-language"',
+            'testID="header-voice-search"',
+            'testID="fresh-groceries-banner"',
+            'router.push("/restaurant")',
+            'router.push("/services")',
+        ):
+&gt;           assert marker in home
+E           assert 'testID="request-anything-card"' in 'import Feather from "@react-native-vector-icons/feather";\nimport { Image } from "expo-image";\nimport { LinearGradie...lignItems: "center",\n  },\n  modalBtnText: { fontSize: 15, fontWeight: "800", color: colors.onBrandPrimary },\n}));\n'
+
+tests/test_frontend_contracts.py:84: AssertionError</failure></testcase><testcase classname="tests.test_frontend_contracts" name="test_bakery_has_no_fabricated_sample_inventory_and_voice_is_honest" time="0.001"><failure message="assert 'Voice search unavailable' in 'import Feather from &quot;@react-native-vector-icons/feather&quot;;\nimport { Image } from &quot;expo-image&quot;;\nimport { LinearGradie...lignItems: &quot;center&quot;,\n  },\n  modalBtnText: { fontSize: 15, fontWeight: &quot;800&quot;, color: colors.onBrandPrimary },\n}));\n'">def test_bakery_has_no_fabricated_sample_inventory_and_voice_is_honest():
+        catalog = (ROOT / "frontend/src/data/catalog.ts").read_text()
+        home = (ROOT / "frontend/app/(tabs)/index.tsx").read_text()
+        assert 'id: "bakery"' in catalog
+        assert 'id: "p-bakery-bread"' not in catalog
+        assert 'name: "Fresh Bread Loaf"' not in catalog
+&gt;       assert 'Voice search unavailable' in home
+E       assert 'Voice search unavailable' in 'import Feather from "@react-native-vector-icons/feather";\nimport { Image } from "expo-image";\nimport { LinearGradie...lignItems: "center",\n  },\n  modalBtnText: { fontSize: 15, fontWeight: "800", color: colors.onBrandPrimary },\n}));\n'
+
+tests/test_frontend_contracts.py:103: AssertionError</failure></testcase></testsuite></testsuites>

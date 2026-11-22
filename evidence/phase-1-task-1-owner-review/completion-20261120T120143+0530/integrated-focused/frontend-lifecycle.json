@@ -1,0 +1,56 @@
+{
+  "recorded_UTC": "2026-11-20T12:59:53.268Z",
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/frontend/component-lifecycle-regression-v2.cjs",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/integrated-focused/frontend-lifecycle.json"
+  ],
+  "source_directory": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+  "scope": "Actual TSX transpilation/component functions with isolated React-hook/API doubles;not a browser/backend/native/provider acceptance test.",
+  "counts": {
+    "PASS": 3,
+    "FAIL": 0,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "cases": [
+    {
+      "id": "FE-LIFECYCLE-01",
+      "invariant": "Checkout re-evaluates live/demo eligibility even when its cart fingerprint stays identical",
+      "status": "PASS",
+      "evidence": {
+        "source": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/checkout.tsx",
+        "source_SHA256": "8f12eed16e2b906f1b1432d962abd6ee43690b8ec6592acf1d73ab8f5e649466",
+        "shop_fetches": 1
+      }
+    },
+    {
+      "id": "FE-LIFECYCLE-02",
+      "invariant": "An old account dashboard response cannot overwrite the currently signed-in account dashboard",
+      "status": "PASS",
+      "evidence": {
+        "source": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/services.tsx",
+        "source_SHA256": "8257c7cae48bf3eebb763b6174abfc13457798d3ca6391c7bc0fddc63fdb0b4e",
+        "no_account_data_in_result": true
+      }
+    },
+    {
+      "id": "FE-LIFECYCLE-03",
+      "invariant": "Persisted address lookup from an old account cannot overwrite the active account selection after an await",
+      "status": "PASS",
+      "evidence": {
+        "source": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/useDiscoveryAddress.ts",
+        "source_SHA256": "6ef259adde7a61e38d145ffb965b3100be42e635c049f2371aa695e2946237cd",
+        "no_private_account_data_in_result": true
+      }
+    }
+  ],
+  "safety": {
+    "production_accounts": false,
+    "API_calls": 0,
+    "native_modules": 0,
+    "provider_calls": 0,
+    "source_modified": false
+  }
+}

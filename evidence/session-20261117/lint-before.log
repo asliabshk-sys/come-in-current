@@ -1,0 +1,28 @@
+yarn run v1.22.22
+$ expo lint
+env: load .env
+env: export EXPO_PUBLIC_BACKEND_URL
+/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@expo/cli/build/src/utils/errors.js:154
+    throw error;
+    ^
+
+Error: ENOENT: no such file or directory, mkdir '/home/agent/.expo'
+    at Object.mkdirSync (node:fs:1410:26)
+    at write (/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@expo/json-file/build/JsonFile.js:257:27)
+    at setSync (/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@expo/json-file/build/JsonFile.js:309:12)
+    at JsonFile.set (/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@expo/json-file/build/JsonFile.js:143:16)
+    at getAnonymousId (/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@expo/cli/build/src/api/user/UserSettings.js:203:18)
+    at new Telemetry (/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@expo/cli/build/src/utils/telemetry/Telemetry.js:36:66)
+    at getTelemetry (/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@expo/cli/build/src/utils/telemetry/index.js:48:21)
+    at record (/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@expo/cli/build/src/utils/telemetry/index.js:63:12)
+    at recordCommand (/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@expo/cli/build/src/utils/telemetry/index.js:69:12)
+    at /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@expo/cli/build/src/index.js:256:9 {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'mkdir',
+  path: '/home/agent/.expo'
+}
+
+Node.js v24.22.1
+error Command failed with exit code 7.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

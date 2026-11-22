@@ -1,0 +1,1 @@
+{"ok": true, "checks": ["concurrent import/replay creates two products and one audit without double stock", "conflicting SKU rolls back claim and products", "ownership is rechecked inside real transaction"]}

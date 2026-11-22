@@ -1,0 +1,14 @@
+{
+  "source_base_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "candidate_SHA256": "f054bfb4a25004ac334514ef6c67fa47cd800715a2df0919dc6c85c9e1b3fbcf",
+  "changed_AST_nodes": [
+    "StatusCheckCreate",
+    "create_status_check",
+    "list_status_checks",
+    "admin_update_user_role"
+  ],
+  "imports_changed": false,
+  "production_source_modified": false,
+  "schema_delta": "Dedicated security_locks control document with _id/admin-role-mutations and version integer;implicit _id index only,no migration/user deletion.",
+  "SEC01_reset_password_unchanged": true
+}

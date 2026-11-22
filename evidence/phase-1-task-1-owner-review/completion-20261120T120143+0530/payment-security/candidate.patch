@@ -1,0 +1,114 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -5026,7 +5026,7 @@
+     await _claim_payment_intent(db.restaurant_orders, oid)
+     import requests as http_requests
+     try:
+-        resp=http_requests.post("https://api.razorpay.com/v1/orders",auth=(key_id,key_secret),json={"amount":int(round(order["total"]*100)),"currency":"INR","receipt":order["ref"],"notes":{"comein_order_id":str(order["_id"])}},timeout=15)
++        resp=await asyncio.to_thread(lambda: http_requests.post("https://api.razorpay.com/v1/orders",auth=(key_id,key_secret),json={"amount":int(round(order["total"]*100)),"currency":"INR","receipt":order["ref"],"notes":{"comein_order_id":str(order["_id"])}},timeout=15))
+         if resp.status_code>=400: raise RuntimeError("Gateway rejected request")
+         payload=resp.json()
+         if (not payload.get("id") or payload.get("currency")!="INR" or
+@@ -5084,10 +5084,10 @@
+     # match its payment/order IDs, captured status, INR currency and exact amount.
+     import requests as http_requests
+     try:
+-        gateway_resp=http_requests.get(
++        gateway_resp=await asyncio.to_thread(lambda: http_requests.get(
+             f"https://api.razorpay.com/v1/payments/{body.razorpay_payment_id}",
+             auth=(key_id,secret), timeout=15,
+-        )
++        ))
+         if gateway_resp.status_code >= 400:
+             raise RuntimeError("Gateway payment lookup failed")
+         gateway_payment=gateway_resp.json()
+@@ -5382,7 +5382,25 @@
+     settings = _razorpay_settings(webhook=True)
+     secret = settings.webhook_secret
+     if not secret: raise HTTPException(status_code=503,detail="Payment webhook is not configured")
+-    raw=await request.body(); signature=request.headers.get("X-Razorpay-Signature","")
++    # Bound raw bytes before allocation/HMAC, including chunked or dishonest lengths.
++    max_body_bytes = 1024 * 1024
++    declared_length = request.headers.get("Content-Length")
++    if declared_length is not None:
++        try:
++            declared_size = int(declared_length)
++        except (TypeError, ValueError):
++            raise HTTPException(status_code=400, detail="Invalid webhook Content-Length")
++        if declared_size < 0:
++            raise HTTPException(status_code=400, detail="Invalid webhook Content-Length")
++        if declared_size > max_body_bytes:
++            raise HTTPException(status_code=413, detail="Webhook body exceeds 1 MiB limit")
++    raw_buffer = bytearray()
++    async for chunk in request.stream():
++        if len(raw_buffer) + len(chunk) > max_body_bytes:
++            raise HTTPException(status_code=413, detail="Webhook body exceeds 1 MiB limit")
++        raw_buffer.extend(chunk)
++    raw = bytes(raw_buffer)
++    signature=request.headers.get("X-Razorpay-Signature","")
+     expected=hmac.new(secret.encode(),raw,hashlib.sha256).hexdigest()
+     if not hmac.compare_digest(expected,signature): raise HTTPException(status_code=400,detail="Invalid webhook signature")
+     event_id = request.headers.get("X-Razorpay-Event-Id", "")
+@@ -5723,7 +5741,7 @@
+     await _claim_restaurant_refund_for_gateway(oid, payment["_id"], blocked_refund_states)
+ 
+     try:
+-        existing_refunds = _fetch_razorpay_refunds(payment["gateway_payment_id"], key_id, secret)
++        existing_refunds = await asyncio.to_thread(_fetch_razorpay_refunds, payment["gateway_payment_id"], key_id, secret)
+         # Include provider refund records already observed by signed webhooks as
+         # well as the live provider list; provider state wins for a matching ID.
+         known_refunds = payment.get("provider_refunds") if isinstance(payment.get("provider_refunds"), dict) else {}
+@@ -5764,12 +5782,12 @@
+     # No prior pending or successful provider refund exists. The requested amount
+     # is the captured amount (which was checked against the order total above).
+     try:
+-        response = requests.post(
++        response = await asyncio.to_thread(lambda: requests.post(
+             f"https://api.razorpay.com/v1/payments/{payment['gateway_payment_id']}/refund",
+             auth=(key_id, secret),
+             json={"amount": eligible_paise, "notes": {"comein_order_id": str(oid)}},
+             timeout=15,
+-        )
++        ))
+         if response.status_code >= 400:
+             raise RuntimeError("Gateway response did not confirm refund acceptance")
+         refund = response.json()
+@@ -6308,7 +6326,7 @@
+         fresh = await db.orders.find_one({"_id": oid})
+         return {"duplicate": True, "refund_status": fresh.get("refund_status"), "provider_request_replayed": False}
+     try:
+-        history = _fetch_razorpay_refunds(payment["gateway_payment_id"], settings.key_id, settings.key_secret)
++        history = await asyncio.to_thread(_fetch_razorpay_refunds, payment["gateway_payment_id"], settings.key_id, settings.key_secret)
+         merged = dict(payment.get("provider_refunds") or {})
+         for item in history:
+             if item.get("id") in merged and merged[item["id"]].get("amount") != item.get("amount"):
+@@ -6323,9 +6341,9 @@
+             await _apply_grocery_refund_transactionally(payment["_id"], oid, item["id"], item["amount"], item["status"])
+         raise HTTPException(status_code=409, detail="Existing provider refund found; no second refund was sent")
+     try:
+-        response = requests.post(f"https://api.razorpay.com/v1/payments/{payment['gateway_payment_id']}/refund",
++        response = await asyncio.to_thread(lambda: requests.post(f"https://api.razorpay.com/v1/payments/{payment['gateway_payment_id']}/refund",
+             auth=(settings.key_id, settings.key_secret), json={"amount": eligible,
+-            "notes": {"comein_order_id": str(oid), "request_id": body.request_id}}, timeout=15)
++            "notes": {"comein_order_id": str(oid), "request_id": body.request_id}}, timeout=15))
+         if response.status_code >= 400:
+             raise ValueError("Provider did not confirm refund")
+         refund = response.json()
+@@ -6388,7 +6406,7 @@
+     await _claim_payment_intent(db.orders, oid)
+     import requests as http_requests
+     try:
+-        resp = http_requests.post("https://api.razorpay.com/v1/orders", auth=(key_id, key_secret), json={"amount": amount_paise, "currency": "INR", "receipt": order["ref"], "notes": {"comein_order_id": str(oid), "order_kind": "grocery"}}, timeout=15)
++        resp = await asyncio.to_thread(lambda: http_requests.post("https://api.razorpay.com/v1/orders", auth=(key_id, key_secret), json={"amount": amount_paise, "currency": "INR", "receipt": order["ref"], "notes": {"comein_order_id": str(oid), "order_kind": "grocery"}}, timeout=15))
+         if resp.status_code >= 400:
+             raise RuntimeError("Gateway rejected request")
+         payload = resp.json()
+@@ -6509,7 +6527,7 @@
+         raise HTTPException(status_code=400, detail="Payment signature verification failed")
+     import requests as http_requests
+     try:
+-        gateway_resp = http_requests.get(f"https://api.razorpay.com/v1/payments/{body.razorpay_payment_id}", auth=(key_id, secret), timeout=15)
++        gateway_resp = await asyncio.to_thread(lambda: http_requests.get(f"https://api.razorpay.com/v1/payments/{body.razorpay_payment_id}", auth=(key_id, secret), timeout=15))
+         if gateway_resp.status_code >= 400:
+             raise RuntimeError("Gateway payment lookup failed")
+         gateway_payment = gateway_resp.json()

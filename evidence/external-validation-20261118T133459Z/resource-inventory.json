@@ -1,0 +1,36 @@
+{
+  "host": "Linux",
+  "tools": {
+    "java": "/usr/bin/java",
+    "javac": null,
+    "adb": null,
+    "emulator": null,
+    "gradle": null,
+    "sdkmanager": null,
+    "xcodebuild": null,
+    "xcrun": null,
+    "pod": null,
+    "eas": null
+  },
+  "sdk_directories": {
+    "/opt/android-sdk": false,
+    "/opt/android": false,
+    "/usr/local/lib/android/sdk": false,
+    "/usr/lib/android-sdk": false,
+    "/home/agent/Android/Sdk": false,
+    "/workspace/android-sdk": false,
+    "/workspace/come-in-tools/android-sdk": false
+  },
+  "bindings_present": {
+    "JAVA_HOME": false,
+    "ANDROID_HOME": false,
+    "ANDROID_SDK_ROOT": false,
+    "RAZORPAY_KEY_ID": false,
+    "RAZORPAY_KEY_SECRET": false,
+    "RAZORPAY_MODE": false,
+    "RAZORPAY_WEBHOOK_SECRET": false
+  },
+  "test_key_prefix_valid": false,
+  "kvm_available": false,
+  "usb_device_bus_present": false
+}

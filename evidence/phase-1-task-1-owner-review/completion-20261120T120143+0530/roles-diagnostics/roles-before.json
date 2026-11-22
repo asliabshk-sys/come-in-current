@@ -1,0 +1,425 @@
+{
+  "project": "COME-IN",
+  "stage": "before",
+  "started_UTC": "2026-11-20T06:38:32.597288+00:00",
+  "finished_UTC": "2026-11-20T06:38:33.099888+00:00",
+  "source": "../before/backend/server.py",
+  "source_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "source_SHA256_after": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "runner_SHA256": "a64b60a947f0edb8c5208e8924f9652bf32d7c4da1f31fad1e0521ebac9f1186",
+  "source_symbols": [
+    {
+      "symbol": "now_utc",
+      "line": 185,
+      "end": 186,
+      "SHA256": "b5b3b166a075dd0a7626b565559e48f77795e8b85cfeec2e1b72279c78bc6be4"
+    },
+    {
+      "symbol": "now_iso",
+      "line": 189,
+      "end": 190,
+      "SHA256": "0208456b45f59b8d8994359e7b813c4b48d9751106607e28da924d519fedb767"
+    },
+    {
+      "symbol": "doc_out",
+      "line": 201,
+      "end": 212,
+      "SHA256": "a3bb4d48e356bce11a0f24ba3aded2faffdfa9aeee3752149b9a42e8aa7a6a60"
+    },
+    {
+      "symbol": "require_role",
+      "line": 291,
+      "end": 297,
+      "SHA256": "68a935c9c4b97794b930b3417ef4c99efe17edbb83cacf731ae3a065bbcbe765"
+    },
+    {
+      "symbol": "root",
+      "line": 669,
+      "end": 670,
+      "SHA256": "201e1d6bf37273a42c881bf556d4dd3970af921f1fee504a2e83d70a57407a88"
+    },
+    {
+      "symbol": "StatusCheck",
+      "line": 676,
+      "end": 679,
+      "SHA256": "1dc7a01af96ae87f4f710ad7e417ecf6e572f9360e356e4dfcb90e3803a666d8"
+    },
+    {
+      "symbol": "StatusCheckCreate",
+      "line": 682,
+      "end": 683,
+      "SHA256": "c68851d04eea19fbd0539acad60dce93a3758dc629a1c94e32ff562285d105a6"
+    },
+    {
+      "symbol": "create_status_check",
+      "line": 687,
+      "end": 690,
+      "SHA256": "412c54b252056a30b12f6dc66f5a59888d3c484bd7cd71b344dae7e1512b282d"
+    },
+    {
+      "symbol": "list_status_checks",
+      "line": 694,
+      "end": 696,
+      "SHA256": "1a0e12609925c8ab77c6b7ae16952d71fe7562bfbaebff22b89e52a94b0c25dc"
+    },
+    {
+      "symbol": "AdminRoleUpdateIn",
+      "line": 3885,
+      "end": 3886,
+      "SHA256": "fa24abe447c6ade8cacb34a17382018e16cec22a1823b1db565b680784bb6759"
+    },
+    {
+      "symbol": "admin_update_user_role",
+      "line": 3896,
+      "end": 3909,
+      "SHA256": "3caa9567e30ad31b0060c122e4f374f87137cf2251ade44bcae6248b60e7f025"
+    },
+    {
+      "symbol": "_object_id_or_404",
+      "line": 4643,
+      "end": 4647,
+      "SHA256": "76594bc127b80ce318eaadffcbdf24bbc70e0006e7d2ff6b7d7bf3e1b5f384a8"
+    }
+  ],
+  "command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-B",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/roles-diagnostics/validate_roles_diagnostics.py",
+    "--stage",
+    "before",
+    "--source",
+    "../before/backend/server.py"
+  ],
+  "versions": {
+    "motor": "3.7.1",
+    "pymongo": "4.18.2",
+    "fastapi": "0.110.1",
+    "pydantic": "2.14.3",
+    "httpx": "0.28.1"
+  },
+  "counts": {
+    "PASS": 10,
+    "FAIL": 17,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "cases": [
+    {
+      "id": "D01",
+      "description": "Public health remains anonymous/read-only",
+      "status": "PASS",
+      "failure": null,
+      "seconds": 0.002460750999944139,
+      "observations": {}
+    },
+    {
+      "id": "D02",
+      "description": "POST diagnostics denies anonymous with401",
+      "status": "FAIL",
+      "failure": "Diagnostic authorization boundary not enforced",
+      "seconds": 0.009475827999949615,
+      "observations": {
+        "actual_status": 200,
+        "expected_status": 401
+      }
+    },
+    {
+      "id": "D03",
+      "description": "GET diagnostics denies anonymous with401",
+      "status": "FAIL",
+      "failure": "Diagnostic authorization boundary not enforced",
+      "seconds": 0.0020598349999545462,
+      "observations": {
+        "actual_status": 200,
+        "expected_status": 401
+      }
+    },
+    {
+      "id": "D04",
+      "description": "POST diagnostics denies customer with403",
+      "status": "FAIL",
+      "failure": "Diagnostic authorization boundary not enforced",
+      "seconds": 0.010237304000156655,
+      "observations": {
+        "actual_status": 200,
+        "expected_status": 403
+      }
+    },
+    {
+      "id": "D05",
+      "description": "POST diagnostics denies shopkeeper with403",
+      "status": "FAIL",
+      "failure": "Diagnostic authorization boundary not enforced",
+      "seconds": 0.009200474999943253,
+      "observations": {
+        "actual_status": 200,
+        "expected_status": 403
+      }
+    },
+    {
+      "id": "D06",
+      "description": "POST diagnostics denies delivery_partner with403",
+      "status": "FAIL",
+      "failure": "Diagnostic authorization boundary not enforced",
+      "seconds": 0.008110481000130676,
+      "observations": {
+        "actual_status": 200,
+        "expected_status": 403
+      }
+    },
+    {
+      "id": "D07",
+      "description": "GET diagnostics denies customer with403",
+      "status": "FAIL",
+      "failure": "Diagnostic authorization boundary not enforced",
+      "seconds": 0.001967701000012312,
+      "observations": {
+        "actual_status": 200,
+        "expected_status": 403
+      }
+    },
+    {
+      "id": "D08",
+      "description": "GET diagnostics denies shopkeeper with403",
+      "status": "FAIL",
+      "failure": "Diagnostic authorization boundary not enforced",
+      "seconds": 0.0020914229999107192,
+      "observations": {
+        "actual_status": 200,
+        "expected_status": 403
+      }
+    },
+    {
+      "id": "D09",
+      "description": "GET diagnostics denies delivery_partner with403",
+      "status": "FAIL",
+      "failure": "Diagnostic authorization boundary not enforced",
+      "seconds": 0.0016823919997932535,
+      "observations": {
+        "actual_status": 200,
+        "expected_status": 403
+      }
+    },
+    {
+      "id": "D10",
+      "description": "Admin can write the existing diagnostic response shape",
+      "status": "PASS",
+      "failure": null,
+      "seconds": 0.007939286000009815,
+      "observations": {}
+    },
+    {
+      "id": "D11",
+      "description": "Admin diagnostic feed preserves legacy stored records and response shape",
+      "status": "PASS",
+      "failure": null,
+      "seconds": 0.009378386999969734,
+      "observations": {}
+    },
+    {
+      "id": "D12",
+      "description": "256-character diagnostic name is accepted",
+      "status": "PASS",
+      "failure": null,
+      "seconds": 0.008977018999985376,
+      "observations": {}
+    },
+    {
+      "id": "D13",
+      "description": "257-character diagnostic name is rejected without storage",
+      "status": "FAIL",
+      "failure": "Oversized diagnostic name was accepted",
+      "seconds": 0.008021063999876787,
+      "observations": {
+        "actual_status": 200
+      }
+    },
+    {
+      "id": "D14",
+      "description": "Empty diagnostic name is rejected without storage",
+      "status": "FAIL",
+      "failure": "Empty diagnostic name was accepted",
+      "seconds": 0.010042384999906062,
+      "observations": {}
+    },
+    {
+      "id": "D15",
+      "description": "Existing required diagnostic field remains required",
+      "status": "PASS",
+      "failure": null,
+      "seconds": 0.0008980069999324769,
+      "observations": {}
+    },
+    {
+      "id": "R01",
+      "description": "Admin can update a legitimate customer role and response redacts secrets",
+      "status": "PASS",
+      "failure": null,
+      "seconds": 0.002984888999890245,
+      "observations": {}
+    },
+    {
+      "id": "R02",
+      "description": "Admin can promote a customer while retaining current admin",
+      "status": "PASS",
+      "failure": null,
+      "seconds": 0.003594914999894172,
+      "observations": {}
+    },
+    {
+      "id": "R03",
+      "description": "Own-session last-admin demotion retains existing409",
+      "status": "PASS",
+      "failure": null,
+      "seconds": 0.0006491680001090572,
+      "observations": {}
+    },
+    {
+      "id": "R04",
+      "description": "Missing target retains404 and changes no user role",
+      "status": "PASS",
+      "failure": null,
+      "seconds": 0.0013789239999368874,
+      "observations": {}
+    },
+    {
+      "id": "R05",
+      "description": "An already-demoted in-flight actor cannot mutate another account",
+      "status": "FAIL",
+      "failure": "Demoted in-flight actor retained mutation authority",
+      "seconds": 0.00404557299998487,
+      "observations": {}
+    },
+    {
+      "id": "R06",
+      "description": "2-admin cross-demotion preserves at least one admin;guard preexisting=False",
+      "status": "FAIL",
+      "failure": "Concurrent cross-demotion removed every admin",
+      "seconds": 0.009164567000198076,
+      "observations": {
+        "actors": 2,
+        "successes": 2,
+        "rejected_statuses": [],
+        "remaining_admins": 0,
+        "nontransactional_count_barrier_reads": 2,
+        "session_bound_count_reads": 0,
+        "guard_preexisting": false
+      }
+    },
+    {
+      "id": "R07",
+      "description": "2-admin cross-demotion preserves at least one admin;guard preexisting=True",
+      "status": "FAIL",
+      "failure": "Concurrent cross-demotion removed every admin",
+      "seconds": 0.015023106000171538,
+      "observations": {
+        "actors": 2,
+        "successes": 2,
+        "rejected_statuses": [],
+        "remaining_admins": 0,
+        "nontransactional_count_barrier_reads": 2,
+        "session_bound_count_reads": 0,
+        "guard_preexisting": true
+      }
+    },
+    {
+      "id": "R08",
+      "description": "4-admin cross-demotion preserves at least one admin;guard preexisting=False",
+      "status": "FAIL",
+      "failure": "Concurrent cross-demotion removed every admin",
+      "seconds": 0.01475133500002812,
+      "observations": {
+        "actors": 4,
+        "successes": 4,
+        "rejected_statuses": [],
+        "remaining_admins": 0,
+        "nontransactional_count_barrier_reads": 4,
+        "session_bound_count_reads": 0,
+        "guard_preexisting": false
+      }
+    },
+    {
+      "id": "R09",
+      "description": "4-admin cross-demotion preserves at least one admin;guard preexisting=True",
+      "status": "FAIL",
+      "failure": "Concurrent cross-demotion removed every admin",
+      "seconds": 0.018534670999997616,
+      "observations": {
+        "actors": 4,
+        "successes": 4,
+        "rejected_statuses": [],
+        "remaining_admins": 0,
+        "nontransactional_count_barrier_reads": 4,
+        "session_bound_count_reads": 0,
+        "guard_preexisting": true
+      }
+    },
+    {
+      "id": "R10",
+      "description": "Fault after actual role write rolls back the user and serialization guard",
+      "status": "FAIL",
+      "failure": "Aborted role write left a committed user change",
+      "seconds": 0.004497587999821917,
+      "observations": {
+        "error_type": "RuntimeError",
+        "role_after": "shopkeeper",
+        "guard_version": null
+      }
+    },
+    {
+      "id": "R11",
+      "description": "Unavailable transaction session does not fall back to unsafe role writes",
+      "status": "FAIL",
+      "failure": "Unavailable transactions allowed standalone role mutation",
+      "seconds": 0.00505547799980377,
+      "observations": {}
+    },
+    {
+      "id": "R12",
+      "description": "HTTP role endpoint retains nonadmin403 before mutation",
+      "status": "PASS",
+      "failure": null,
+      "seconds": 0.0025971259999550966,
+      "observations": {}
+    }
+  ],
+  "retained_databases": [
+    "comein_roles_before_8bed1548faeb_1",
+    "comein_roles_before_8bed1548faeb_2",
+    "comein_roles_before_8bed1548faeb_3",
+    "comein_roles_before_8bed1548faeb_4",
+    "comein_roles_before_8bed1548faeb_5",
+    "comein_roles_before_8bed1548faeb_6",
+    "comein_roles_before_8bed1548faeb_7",
+    "comein_roles_before_8bed1548faeb_8",
+    "comein_roles_before_8bed1548faeb_9",
+    "comein_roles_before_8bed1548faeb_10",
+    "comein_roles_before_8bed1548faeb_11",
+    "comein_roles_before_8bed1548faeb_12",
+    "comein_roles_before_8bed1548faeb_13",
+    "comein_roles_before_8bed1548faeb_14",
+    "comein_roles_before_8bed1548faeb_15",
+    "comein_roles_before_8bed1548faeb_16",
+    "comein_roles_before_8bed1548faeb_17",
+    "comein_roles_before_8bed1548faeb_18",
+    "comein_roles_before_8bed1548faeb_19",
+    "comein_roles_before_8bed1548faeb_20",
+    "comein_roles_before_8bed1548faeb_21",
+    "comein_roles_before_8bed1548faeb_22",
+    "comein_roles_before_8bed1548faeb_23",
+    "comein_roles_before_8bed1548faeb_24",
+    "comein_roles_before_8bed1548faeb_25",
+    "comein_roles_before_8bed1548faeb_26",
+    "comein_roles_before_8bed1548faeb_27"
+  ],
+  "replica_set": "rs0",
+  "limits": [
+    "Actual source models/handlers/role dependency are executed;ASGI authentication is a synthetic fixture identity dependency,not JWT validation.",
+    "Role state/concurrency and transaction rollback use real Motor/MongoDB;only the old nontransactional count reads are barrier-synchronized;session reads cannot barrier without deadlock.",
+    "Only unique local fixture databases written,retained,no drops/migrations/provider/native/production calls."
+  ],
+  "production_source_modified": false,
+  "global_failpoints": 0,
+  "provider_calls": 0,
+  "DB_drops": 0
+}

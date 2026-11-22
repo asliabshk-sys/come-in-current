@@ -1,0 +1,83 @@
+{
+  "timestamp": "2026-11-19T14:07:04.271625+05:30",
+  "repo": "/workspace/come-in-current",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "previous_manifest_sha256": "7fbe1ee4d606157421f7192cc69fc0ee59f8fd9409ac655fe1fd4a6a8308b8af",
+  "previous_baseline_mismatches": [],
+  "new_protected_count": 8533,
+  "inputs": [
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_EVIDENCE_GAP_CLOSURE_REPORT.md",
+      "bytes": 67826,
+      "sha256": "3d3c47c66f5997d2a90d8e41beee3ebee886f64a894ed60f4d0d2bf3689e6ce1",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_SECURITY_VALIDATION_REPORT.md",
+      "bytes": 24904,
+      "sha256": "f2bac57653f5348adceaa8fa158fef2d7b6c9c3d61ac3e417e27fb682118715c",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_NAVIGATION_AND_API_INVENTORY.md",
+      "bytes": 333626,
+      "sha256": "c3196394b04218f9220e7bbb77b2573736e8b56352b9cafb88eba2a266c8c044",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_PRESERVATION_VERIFICATION.md",
+      "bytes": 7368,
+      "sha256": "5459f05e0daefde654244dc6d59425d0589caad31e8f1217d14f5e84114e1494",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_OWNER_DECISION_READINESS.md",
+      "bytes": 7727,
+      "sha256": "71ca13c7180de6624a5844e483e6cd7966c177c71a5c206977a8656b32dab4c8",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_REVIEW_MANIFEST.json",
+      "bytes": 9059,
+      "sha256": "7fbe1ee4d606157421f7192cc69fc0ee59f8fd9409ac655fe1fd4a6a8308b8af",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/ITERATION_CHECKPOINT.md",
+      "bytes": 6941,
+      "sha256": "b402d622c2b33e7f8e7bf676f474a5f7eb544b3e38cd3fcfff6e033bf828a847",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/COME_IN_LIVE_CHECKPOINT.md",
+      "bytes": 121356,
+      "sha256": "56afaff01f4778254398b9681634767702ee09a432e571f29c50675f70cc40e5",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/COME_IN_MASTER_TASK_TRACKER.md",
+      "bytes": 160425,
+      "sha256": "8884194a347de4b4af99bb807ef53180cf79a4bce89f7b955a110070fb0ececf",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/COME_IN_DECISIONS_AND_BLOCKERS.md",
+      "bytes": 137554,
+      "sha256": "a09d6d51cdd107a2311ff8a9e3940ae2fdfd6a52ca0fa2d3ad2d1f787426107b",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/COME_IN_SESSION_LOG.md",
+      "bytes": 131493,
+      "sha256": "e4cd1cf4dd91206eda4b3d7f602dff39f8ce850227fe9dce974a75fc538933df",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/COME_IN_NEXT_SESSION_RESUME_PROMPT.md",
+      "bytes": 5135,
+      "sha256": "6ffac46abc3ef8b0c38bff8890dea790fccd41973655fb5e21fecafe671b70ce",
+      "read": true
+    }
+  ]
+}

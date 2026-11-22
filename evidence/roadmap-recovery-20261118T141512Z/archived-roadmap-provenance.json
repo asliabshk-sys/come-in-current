@@ -1,0 +1,106 @@
+[
+  {
+    "member": "COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_MASTER_TASK_TRACKER.json",
+    "archive_sha256": "569dedc3def2c3d469172b3aff10f7266455bfe01c87afe2146830d16c359431",
+    "current_copy_matches": true,
+    "zip_member_timestamp": [
+      2026,
+      11,
+      15,
+      5,
+      13,
+      24
+    ]
+  },
+  {
+    "member": "COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_MASTER_TASK_TRACKER.md",
+    "archive_sha256": "b3ea451b42b70255ad03c7c0f14e6b18aa1e44bdf3696c88433e7eb6373b169e",
+    "current_copy_matches": true,
+    "zip_member_timestamp": [
+      2026,
+      11,
+      15,
+      5,
+      13,
+      24
+    ]
+  },
+  {
+    "member": "COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_MASTER_TASK_TRACKER.xlsx",
+    "archive_sha256": "89890f352cf318babd935b9704abd40d3b5f9f3123c1a730e99566dd50cfaebb",
+    "current_copy_matches": true,
+    "zip_member_timestamp": [
+      2026,
+      11,
+      15,
+      5,
+      13,
+      24
+    ]
+  },
+  {
+    "member": "COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_BACKUP_EVIDENCE/HISTORICAL_DOCUMENT_VERSIONS/COME-IN-MONGODB-PHASE2-WORK/COME_IN_MASTER_TASK_TRACKER.md",
+    "archive_sha256": "6e72e363530683a469714523817b66ffb99b01cbd839c6c9aadd868cd8b0e0f4",
+    "current_copy_matches": true,
+    "zip_member_timestamp": [
+      2026,
+      11,
+      15,
+      5,
+      14,
+      28
+    ]
+  },
+  {
+    "member": "COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_BACKUP_EVIDENCE/HISTORICAL_DOCUMENT_VERSIONS/COME-IN-MONGODB-STEP1-DEV-20261115/COME_IN_MASTER_TASK_TRACKER.md",
+    "archive_sha256": "529a8f0f85127c8a168eb92445ae38959e0fd7a286b4e63fb9b928bb311eedfb",
+    "current_copy_matches": true,
+    "zip_member_timestamp": [
+      2026,
+      11,
+      15,
+      5,
+      14,
+      28
+    ]
+  },
+  {
+    "member": "COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_TASK_TRACKER.md",
+    "archive_sha256": "0fd4b1708e62b2cc9a9563e6580c3fda5d1e249f18104608a317158566279cb6",
+    "current_copy_matches": true,
+    "zip_member_timestamp": [
+      2026,
+      11,
+      15,
+      5,
+      13,
+      24
+    ]
+  },
+  {
+    "member": "COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/memory/COME-IN-MASTER-ROADMAP.md",
+    "archive_sha256": "702adc3c8648443c0fb4e3e35ce2b84304c27f89b4bf852011cfec69081b6ece",
+    "current_copy_matches": true,
+    "zip_member_timestamp": [
+      2026,
+      11,
+      15,
+      5,
+      13,
+      24
+    ]
+  },
+  {
+    "member": "COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/PROJECT_HISTORY/ADDITIONAL_LIBRARY_ARTIFACTS/COME_IN_MASTER_TASK_TRACKER.md",
+    "archive_sha256": "d4ee4007202a045e95107d51ec84ea42a04cbfac7330d5f3902ac1186f73e270",
+    "current_copy_matches": true,
+    "zip_member_timestamp": [
+      2026,
+      11,
+      15,
+      5,
+      13,
+      24
+    ]
+  }
+]

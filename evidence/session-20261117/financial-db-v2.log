@@ -1,0 +1,2 @@
+ERROR:comein:Restaurant refund webhook commit could not be confirmed (WriteError)
+{"ok": true, "checks": ["concurrent refund replay commits one reversal and one refund entry", "late failed webhook cannot downgrade processed refund", "admin state cannot downgrade completed webhook state", "real validator failure rolls back refund payment/order/ledger writes", "Restaurant capture and repeat are atomic and durable"]}

@@ -1,0 +1,15 @@
+{
+  "host": "Linux",
+  "tools": {
+    "java": "/usr/bin/java",
+    "javac": null,
+    "adb": null,
+    "emulator": null,
+    "gradle": null,
+    "sdkmanager": null,
+    "xcodebuild": null,
+    "pod": null,
+    "eas": null
+  },
+  "android_sdk_dir_present": false
+}

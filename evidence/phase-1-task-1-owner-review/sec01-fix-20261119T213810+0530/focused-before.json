@@ -1,0 +1,291 @@
+{
+  "project": "COME-IN",
+  "scope": "SEC-01 focused before/after function integration on real local disposable MongoDB",
+  "stage": "before",
+  "started_UTC": "2026-11-19T16:14:24.670581+00:00",
+  "finished_UTC": "2026-11-19T16:14:38.581776+00:00",
+  "source": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/before/backend/server.py",
+  "source_SHA256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+  "source_SHA256_after": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+  "extracted_symbols": [
+    {
+      "symbol": "now_utc",
+      "start": 185,
+      "end": 186,
+      "segment_SHA256": "b5b3b166a075dd0a7626b565559e48f77795e8b85cfeec2e1b72279c78bc6be4"
+    },
+    {
+      "symbol": "BCRYPT_ROUNDS",
+      "start": 228,
+      "end": 228,
+      "segment_SHA256": "d7a2a166193a93961d5a6d99bc44a34e975899a7423096d582b9c3a7a4947a07"
+    },
+    {
+      "symbol": "hash_password",
+      "start": 233,
+      "end": 236,
+      "segment_SHA256": "77b6a36f6955f4c3b3ec9a7a6974e8e7119a9844261ebb550d1a4a5ab70cd8b4"
+    },
+    {
+      "symbol": "verify_password",
+      "start": 239,
+      "end": 243,
+      "segment_SHA256": "601912ca47f6eeec847138ca1f8c786e109d364017eacf197fa5e147b8583eac"
+    },
+    {
+      "symbol": "ResetPasswordIn",
+      "start": 1083,
+      "end": 1085,
+      "segment_SHA256": "104ef456ca0108c907ee7a20f1190a67ccce93acf40f03c9bba1bd022037ae5f"
+    },
+    {
+      "symbol": "reset_password",
+      "start": 1123,
+      "end": 1130,
+      "segment_SHA256": "025eb35ae63b9986a110f0db1e3f561c7d31cb480f7da91a359463c4294614c1"
+    },
+    {
+      "symbol": "_object_id_or_404",
+      "start": 4624,
+      "end": 4628,
+      "segment_SHA256": "76594bc127b80ce318eaadffcbdf24bbc70e0006e7d2ff6b7d7bf3e1b5f384a8"
+    }
+  ],
+  "transaction_helper": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py",
+  "transaction_helper_SHA256": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30",
+  "runner_SHA256": "71d15423b6bf06ce679af2b02456f53233a67ec324f655246855cf6775b70a85",
+  "python": "3.11.18 (main, Oct 26 2026, 14:05:07) [Clang 23.1.3 ]",
+  "executable": "/workspace/come-in-tools/py311/bin/python",
+  "versions": {
+    "motor": "3.7.1",
+    "pymongo": "4.18.2",
+    "bcrypt": "4.1.3",
+    "pydantic": "2.14.3",
+    "fastapi": "0.110.1"
+  },
+  "database": "comein_sec01_focused_before_20261119t161424z_f23513f3",
+  "replica_set": "rs0",
+  "counts": {
+    "PASS": 10,
+    "FAIL": 10,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "cases": [
+    {
+      "id": "SEC01-01",
+      "invariant": "Valid reset preserves the existing response and atomically updates both records",
+      "status": "PASS",
+      "seconds": 0.5455518640010268,
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "SEC01-02",
+      "invariant": "Unknown token returns existing400 without password hashing or writes",
+      "status": "PASS",
+      "seconds": 0.0016128339993883856,
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "SEC01-03",
+      "invariant": "Expired token is rejected before TTL deletion without writes",
+      "status": "PASS",
+      "seconds": 0.0034400949989503715,
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "SEC01-04",
+      "invariant": "Already consumed token remains rejected",
+      "status": "PASS",
+      "seconds": 0.003029618997970829,
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "SEC01-05",
+      "invariant": "Sequential replay cannot overwrite a committed password",
+      "status": "PASS",
+      "seconds": 0.5400906350005243,
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "SEC01-06",
+      "invariant": "Two synchronized valid preflight reads permit exactly one successful reset",
+      "status": "FAIL",
+      "seconds": 0.5453868580007111,
+      "failure": "Two same-token consumers did not produce exactly one success and one400",
+      "observations": {
+        "synchronized_preflight_reads": 2,
+        "accepted": 2,
+        "rejected400": 0
+      }
+    },
+    {
+      "id": "SEC01-07",
+      "invariant": "Three rounds of eight synchronized same-token requests have one winner each",
+      "status": "FAIL",
+      "seconds": 2.1857289889994718,
+      "failure": "A repeated eight-way concurrency round did not have exactly one winner",
+      "observations": {}
+    },
+    {
+      "id": "SEC01-08",
+      "invariant": "Token-write failure leaves no partial password change and allows safe retry",
+      "status": "FAIL",
+      "seconds": 0.2717405299990787,
+      "failure": "An aborted reset left a committed password or consumed token",
+      "observations": {
+        "injected_fault_fired": true,
+        "error_type": "RuntimeError",
+        "password_and_token_unchanged_after_abort": false
+      }
+    },
+    {
+      "id": "SEC01-09",
+      "invariant": "User-write failure after a claim rolls back token consumption",
+      "status": "PASS",
+      "seconds": 1.1617022619975614,
+      "failure": null,
+      "observations": {
+        "injected_fault_fired": true,
+        "error_type": "RuntimeError",
+        "password_and_token_unchanged_after_abort": true
+      }
+    },
+    {
+      "id": "SEC01-10",
+      "invariant": "Fault after the real user write but before commit rolls back both documents",
+      "status": "FAIL",
+      "seconds": 0.27968089299974963,
+      "failure": "An aborted reset left a committed password or consumed token",
+      "observations": {
+        "injected_fault_fired": true,
+        "error_type": "RuntimeError",
+        "password_and_token_unchanged_after_abort": false
+      }
+    },
+    {
+      "id": "SEC01-11",
+      "invariant": "Transient transaction failure retries the body with only one durable paired result",
+      "status": "FAIL",
+      "seconds": 0.2734237349977775,
+      "failure": "Transient failure was not safely retried",
+      "observations": {
+        "error_type": "OperationFailure",
+        "callback_calls": 0,
+        "user_write_attempts": 1,
+        "password_hash_calls": 1
+      }
+    },
+    {
+      "id": "SEC01-12",
+      "invariant": "Unknown commit acknowledgement retries commit without rerunning password writes",
+      "status": "FAIL",
+      "seconds": 0.27438199300013366,
+      "failure": "Unknown commit acknowledgement replayed the reset body or failed to retry commit",
+      "observations": {
+        "error_type": null,
+        "commit_calls": 0,
+        "callback_calls": 0,
+        "user_write_attempts": 1,
+        "token_write_attempts": 1
+      }
+    },
+    {
+      "id": "SEC01-13",
+      "invariant": "Lost response after committed success cannot make a retry overwrite the password",
+      "status": "PASS",
+      "seconds": 0.8127265139992232,
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "SEC01-14",
+      "invariant": "Missing target user cannot return success or consume a token",
+      "status": "FAIL",
+      "seconds": 0.27267625799868256,
+      "failure": "Missing-user reset reported success or committed token consumption",
+      "observations": {}
+    },
+    {
+      "id": "SEC01-15",
+      "invariant": "Expiry is rechecked after successful preflight and before transactional claim",
+      "status": "FAIL",
+      "seconds": 0.2593250409991015,
+      "failure": "Token expired after preflight was accepted",
+      "observations": {}
+    },
+    {
+      "id": "SEC01-16",
+      "invariant": "A token consumed after preflight is rejected by the fresh claim",
+      "status": "FAIL",
+      "seconds": 0.26358250999692245,
+      "failure": "A token invalidated after preflight still changed the password",
+      "observations": {}
+    },
+    {
+      "id": "SEC01-17",
+      "invariant": "Only the account bound to the token receives the password update",
+      "status": "PASS",
+      "seconds": 0.5147043610013498,
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "SEC01-18",
+      "invariant": "Unavailable transaction sessions fail closed without a standalone write fallback",
+      "status": "FAIL",
+      "seconds": 0.26351512399924104,
+      "failure": "Missing transaction support fell back to non-atomic writes",
+      "observations": {}
+    },
+    {
+      "id": "SEC01-19",
+      "invariant": "Existing reset request model length requirements are preserved",
+      "status": "PASS",
+      "seconds": 0.0001409069991495926,
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "SEC01-20",
+      "invariant": "Existing transaction helper really rolls back an aborted real Mongo write",
+      "status": "PASS",
+      "seconds": 0.0030041110003367066,
+      "failure": null,
+      "observations": {}
+    }
+  ],
+  "retained_records": {
+    "users": 21,
+    "reset_records": 17
+  },
+  "command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-B",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/sec01_focused_regression.py",
+    "--stage",
+    "before",
+    "--source",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/before/backend/server.py"
+  ],
+  "safety": {
+    "source_modified": false,
+    "production_access": false,
+    "provider_calls": 0,
+    "global_failpoints": 0,
+    "DB_drops": 0,
+    "raw_tokens_passwords_or_secrets_written": false,
+    "database_retained": true
+  },
+  "limitations": [
+    "Function bodies and model source are actual AST extraction;API decorators alone removed;not full HTTP routing/middleware integration.",
+    "Authentication throttle is an isolated no-op to keep this focused suite from changing or adjudicating SEC-04;old broader suite separately verifies it.",
+    "Collection fault wrappers forward actual Motor sessions and inject deterministic one-shot local errors;no global Mongo failpoint or provider call.",
+    "Commit-acknowledgement and session-unavailable paths are controlled client-boundary faults over the real replica-set session,not actual network outages or a standalone server."
+  ]
+}

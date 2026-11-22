@@ -1,0 +1,30 @@
+{
+  "three-failures-before.xml": {
+    "tests": "3",
+    "errors": "0",
+    "failures": "3",
+    "skipped": "0",
+    "time": "0.057"
+  },
+  "csv-focused.xml": {
+    "tests": "8",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "time": "0.068"
+  },
+  "three-failures-after.xml": {
+    "tests": "3",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "time": "0.077"
+  },
+  "relevant-regression.xml": {
+    "tests": "96",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "4",
+    "time": "3.637"
+  }
+}

@@ -1,0 +1,4634 @@
+[
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 133,
+    "event": "onPress",
+    "handler": "logout",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 141,
+    "event": "onPress",
+    "handler": "() => router.push(\"/auth\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 157,
+    "event": "onPress",
+    "handler": "r.onPress",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 192,
+    "event": "onRequestClose",
+    "handler": "() => setShopModesOpen(false)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 194,
+    "event": "onPress",
+    "handler": "() => setShopModesOpen(false)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 195,
+    "event": "onPress",
+    "handler": "() => {}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": true
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 211,
+    "event": "onPress",
+    "handler": "() => { setShopModesOpen(false); mode.go(); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 219,
+    "event": "onPress",
+    "handler": "() => setShopModesOpen(false)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 230,
+    "event": "onRequestClose",
+    "handler": "() => setSignInOpen(false)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 232,
+    "event": "onPress",
+    "handler": "() => setSignInOpen(false)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 243,
+    "event": "onPress",
+    "handler": "() => setSignInOpen(false)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 51,
+    "event": "onPress",
+    "handler": "() => removeKey(key)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 54,
+    "event": "onPress",
+    "handler": "() => router.replace(\"/(tabs)\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 76,
+    "event": "onPress",
+    "handler": "clear",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 104,
+    "event": "onPress",
+    "handler": "() => removeKey(key)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 114,
+    "event": "onError",
+    "handler": "() => setFailedImages((current) => ({ ...current, [line.key]: true }))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 137,
+    "event": "onAdd",
+    "handler": "() => increment(line.product.id, line.variant?.id)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 138,
+    "event": "onInc",
+    "handler": "() => {\n                        if (isMeasured(line.product)) {\n                          if (stepUp(line.product, line.qty) === line.qty) { setQuantityNotice((current) => ({ ...current, [line.key]: t(\"m.maxAvailable\", { amount: formatAmount(line.product, line.qty) }) })); return; }\n                          setQuantityNotice((current) => { const next = { ...current }; delete next[line.key]; return next; });\n                          increment(line.product.id, undefined, line.product);\n                          return;\n                        }\n                        const available = line.variant ? line.variant.stock : line.product.stock;\n                        if (line.qty >= 1000) {\n                          setQuantityNotice((current) => ({ ...current, [line.key]: \"Maximum 1000 packs of one variant per order.\" }));\n                          return;\n                        }\n                        if (available !== undefined && line.qty >= available) {\n                          setQuantityNotice((current) => ({ ...current, [line.key]: `Only ${available} pack(s) are currently available.` }));\n                          return;\n                        }\n                        setQuantityNotice((current) => { const next = { ...current }; delete next[line.key]; return next; });\n                        increment(line.product.id, line.variant?.id);\n                      }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 157,
+    "event": "onDec",
+    "handler": "() => { setQuantityNotice((current) => { const next = { ...current }; delete next[line.key]; return next; }); decrement(line.product.id, line.variant?.id); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 160,
+    "event": "onPress",
+    "handler": "() => remove(line.product.id, line.variant?.id)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 174,
+    "event": "onPress",
+    "handler": "() => replaceLine(line.product.id, line.variant?.id, candidate, variant?.id, line.qty)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 211,
+    "event": "onPress",
+    "handler": "() => router.push(\"/checkout\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/categories.tsx",
+    "line": 24,
+    "event": "onPress",
+    "handler": "() => router.push(\"/services\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/categories.tsx",
+    "line": 41,
+    "event": "onPress",
+    "handler": "() => router.push(`/category/${item.id}`)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 96,
+    "event": "onPress",
+    "handler": "() => router.push(\"/chand?voice=1\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 99,
+    "event": "onPress",
+    "handler": "() => router.push(\"/language\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 102,
+    "event": "onPress",
+    "handler": "() => router.push(user ? \"/notifications\" : \"/orders\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 106,
+    "event": "onPress",
+    "handler": "() => router.push(\"/(tabs)/account\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 118,
+    "event": "onPress",
+    "handler": "() => router.push(\"/(tabs)/search\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 128,
+    "event": "onPress",
+    "handler": "() => router.push(\"/(tabs)/categories\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 143,
+    "event": "onPress",
+    "handler": "() => router.push(\"/(tabs)/categories\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 178,
+    "event": "onPress",
+    "handler": "() => router.push(\"/referral-dashboard\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 187,
+    "event": "onPress",
+    "handler": "() => router.push(\"/shops?type=online\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 188,
+    "event": "onPress",
+    "handler": "() => router.push(\"/shops?type=offline\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 189,
+    "event": "onPress",
+    "handler": "() => router.push(\"/restaurant\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 190,
+    "event": "onPress",
+    "handler": "() => router.push(\"/services\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 196,
+    "event": "onSeeAll",
+    "handler": "() => router.push(\"/(tabs)/categories\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 203,
+    "event": "onPress",
+    "handler": "() => router.push(`/category/${item.id}`)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 226,
+    "event": "onPress",
+    "handler": "() => setLocModalOpen(true)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 239,
+    "event": "onPress",
+    "handler": "() => router.push(\"/chand\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 268,
+    "event": "onSeeAll",
+    "handler": "() => router.push(\"/(tabs)/categories\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 278,
+    "event": "onSeeAll",
+    "handler": "() => router.push(\"/services\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 288,
+    "event": "onPress",
+    "handler": "() => router.push(\"/services\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 312,
+    "event": "onRequestClose",
+    "handler": "() => setLocModalOpen(false)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 314,
+    "event": "onPress",
+    "handler": "() => setLocModalOpen(false)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 322,
+    "event": "onChangeText",
+    "handler": "setLocInput",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 330,
+    "event": "onPress",
+    "handler": "() => {\n              setLocation(locInput);\n              setLocModalOpen(false);\n            }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 359,
+    "event": "onPress",
+    "handler": "onPress",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 378,
+    "event": "onPress",
+    "handler": "onSeeAll",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/search.tsx",
+    "line": 51,
+    "event": "onChangeText",
+    "handler": "setQuery",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/search.tsx",
+    "line": 59,
+    "event": "onPress",
+    "handler": "() => setQuery(\"\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/search.tsx",
+    "line": 74,
+    "event": "onPress",
+    "handler": "() => setQuery(s)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/(tabs)/search.tsx",
+    "line": 107,
+    "event": "onScrollBeginDrag",
+    "handler": "Keyboard.dismiss",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/addresses.tsx",
+    "line": 8,
+    "event": "onPress",
+    "handler": "()=>router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/addresses.tsx",
+    "line": 8,
+    "event": "onChangeText",
+    "handler": "setter",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/addresses.tsx",
+    "line": 8,
+    "event": "onPress",
+    "handler": "save",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/addresses.tsx",
+    "line": 8,
+    "event": "onPress",
+    "handler": "()=>remove(a.id)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-delivery-partners.tsx",
+    "line": 25,
+    "event": "onPress",
+    "handler": "() => open(item.id)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-delivery-partners.tsx",
+    "line": 26,
+    "event": "onChangeText",
+    "handler": "setReason",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-delivery-partners.tsx",
+    "line": 27,
+    "event": "onPress",
+    "handler": "() => decide(\"approve\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-delivery-partners.tsx",
+    "line": 27,
+    "event": "onPress",
+    "handler": "() => decide(\"reject\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-delivery-partners.tsx",
+    "line": 27,
+    "event": "onPress",
+    "handler": "() => decide(\"correction\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-delivery-partners.tsx",
+    "line": 27,
+    "event": "onPress",
+    "handler": "() => decide(\"suspend\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-delivery-partners.tsx",
+    "line": 27,
+    "event": "onPress",
+    "handler": "() => decide(\"reactivate\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-delivery-partners.tsx",
+    "line": 27,
+    "event": "onPress",
+    "handler": "() => setSelected(null)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-delivery-partners.tsx",
+    "line": 31,
+    "event": "onPress",
+    "handler": "onPress",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 37,
+    "event": "onPress",
+    "handler": "()=>router.replace(\"/(tabs)/account\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 40,
+    "event": "onPress",
+    "handler": "()=>router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 40,
+    "event": "onPress",
+    "handler": "refresh",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 41,
+    "event": "onRefresh",
+    "handler": "refresh",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 42,
+    "event": "onChangeText",
+    "handler": "setStartDate",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 42,
+    "event": "onChangeText",
+    "handler": "setEndDate",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 42,
+    "event": "onPress",
+    "handler": "()=>{setLoading(true);load().catch((e:any)=>setNotice(e?.message||\"Failed\")).finally(()=>setLoading(false));}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 45,
+    "event": "onPress",
+    "handler": "()=>choosePolicy(entity)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 45,
+    "event": "onChangeText",
+    "handler": "setCommissionRate",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 45,
+    "event": "onChangeText",
+    "handler": "setServiceFee",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 45,
+    "event": "onPress",
+    "handler": "()=>setDeliveryBeneficiary(v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 45,
+    "event": "onPress",
+    "handler": "savePolicy",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 46,
+    "event": "onChangeText",
+    "handler": "setHolder",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 46,
+    "event": "onChangeText",
+    "handler": "setBankName",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 46,
+    "event": "onChangeText",
+    "handler": "setAccount",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 46,
+    "event": "onChangeText",
+    "handler": "setIfsc",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 46,
+    "event": "onPress",
+    "handler": "saveBank",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 47,
+    "event": "onChangeText",
+    "handler": "setTransactionOrderId",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 47,
+    "event": "onChangeText",
+    "handler": "setTransactionShopId",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 47,
+    "event": "onChangeText",
+    "handler": "setTransactionStatus",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 47,
+    "event": "onChangeText",
+    "handler": "setTransactionType",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 47,
+    "event": "onChangeText",
+    "handler": "setSettlementReference",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 47,
+    "event": "onPress",
+    "handler": "()=>{setLoading(true);load().catch((e:any)=>setNotice(e?.message||\"Failed\")).finally(()=>setLoading(false));}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 49,
+    "event": "onPress",
+    "handler": "()=>decision(s.id,\"approve\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 49,
+    "event": "onPress",
+    "handler": "()=>decision(s.id,\"reject\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 49,
+    "event": "onChangeText",
+    "handler": "setPayoutRef",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 49,
+    "event": "onPress",
+    "handler": "()=>decision(s.id,\"processing\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 49,
+    "event": "onPress",
+    "handler": "()=>Alert.alert(\"Confirm actual transfer\", \"Only continue after a real bank transfer has been completed and its reference checked.\",[{text:\"Cancel\",style:\"cancel\"},{text:\"Confirm transfer\",onPress:()=>decision(s.id,\"paid\")}])",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 124,
+    "event": "onPress",
+    "handler": "() => router.push(\"/auth\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 198,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 225,
+    "event": "onPress",
+    "handler": "() => setTab(t.k as Tab)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 233,
+    "event": "onRefresh",
+    "handler": "async () => { setRefreshing(true); await load(); setRefreshing(false); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 249,
+    "event": "onPress",
+    "handler": "() => setTab(target as Tab)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 258,
+    "event": "onPress",
+    "handler": "() => router.push(\"/admin-earnings\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 264,
+    "event": "onPress",
+    "handler": "async () => { Alert.alert(\"Change user role\", `Set ${u.email} to ${role}? This changes server-authorized access.`, [{text:\"Cancel\",style:\"cancel\"},{text:\"Confirm\",onPress:async()=>{try{await api.patch(`/admin/users/${u.id}/role`,{role});setAdminNotice(`Role updated for ${u.email}.`);await load();}catch(e:any){setAdminNotice(e?.message||\"Role update failed.\");}}}]); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 274,
+    "event": "onPress",
+    "handler": "() => setShopStatus(s.id, \"approved\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 275,
+    "event": "onPress",
+    "handler": "() => setShopStatus(s.id, \"suspended\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 276,
+    "event": "onPress",
+    "handler": "() => setShopStatus(s.id, \"pending\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 293,
+    "event": "onPress",
+    "handler": "() => setRestaurantStatus(r.id, \"approved\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 294,
+    "event": "onPress",
+    "handler": "() => setRestaurantStatus(r.id, \"suspended\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 295,
+    "event": "onPress",
+    "handler": "() => setRestaurantStatus(r.id, \"pending\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 306,
+    "event": "onPress",
+    "handler": "() => requestRefund(o.id)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 315,
+    "event": "onPress",
+    "handler": "() => setSupportStatus(r.id, \"in_progress\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 316,
+    "event": "onPress",
+    "handler": "() => setSupportStatus(r.id, \"resolved\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 317,
+    "event": "onPress",
+    "handler": "() => setSupportStatus(r.id, \"closed\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 328,
+    "event": "onPress",
+    "handler": "async () => { try { await api.patch(`/admin/chand/feedback/${r.id}`, { status: \"reviewing\", resolution_note: \"\" }); setChandFeedback((rows) => rows.map((x) => x.id === r.id ? { ...x, status: \"reviewing\" } : x)); } catch (e: any) { setAdminNotice(e?.message || \"Feedback update failed.\"); } }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 329,
+    "event": "onPress",
+    "handler": "async () => { try { await api.patch(`/admin/chand/feedback/${r.id}`, { status: \"resolved\", resolution_note: \"Reviewed by admin\" }); setChandFeedback((rows) => rows.map((x) => x.id === r.id ? { ...x, status: \"resolved\", resolution_note: \"Reviewed by admin\" } : x)); } catch (e: any) { setAdminNotice(e?.message || \"Feedback update failed.\"); } }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 330,
+    "event": "onPress",
+    "handler": "async () => { try { await api.patch(`/admin/chand/feedback/${r.id}`, { status: \"closed\", resolution_note: \"Closed by admin\" }); setChandFeedback((rows) => rows.map((x) => x.id === r.id ? { ...x, status: \"closed\", resolution_note: \"Closed by admin\" } : x)); } catch (e: any) { setAdminNotice(e?.message || \"Feedback update failed.\"); } }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 340,
+    "event": "onPress",
+    "handler": "() => setReqStatus(\"anything\", r.id, \"assigned\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 341,
+    "event": "onPress",
+    "handler": "() => setReqStatus(\"anything\", r.id, \"completed\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 342,
+    "event": "onPress",
+    "handler": "() => setReqStatus(\"anything\", r.id, \"cancelled\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 352,
+    "event": "onPress",
+    "handler": "() => setReqStatus(\"assist\", r.id, \"assigned\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 353,
+    "event": "onPress",
+    "handler": "() => setReqStatus(\"assist\", r.id, \"completed\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 360,
+    "event": "onPress",
+    "handler": "() => setHomeFeeMode(value)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 361,
+    "event": "onChangeText",
+    "handler": "setHomeFixedFee",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 362,
+    "event": "onPress",
+    "handler": "async () => { const fee=Number(homeFixedFee); if (!Number.isFinite(fee)||fee<0||fee>100000) { setAdminNotice(\"Enter a valid fee between ₹0 and ₹100,000.\"); return; } try { await api.patch(\"/admin/home-services/fee-policy\",{mode:homeFeeMode,fixed_visit_fee:fee,currency:\"INR\"}); setAdminNotice(\"Home-visit fee policy saved for new appointment requests.\"); } catch(e:any) { setAdminNotice(e?.message||\"Could not save fee policy.\"); } }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 366,
+    "event": "onChangeText",
+    "handler": "setAnnouncementTitle",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 367,
+    "event": "onChangeText",
+    "handler": "setAnnouncementBody",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 369,
+    "event": "onPress",
+    "handler": "() => setAnnouncementAudience(audience)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 371,
+    "event": "onChangeText",
+    "handler": "setAnnouncementDays",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 372,
+    "event": "onPress",
+    "handler": "async () => {\n            if (announcementTitle.trim().length < 3 || announcementBody.trim().length < 3) { setAdminNotice(\"Enter an announcement title and message.\"); return; }\n            const days = announcementDays.trim() ? Number(announcementDays) : null;\n            if (days !== null && (!Number.isInteger(days) || days < 1 || days > 365)) { setAdminNotice(\"Active days must be a whole number from 1 to 365.\"); return; }\n            const payload = { title: announcementTitle.trim(), body: announcementBody.trim(), audience: announcementAudience, expires_at: days ? new Date(Date.now() + days * 86400000).toISOString() : null };\n            try {\n              if (editingAnnouncement) await api.patch(`/admin/announcements/${editingAnnouncement}`, payload);\n              else await api.post(\"/admin/announcements\", { ...payload, active: true });\n              setAdminNotice(editingAnnouncement ? \"Announcement updated.\" : \"Announcement published.\");\n              setEditingAnnouncement(null); setAnnouncementTitle(\"\"); setAnnouncementBody(\"\"); setAnnouncementDays(\"\"); setAnnouncements(await api.get<any[]>(\"/admin/announcements\"));\n            }\n            catch (e: any) { setAdminNotice(e?.message || \"Could not save announcement.\"); }\n          }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 385,
+    "event": "onPress",
+    "handler": "() => { setEditingAnnouncement(null); setAnnouncementTitle(\"\"); setAnnouncementBody(\"\"); setAnnouncementDays(\"\"); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 386,
+    "event": "onPress",
+    "handler": "() => { setEditingAnnouncement(announcement.id); setAnnouncementTitle(announcement.title || \"\"); setAnnouncementBody(announcement.body || \"\"); setAnnouncementAudience(announcement.audience || \"all\"); setAnnouncementDays(\"\"); setAdminNotice(\"Editing announcement. Leave days blank to keep it until deactivated.\"); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 386,
+    "event": "onPress",
+    "handler": "async () => { try { await api.patch(`/admin/announcements/${announcement.id}`, { active: !announcement.active }); setAnnouncements(await api.get<any[]>(\"/admin/announcements\")); } catch (e: any) { setAdminNotice(e?.message || \"Could not update announcement.\"); } }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 393,
+    "event": "onPress",
+    "handler": "() => { setImportShopId(shop.id); setImportPreview(null); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 396,
+    "event": "onPress",
+    "handler": "async () => { if (!importShopId) { setAdminNotice(\"Select a store first.\"); return; } try { const blob = await api.downloadShopImportTemplate(importShopId); if (typeof document === \"undefined\" || typeof URL === \"undefined\") { setAdminNotice(\"Template download is supported in the web admin. On native, use the project web admin for this download.\"); return; } const url = URL.createObjectURL(blob); const a = document.createElement(\"a\"); a.href = url; a.download = \"come-in-grocery-import-template.csv\"; a.click(); URL.revokeObjectURL(url); setAdminNotice(\"Template downloaded.\"); } catch(e:any) { setAdminNotice(e?.message || \"Template download failed.\"); } }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 397,
+    "event": "onPress",
+    "handler": "async () => { setImportBusy(true); try { const [h,a] = await Promise.all([api.get<any[]>(\"/admin/catalog-import-history\"),api.get<any[]>(\"/admin/catalog-price-audit\")]); setImportHistory(h); setPriceAudit(a); setAdminNotice(\"Import history and price audit refreshed.\"); } catch(e:any) { setAdminNotice(e?.message || \"History/audit could not be loaded.\"); } finally { setImportBusy(false); } }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 402,
+    "event": "onPress",
+    "handler": "async () => { if(!importShopId || !importFile){setAdminNotice(\"Select a store and a CSV/XLS/XLSX file first.\");return;} setImportBusy(true);setImportPreview(null);try{const result=await api.importShopProducts(importShopId,importFile,importFile.name,false);setImportPreview(result);setAdminNotice(result.applied?\"Server returned an applied result.\":result.errors?.length?\"Preview found invalid rows. Correct the file before importing.\":\"Preview completed. No changes have been committed.\");}catch(e:any){setAdminNotice(e?.message||\"Import preview failed.\");}finally{setImportBusy(false);}}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 403,
+    "event": "onPress",
+    "handler": "() => { if(!importShopId||!importFile||!importPreview||importPreview.errors?.length||!importPreview.valid_rows){setAdminNotice(\"Run a successful preview with no errors before confirming import.\");return;} Alert.alert(\"Confirm catalogue import\", `Apply ${importPreview.valid_rows} validated row(s) to ${shops.find((shop)=>shop.id===importShopId)?.name || \"the selected store\"}? This may create listings and update prices.`, [{text:\"Cancel\",style:\"cancel\"},{text:\"Import now\",style:\"destructive\",onPress:async()=>{setImportBusy(true);try{const result=await api.importShopProducts(importShopId,importFile,importFile.name,true);setImportPreview(result);setAdminNotice(result.applied?`Import completed: ${result.created||0} created, ${result.updated||0} updated.`:(result.errors?.[0]?.error||\"Import was not committed.\"));if(result.applied){setImportHistory(await api.get<any[]>(\"/admin/catalog-import-history\"));setPriceAudit(await api.get<any[]>(\"/admin/catalog-price-audit\"));setImportFile(null);}}catch(e:any){setAdminNotice(e?.message||\"Import failed; check server response and history.\");}finally{setImportBusy(false);}}}]);}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 427,
+    "event": "onPress",
+    "handler": "async()=>{try{const result=await api.get<any>(\"/admin/referrals\");setReferralRows(result.referrals||[]);setReferralRewards(result.rewards||[]);setAdminNotice(\"Referral queue refreshed.\");}catch(e:any){setAdminNotice(e?.message||\"Could not refresh referral queue.\");}}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 433,
+    "event": "onPress",
+    "handler": "()=>Alert.alert(\"Verify referral eligibility\", \"Only continue if you have independently verified customer contact, confirmed payment, and completed refund/return and fraud checks.\", [{text:\"Cancel\",style:\"cancel\"},{text:\"I verified all checks\",onPress:async()=>{try{await api.patch(`/admin/referrals/${r.id}/review`,{decision:\"approve\",note:\"Admin verified contact, payment, refund/return and fraud checks.\",contact_verified:true,contact_verification_method:\"authorized_manual_check\",payment_confirmed:true,refund_return_checks_passed:true});setAdminNotice(\"Referral approved after admin attestation.\");const result=await api.get<any>(\"/admin/referrals\");setReferralRows(result.referrals||[]);setReferralRewards(result.rewards||[]);}catch(e:any){setAdminNotice(e?.message||\"Referral approval failed.\");}}}])",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 434,
+    "event": "onPress",
+    "handler": "()=>Alert.alert(\"Reject referral\", \"Reject this referral qualification?\", [{text:\"Cancel\",style:\"cancel\"},{text:\"Reject\",style:\"destructive\",onPress:async()=>{try{await api.patch(`/admin/referrals/${r.id}/review`,{decision:\"reject\",note:\"Rejected by admin review.\"});const result=await api.get<any>(\"/admin/referrals\");setReferralRows(result.referrals||[]);setReferralRewards(result.rewards||[]);setAdminNotice(\"Referral rejected and audited.\");}catch(e:any){setAdminNotice(e?.message||\"Referral rejection failed.\");}}}])",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 441,
+    "event": "onPress",
+    "handler": "()=>Alert.alert(\"Approve reward\", \"Approve the single ₹500 reward only after validating all 10 qualified referrals and fraud review.\", [{text:\"Cancel\",style:\"cancel\"},{text:\"Approve reward\",onPress:async()=>{try{await api.patch(`/admin/referral-rewards/${r.id}`,{decision:\"approve\",note:\"10 qualifying customers verified.\"});const result=await api.get<any>(\"/admin/referrals\");setReferralRows(result.referrals||[]);setReferralRewards(result.rewards||[]);setAdminNotice(\"Reward approved; ledger credit recorded.\");}catch(e:any){setAdminNotice(e?.message||\"Reward approval failed.\");}}}])",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 442,
+    "event": "onPress",
+    "handler": "async()=>{try{await api.patch(`/admin/referral-rewards/${r.id}`,{decision:\"available\",note:\"Reward cleared for use.\"});const result=await api.get<any>(\"/admin/referrals\");setReferralRewards(result.rewards||[]);setAdminNotice(\"Reward marked available in the ledger.\");}catch(e:any){setAdminNotice(e?.message||\"Could not release reward.\");}}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 443,
+    "event": "onChangeText",
+    "handler": "setReferralPayoutReference",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 443,
+    "event": "onPress",
+    "handler": "async()=>{try{await api.patch(`/admin/referral-rewards/${r.id}`,{decision:\"processing\",note:\"Manual payout processing started.\"});const result=await api.get<any>(\"/admin/referrals\");setReferralRewards(result.rewards||[]);}catch(e:any){setAdminNotice(e?.message||\"Could not update payout status.\");}}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 443,
+    "event": "onPress",
+    "handler": "async()=>{if(!referralPayoutReference.trim()){setAdminNotice(\"Enter a verified bank payout reference first.\");return;}try{await api.patch(`/admin/referral-rewards/${r.id}`,{decision:\"paid\",note:\"Manual bank payout verified.\",payout_reference:referralPayoutReference.trim()});setReferralPayoutReference(\"\");const result=await api.get<any>(\"/admin/referrals\");setReferralRewards(result.rewards||[]);setAdminNotice(\"Payout reference recorded; reward marked paid.\");}catch(e:any){setAdminNotice(e?.message||\"Could not mark reward paid.\");}}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 453,
+    "event": "onPress",
+    "handler": "async () => { try { const blob = await api.downloadRetailPriceImportTemplate(); if (typeof document === \"undefined\" || typeof URL === \"undefined\") { setAdminNotice(\"Template download is supported in the web admin.\"); return; } const url = URL.createObjectURL(blob); const a = document.createElement(\"a\"); a.href = url; a.download = \"come-in-retail-price-template.csv\"; a.click(); URL.revokeObjectURL(url); setAdminNotice(\"Retail Price Import template downloaded.\"); } catch(e:any) { setAdminNotice(e?.message || \"Retail template download failed.\"); } }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 454,
+    "event": "onPress",
+    "handler": "async () => { setImportBusy(true); try { setRetailHistory(await api.get<any[]>(\"/admin/retail-price-import/history\")); setAdminNotice(\"Retail import history refreshed.\"); } catch(e:any) { setAdminNotice(e?.message || \"Retail history could not be loaded.\"); } finally { setImportBusy(false); } }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 459,
+    "event": "onPress",
+    "handler": "async()=>{ if(!retailFile){setAdminNotice(\"Choose a retailer CSV/XLS/XLSX file first.\");return;} setImportBusy(true);setRetailPreview(null);try{const result=await api.importRetailPrices(retailFile,retailFile.name,false);setRetailPreview(result);setAdminNotice(result.errors?.length?\"Retail preview found invalid rows; correct them before importing.\":\"Retail preview complete. No changes have been committed.\");}catch(e:any){setAdminNotice(e?.message||\"Retail preview failed.\");}finally{setImportBusy(false);}}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 460,
+    "event": "onPress",
+    "handler": "()=>{if(!retailFile||!retailPreview||retailPreview.errors?.length||!retailPreview.valid_rows){setAdminNotice(\"Run a successful preview with no errors before confirming.\");return;} Alert.alert(\"Confirm Retail Price Import\",`Apply ${retailPreview.valid_rows} retailer offer row(s)? Existing offers update only within the same retailer and retailer shop ID.`,[{text:\"Cancel\",style:\"cancel\"},{text:\"Import now\",style:\"destructive\",onPress:async()=>{setImportBusy(true);try{const result=await api.importRetailPrices(retailFile,retailFile.name,true);setRetailPreview(result);setAdminNotice(result.applied?`Retail import complete: ${result.created||0} created, ${result.updated||0} updated.`:(result.errors?.[0]?.error||\"Import was not committed.\"));if(result.applied){setRetailHistory(await api.get<any[]>(\"/admin/retail-price-import/history\"));setRetailFile(null);}}catch(e:any){setAdminNotice(e?.message||\"Retail import failed.\");}finally{setImportBusy(false);}}}]);}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 476,
+    "event": "onChangeText",
+    "handler": "setMasterName",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 477,
+    "event": "onChangeText",
+    "handler": "setMasterBrand",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 478,
+    "event": "onChangeText",
+    "handler": "setMasterCategory",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 479,
+    "event": "onChangeText",
+    "handler": "setMasterUnit",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 480,
+    "event": "onChangeText",
+    "handler": "setMasterSource",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 481,
+    "event": "onPress",
+    "handler": "() => { void createMasterProduct(); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 482,
+    "event": "onChangeText",
+    "handler": "setMasterQuery",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 483,
+    "event": "onPress",
+    "handler": "async () => { try { setMasterProducts(await api.get<any[]>(`/catalog/master-products?q=${encodeURIComponent(masterQuery)}&limit=100`)); } catch (e: any) { setAdminNotice(e?.message || \"Catalog search failed.\"); } }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 498,
+    "event": "onPress",
+    "handler": "onPress",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/auth.tsx",
+    "line": 84,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/auth.tsx",
+    "line": 110,
+    "event": "onChangeText",
+    "handler": "setName",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/auth.tsx",
+    "line": 121,
+    "event": "onChangeText",
+    "handler": "setEmail",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/auth.tsx",
+    "line": 134,
+    "event": "onChangeText",
+    "handler": "setPhone",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/auth.tsx",
+    "line": 146,
+    "event": "onChangeText",
+    "handler": "setPassword",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/auth.tsx",
+    "line": 161,
+    "event": "onPress",
+    "handler": "submit",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/auth.tsx",
+    "line": 174,
+    "event": "onPress",
+    "handler": "() => router.push(\"/password-reset\" as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/auth.tsx",
+    "line": 181,
+    "event": "onPress",
+    "handler": "() => setMode(mode === \"signin\" ? \"signup\" : \"signin\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 110,
+    "event": "onPress",
+    "handler": "() => router.push({ pathname: \"/auth\", params: { next: \"/become-seller\" } })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 223,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 238,
+    "event": "onPress",
+    "handler": "pickLogo",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 259,
+    "event": "onChange",
+    "handler": "onFile",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 265,
+    "event": "onChange",
+    "handler": "(v) => field(\"name\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 266,
+    "event": "onChange",
+    "handler": "(v) => field(\"owner_name\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 267,
+    "event": "onChange",
+    "handler": "(v) => field(\"tagline\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 272,
+    "event": "onChange",
+    "handler": "(v) => field(\"description\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 275,
+    "event": "onChange",
+    "handler": "(v) => field(\"business_registration\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 278,
+    "event": "onChange",
+    "handler": "(v) => field(\"phone\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 279,
+    "event": "onChange",
+    "handler": "(v) => field(\"alt_phone\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 280,
+    "event": "onChange",
+    "handler": "(v) => field(\"whatsapp\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 283,
+    "event": "onChange",
+    "handler": "(v) => field(\"area\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 284,
+    "event": "onChange",
+    "handler": "(v) => field(\"address\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 287,
+    "event": "onChange",
+    "handler": "(v) => field(\"city\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 290,
+    "event": "onChange",
+    "handler": "(v) => field(\"state\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 293,
+    "event": "onChange",
+    "handler": "(v) => field(\"pincode\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 298,
+    "event": "onChange",
+    "handler": "(v) => field(\"latitude\", v ? Number(v) : undefined)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 301,
+    "event": "onChange",
+    "handler": "(v) => field(\"longitude\", v ? Number(v) : undefined)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 317,
+    "event": "onChange",
+    "handler": "(v) => field(\"shop_type\", v as Shop[\"shop_type\"])",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 326,
+    "event": "onPress",
+    "handler": "() => field(\"offline_shop_type\", value)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 331,
+    "event": "onChange",
+    "handler": "(v) => field(\"hours\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 336,
+    "event": "onChange",
+    "handler": "(v) => field(\"delivery_radius_km\", v ? Number(v) : undefined)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 343,
+    "event": "onChange",
+    "handler": "(v) => field(\"delivery_available\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 349,
+    "event": "onChange",
+    "handler": "(v) => field(\"pickup_available\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 355,
+    "event": "onToggle",
+    "handler": "togglePayment",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 356,
+    "event": "onToggle",
+    "handler": "togglePayment",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 357,
+    "event": "onToggle",
+    "handler": "togglePayment",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 358,
+    "event": "onToggle",
+    "handler": "togglePayment",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 359,
+    "event": "onToggle",
+    "handler": "togglePayment",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 362,
+    "event": "onChange",
+    "handler": "(v) => field(\"public_upi\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 382,
+    "event": "onPress",
+    "handler": "submit",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 396,
+    "event": "onPress",
+    "handler": "() => router.push(\"/seller/products\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 397,
+    "event": "onPress",
+    "handler": "() => router.push(\"/seller/orders\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 412,
+    "event": "onPress",
+    "handler": "onPress",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 450,
+    "event": "onChangeText",
+    "handler": "onChange",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 477,
+    "event": "onValueChange",
+    "handler": "onChange",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 501,
+    "event": "onPress",
+    "handler": "() => onChange(o.value)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 542,
+    "event": "onPress",
+    "handler": "() => onToggle(code)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 571,
+    "event": "onPress",
+    "handler": "onPress",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/category/[slug].tsx",
+    "line": 25,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/category/[slug].tsx",
+    "line": 48,
+    "event": "onPress",
+    "handler": "() => router.replace(`/category/${item.id}`)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 576,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 591,
+    "event": "onPress",
+    "handler": "() => setRole(item)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 602,
+    "event": "onPress",
+    "handler": "() => void chooseProductPhoto(\"camera\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 603,
+    "event": "onPress",
+    "handler": "() => void chooseProductPhoto(\"gallery\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 608,
+    "event": "onPress",
+    "handler": "() => void searchPhotoCatalog()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 609,
+    "event": "onPress",
+    "handler": "() => void chooseProductPhoto(\"gallery\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 610,
+    "event": "onPress",
+    "handler": "() => { setPhotoAsset(null); setPhotoMatches([]); setPhotoClues(\"\"); setPhotoNotice(\"\"); setPhotoError(\"\"); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 619,
+    "event": "onPress",
+    "handler": "() => confirmPhotoProduct(product)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 633,
+    "event": "onPress",
+    "handler": "() => addToPlan(product)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 634,
+    "event": "onPress",
+    "handler": "() => addToPlan(product, variant.id)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 649,
+    "event": "onPress",
+    "handler": "() => void send(retryQuery)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 661,
+    "event": "onPress",
+    "handler": "() => substitutePartyLine(line)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 662,
+    "event": "onPress",
+    "handler": "() => setPlanItems((rows) => rows.map((row) => row.product.id === line.product.id && row.variantId === line.variantId ? { ...row, quantity: Math.max(min, row.quantity - step), verifiedTotal: undefined } : row))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 664,
+    "event": "onPress",
+    "handler": "() => setPlanItems((rows) => rows.map((row) => row.product.id === line.product.id && row.variantId === line.variantId ? { ...row, quantity: Math.min(row.quantity + step, max), verifiedTotal: undefined } : row))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 665,
+    "event": "onPress",
+    "handler": "() => setPlanItems((rows) => rows.filter((row) => !(row.product.id === line.product.id && row.variantId === line.variantId)))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 670,
+    "event": "onPress",
+    "handler": "() => void transferPlanToCart()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 678,
+    "event": "onPress",
+    "handler": "() => setFeedbackRating(\"positive\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 679,
+    "event": "onPress",
+    "handler": "() => setFeedbackRating(\"negative\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 681,
+    "event": "onChangeText",
+    "handler": "setFeedbackComment",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 682,
+    "event": "onPress",
+    "handler": "() => void submitChandFeedback()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 689,
+    "event": "onPress",
+    "handler": "openHelp",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 702,
+    "event": "onPress",
+    "handler": "() => { setSelectedOrder(o); setSupportCategory(o.refund_status ? \"refund\" : \"order\"); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 711,
+    "event": "onPress",
+    "handler": "() => setSupportCategory(cat as any)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 712,
+    "event": "onChangeText",
+    "handler": "setSupportMessage",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 719,
+    "event": "onPress",
+    "handler": "() => setConfirmSupport(false)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 720,
+    "event": "onPress",
+    "handler": "() => void submitSupport()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 724,
+    "event": "onPress",
+    "handler": "() => void loadHelpData()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 725,
+    "event": "onPress",
+    "handler": "() => { setSupportRequestId((current) => current || `support-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`); setConfirmSupport(true); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 736,
+    "event": "onPress",
+    "handler": "() => send(suggestion)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 742,
+    "event": "onPress",
+    "handler": "() => setVoiceLanguage(value)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 746,
+    "event": "onPress",
+    "handler": "() => void startVoiceRecording()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 747,
+    "event": "onPress",
+    "handler": "() => void stopAndTranscribeVoice()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 748,
+    "event": "onPress",
+    "handler": "() => void cancelVoiceRecording()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 757,
+    "event": "onChangeText",
+    "handler": "setDraft",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 757,
+    "event": "onSubmitEditing",
+    "handler": "() => send()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 758,
+    "event": "onPress",
+    "handler": "() => { setVoiceTypingHint(true); messageInputRef.current?.focus(); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 761,
+    "event": "onPress",
+    "handler": "() => send()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 768,
+    "event": "onPress",
+    "handler": "() => { setPartyOccasion(occasion); setPartyServing(PARTY_OCCASION_SERVING_ASSUMPTIONS[occasion]); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 771,
+    "event": "onChangeText",
+    "handler": "(value) => setPartyGuests(value.replace(/[^0-9]/g, \"\").slice(0, 3))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 772,
+    "event": "onChangeText",
+    "handler": "(value) => setPartyBudget(value.replace(/[^0-9]/g, \"\").slice(0, 6))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 776,
+    "event": "onChangeText",
+    "handler": "(v) => setPartyServing((a) => ({ ...a, snacksGramsPerGuest: Number(v.replace(/[^0-9]/g, \"\")) }))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 777,
+    "event": "onChangeText",
+    "handler": "(v) => setPartyServing((a) => ({ ...a, drinksMlPerGuest: Number(v.replace(/[^0-9]/g, \"\")) }))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 780,
+    "event": "onChangeText",
+    "handler": "(v) => setPartyServing((a) => ({ ...a, bakeryPiecesPerGuest: Number(v.replace(/[^0-9]/g, \"\")) }))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 781,
+    "event": "onChangeText",
+    "handler": "(v) => setPartyServing((a) => ({ ...a, fruitGramsPerGuest: Number(v.replace(/[^0-9]/g, \"\")) }))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 784,
+    "event": "onPress",
+    "handler": "() => void generatePartyPlan()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 787,
+    "event": "onPress",
+    "handler": "() => setPartyOpen((open) => !open)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 788,
+    "event": "onPress",
+    "handler": "() => router.push(\"/(tabs)/categories\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 789,
+    "event": "onPress",
+    "handler": "() => router.push(\"/restaurant\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 790,
+    "event": "onPress",
+    "handler": "() => router.push(\"/services\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 791,
+    "event": "onPress",
+    "handler": "() => router.push(\"/orders\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 792,
+    "event": "onPress",
+    "handler": "() => router.push(\"/request\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 216,
+    "event": "onPress",
+    "handler": "() => { if (placed.payment_uri) Linking.openURL(placed.payment_uri).catch(() => setError(\"Could not open a UPI app. Copy the shop UPI ID from the shop page and pay manually; the order remains unpaid until the shop verifies receipt.\")); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 222,
+    "event": "onChange",
+    "handler": "setPlaced",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 224,
+    "event": "onPress",
+    "handler": "() => router.replace(\"/(tabs)\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 227,
+    "event": "onPress",
+    "handler": "() => router.replace(\"/orders\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 237,
+    "event": "onPress",
+    "handler": "() => { if (buyNowLine) clearBuyNow(); router.back(); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 245,
+    "event": "onPress",
+    "handler": "() => setFulfillment(\"delivery\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 246,
+    "event": "onPress",
+    "handler": "() => setFulfillment(\"pickup\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 252,
+    "event": "onChange",
+    "handler": "setAddress",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 254,
+    "event": "onChange",
+    "handler": "setName",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 255,
+    "event": "onChange",
+    "handler": "setPhone",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 256,
+    "event": "onChange",
+    "handler": "setNotes",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 259,
+    "event": "onPress",
+    "handler": "() => setPaymentMethod(\"cod\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 264,
+    "event": "onPress",
+    "handler": "() => setPaymentMethod(\"upi\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 269,
+    "event": "onPress",
+    "handler": "() => setPaymentMethod(shopOptions.paymentMethods.includes(\"cash_shop\") ? \"cash_shop\" : \"pickup\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 273,
+    "event": "onPress",
+    "handler": "() => setPaymentMethod(\"online_razorpay\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 280,
+    "event": "onPress",
+    "handler": "() => { setUseRewards((current) => !current); setQuote(null); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 304,
+    "event": "onPress",
+    "handler": "place",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 330,
+    "event": "onChangeText",
+    "handler": "onChange",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/delivery-address.tsx",
+    "line": 81,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/delivery-address.tsx",
+    "line": 97,
+    "event": "onPress",
+    "handler": "requestCurrentLocation",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/delivery-address.tsx",
+    "line": 112,
+    "event": "onChangeText",
+    "handler": "setInput",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/delivery-address.tsx",
+    "line": 118,
+    "event": "onSubmitEditing",
+    "handler": "handleSave",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/delivery-address.tsx",
+    "line": 128,
+    "event": "onPress",
+    "handler": "() => setInput(q.value)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/delivery-address.tsx",
+    "line": 158,
+    "event": "onPress",
+    "handler": "handleSave",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/delivery-partner.tsx",
+    "line": 78,
+    "event": "onChangeText",
+    "handler": "setter",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/delivery-partner.tsx",
+    "line": 87,
+    "event": "onPress",
+    "handler": "startOtp",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/delivery-partner.tsx",
+    "line": 96,
+    "event": "onPress",
+    "handler": "() => setConsent(!consent)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/delivery-partner.tsx",
+    "line": 97,
+    "event": "onPress",
+    "handler": "saveDraft",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/delivery-partner.tsx",
+    "line": 98,
+    "event": "onPress",
+    "handler": "shareReferral",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/language.tsx",
+    "line": 28,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/language.tsx",
+    "line": 53,
+    "event": "onPress",
+    "handler": "() => setSelected(opt.code)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/language.tsx",
+    "line": 86,
+    "event": "onPress",
+    "handler": "handleSave",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/notifications.tsx",
+    "line": 50,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/notifications.tsx",
+    "line": 53,
+    "event": "onPress",
+    "handler": "readAll",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/notifications.tsx",
+    "line": 61,
+    "event": "onPress",
+    "handler": "() => void open(n)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/order-tracking.tsx",
+    "line": 41,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/order-tracking.tsx",
+    "line": 46,
+    "event": "onPress",
+    "handler": "() => { setLoading(true); void load(); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/orders.tsx",
+    "line": 168,
+    "event": "onPress",
+    "handler": "() => router.push({ pathname: \"/auth\", params: { next: \"/orders\" } })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/orders.tsx",
+    "line": 179,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/orders.tsx",
+    "line": 181,
+    "event": "onPress",
+    "handler": "() => void loadOrders()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/orders.tsx",
+    "line": 193,
+    "event": "onPress",
+    "handler": "() => router.push(item.kind === \"restaurant\" ? { pathname: \"/restaurant/orders/[id]\", params: { id: item.id } } : { pathname: \"/order-tracking\", params: { id: item.id, kind: \"grocery\" } })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/orders.tsx",
+    "line": 206,
+    "event": "onChange",
+    "handler": "(updated) => setOrders((current) => current.map((row) => row.id === item.id && row.kind === \"grocery\" ? { ...row, ...updated, kind: \"grocery\" } : row))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/orders.tsx",
+    "line": 208,
+    "event": "onPress",
+    "handler": "() => router.push({ pathname: \"/chand\", params: { openHelp: \"1\", order_id: item.id, order_kind: item.kind } } as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/orders.tsx",
+    "line": 212,
+    "event": "onPress",
+    "handler": "() => repeatOrder(item)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/orders.tsx",
+    "line": 215,
+    "event": "onPress",
+    "handler": "() => void cancelOrder(item)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/password-reset.tsx",
+    "line": 6,
+    "event": "onChangeText",
+    "handler": "setEmail",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/password-reset.tsx",
+    "line": 6,
+    "event": "onPress",
+    "handler": "request",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/password-reset.tsx",
+    "line": 6,
+    "event": "onChangeText",
+    "handler": "setToken",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/password-reset.tsx",
+    "line": 6,
+    "event": "onChangeText",
+    "handler": "setPassword",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/password-reset.tsx",
+    "line": 6,
+    "event": "onPress",
+    "handler": "reset",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/password-reset.tsx",
+    "line": 6,
+    "event": "onPress",
+    "handler": "()=>router.replace('/auth' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/payment-methods.tsx",
+    "line": 14,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/payment-methods.tsx",
+    "line": 29,
+    "event": "onPress",
+    "handler": "() => router.push(\"/(tabs)/cart\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/payment-methods.tsx",
+    "line": 30,
+    "event": "onPress",
+    "handler": "() => router.push(\"/restaurant/cart\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 65,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 124,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 132,
+    "event": "onPress",
+    "handler": "() => router.push(\"/(tabs)/cart\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 144,
+    "event": "onError",
+    "handler": "() => setImageFailed(true)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 163,
+    "event": "onSave",
+    "handler": "(amount) => setAmount(product, amount)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 180,
+    "event": "onPress",
+    "handler": "() => { setSelectedVariantId(variant.id); setCartMessage(\"\"); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 235,
+    "event": "onPress",
+    "handler": "() => router.push(`/product/${listing.id}`)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 264,
+    "event": "onPress",
+    "handler": "() => router.push(`/product/${r.id}`)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 296,
+    "event": "onAdd",
+    "handler": "measured ? () => { addProduct(product); setCartMessage(\"\"); } : addSelectedToCart",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 297,
+    "event": "onInc",
+    "handler": "measured ? () => { increment(product.id, undefined, product); setCartMessage(\"\"); } : incrementSelected",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 298,
+    "event": "onDec",
+    "handler": "() => { decrement(product.id, selectedVariant?.id); setCartMessage(\"\"); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 302,
+    "event": "onPress",
+    "handler": "buyNow",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/referral-dashboard.tsx",
+    "line": 23,
+    "event": "onPress",
+    "handler": "()=>router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/referral-dashboard.tsx",
+    "line": 26,
+    "event": "onPress",
+    "handler": "()=>void copy()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/referral-dashboard.tsx",
+    "line": 27,
+    "event": "onPress",
+    "handler": "()=>void share()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/referral-dashboard.tsx",
+    "line": 28,
+    "event": "onPress",
+    "handler": "()=>void whatsapp()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/referral.tsx",
+    "line": 29,
+    "event": "onPress",
+    "handler": "() => router.push({pathname:\"/auth\",params:{mode:\"signup\",ref:typeof code===\"string\"?code:\"\"}})",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/referral.tsx",
+    "line": 30,
+    "event": "onPress",
+    "handler": "() => router.push({pathname:\"/auth\",params:{ref:typeof code===\"string\"?code:\"\"}})",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/request.tsx",
+    "line": 87,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/request.tsx",
+    "line": 113,
+    "event": "onChangeText",
+    "handler": "setPickup",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/request.tsx",
+    "line": 126,
+    "event": "onChangeText",
+    "handler": "setDrop",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/request.tsx",
+    "line": 134,
+    "event": "onPress",
+    "handler": "() => router.push(\"/delivery-address\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/request.tsx",
+    "line": 152,
+    "event": "onChangeText",
+    "handler": "setDesc",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/request.tsx",
+    "line": 168,
+    "event": "onPress",
+    "handler": "() => setSize(s)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/request.tsx",
+    "line": 204,
+    "event": "onChangeText",
+    "handler": "setCustomerPhone",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/request.tsx",
+    "line": 218,
+    "event": "onPress",
+    "handler": "submit",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/request.tsx",
+    "line": 248,
+    "event": "onPress",
+    "handler": "() => {\n                setSubmitted(false);\n                router.back();\n              }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/[id].tsx",
+    "line": 16,
+    "event": "onPress",
+    "handler": "()=>router.replace('/restaurant' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/[id].tsx",
+    "line": 24,
+    "event": "onPress",
+    "handler": "()=>setVariantChoice(prev=>({...prev,[item.id]:v.id}))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/[id].tsx",
+    "line": 25,
+    "event": "onPress",
+    "handler": "()=>setAddonChoice(prev=>({...prev,[item.id]:checked?(prev[item.id]||[]).filter(x=>x!==a.id):[...(prev[item.id]||[]),a.id]}))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/[id].tsx",
+    "line": 26,
+    "event": "onPress",
+    "handler": "()=>add(item)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/[id].tsx",
+    "line": 28,
+    "event": "onPress",
+    "handler": "()=>router.push('/restaurant/cart' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/cart.tsx",
+    "line": 7,
+    "event": "onPress",
+    "handler": "()=>router.push('/restaurant' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/cart.tsx",
+    "line": 7,
+    "event": "onPress",
+    "handler": "()=>update(row.quantity===1?lines.filter(x=>x.itemId!==row.itemId):lines.map(x=>x.itemId===row.itemId?{...x,quantity:x.quantity-1}:x))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/cart.tsx",
+    "line": 7,
+    "event": "onPress",
+    "handler": "()=>update(lines.map(x=>x.itemId===row.itemId?{...x,quantity:x.quantity+1}:x))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/cart.tsx",
+    "line": 7,
+    "event": "onPress",
+    "handler": "()=>update(lines.filter(x=>x.itemId!==row.itemId))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/cart.tsx",
+    "line": 7,
+    "event": "onPress",
+    "handler": "()=>router.push('/restaurant/checkout' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/categories.tsx",
+    "line": 10,
+    "event": "onPress",
+    "handler": "()=>setCuisine(c)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/categories.tsx",
+    "line": 10,
+    "event": "onPress",
+    "handler": "()=>router.push({pathname:'/restaurant/[id]',params:{id:r.id}} as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 182,
+    "event": "onPress",
+    "handler": "() => router.push({ pathname: '/auth', params: { next: '/restaurant/checkout' } } as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 185,
+    "event": "onChangeText",
+    "handler": "setContactName",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 187,
+    "event": "onChangeText",
+    "handler": "setContactPhone",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 191,
+    "event": "onPress",
+    "handler": "() => setFulfillment('delivery')",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 192,
+    "event": "onPress",
+    "handler": "() => setFulfillment('pickup')",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 198,
+    "event": "onPress",
+    "handler": "() => { setAddressId(saved.id); setAddress(formatAddress(saved)); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 201,
+    "event": "onPress",
+    "handler": "() => router.push('/addresses' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 202,
+    "event": "onPress",
+    "handler": "() => router.push('/delivery-address' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 209,
+    "event": "onPress",
+    "handler": "()=>setPaymentMethod('cod')",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 210,
+    "event": "onPress",
+    "handler": "()=>setPaymentMethod('pickup')",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 211,
+    "event": "onPress",
+    "handler": "()=>setPaymentMethod('razorpay')",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 213,
+    "event": "onPress",
+    "handler": "placeOrder",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 26,
+    "event": "onPress",
+    "handler": "()=>{setSelected(r);setName(r.name||'');setPhone(r.phone||'');setAddress(r.address||'');setCity(r.city||'');setDescription(r.description||'');setCuisines((r.cuisines||[]).join(', '));setImageURL(r.image_url||'');setPaymentMethods(r.payment_methods||['cod','pickup']);setMessage('')}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 26,
+    "event": "onPress",
+    "handler": "async()=>{try{const updated=await api.patch<R>(`/restaurants/${selected.id}/availability`,{available:!selected.available});setSelected(updated);setRestaurants(prev=>prev.map(r=>r.id===updated.id?updated:r))}catch(e:any){setMessage(e?.message||'Availability update failed.')}}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 27,
+    "event": "onChangeText",
+    "handler": "setter",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 27,
+    "event": "onPress",
+    "handler": "()=>togglePaymentMethod(m.id)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 27,
+    "event": "onChange",
+    "handler": "uploadLogo",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 27,
+    "event": "onPress",
+    "handler": "()=>imageInput.current?.click()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 27,
+    "event": "onPress",
+    "handler": "updateProfile",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 28,
+    "event": "onChange",
+    "handler": "uploadLogo",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 28,
+    "event": "onPress",
+    "handler": "()=>imageInput.current?.click()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 28,
+    "event": "onChangeText",
+    "handler": "setter",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 28,
+    "event": "onPress",
+    "handler": "()=>togglePaymentMethod(m.id)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 28,
+    "event": "onPress",
+    "handler": "create",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 29,
+    "event": "onChangeText",
+    "handler": "setItemName",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 29,
+    "event": "onChangeText",
+    "handler": "setItemPrice",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 29,
+    "event": "onPress",
+    "handler": "addItem",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 30,
+    "event": "onChangeText",
+    "handler": "v=>setPriceDrafts(prev=>({...prev,[item.id]:v}))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 30,
+    "event": "onPress",
+    "handler": "()=>updatePrice(item)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 30,
+    "event": "onPress",
+    "handler": "()=>toggleItem(item)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 30,
+    "event": "onPress",
+    "handler": "()=>deleteItem(item)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 31,
+    "event": "onPress",
+    "handler": "()=>setStatus(o,'accepted')",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 31,
+    "event": "onPress",
+    "handler": "()=>setStatus(o,'rejected')",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 31,
+    "event": "onPress",
+    "handler": "()=>setStatus(o,'preparing')",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 31,
+    "event": "onPress",
+    "handler": "()=>setStatus(o,'ready')",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 31,
+    "event": "onPress",
+    "handler": "()=>setStatus(o,o.fulfillment==='pickup'?'picked_up':'out_for_delivery')",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 31,
+    "event": "onPress",
+    "handler": "()=>setStatus(o,'delivered')",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 32,
+    "event": "onPress",
+    "handler": "()=>router.replace('/restaurant' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/index.tsx",
+    "line": 11,
+    "event": "onPress",
+    "handler": "()=>router.push('/restaurant/search' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/index.tsx",
+    "line": 11,
+    "event": "onPress",
+    "handler": "()=>router.push('/restaurant/search' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/index.tsx",
+    "line": 11,
+    "event": "onPress",
+    "handler": "()=>router.push({pathname:'/restaurant/categories',params:{cuisine:label}} as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/index.tsx",
+    "line": 11,
+    "event": "onPress",
+    "handler": "()=>router.push('/restaurant/search' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/index.tsx",
+    "line": 11,
+    "event": "onPress",
+    "handler": "()=>router.push({pathname:'/restaurant/[id]',params:{id:r.id}} as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/order-confirmation.tsx",
+    "line": 4,
+    "event": "onPress",
+    "handler": "()=>router.replace('/restaurant/orders' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/order-confirmation.tsx",
+    "line": 4,
+    "event": "onPress",
+    "handler": "()=>router.replace('/restaurant' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/orders/[id].tsx",
+    "line": 9,
+    "event": "onChange",
+    "handler": "setOrder",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/orders/[id].tsx",
+    "line": 9,
+    "event": "onPress",
+    "handler": "()=>router.push({pathname:'/order-tracking',params:{id:order.id,kind:'restaurant'}} as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/orders/[id].tsx",
+    "line": 9,
+    "event": "onPress",
+    "handler": "cancel",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/orders/[id].tsx",
+    "line": 9,
+    "event": "onPress",
+    "handler": "()=>setRating(n)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/orders/[id].tsx",
+    "line": 9,
+    "event": "onChangeText",
+    "handler": "setComment",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/orders/[id].tsx",
+    "line": 9,
+    "event": "onPress",
+    "handler": "review",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/orders/[id].tsx",
+    "line": 9,
+    "event": "onPress",
+    "handler": "()=>{if(order) router.push({pathname:'/restaurant/support',params:{order_id:order.id,order_kind:'restaurant'}} as never)}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/orders/index.tsx",
+    "line": 69,
+    "event": "onPress",
+    "handler": "() => router.push({ pathname: '/auth', params: { next: '/restaurant/orders' } } as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/orders/index.tsx",
+    "line": 85,
+    "event": "onPress",
+    "handler": "() => { void loadOrders(); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/orders/index.tsx",
+    "line": 93,
+    "event": "onPress",
+    "handler": "() => router.replace('/restaurant' as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/orders/index.tsx",
+    "line": 102,
+    "event": "onPress",
+    "handler": "() => router.push({ pathname: '/restaurant/orders/[id]', params: { id: order.id } } as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/search.tsx",
+    "line": 11,
+    "event": "onChangeText",
+    "handler": "setQ",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/search.tsx",
+    "line": 11,
+    "event": "onPress",
+    "handler": "()=>setQ('')",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/search.tsx",
+    "line": 11,
+    "event": "onPress",
+    "handler": "()=>setRatingOnly(v=>!v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/search.tsx",
+    "line": 11,
+    "event": "onPress",
+    "handler": "()=>setLowFeeOnly(v=>!v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/restaurant/search.tsx",
+    "line": 11,
+    "event": "onPress",
+    "handler": "()=>router.push({pathname:'/restaurant/[id]',params:{id:r.id}} as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/retail-prices.tsx",
+    "line": 57,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/retail-prices.tsx",
+    "line": 60,
+    "event": "onChangeText",
+    "handler": "setQuery",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/orders.tsx",
+    "line": 77,
+    "event": "onPress",
+    "handler": "() => router.push(\"/auth\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/orders.tsx",
+    "line": 93,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/orders.tsx",
+    "line": 106,
+    "event": "onValueChange",
+    "handler": "toggleAvailability",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/orders.tsx",
+    "line": 121,
+    "event": "onRefresh",
+    "handler": "async () => { setRefreshing(true); await load(); setRefreshing(false); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/orders.tsx",
+    "line": 138,
+    "event": "onPress",
+    "handler": "() => confirmUpiPayment(item.id)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/orders.tsx",
+    "line": 142,
+    "event": "onPress",
+    "handler": "() => advance(item.id, a.next)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 326,
+    "event": "onPress",
+    "handler": "() => router.push(\"/auth\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 344,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 351,
+    "event": "onPress",
+    "handler": "openMasterCatalog",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 355,
+    "event": "onPress",
+    "handler": "openNew",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 360,
+    "event": "onPress",
+    "handler": "() => { void downloadImportTemplate(); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 363,
+    "event": "onPress",
+    "handler": "() => importRef.current?.click()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 366,
+    "event": "onPress",
+    "handler": "() => catalogueImportRef.current?.click()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 370,
+    "event": "onChange",
+    "handler": "(e: any) => e.target.files?.[0] && previewImport(e.target.files[0])",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 372,
+    "event": "onChange",
+    "handler": "(e: any) => e.target.files?.length && uploadUniversalCatalogue(Array.from(e.target.files))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 382,
+    "event": "onPress",
+    "handler": "() => { if (!shopId) return; void api.getCatalogueImportJob(shopId, item.job_id).then(setCatalogueImportJob).catch((e: any) => setError(e?.message || \"Could not load import job.\")); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 398,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"name\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 399,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"brand\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 400,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"price\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 401,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"mrp\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 402,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"stock\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 404,
+    "event": "onPress",
+    "handler": "() => updateDraft(\"category_id\", category.id)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 405,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"category_id\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 406,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"unit\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 407,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"sku\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 408,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"barcode\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 409,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"sell_by\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 410,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"min_qty\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 411,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"step\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 412,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"max_qty\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 413,
+    "event": "onChangeText",
+    "handler": "(v) => updateDraft(\"description\", v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 415,
+    "event": "onPress",
+    "handler": "() => { void saveDraft().catch((e: any) => setError(e?.message || \"Could not save record edits.\")); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 416,
+    "event": "onPress",
+    "handler": "() => { void (async () => { if (Object.keys(record.seller_edited_fields || {}).length) await saveDraft(); await approve(); })().catch((e: any) => setError(e?.message || \"Record approval failed.\")); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 417,
+    "event": "onPress",
+    "handler": "() => { void reject().catch((e: any) => setError(e?.message || \"Record rejection failed.\")); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 422,
+    "event": "onPress",
+    "handler": "() => { if (!shopId) return; void api.bulkApproveCatalogueImportJob(shopId, catalogueImportJob.job_id).then(() => api.getCatalogueImportJob(shopId, catalogueImportJob.job_id)).then(setCatalogueImportJob).catch((e: any) => setError(e?.message || \"Bulk approval failed.\")); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 423,
+    "event": "onPress",
+    "handler": "() => { if (!shopId) return; void api.confirmCatalogueImportApply(shopId, catalogueImportJob.job_id).then((r) => setError(r.message)).catch((e: any) => setError(e?.message || \"Apply confirmation failed.\")); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 426,
+    "event": "onPress",
+    "handler": "() => setCatalogueImportJob(null)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 433,
+    "event": "onPress",
+    "handler": "() => { void applyImport(); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 434,
+    "event": "onPress",
+    "handler": "() => { setImportFile(null); setImportReport(null); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 442,
+    "event": "onChange",
+    "handler": "setMasterQuery",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 443,
+    "event": "onPress",
+    "handler": "searchMasterCatalog",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 450,
+    "event": "onPress",
+    "handler": "() => { setSelectedMaster(item); setSelectedVariantId(item.variants?.[0]?.id || \"\"); setLinkPrice(\"\"); setLinkMrp(\"\"); setLinkStock(\"0\"); setLinkAvailable(true); setLinkSellBy(\"pack\"); setLinkMeasure(null); setMasterError(null); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 462,
+    "event": "onPress",
+    "handler": "() => setSelectedVariantId(variant.id)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 467,
+    "event": "onChange",
+    "handler": "(next) => { setLinkSellBy(next.sell_by); setLinkMeasure(next.measure); if (next.stock !== undefined) setLinkStock(String(next.stock)); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 468,
+    "event": "onChange",
+    "handler": "setLinkPrice",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 469,
+    "event": "onChange",
+    "handler": "setLinkMrp",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 470,
+    "event": "onChange",
+    "handler": "setLinkStock",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 471,
+    "event": "onValueChange",
+    "handler": "setLinkAvailable",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 472,
+    "event": "onPress",
+    "handler": "linkMasterProduct",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 477,
+    "event": "onPress",
+    "handler": "() => { setMasterOpen(false); setMasterError(null); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 484,
+    "event": "onPress",
+    "handler": "() => fileRef.current?.click()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 494,
+    "event": "onChange",
+    "handler": "(e: any) => e.target.files?.[0] && uploadImage(e.target.files[0])",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 498,
+    "event": "onChange",
+    "handler": "setSuggestionQuery",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 502,
+    "event": "onPress",
+    "handler": "() => setEditing({ ...editing, name: item.name, category_id: item.category_id, brand: \"\", unit: \"\", price: 0, mrp: undefined, stock: 0, image_url: undefined, available: true })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 507,
+    "event": "onChange",
+    "handler": "(v) => setEditing({ ...editing, name: v })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 508,
+    "event": "onChange",
+    "handler": "(v) => setEditing({ ...editing, brand: v })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 509,
+    "event": "onChange",
+    "handler": "(v) => setEditing({ ...editing, unit: v })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 510,
+    "event": "onChange",
+    "handler": "(next) => setEditing({ ...editing, ...next, stock: next.stock ?? editing.stock })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 513,
+    "event": "onChange",
+    "handler": "(v) => setEditing({ ...editing, price: Number(v) || 0 })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 516,
+    "event": "onChange",
+    "handler": "(v) => setEditing({ ...editing, mrp: v ? Number(v) : undefined })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 519,
+    "event": "onChange",
+    "handler": "(v) => setEditing({ ...editing, stock: Number(v) || 0 })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 528,
+    "event": "onPress",
+    "handler": "() => setEditing({ ...editing, category_id: c.id })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 536,
+    "event": "onPress",
+    "handler": "() => setEditing({ ...editing, variants: [...(editing.variants || []), { id: `pack-${Date.now()}`, unit: \"\", price: 0, stock: 0, available: true }] })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 542,
+    "event": "onChange",
+    "handler": "(v) => setEditing({ ...editing, variants: (editing.variants || []).map((x, i) => i === index ? { ...x, unit: v } : x) })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 544,
+    "event": "onChange",
+    "handler": "(v) => setEditing({ ...editing, variants: (editing.variants || []).map((x, i) => i === index ? { ...x, price: Number(v) || 0 } : x) })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 545,
+    "event": "onChange",
+    "handler": "(v) => setEditing({ ...editing, variants: (editing.variants || []).map((x, i) => i === index ? { ...x, mrp: v ? Number(v) : undefined } : x) })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 546,
+    "event": "onChange",
+    "handler": "(v) => setEditing({ ...editing, variants: (editing.variants || []).map((x, i) => i === index ? { ...x, stock: Math.max(0, Number(v) || 0) } : x) })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 548,
+    "event": "onValueChange",
+    "handler": "(v) => setEditing({ ...editing, variants: (editing.variants || []).map((x, i) => i === index ? { ...x, available: v } : x) })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 549,
+    "event": "onPress",
+    "handler": "() => setEditing({ ...editing, variants: (editing.variants || []).filter((_, i) => i !== index) })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 556,
+    "event": "onChange",
+    "handler": "(v) => setEditing({ ...editing, description: v })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 562,
+    "event": "onValueChange",
+    "handler": "(v) => setEditing({ ...editing, available: v })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 567,
+    "event": "onPress",
+    "handler": "close",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 568,
+    "event": "onPress",
+    "handler": "save",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 587,
+    "event": "onPress",
+    "handler": "() => openEdit(p)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 588,
+    "event": "onPress",
+    "handler": "() => remove(p)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 614,
+    "event": "onChangeText",
+    "handler": "onChange",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/support.tsx",
+    "line": 98,
+    "event": "onPress",
+    "handler": "() => router.push(\"/auth\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/support.tsx",
+    "line": 103,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/support.tsx",
+    "line": 109,
+    "event": "onRefresh",
+    "handler": "refresh",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/support.tsx",
+    "line": 111,
+    "event": "onPress",
+    "handler": "refresh",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/support.tsx",
+    "line": 120,
+    "event": "onPress",
+    "handler": "() => void updateStatus(item)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller/support.tsx",
+    "line": 124,
+    "event": "onPress",
+    "handler": "refresh",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 23,
+    "event": "onPress",
+    "handler": "()=>router.replace(\"/(tabs)/account\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 25,
+    "event": "onPress",
+    "handler": "()=>router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 25,
+    "event": "onPress",
+    "handler": "refresh",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 26,
+    "event": "onRefresh",
+    "handler": "refresh",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 27,
+    "event": "onPress",
+    "handler": "()=>{setSelected(s.id);}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 27,
+    "event": "onChangeText",
+    "handler": "setStartDate",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 27,
+    "event": "onChangeText",
+    "handler": "setEndDate",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 27,
+    "event": "onPress",
+    "handler": "()=>{setLoading(true);load().catch((e:any)=>setNotice(e?.message||\"Failed\")).finally(()=>setLoading(false));}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 32,
+    "event": "onPress",
+    "handler": "()=>{api.post(`/earnings/orders/${o.order_kind}/${o.order_id}/cash-collected`,{confirmed:true,note:\"Shopkeeper confirmed cash was physically received.\"}).then(()=>refresh()).catch((e:any)=>setNotice(e?.message||\"Cash collection could not be confirmed.\"));}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 33,
+    "event": "onChangeText",
+    "handler": "setHolder",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 33,
+    "event": "onChangeText",
+    "handler": "setBankName",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 33,
+    "event": "onChangeText",
+    "handler": "setAccount",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 33,
+    "event": "onChangeText",
+    "handler": "setIfsc",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 33,
+    "event": "onPress",
+    "handler": "saveBank",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 34,
+    "event": "onChangeText",
+    "handler": "setSettlementKey",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 34,
+    "event": "onPress",
+    "handler": "requestSettlement",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 26,
+    "event": "onChangeText",
+    "handler": "set",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 31,
+    "event": "onPress",
+    "handler": "()=>router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 33,
+    "event": "onPress",
+    "handler": "async()=>{try{await api.patch(`/home-services/appointments/${a.id}/status`,{status:\"cancelled\",note:\"Cancelled by customer\"});loadDashboard();}catch(e:any){Alert.alert(\"Cancellation failed\",e?.message||\"Refresh and try again.\");}}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 34,
+    "event": "onChange",
+    "handler": "uploadProviderPhoto",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 34,
+    "event": "onPress",
+    "handler": "()=>fileInputRef.current?.click()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 34,
+    "event": "onPress",
+    "handler": "()=>updateAppointment(a,\"accepted\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 34,
+    "event": "onPress",
+    "handler": "()=>updateAppointment(a,\"rejected\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 34,
+    "event": "onPress",
+    "handler": "()=>updateAppointment(a,\"rescheduled\",reschedule[a.id])",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 35,
+    "event": "onPress",
+    "handler": "()=>setRegister(v=>!v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 36,
+    "event": "onPress",
+    "handler": "()=>setCashAfterService(v=>!v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 36,
+    "event": "onPress",
+    "handler": "()=>setCashVisitFee(v=>!v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 36,
+    "event": "onPress",
+    "handler": "registerProvider",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 37,
+    "event": "onPress",
+    "handler": "()=>Linking.openURL(`tel:${p.phone}`).catch(()=>Alert.alert(\"Calling unavailable\",\"Use a device that supports phone links.\"))",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 37,
+    "event": "onPress",
+    "handler": "()=>{setSelected(p);setService(\"\");setDate(\"\");setAddress(\"\");}",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 38,
+    "event": "onPress",
+    "handler": "book",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/services.tsx",
+    "line": 38,
+    "event": "onPress",
+    "handler": "()=>setSelected(null)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 74,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 159,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 211,
+    "event": "onPress",
+    "handler": "callShop",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 215,
+    "event": "onPress",
+    "handler": "waShop",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 221,
+    "event": "onPress",
+    "handler": "directions",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 225,
+    "event": "onPress",
+    "handler": "() => setAssistOpen(true)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 274,
+    "event": "onRequestClose",
+    "handler": "() => setAssistOpen(false)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 275,
+    "event": "onPress",
+    "handler": "() => setAssistOpen(false)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 276,
+    "event": "onStartShouldSetResponder",
+    "handler": "() => true",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 284,
+    "event": "onChangeText",
+    "handler": "setAssistReason",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 293,
+    "event": "onChangeText",
+    "handler": "setAssistPhone",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shop/[id].tsx",
+    "line": 297,
+    "event": "onPress",
+    "handler": "submitAssist",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 86,
+    "event": "onPress",
+    "handler": "() => router.back()",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 101,
+    "event": "onChangeText",
+    "handler": "setQuery",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 107,
+    "event": "onPress",
+    "handler": "() => setQuery(\"\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 118,
+    "event": "onPress",
+    "handler": "() => setTab(key)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 143,
+    "event": "onPress",
+    "handler": "() => setOfflineShopType(value as OfflineShopType | \"all\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 152,
+    "event": "onPress",
+    "handler": "() => setOpenNowOnly((v) => !v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 159,
+    "event": "onPress",
+    "handler": "() => setDeliveryOnly((v) => !v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 167,
+    "event": "onPress",
+    "handler": "() => router.push(\"/retail-prices\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 192,
+    "event": "onPress",
+    "handler": "() => router.push(`/shop/${item.id}`)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 218,
+    "event": "onPress",
+    "handler": "onPress",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 245,
+    "event": "onPress",
+    "handler": "onPress",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/AnnouncementBanner.tsx",
+    "line": 40,
+    "event": "onPress",
+    "handler": "() => setHidden((h) => [...h, a.id])",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/GroceryOnlinePayment.tsx",
+    "line": 60,
+    "event": "onPress",
+    "handler": "pay",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/GroceryOnlinePayment.tsx",
+    "line": 61,
+    "event": "onPress",
+    "handler": "cancel",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/MeasuredQuantityPicker.tsx",
+    "line": 64,
+    "event": "onPress",
+    "handler": "() => { setCustom(\"\"); setMessage(\"\"); setAmount(p); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/MeasuredQuantityPicker.tsx",
+    "line": 72,
+    "event": "onChangeText",
+    "handler": "applyCustom",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/MeasuredQuantityPicker.tsx",
+    "line": 78,
+    "event": "onPress",
+    "handler": "save",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/ProductCard.tsx",
+    "line": 46,
+    "event": "onPress",
+    "handler": "() => router.push(`/product/${product.id}`)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/ProductCard.tsx",
+    "line": 50,
+    "event": "onError",
+    "handler": "() => setImageFailed(true)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/ProductCard.tsx",
+    "line": 79,
+    "event": "onPress",
+    "handler": "() => router.push(`/product/${product.id}`)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/ProductCard.tsx",
+    "line": 89,
+    "event": "onAdd",
+    "handler": "() => addProduct(product)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/ProductCard.tsx",
+    "line": 90,
+    "event": "onInc",
+    "handler": "() => increment(product.id, undefined, product)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/ProductCard.tsx",
+    "line": 91,
+    "event": "onDec",
+    "handler": "() => decrement(product.id)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/ProductCard.tsx",
+    "line": 95,
+    "event": "onPress",
+    "handler": "buyNow",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/QuantityStepper.tsx",
+    "line": 30,
+    "event": "onPress",
+    "handler": "() => {\n          haptic();\n          onAdd();\n        }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/QuantityStepper.tsx",
+    "line": 51,
+    "event": "onPress",
+    "handler": "() => {\n          haptic();\n          onDec();\n        }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/QuantityStepper.tsx",
+    "line": 63,
+    "event": "onPress",
+    "handler": "() => {\n          haptic();\n          onInc();\n        }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/RestockAlertButton.tsx",
+    "line": 37,
+    "event": "onPress",
+    "handler": "toggle",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/SellerMeasuredFields.tsx",
+    "line": 36,
+    "event": "onPress",
+    "handler": "() => onChange({ sell_by: o.id, measure: o.id === \"pack\" ? null : m })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/SellerMeasuredFields.tsx",
+    "line": 44,
+    "event": "onChange",
+    "handler": "(v: string) => { setStockText(v); const n = Number(v); if (Number.isFinite(n) && n >= 0) onChange({ sell_by: sellBy, measure: m, stock: Math.round(n * 1000) }); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/SellerMeasuredFields.tsx",
+    "line": 46,
+    "event": "onChange",
+    "handler": "(v: string) => set({ min_qty: num(v) })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/SellerMeasuredFields.tsx",
+    "line": 47,
+    "event": "onChange",
+    "handler": "(v: string) => set({ max_qty: num(v) })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/SellerMeasuredFields.tsx",
+    "line": 48,
+    "event": "onChange",
+    "handler": "(v: string) => set({ step: num(v) })",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/SellerMeasuredFields.tsx",
+    "line": 50,
+    "event": "onChange",
+    "handler": "(v: string) => { setPresetText(v); set({ presets: v.split(\",\").map((x) => num(x)).filter((x) => x > 0).slice(0, 8) }); }",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/SellerMeasuredFields.tsx",
+    "line": 63,
+    "event": "onChangeText",
+    "handler": "onChange",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/error-boundary.tsx",
+    "line": 58,
+    "event": "onPress",
+    "handler": "handleReload",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/components/error-boundary.tsx",
+    "line": 66,
+    "event": "onPress",
+    "handler": "() => setShowDetails((v) => !v)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/restaurant/RestaurantCard.tsx",
+    "line": 6,
+    "event": "onPress",
+    "handler": "()=>router.push(`/restaurant/${restaurant.id}` as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/restaurant/RestaurantModeShell.tsx",
+    "line": 41,
+    "event": "onPress",
+    "handler": "() => router.replace(\"/(tabs)\")",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  },
+  {
+    "file": "src/restaurant/RestaurantNav.tsx",
+    "line": 6,
+    "event": "onPress",
+    "handler": "()=>router.push(route as never)",
+    "scope": "SOURCE VERIFIED binding only;runtime behavior UNVERIFIED",
+    "empty": false
+  }
+]

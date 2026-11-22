@@ -1,0 +1,225 @@
+{
+  "stage": "before-candidate-v2",
+  "started_UTC": "2026-11-20T06:40:47.973332+00:00",
+  "command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-B",
+    "-m",
+    "pytest",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-before-candidate-v2/test-copy/backend_test.py",
+    "-q",
+    "-n",
+    "0",
+    "-p",
+    "no:cacheprovider",
+    "-p",
+    "isolated_backend_guard",
+    "-c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/pytest.ini",
+    "--junitxml=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-before-candidate-v2/junit.xml",
+    "--basetemp=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-before-candidate-v2/pytest-tmp"
+  ],
+  "server_command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-B",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/isolated_backend_bootstrap.py"
+  ],
+  "database": "comein_disposable_test_completion_8f9ce786696f4185",
+  "port": 46053,
+  "test_copy_byte_identical": true,
+  "source_bindings_before": {
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/before/backend/server.py": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/candidate/backend_test.py": "d726af9acb2786c60d4ff993ff179c9e9e768da0f7fde441faecdf0f4eee7925",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30"
+  },
+  "dotenv_read": false,
+  "real_provider_calls": 0,
+  "native_validation": false,
+  "exit_code": 1,
+  "cases": [
+    {
+      "classname": "",
+      "name": "test_health",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_register_login_me",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_me_unauth",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_shop_mine",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_duplicate_shop_rejected",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_availability_blocked_until_approved",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_public_list_hides_pending",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_public_shop_detail_hidden_until_approved",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_admin_approves_shop",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_non_admin_cannot_approve",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_availability_after_approval",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_product_crud",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_product_validation",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_product_delete",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_order_create_guest",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_order_customer_and_seller_views",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_order_empty_items_rejected",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_request_anything",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_agent_assist",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_admin_orders",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_admin_endpoints_require_admin",
+      "status": "FAIL",
+      "message": "AssertionError: /status expected 403 got 200\nassert 200 == 403\n +  where 200 = <Response [200]>.status_code",
+      "detail": "s = <requests.sessions.Session object at 0x7f280e319510>\ncustomer = {'token': '[REDACTED_SYNTHETIC_JWT]', 'phone': '9999900000', 'role': 'customer', ...}, 'email': 'TEST_cust_d1359320@test.com', 'password': '[REDACTED_SYNTHETIC_FIXTURE]'}\n\n    def test_admin_endpoints_require_admin(s, customer):\n        for ep in [\"/admin/shops\", \"/admin/orders\", \"/admin/requests/anything\", \"/admin/requests/assist\", \"/status\"]:\n            r = s.get(f\"{API}{ep}\", headers=h(customer[\"token\"]))\n>           assert r.status_code == 403, f\"{ep} expected 403 got {r.status_code}\"\nE           AssertionError: /status expected 403 got 200\nE           assert 200 == 403\nE            +  where 200 = <Response [200]>.status_code\n\n../../../come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-before-candidate-v2/test-copy/backend_test.py:368: AssertionError"
+    },
+    {
+      "classname": "",
+      "name": "test_status_diagnostics_require_admin",
+      "status": "FAIL",
+      "message": "AssertionError: assert 200 == 401\n +  where 200 = <Response [200]>.status_code\n +    where <Response [200]> = get('http://127.0.0.1:46053/api/status', headers={})\n +      where get = <requests.sessions.Session object at 0x7f280e319510>.get",
+      "detail": "s = <requests.sessions.Session object at 0x7f280e319510>\nadmin = {'token': '[REDACTED_SYNTHETIC_JWT]'user': {'name': 'Come In Admin', 'email': 'completion.admin.b0130f83@example.com', 'phone': '', 'role': 'admin', ...}}\ncustomer = {'token': '[REDACTED_SYNTHETIC_JWT]', 'phone': '9999900000', 'role': 'customer', ...}, 'email': 'TEST_cust_d1359320@test.com', 'password': '[REDACTED_SYNTHETIC_FIXTURE]'}\nshop_owner = {'token': '[REDACTED_SYNTHETIC_JWT]', 'user': {'name': 'Owner', 'email': 'test_shop_2b5fdc0c@test.com', 'phone': '', 'role': 'customer', ...}}\n\n    def test_status_diagnostics_require_admin(s, admin, customer, shop_owner):\n        for headers, expected in [({}, 401), (h(customer[\"token\"]), 403), (h(shop_owner[\"token\"]), 403)]:\n>           assert s.get(f\"{API}/status\", headers=headers).status_code == expected\nE           AssertionError: assert 200 == 401\nE            +  where 200 = <Response [200]>.status_code\nE            +    where <Response [200]> = get('http://127.0.0.1:46053/api/status', headers={})\nE            +      where get = <requests.sessions.Session object at 0x7f280e319510>.get\n\n../../../come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-before-candidate-v2/test-copy/backend_test.py:373: AssertionError"
+    },
+    {
+      "classname": "",
+      "name": "test_image_upload",
+      "status": "SKIPPED",
+      "message": "Object storage unavailable",
+      "detail": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-before-candidate-v2/test-copy/backend_test.py:397: Object storage unavailable"
+    },
+    {
+      "classname": "",
+      "name": "test_image_upload_unauth",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    }
+  ],
+  "counts": {
+    "PASS": 21,
+    "FAIL": 2,
+    "ERROR": 0,
+    "SKIPPED": 1
+  },
+  "finished_UTC": "2026-11-20T06:40:52.285548+00:00",
+  "database_retained": true,
+  "database_drops": 0,
+  "isolated_backend_stopped": true,
+  "source_bindings_after": {
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/before/backend/server.py": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/candidate/backend_test.py": "d726af9acb2786c60d4ff993ff179c9e9e768da0f7fde441faecdf0f4eee7925",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30"
+  },
+  "source_changes": []
+}

@@ -1,0 +1,9 @@
+{
+  "file": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+  "before_SHA256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+  "after_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "only_changed_AST_symbol": "reset_password",
+  "all_other_top_level_AST_nodes_identical": true,
+  "existing_helper_unchanged": true,
+  "no_schema_or_API_route_change": true
+}

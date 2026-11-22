@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-11-20T12:05:09.749742+05:30",
+  "commands": [
+    "docker inspect Cmd/NetworkMode",
+    "docker start comein-onboarding-mongo",
+    "docker exec --user mongodb comein-onboarding-mongo prlimit --pid 1 --nofile=16384:16384",
+    "hello",
+    "buildInfo"
+  ],
+  "version": "7.0.45",
+  "hello": {
+    "isWritablePrimary": true,
+    "setName": "rs0",
+    "hosts": [
+      "127.0.0.1:27018"
+    ],
+    "primary": "127.0.0.1:27018"
+  },
+  "record_reads": 0,
+  "record_writes": 0,
+  "production_access": false,
+  "DB_drops": 0
+}

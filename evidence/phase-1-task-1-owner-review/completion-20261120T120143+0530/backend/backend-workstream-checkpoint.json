@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-11-20T12:06:30.122631+05:30",
+  "workstream": "Backend regression and justified legacy contract/fixture alignment",
+  "source_root": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+  "production_source_edited": false,
+  "legacy_original_SHA256": "a4e9c990c972790e4f6f6c9fd0aca31d280c3bdac5bc5a0ab9cc56d34d5935b9",
+  "scope": "Candidate only. Wait for root-integrated security fixes before final actual-source regression. Android/iOS/realRazorpay explicitly deferred.",
+  "optional_missing": [
+    "pypdf",
+    "openpyxl",
+    "Pillow",
+    "PyMuPDF",
+    "pytesseract"
+  ],
+  "system_tesseract_present": true,
+  "packages_installed": false
+}

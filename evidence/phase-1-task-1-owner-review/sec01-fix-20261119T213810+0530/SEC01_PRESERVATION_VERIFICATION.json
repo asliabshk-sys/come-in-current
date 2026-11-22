@@ -1,0 +1,31 @@
+{
+  "timestamp_Asia_Kolkata": "2026-11-19T21:53:23.407856+05:30",
+  "status": "PASS",
+  "protected_baseline_paths": 8746,
+  "unchanged_protected_paths": 8745,
+  "authorized_changed_paths": [
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "before_SHA256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+      "after_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07"
+    }
+  ],
+  "unauthorized_or_missing_paths": [],
+  "before_source_exact_backup_verified": true,
+  "after_source_snapshot_verified": true,
+  "top_level_AST_nodes": 434,
+  "unchanged_nodes_outside_reset_password": 433,
+  "only_changed_AST_symbol": "reset_password",
+  "API_signature_and_decorators_unchanged": true,
+  "existing_transaction_helper_SHA256": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30",
+  "helper_schema_config_UI_and_other_findings_unchanged": true,
+  "previous_211_manifest_members_unchanged": true,
+  "previous_master_manifest_SHA256": "24de73630bdcd28412a0b270e32ac5da7f88e61bb4ce85f2c2a405d17f563588",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "Git_tracked_and_staged_diff_empty": true,
+  "Git_status_outside_new_evidence_unchanged": true,
+  "limits": "Git doesnottracktheapplicationextraction;explicitpatch/contenthashescoverthesourcechange. Actualsecret.env/dependency/cacheexcludedhistoricalscopeisnotbackdatedproductioncustodyproof.",
+  "original_reports_checkpoints_ZIPs_and_inherited_patches_unchanged": true,
+  "Task2_commit_push_deploy_publish": false
+}

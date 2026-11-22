@@ -1,0 +1,5 @@
+yarn run v1.22.22
+$ expo lint
+env: load .env
+env: export EXPO_PUBLIC_BACKEND_URL
+Done in 0.42s.

@@ -1,0 +1,74 @@
+Traceback (most recent call last):
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/pool.py", line 446, in receive_message
+    return receive_message(self, request_id, self.max_message_size)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/network_layer.py", line 777, in receive_message
+    length, _, response_to, op_code = _UNPACK_HEADER(receive_data(conn, 16, deadline))
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/network_layer.py", line 382, in receive_data
+    raise OSError("connection closed")
+OSError: connection closed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/come-in-current/evidence/session-20261117/catalogue-db-acceptance.py", line 14, in <module>
+    init_db(c[name]);server.db=server.client[name]; results=[]
+    ^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/scripts/mongo/comein_mongo.py", line 141, in init_db
+    db[spec["collection"]].create_index(spec["keys"], **spec["options"])
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 2369, in create_index
+    return (self._create_indexes([index], session, **cmd_options))[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/_csot.py", line 126, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 2251, in _create_indexes
+    return self.database.client._retryable_write(False, inner, session, _Op.CREATE_INDEXES)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2099, in _retryable_write
+    return self._retry_with_session(retryable, func, s, bulk, operation, operation_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 1969, in _retry_with_session
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/_csot.py", line 126, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2022, in _retry_internal
+    ).run()
+      ^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2890, in run
+    res = self._read() if self._is_read else self._write()
+                                             ^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 3103, in _write
+    return self._func(self._session, conn, self._retryable)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 2241, in inner
+    self._command(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 600, in _command
+    return conn.command(
+           ^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/helpers.py", line 51, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/pool.py", line 421, in command
+    self._raise_connection_failure(error)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/pool.py", line 567, in _raise_connection_failure
+    raise error
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/pool.py", line 396, in command
+    return run_command(
+           ^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/command_runner.py", line 440, in run_command
+    docs, _, _ = _run_command(
+                 ^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/command_runner.py", line 192, in _run_command
+    reply = conn.receive_message(request_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/pool.py", line 449, in receive_message
+    self._raise_connection_failure(error)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/pool.py", line 565, in _raise_connection_failure
+    _raise_connection_failure(self.address, error, timeout_details=details)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/pool_shared.py", line 168, in _raise_connection_failure
+    raise AutoReconnect(msg) from error
+pymongo.errors.AutoReconnect: 127.0.0.1:27018: connection closed (configured timeouts: connectTimeoutMS: 20000.0ms)

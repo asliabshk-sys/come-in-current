@@ -1,0 +1,55 @@
+{
+  "original_path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/backend_test.py",
+  "candidate_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/candidate/backend_test.py",
+  "before_SHA256": "a4e9c990c972790e4f6f6c9fd0aca31d280c3bdac5bc5a0ab9cc56d34d5935b9",
+  "candidate_SHA256": "d726af9acb2786c60d4ff993ff179c9e9e768da0f7fde441faecdf0f4eee7925",
+  "original_cases": 23,
+  "candidate_cases": 24,
+  "original_case_names_preserved": true,
+  "added_cases": [
+    "test_status_diagnostics_require_admin"
+  ],
+  "source_edited": false,
+  "baseline_server_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "baseline_v1_counts": {
+    "PASS": 20,
+    "FAIL": 3,
+    "ERROR": 0,
+    "SKIPPED": 1
+  },
+  "baseline_v2_counts": {
+    "PASS": 21,
+    "FAIL": 2,
+    "ERROR": 0,
+    "SKIPPED": 1
+  },
+  "changes": [
+    {
+      "reason": "Existing source explicitly returns409for duplicate registration;assert exact current intended conflict contract.",
+      "change": "400\u2192409onlyfor duplicate-registration assertion."
+    },
+    {
+      "reason": "CurrentProductInrequiresdescription/category and sourcePATCHalso usesfullProductIn;oldfixturesneverreachedthoseoperations.",
+      "change": "Provide actual canonical shopcategory atta-rice-dal, required description, full PATCHfields;assert creation beforeid."
+    },
+    {
+      "reason": "CurrentGrocerycreatesordersonlyfroma scoped serverquote+idempotency key;delivery requires explicit shopcapability.",
+      "change": "Enable existing delivery capability in synthetic shopfixture;obtain actual quote,guest-sessionheader/idempotency;independentlycheck unitprice\u00d7qty,subtotal,29below199policyfee,total."
+    },
+    {
+      "reason": "SourceSKUprice ismutatedby existing CRUDtest;stale sharedfixture must not drive checkoutassertions.",
+      "change": "Updatefixture from alreadyasserted legitimate55price/8stock result."
+    },
+    {
+      "reason": "SEC5authorized admin-only diagnostics must rejectanonymous/customer/sellerandretainadminfunctionality.",
+      "change": "Extendexisting admin-role guardloop andaddone diagnosticscase inclsizebound."
+    }
+  ],
+  "remaining_baseline_failures": [
+    "test_admin_endpoints_require_admin:old /status customer200expected403",
+    "test_status_diagnostics_require_admin:old anonymous200expected401"
+  ],
+  "baseline_skip": "Externalobjectstorageunconfigured503;notclaimedPASS.",
+  "first_attempt_retained": "Firstcandidatebaselineexposed newlyreachablePATCH422;fixture corrected tocurrentrequiredcontract withoutchangingAPIs/assertionsweakened.",
+  "next": "Rootreview/mergecandidate only;runfinalactualsourceafterallsecuritycorrections."
+}

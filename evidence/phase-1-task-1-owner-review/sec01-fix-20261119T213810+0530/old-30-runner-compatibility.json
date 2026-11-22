@@ -1,0 +1,17 @@
+{
+  "original_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/validate_password_reset.py",
+  "original_SHA256": "79952bdfc4bc80b54cb54709728eb9d80e299e469460c4ca50d3edc492ea27fd",
+  "adapted_SHA256": "35dce6bb6dd30c633ab74130adc36ee35c7e11cf3a45388f92a0ca47e150a6d6",
+  "original_require_calls": 55,
+  "adapted_require_calls": 56,
+  "all_original_invariant_assertions_preserved": true,
+  "new_assertions": 1,
+  "source_changes": 0,
+  "adaptations": [
+    "Source/output path selections point at immutable before backup or current protected source;new unique DB prefix.",
+    "Actual existing run_transaction helper and Motor client supplied to extracted globals.",
+    "RESET17samefault-after-password-write invariant:execute real users.update_one thenraise;session forwards so actual AFTER transaction abort is tested. Before source still commits and fails.",
+    "RESET18accept intendedHTTP400rejection before existing no-false-success assertion;otherwisecorrectfixwouldbe misreported as harnessERROR."
+  ],
+  "all_original_require_calls_preserved_with_multiplicity": true
+}

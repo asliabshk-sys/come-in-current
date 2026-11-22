@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite name="SEC01 focused after" tests="2" timestamp="2026-11-19T16:19:32.320007+00:00" failures="0" errors="0" skipped="0"><testcase classname="sec01.focused" name="SEC01-06" time="1.0919701179991534" /><testcase classname="sec01.focused" name="SEC01-07" time="12.977977750000719" /></testsuite>

@@ -1,0 +1,1 @@
+iOS apps can only be built on macOS devices. Use eas build -p ios to build in the cloud.

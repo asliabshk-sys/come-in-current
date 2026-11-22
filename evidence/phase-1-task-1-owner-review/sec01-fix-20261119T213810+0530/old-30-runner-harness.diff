@@ -1,0 +1,79 @@
+--- /workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/validate_password_reset.py
++++ NEW old-30-runner-compatible.py
+@@ -9,6 +9,7 @@
+ from __future__ import annotations
+ 
+ import ast
++import os
+ import asyncio
+ import copy
+ import hashlib
+@@ -35,11 +36,13 @@
+ from motor.motor_asyncio import AsyncIOMotorClient
+ from pydantic import BaseModel, EmailStr, Field, ValidationError
+ 
+-OUT = Path(__file__).resolve().parent
+-SOURCE = Path('/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py')
+-PREVIOUS = OUT.parent / 'iteration-2026-11-18T072632-0800'
++OUT = Path(os.environ['SEC01_OUTPUT_DIR']).resolve(); OUT.mkdir(parents=True, exist_ok=True)
++SOURCE = Path(os.environ['SEC01_SOURCE']).resolve()
++sys.path.insert(0, '/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend')
++from mongo_transactions import run_transaction
++PREVIOUS = Path('/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800')
+ RUN_ID = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '_' + uuid.uuid4().hex[:10]
+-DB_NAME = 'comein_reset_validation_' + RUN_ID.lower()
++DB_NAME = 'comein_reset_sec01_compat_' + RUN_ID.lower()
+ URI = 'mongodb://127.0.0.1:27018/?replicaSet=rs0'
+ FUNCTIONS = [
+     'now_utc', 'doc_out', 'hash_password', 'verify_password', '_jwt_secret',
+@@ -158,7 +161,8 @@
+         return getattr(self.actual, name)
+ 
+     async def update_one(self, *args, **kwargs):
+-        raise RuntimeError('synthetic token-mark write failure')
++        await self.actual.update_one(*args, **kwargs)
++        raise RuntimeError('synthetic failure after actual password write')
+ 
+ 
+ class Harness:
+@@ -177,7 +181,8 @@
+                    'timedelta': timedelta, 'Optional': Optional, 'bcrypt': bcrypt, 'jwt': jwt, 'ObjectId': ObjectId,
+                    'HTTPException': HTTPException, 'Request': Request, 'Depends': Depends, 'BaseModel': BaseModel,
+                    'EmailStr': EmailStr, 'Field': Field, 'os': types.SimpleNamespace(environ=self.env),
+-                   'secrets': secrets, 'hashlib': hashlib, 'logger': self.logger, 'db': db}
++                   'secrets': secrets, 'hashlib': hashlib, 'logger': self.logger, 'db': db,
++                   'client': db.client, 'run_transaction': run_transaction}
+         exec(CODE, self.ns)
+         self.user = None
+         self.initial_hash = None
+@@ -415,7 +420,7 @@
+ async def failure_between_writes(h, o):
+     await h.seed_user()
+     token, record = await h.seed_token()
+-    h.ns['db'] = DBProxy(h.db, password_resets=FaultAfterPasswordWrite(h.db.password_resets))
++    h.ns['db'] = DBProxy(h.db, users=FaultAfterPasswordWrite(h.db.users))
+     escaped = False
+     try:
+         await h.reset(token)
+@@ -428,7 +433,7 @@
+     retried = await h.reset(token, 'Retry fixture password!')
+     o.update(injected_exception_escaped=escaped, password_changed_before_failure=changed,
+              token_unused_after_failure=not stored['used'], same_token_retry_accepted=retried.get('reset') is True,
+-             fault_scope='Token-mark update raises before execution; preceding real users.update_one committed')
++             fault_scope='Fault immediately after actual users.update_one; nontransactional BEFORE commits that write, transactional AFTER must abort both writes')
+     require(not changed or stored['used'], 'Password changed but token stayed unused; same token retry accepted')
+ 
+ 
+@@ -436,7 +441,11 @@
+ async def missing_user(h, o):
+     await h.seed_user()
+     token, record = await h.seed_token(user_id=ObjectId())
+-    response = await h.reset(token)
++    try:
++        response = await h.reset(token)
++    except HTTPException as exc:
++        require(exc.status_code == 400, 'Missing account must reject with the existing invalid-reset response')
++        response = {'reset': False}
+     stored = await h.db.password_resets.find_one({'_id': record['_id']})
+     o.update(success_reported=response.get('reset') is True, token_consumed=stored['used'])
+     require(response.get('reset') is not True, 'Reset reports success when users.update_one matches zero accounts')

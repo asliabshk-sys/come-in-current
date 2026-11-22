@@ -1,0 +1,97 @@
+bringing up nodes...
+bringing up nodes...
+
+..................................................F.                     [100%]/workspace/come-in-tools/py311/lib/python3.11/site-packages/_pytest/unraisableexception.py:29: RuntimeWarning: coroutine 'BaseEventLoop.shutdown_asyncgens' was never awaited
+  gc.collect()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+Task exception was never retrieved
+future: <Task finished name='Task-106' coro=<run_transaction() done, defined at /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py:42> exception=RuntimeError('coroutine raised StopIteration')>
+Traceback (most recent call last):
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py", line 64, in commit_with_retry
+    await session.commit_transaction()
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_transaction_commit_retry.py", line 39, in commit_transaction
+    raise self.failures.pop(0)
+pymongo.errors.OperationFailure: synthetic unknown commit, full error: {'errorLabels': ['UnknownTransactionCommitResult'], 'code': 91}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py", line 70, in commit_with_retry
+    and time.monotonic() - started < 120
+        ^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_transaction_commit_retry.py", line 78, in <lambda>
+    monkeypatch.setattr(mongo_transactions.time, "monotonic", lambda: next(times))
+                                                                      ^^^^^^^^^^^
+StopIteration
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py", line 76, in run_transaction
+    return await session.with_transaction(commit_with_retry)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_transaction_commit_retry.py", line 29, in with_transaction
+    result = await callback(self)
+             ^^^^^^^^^^^^^^^^^^^^
+RuntimeError: coroutine raised StopIteration
+
+=================================== FAILURES ===================================
+____________ test_unknown_commit_retry_stops_at_transaction_budget _____________
+[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+>   monkeypatch.setattr(mongo_transactions.time, "monotonic", lambda: next(times))
+                                                                      ^^^^^^^^^^^
+E   StopIteration
+
+tests/test_transaction_commit_retry.py:78: StopIteration
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6f32cb9bd0>
+
+    def test_unknown_commit_retry_stops_at_transaction_budget(monkeypatch):
+        times = iter([0, 120])
+        monkeypatch.setattr(mongo_transactions.time, "monotonic", lambda: next(times))
+        session = Session([unknown_commit()])
+    
+        async def callback(current):
+            return "saved"
+    
+        with pytest.raises(OperationFailure):
+>           asyncio.run(mongo_transactions.run_transaction(Client(session), callback))
+
+tests/test_transaction_commit_retry.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:189: in run
+    with Runner(debug=debug) as runner:
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:63: in __exit__
+    self.close()
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:72: in close
+    loop.run_until_complete(loop.shutdown_asyncgens())
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py:641: in run_until_complete
+    self.run_forever()
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py:608: in run_forever
+    self._run_once()
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py:1904: in _run_once
+    end_time = self.time() + self._clock_resolution
+               ^^^^^^^^^^^
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py:708: in time
+    return time.monotonic()
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   monkeypatch.setattr(mongo_transactions.time, "monotonic", lambda: next(times))
+                                                                      ^^^^^^^^^^^
+E   StopIteration
+
+tests/test_transaction_commit_retry.py:78: StopIteration
+=============================== warnings summary ===============================
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+  /workspace/come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_transaction_commit_retry.py::test_unknown_commit_retry_stops_at_transaction_budget
+1 failed, 51 passed, 2 warnings in 3.73s

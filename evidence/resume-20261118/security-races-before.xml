@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="4" time="1.533" timestamp="2026-11-18T13:22:31.668987+00:00" hostname="4fa0f8dc6b53"><testcase classname="tests.test_final_payment_transition_races" name="test_customer_transition_cannot_overwrite_concurrent_final_state[concurrent0-cancel_restaurant_order]" time="0.261"><failure message="Failed: DID NOT RAISE HTTPException">name = 'cancel_restaurant_order'
+concurrent = {'payment_status': 'paid', 'status': 'placed'}
+
+    @pytest.mark.parametrize("name", ["cancel_restaurant_order", "retry_restaurant_payment"])
+    @pytest.mark.parametrize("concurrent", [{"payment_status": "paid", "status": "placed"}, {"status": "accepted"}])
+    def test_customer_transition_cannot_overwrite_concurrent_final_state(name, concurrent):
+        oid = ObjectId()
+        initial = {"_id": oid, "customer_id": "owner", "status": "pending_payment", "payment_status": "pending", "payment_method": "razorpay"}
+        rows = InterleavedOrders(initial, concurrent)
+        async def run():
+            with pytest.raises(HTTPException) as result:
+                await endpoint(name, rows)(str(oid), {"id": "owner"})
+            assert result.value.status_code == 409
+            assert rows.current == {**initial, **concurrent}
+&gt;       asyncio.run(run())
+
+tests/test_final_payment_transition_races.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+&gt;       with pytest.raises(HTTPException) as result:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_final_payment_transition_races.py:57: Failed</failure></testcase><testcase classname="tests.test_final_payment_transition_races" name="test_customer_transition_cannot_overwrite_concurrent_final_state[concurrent0-retry_restaurant_payment]" time="0.091"><failure message="Failed: DID NOT RAISE HTTPException">name = 'retry_restaurant_payment'
+concurrent = {'payment_status': 'paid', 'status': 'placed'}
+
+    @pytest.mark.parametrize("name", ["cancel_restaurant_order", "retry_restaurant_payment"])
+    @pytest.mark.parametrize("concurrent", [{"payment_status": "paid", "status": "placed"}, {"status": "accepted"}])
+    def test_customer_transition_cannot_overwrite_concurrent_final_state(name, concurrent):
+        oid = ObjectId()
+        initial = {"_id": oid, "customer_id": "owner", "status": "pending_payment", "payment_status": "pending", "payment_method": "razorpay"}
+        rows = InterleavedOrders(initial, concurrent)
+        async def run():
+            with pytest.raises(HTTPException) as result:
+                await endpoint(name, rows)(str(oid), {"id": "owner"})
+            assert result.value.status_code == 409
+            assert rows.current == {**initial, **concurrent}
+&gt;       asyncio.run(run())
+
+tests/test_final_payment_transition_races.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+&gt;       with pytest.raises(HTTPException) as result:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_final_payment_transition_races.py:57: Failed</failure></testcase><testcase classname="tests.test_final_payment_transition_races" name="test_customer_transition_cannot_overwrite_concurrent_final_state[concurrent1-cancel_restaurant_order]" time="0.091"><failure message="Failed: DID NOT RAISE HTTPException">name = 'cancel_restaurant_order', concurrent = {'status': 'accepted'}
+
+    @pytest.mark.parametrize("name", ["cancel_restaurant_order", "retry_restaurant_payment"])
+    @pytest.mark.parametrize("concurrent", [{"payment_status": "paid", "status": "placed"}, {"status": "accepted"}])
+    def test_customer_transition_cannot_overwrite_concurrent_final_state(name, concurrent):
+        oid = ObjectId()
+        initial = {"_id": oid, "customer_id": "owner", "status": "pending_payment", "payment_status": "pending", "payment_method": "razorpay"}
+        rows = InterleavedOrders(initial, concurrent)
+        async def run():
+            with pytest.raises(HTTPException) as result:
+                await endpoint(name, rows)(str(oid), {"id": "owner"})
+            assert result.value.status_code == 409
+            assert rows.current == {**initial, **concurrent}
+&gt;       asyncio.run(run())
+
+tests/test_final_payment_transition_races.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+&gt;       with pytest.raises(HTTPException) as result:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_final_payment_transition_races.py:57: Failed</failure></testcase><testcase classname="tests.test_final_payment_transition_races" name="test_customer_transition_cannot_overwrite_concurrent_final_state[concurrent1-retry_restaurant_payment]" time="0.089"><failure message="Failed: DID NOT RAISE HTTPException">name = 'retry_restaurant_payment', concurrent = {'status': 'accepted'}
+
+    @pytest.mark.parametrize("name", ["cancel_restaurant_order", "retry_restaurant_payment"])
+    @pytest.mark.parametrize("concurrent", [{"payment_status": "paid", "status": "placed"}, {"status": "accepted"}])
+    def test_customer_transition_cannot_overwrite_concurrent_final_state(name, concurrent):
+        oid = ObjectId()
+        initial = {"_id": oid, "customer_id": "owner", "status": "pending_payment", "payment_status": "pending", "payment_method": "razorpay"}
+        rows = InterleavedOrders(initial, concurrent)
+        async def run():
+            with pytest.raises(HTTPException) as result:
+                await endpoint(name, rows)(str(oid), {"id": "owner"})
+            assert result.value.status_code == 409
+            assert rows.current == {**initial, **concurrent}
+&gt;       asyncio.run(run())
+
+tests/test_final_payment_transition_races.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+&gt;       with pytest.raises(HTTPException) as result:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_final_payment_transition_races.py:57: Failed</failure></testcase></testsuite></testsuites>

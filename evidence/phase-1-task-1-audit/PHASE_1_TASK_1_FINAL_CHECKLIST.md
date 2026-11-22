@@ -1,0 +1,37 @@
+# PHASE 1 TASK 1 — Final Checklist
+
+Audit timestamp: 2026-11-18T06:59:35.322181-08:00 (UTC−08). **Final status: REVIEW PENDING.** Canonical Phase1/Task1=Existing Project Audit under the recovered22-task roadmap. Roadmap Recovery is preserved and is not proof that this application audit passed. No canonical task added/renamed/merged/renumbered. Task2/implementation NOT STARTED. Only files in `/workspace/come-in-current/evidence/phase-1-task-1-audit` are created/updated. Existing source,ZIP,patches and all five checkpoints are protected unchanged.
+
+Evidence labels: **SOURCE VERIFIED**=located in current code/document;**STATICALLY VERIFIED**=read-only parser/structural check;**TEST EVIDENCE FOUND**=persisted result with date/scope,not freshly run;**RUNTIME VERIFIED**=only the specified actual runtime observation;**EXTERNAL INTEGRATION VERIFIED**=requires real external provider evidence (none newly established);**HISTORICAL REPORT ONLY**,**NOT FOUND**,**UNVERIFIED**,**BLOCKED** retain their narrow meaning.
+
+Allowed item statuses: VERIFIED,PARTIALLY VERIFIED,NOT IMPLEMENTED,NOT FOUND,HISTORICAL CLAIM ONLY,UNVERIFIED,BLOCKED,REVIEW REQUIRED. A VERIFIED inventory/declaration is not VERIFIED business behavior. Owner approval for audit acceptance/fixes/Task2 remains pending.
+
+| Requirement | Evidence | Status | Remaining action | Approval status |
+|---|---|---|---|---|
+| Original:current app/screens/navigation/frontend/backend/API/database/auth inspection | Master + fullscreen/API/DB inventories | PARTIALLY VERIFIED | Owner reviews source/runtime scope;fullruntime not proved | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Original:which buttons/workflows really work | 579bindings +17historical browserchecks + workflow tables | PARTIALLY VERIFIED | Disposable behavior tests for unexercised controls;no sourceexistence=working claim | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Original:Grocery,online/offline shops,Restaurants,HomeServices features | Master workflow maps;services+Restaurant+catalog APIs | PARTIALLY VERIFIED | Verify current merchant/provider/operational scenarios | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Original:duplicates/errors/incomplete work | 0duplicateAPI;intentional aliases;UI-01/UI-02;gap register | PARTIALLY VERIFIED | Review dynamic routes/allUI branch behavior | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Original:read-only first,no fixes without approval | Protected hashes,Git before/after;AUDIT_PROGRESS | VERIFIED | Maintain preservation;fixesnotstarted | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Workspace/branch/HEAD/Git modified/untracked/ignored | workspace-provenance;git-status-before/after/ignored | VERIFIED | Remote latest stillUNVERIFIED | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Checkpoint/handover/roadmap/recovery inventory and preservation | existing-document-inventory;protected hashes | VERIFIED | No existing checkpoint change | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Master ZIP CRC/hash and workspace/ZIP differences | workspace-provenance.json;62differences | VERIFIED | Do not confuse snapshot with current remote/source | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Architecture/routes/models/service boundaries | Master;179APIs/60models/95modules | VERIFIED | Static inventory only;coupling is not refactor authorization | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Every screen route/render/action/API/loading-empty-error/nav | Complete screen report + JSON | PARTIALLY VERIFIED | Render/allbutton runtime mostlyUNVERIFIED | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| APIrequest/response/dependencies/roles/validation/errors | API/model inventory;security findings | PARTIALLY VERIFIED | Plain dict contracts/error branches require approved tests | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Order/product/stock/seller/admin/import/payment/refund/notifications | Master maps/API inventory;historical resultindex | PARTIALLY VERIFIED | No current statechanging operations | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Database collections/indexes/unique/ref/transactions/validation | 52metadata/67matched/27unique;sourcehelpers | PARTIALLY VERIFIED | No data scan/transaction write;0validators review | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Backup/restore and production DB security | scripts+historical drill;securityreport | BLOCKED | Need actualproduction grants/TLS/retention/recovery evidence | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Authregistration/login/password/token/reset/session/roles | 8security findings;sourcefunctions | PARTIALLY VERIFIED | Highresetatomicity andsessions require review | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Customer browse/search/cart/variants/checkout/COD/order/help/cancel/repeat/replacement/refund | Mastercustomer table;API/screens | PARTIALLY VERIFIED | Guestlifecycle/replacement/provider/devicegaps | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Sellerregistration/approval/product/price/stock/order/adminaudit | Masteroperations table;APIdependency coverage | PARTIALLY VERIFIED | Actualworkflow mutations notperformed | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Restaurantmenu/orders/cart/themes/refunds/modeisolation | MasterRestaurantmap;stores/shell/routes | PARTIALLY VERIFIED | Native/provider/coverage lifecycle blocked | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Delivery onboarding/approval/assignment/status/provider | Deliverysource+gapG04 | BLOCKED | Adapters/identity/jobassignment missing orblocked | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| SecurityIDOR/roles/rate/CORS/secrets/uploads/formulas/prices/refunds/session/logs/DB/dependencies | Securityreport8items;sourceevidence | PARTIALLY VERIFIED | Productioncontrols/exploitability/dependency advisoryscan unverified | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Integration source/config/offline/runtime/provider classification | Masterintegration table | PARTIALLY VERIFIED | External provider evidence notfound;do not promote mocks | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Testconfiguration/safety andexistingvsfreshscope | Tests notexecuted;onlysafeparsers/metadata | VERIFIED | No dangerous suite authorized;do notrunhealth/init | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Seven requiredreports/manifest anddurable auditcheckpoint | Thisfolder7namedreports +AUDIT_PROGRESS | VERIFIED | Owner reviewscontent;creationdoesnotcomplete acceptance | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| Noapplication/source/UI/API/config/dependency/DB/Githistory modifications | Finalhash/statusverification | VERIFIED | Existing checkpoints/ZIP/patch unchanged | Audit authorized;acceptance/fix/Task2 approval PENDING |
+| FinalstatusREVIEWPENDING;Task2/fixesnotstarted | Master/checklist/AUDIT_PROGRESS | REVIEW REQUIRED | Wait for explicitowner approval | Audit authorized;acceptance/fix/Task2 approval PENDING |
+
+No blanket Task1 COMPLETE declaration. Enough bounded audit evidence is available for owner review;unexecuted runtime/production/provider checks remain documented. Existing five canonical checkpoints are preserved byte-for-byte;the current durable progress/resume instruction is in AUDIT_PROGRESS.md here.

@@ -1,0 +1,273 @@
+2026-11-17T09:48:19.723+0000	preparing collections to restore from
+2026-11-17T09:48:19.735+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.referrals` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.shops` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.agent_assist` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.retail_price_offers` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.grocery_quotes` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.referral_link_events` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.restaurant_carts` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.files` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.service_appointments` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.restaurant_reviews` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.catalog_price_audit` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.service_providers` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.settlement_order_allocations` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.assistant_rate_limits` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.auth_rate_limits` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.referral_audit` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.orders` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.status_checks` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.products` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.delivery_partner_applications` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.restaurant_support` from `archive on stdin`
+2026-11-17T09:48:19.736+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.request_anything` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.notifications` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.password_resets` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.retail_price_import_history` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.delivery_partner_audit` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.catalogue_import_jobs` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.addresses` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.restock_alerts` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.users` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.financial_ledger` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.referral_ledger` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.payout_bank_accounts` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.home_service_settings` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.settlement_requests` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.master_products` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.chand_feedback` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.financial_audit` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.retail_price_price_audit` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.restaurants` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.restaurant_menu` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.catalog_import_history` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.home_service_slot_reservations` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.restaurant_payments` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.restaurant_orders` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.announcements` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.grocery_payments` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.restaurant_payment_events` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.catalogue_import_audit` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.referral_rewards` from `archive on stdin`
+2026-11-17T09:48:19.737+0000	reading metadata for `comein_disposable_test_release_20261117t094751z_restored.delivery_partner_referrals` from `archive on stdin`
+2026-11-17T09:48:19.749+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.users` from `archive on stdin`
+2026-11-17T09:48:19.760+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.users` (1 document, 0 failures)
+2026-11-17T09:48:19.767+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.referral_ledger` from `archive on stdin`
+2026-11-17T09:48:19.783+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.referral_ledger` (0 documents, 0 failures)
+2026-11-17T09:48:19.792+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_support` from `archive on stdin`
+2026-11-17T09:48:19.803+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_support` (0 documents, 0 failures)
+2026-11-17T09:48:19.811+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.catalogue_import_audit` from `archive on stdin`
+2026-11-17T09:48:19.821+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.catalogue_import_audit` (1 document, 0 failures)
+2026-11-17T09:48:19.827+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.notifications` from `archive on stdin`
+2026-11-17T09:48:19.837+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.notifications` (0 documents, 0 failures)
+2026-11-17T09:48:19.843+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.password_resets` from `archive on stdin`
+2026-11-17T09:48:19.853+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.password_resets` (0 documents, 0 failures)
+2026-11-17T09:48:19.859+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_orders` from `archive on stdin`
+2026-11-17T09:48:19.870+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_orders` (0 documents, 0 failures)
+2026-11-17T09:48:19.875+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.files` from `archive on stdin`
+2026-11-17T09:48:19.900+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.files` (0 documents, 0 failures)
+2026-11-17T09:48:19.906+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.settlement_requests` from `archive on stdin`
+2026-11-17T09:48:19.924+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.settlement_requests` (0 documents, 0 failures)
+2026-11-17T09:48:19.930+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.retail_price_price_audit` from `archive on stdin`
+2026-11-17T09:48:19.949+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.retail_price_price_audit` (0 documents, 0 failures)
+2026-11-17T09:48:19.955+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.restaurants` from `archive on stdin`
+2026-11-17T09:48:19.973+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.restaurants` (0 documents, 0 failures)
+2026-11-17T09:48:19.979+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_carts` from `archive on stdin`
+2026-11-17T09:48:19.989+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_carts` (0 documents, 0 failures)
+2026-11-17T09:48:19.996+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.payout_bank_accounts` from `archive on stdin`
+2026-11-17T09:48:20.007+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.payout_bank_accounts` (0 documents, 0 failures)
+2026-11-17T09:48:20.013+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_menu` from `archive on stdin`
+2026-11-17T09:48:20.025+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_menu` (0 documents, 0 failures)
+2026-11-17T09:48:20.031+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.service_appointments` from `archive on stdin`
+2026-11-17T09:48:20.043+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.service_appointments` (0 documents, 0 failures)
+2026-11-17T09:48:20.048+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.agent_assist` from `archive on stdin`
+2026-11-17T09:48:20.060+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.agent_assist` (0 documents, 0 failures)
+2026-11-17T09:48:20.066+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_payment_events` from `archive on stdin`
+2026-11-17T09:48:20.077+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_payment_events` (0 documents, 0 failures)
+2026-11-17T09:48:20.083+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.master_products` from `archive on stdin`
+2026-11-17T09:48:20.100+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.master_products` (0 documents, 0 failures)
+2026-11-17T09:48:20.106+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.referral_audit` from `archive on stdin`
+2026-11-17T09:48:20.123+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.referral_audit` (0 documents, 0 failures)
+2026-11-17T09:48:20.129+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.restock_alerts` from `archive on stdin`
+2026-11-17T09:48:20.141+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.restock_alerts` (0 documents, 0 failures)
+2026-11-17T09:48:20.148+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.home_service_settings` from `archive on stdin`
+2026-11-17T09:48:20.159+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.home_service_settings` (0 documents, 0 failures)
+2026-11-17T09:48:20.166+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.home_service_slot_reservations` from `archive on stdin`
+2026-11-17T09:48:20.178+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.home_service_slot_reservations` (0 documents, 0 failures)
+2026-11-17T09:48:20.184+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_reviews` from `archive on stdin`
+2026-11-17T09:48:20.196+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_reviews` (0 documents, 0 failures)
+2026-11-17T09:48:20.202+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.service_providers` from `archive on stdin`
+2026-11-17T09:48:20.214+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.service_providers` (0 documents, 0 failures)
+2026-11-17T09:48:20.220+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.financial_audit` from `archive on stdin`
+2026-11-17T09:48:20.238+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.financial_audit` (0 documents, 0 failures)
+2026-11-17T09:48:20.249+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.referrals` from `archive on stdin`
+2026-11-17T09:48:20.251+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.products` from `archive on stdin`
+2026-11-17T09:48:20.264+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.products` (0 documents, 0 failures)
+2026-11-17T09:48:20.264+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.referrals` (0 documents, 0 failures)
+2026-11-17T09:48:20.270+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.catalog_price_audit` from `archive on stdin`
+2026-11-17T09:48:20.282+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.catalog_price_audit` (0 documents, 0 failures)
+2026-11-17T09:48:20.288+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.delivery_partner_audit` from `archive on stdin`
+2026-11-17T09:48:20.300+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.delivery_partner_audit` (0 documents, 0 failures)
+2026-11-17T09:48:20.306+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.grocery_quotes` from `archive on stdin`
+2026-11-17T09:48:20.318+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.grocery_quotes` (0 documents, 0 failures)
+2026-11-17T09:48:20.324+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.catalog_import_history` from `archive on stdin`
+2026-11-17T09:48:20.337+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.catalog_import_history` (0 documents, 0 failures)
+2026-11-17T09:48:20.343+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.retail_price_import_history` from `archive on stdin`
+2026-11-17T09:48:20.354+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.retail_price_import_history` (0 documents, 0 failures)
+2026-11-17T09:48:20.362+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.financial_ledger` from `archive on stdin`
+2026-11-17T09:48:20.374+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.financial_ledger` (0 documents, 0 failures)
+2026-11-17T09:48:20.381+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.retail_price_offers` from `archive on stdin`
+2026-11-17T09:48:20.393+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.retail_price_offers` (0 documents, 0 failures)
+2026-11-17T09:48:20.399+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.catalogue_import_jobs` from `archive on stdin`
+2026-11-17T09:48:20.411+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.catalogue_import_jobs` (0 documents, 0 failures)
+2026-11-17T09:48:20.419+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.orders` from `archive on stdin`
+2026-11-17T09:48:20.430+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.orders` (0 documents, 0 failures)
+2026-11-17T09:48:20.436+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_payments` from `archive on stdin`
+2026-11-17T09:48:20.448+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.restaurant_payments` (0 documents, 0 failures)
+2026-11-17T09:48:20.456+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.referral_rewards` from `archive on stdin`
+2026-11-17T09:48:20.468+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.referral_rewards` (0 documents, 0 failures)
+2026-11-17T09:48:20.474+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.referral_link_events` from `archive on stdin`
+2026-11-17T09:48:20.486+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.referral_link_events` (0 documents, 0 failures)
+2026-11-17T09:48:20.492+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.delivery_partner_applications` from `archive on stdin`
+2026-11-17T09:48:20.504+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.delivery_partner_applications` (0 documents, 0 failures)
+2026-11-17T09:48:20.510+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.addresses` from `archive on stdin`
+2026-11-17T09:48:20.522+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.addresses` (0 documents, 0 failures)
+2026-11-17T09:48:20.529+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.settlement_order_allocations` from `archive on stdin`
+2026-11-17T09:48:20.541+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.settlement_order_allocations` (0 documents, 0 failures)
+2026-11-17T09:48:20.547+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.announcements` from `archive on stdin`
+2026-11-17T09:48:20.559+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.announcements` (0 documents, 0 failures)
+2026-11-17T09:48:20.566+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.request_anything` from `archive on stdin`
+2026-11-17T09:48:20.577+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.request_anything` (0 documents, 0 failures)
+2026-11-17T09:48:20.583+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.assistant_rate_limits` from `archive on stdin`
+2026-11-17T09:48:20.595+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.assistant_rate_limits` (0 documents, 0 failures)
+2026-11-17T09:48:20.601+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.delivery_partner_referrals` from `archive on stdin`
+2026-11-17T09:48:20.612+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.delivery_partner_referrals` (0 documents, 0 failures)
+2026-11-17T09:48:20.618+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.chand_feedback` from `archive on stdin`
+2026-11-17T09:48:20.630+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.chand_feedback` (0 documents, 0 failures)
+2026-11-17T09:48:20.636+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.shops` from `archive on stdin`
+2026-11-17T09:48:20.647+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.shops` (0 documents, 0 failures)
+2026-11-17T09:48:20.654+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.status_checks` from `archive on stdin`
+2026-11-17T09:48:20.666+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.status_checks` (0 documents, 0 failures)
+2026-11-17T09:48:20.673+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.grocery_payments` from `archive on stdin`
+2026-11-17T09:48:20.685+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.grocery_payments` (0 documents, 0 failures)
+2026-11-17T09:48:20.691+0000	restoring `comein_disposable_test_release_20261117t094751z_restored.auth_rate_limits` from `archive on stdin`
+2026-11-17T09:48:20.703+0000	finished restoring `comein_disposable_test_release_20261117t094751z_restored.auth_rate_limits` (0 documents, 0 failures)
+2026-11-17T09:48:20.703+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.restaurant_menu` from metadata
+2026-11-17T09:48:20.703+0000	index: &idx.IndexDocument{Options:bson.M{"name":"restaurant_id_1_available_1", "v":2}, Key:bson.D{bson.E{Key:"restaurant_id", Value:1}, bson.E{Key:"available", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.703+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.addresses` from metadata
+2026-11-17T09:48:20.703+0000	index: &idx.IndexDocument{Options:bson.M{"name":"user_id_1_is_default_-1", "v":2}, Key:bson.D{bson.E{Key:"user_id", Value:1}, bson.E{Key:"is_default", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.703+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.service_providers` from metadata
+2026-11-17T09:48:20.703+0000	index: &idx.IndexDocument{Options:bson.M{"name":"owner_id_1", "sparse":true, "unique":true, "v":2}, Key:bson.D{bson.E{Key:"owner_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.703+0000	no indexes to restore for collection `comein_disposable_test_release_20261117t094751z_restored.retail_price_price_audit`
+2026-11-17T09:48:20.704+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.grocery_quotes` from metadata
+2026-11-17T09:48:20.704+0000	index: &idx.IndexDocument{Options:bson.M{"expireAfterSeconds":0, "name":"expires_at_1", "v":2}, Key:bson.D{bson.E{Key:"expires_at", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.704+0000	index: &idx.IndexDocument{Options:bson.M{"name":"scope_1_status_1", "v":2}, Key:bson.D{bson.E{Key:"scope", Value:1}, bson.E{Key:"status", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.710+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.service_appointments` from metadata
+2026-11-17T09:48:20.710+0000	index: &idx.IndexDocument{Options:bson.M{"name":"customer_id_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"customer_id", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.710+0000	index: &idx.IndexDocument{Options:bson.M{"name":"provider_id_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"provider_id", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.712+0000	no indexes to restore for collection `comein_disposable_test_release_20261117t094751z_restored.catalog_price_audit`
+2026-11-17T09:48:20.712+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.referral_audit` from metadata
+2026-11-17T09:48:20.712+0000	index: &idx.IndexDocument{Options:bson.M{"name":"created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.721+0000	no indexes to restore for collection `comein_disposable_test_release_20261117t094751z_restored.retail_price_import_history`
+2026-11-17T09:48:20.721+0000	no indexes to restore for collection `comein_disposable_test_release_20261117t094751z_restored.master_products`
+2026-11-17T09:48:20.721+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.assistant_rate_limits` from metadata
+2026-11-17T09:48:20.721+0000	index: &idx.IndexDocument{Options:bson.M{"name":"rate_key_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"rate_key", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.721+0000	index: &idx.IndexDocument{Options:bson.M{"expireAfterSeconds":0, "name":"expires_at_1", "v":2}, Key:bson.D{bson.E{Key:"expires_at", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.726+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.restaurant_support` from metadata
+2026-11-17T09:48:20.726+0000	index: &idx.IndexDocument{Options:bson.M{"name":"user_id_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"user_id", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.726+0000	index: &idx.IndexDocument{Options:bson.M{"name":"user_id_1_request_id_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"user_id", Value:1}, bson.E{Key:"request_id", Value:1}}, PartialFilterExpression:(*bson.D)(0x5caa4690708)}
+2026-11-17T09:48:20.726+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.home_service_slot_reservations` from metadata
+2026-11-17T09:48:20.726+0000	index: &idx.IndexDocument{Options:bson.M{"name":"provider_id_1_slot_key_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"provider_id", Value:1}, bson.E{Key:"slot_key", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.726+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.financial_audit` from metadata
+2026-11-17T09:48:20.726+0000	index: &idx.IndexDocument{Options:bson.M{"name":"created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.737+0000	no indexes to restore for collection `comein_disposable_test_release_20261117t094751z_restored.announcements`
+2026-11-17T09:48:20.737+0000	no indexes to restore for collection `comein_disposable_test_release_20261117t094751z_restored.grocery_payments`
+2026-11-17T09:48:20.737+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.restaurant_payment_events` from metadata
+2026-11-17T09:48:20.737+0000	index: &idx.IndexDocument{Options:bson.M{"name":"event_id_1", "sparse":true, "unique":true, "v":2}, Key:bson.D{bson.E{Key:"event_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.740+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.delivery_partner_referrals` from metadata
+2026-11-17T09:48:20.740+0000	index: &idx.IndexDocument{Options:bson.M{"name":"referred_application_id_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"referred_application_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.740+0000	index: &idx.IndexDocument{Options:bson.M{"name":"referrer_application_id_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"referrer_application_id", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.742+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.shops` from metadata
+2026-11-17T09:48:20.742+0000	index: &idx.IndexDocument{Options:bson.M{"name":"owner_id_1", "v":2}, Key:bson.D{bson.E{Key:"owner_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.742+0000	index: &idx.IndexDocument{Options:bson.M{"name":"status_1", "v":2}, Key:bson.D{bson.E{Key:"status", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.742+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.referral_link_events` from metadata
+2026-11-17T09:48:20.742+0000	index: &idx.IndexDocument{Options:bson.M{"name":"referrer_id_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"referrer_id", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.746+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.products` from metadata
+2026-11-17T09:48:20.746+0000	index: &idx.IndexDocument{Options:bson.M{"name":"shop_id_1", "v":2}, Key:bson.D{bson.E{Key:"shop_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.746+0000	index: &idx.IndexDocument{Options:bson.M{"name":"owner_id_1", "v":2}, Key:bson.D{bson.E{Key:"owner_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.746+0000	index: &idx.IndexDocument{Options:bson.M{"name":"catalogue_import_job_id_1_catalogue_import_record_index_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"catalogue_import_job_id", Value:1}, bson.E{Key:"catalogue_import_record_index", Value:1}}, PartialFilterExpression:(*bson.D)(0x5caa4690150)}
+2026-11-17T09:48:20.771+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.payout_bank_accounts` from metadata
+2026-11-17T09:48:20.771+0000	index: &idx.IndexDocument{Options:bson.M{"name":"beneficiary_type_1_beneficiary_id_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"beneficiary_type", Value:1}, bson.E{Key:"beneficiary_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.771+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.restaurant_payments` from metadata
+2026-11-17T09:48:20.771+0000	index: &idx.IndexDocument{Options:bson.M{"name":"gateway_order_id_1", "sparse":true, "unique":true, "v":2}, Key:bson.D{bson.E{Key:"gateway_order_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.772+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.files` from metadata
+2026-11-17T09:48:20.772+0000	index: &idx.IndexDocument{Options:bson.M{"name":"owner_id_1", "v":2}, Key:bson.D{bson.E{Key:"owner_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.787+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.orders` from metadata
+2026-11-17T09:48:20.787+0000	index: &idx.IndexDocument{Options:bson.M{"name":"customer_id_1", "v":2}, Key:bson.D{bson.E{Key:"customer_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.787+0000	index: &idx.IndexDocument{Options:bson.M{"name":"shop_id_1", "v":2}, Key:bson.D{bson.E{Key:"shop_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.787+0000	index: &idx.IndexDocument{Options:bson.M{"name":"grocery_idempotency_scope_1", "sparse":true, "unique":true, "v":2}, Key:bson.D{bson.E{Key:"grocery_idempotency_scope", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.787+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.delivery_partner_applications` from metadata
+2026-11-17T09:48:20.787+0000	index: &idx.IndexDocument{Options:bson.M{"name":"status_1_updated_at_-1", "v":2}, Key:bson.D{bson.E{Key:"status", Value:1}, bson.E{Key:"updated_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.787+0000	index: &idx.IndexDocument{Options:bson.M{"name":"user_id_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"user_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.787+0000	index: &idx.IndexDocument{Options:bson.M{"name":"referral_code_1", "sparse":true, "unique":true, "v":2}, Key:bson.D{bson.E{Key:"referral_code", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.787+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.chand_feedback` from metadata
+2026-11-17T09:48:20.787+0000	index: &idx.IndexDocument{Options:bson.M{"name":"user_id_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"user_id", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.787+0000	index: &idx.IndexDocument{Options:bson.M{"name":"user_id_1_request_id_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"user_id", Value:1}, bson.E{Key:"request_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.787+0000	index: &idx.IndexDocument{Options:bson.M{"name":"status_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"status", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.787+0000	no indexes to restore for collection `comein_disposable_test_release_20261117t094751z_restored.request_anything`
+2026-11-17T09:48:20.787+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.restaurants` from metadata
+2026-11-17T09:48:20.787+0000	index: &idx.IndexDocument{Options:bson.M{"name":"owner_id_1", "v":2}, Key:bson.D{bson.E{Key:"owner_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.787+0000	index: &idx.IndexDocument{Options:bson.M{"name":"status_1_available_1_city_1", "v":2}, Key:bson.D{bson.E{Key:"status", Value:1}, bson.E{Key:"available", Value:1}, bson.E{Key:"city", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.814+0000	no indexes to restore for collection `comein_disposable_test_release_20261117t094751z_restored.catalog_import_history`
+2026-11-17T09:48:20.814+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.catalogue_import_audit` from metadata
+2026-11-17T09:48:20.814+0000	index: &idx.IndexDocument{Options:bson.M{"name":"apply_key_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"apply_key", Value:1}}, PartialFilterExpression:(*bson.D)(0x5caa4895c50)}
+2026-11-17T09:48:20.815+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.delivery_partner_audit` from metadata
+2026-11-17T09:48:20.815+0000	index: &idx.IndexDocument{Options:bson.M{"name":"application_id_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"application_id", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.822+0000	no indexes to restore for collection `comein_disposable_test_release_20261117t094751z_restored.agent_assist`
+2026-11-17T09:48:20.822+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.auth_rate_limits` from metadata
+2026-11-17T09:48:20.822+0000	index: &idx.IndexDocument{Options:bson.M{"expireAfterSeconds":0, "name":"expires_at_1", "v":2}, Key:bson.D{bson.E{Key:"expires_at", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.831+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.restock_alerts` from metadata
+2026-11-17T09:48:20.831+0000	index: &idx.IndexDocument{Options:bson.M{"name":"product_id_1_active_1", "v":2}, Key:bson.D{bson.E{Key:"product_id", Value:1}, bson.E{Key:"active", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.831+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.referral_ledger` from metadata
+2026-11-17T09:48:20.832+0000	index: &idx.IndexDocument{Options:bson.M{"name":"idempotency_key_1", "sparse":true, "unique":true, "v":2}, Key:bson.D{bson.E{Key:"idempotency_key", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.832+0000	index: &idx.IndexDocument{Options:bson.M{"name":"user_id_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"user_id", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.832+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.settlement_requests` from metadata
+2026-11-17T09:48:20.832+0000	index: &idx.IndexDocument{Options:bson.M{"name":"beneficiary_user_id_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"beneficiary_user_id", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.832+0000	index: &idx.IndexDocument{Options:bson.M{"name":"beneficiary_user_id_1_beneficiary_type_1_beneficiary_id_1_idempotency_key_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"beneficiary_user_id", Value:1}, bson.E{Key:"beneficiary_type", Value:1}, bson.E{Key:"beneficiary_id", Value:1}, bson.E{Key:"idempotency_key", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.832+0000	index: &idx.IndexDocument{Options:bson.M{"name":"status_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"status", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.849+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.referral_rewards` from metadata
+2026-11-17T09:48:20.849+0000	index: &idx.IndexDocument{Options:bson.M{"name":"reward_key_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"reward_key", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.849+0000	index: &idx.IndexDocument{Options:bson.M{"name":"referrer_id_1_status_1", "v":2}, Key:bson.D{bson.E{Key:"referrer_id", Value:1}, bson.E{Key:"status", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.849+0000	no indexes to restore for collection `comein_disposable_test_release_20261117t094751z_restored.retail_price_offers`
+2026-11-17T09:48:20.849+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.restaurant_carts` from metadata
+2026-11-17T09:48:20.849+0000	index: &idx.IndexDocument{Options:bson.M{"name":"user_id_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"user_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.849+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.restaurant_orders` from metadata
+2026-11-17T09:48:20.849+0000	index: &idx.IndexDocument{Options:bson.M{"name":"customer_id_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"customer_id", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.849+0000	index: &idx.IndexDocument{Options:bson.M{"name":"restaurant_id_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"restaurant_id", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.849+0000	index: &idx.IndexDocument{Options:bson.M{"name":"customer_id_1_idempotency_key_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"customer_id", Value:1}, bson.E{Key:"idempotency_key", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.849+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.password_resets` from metadata
+2026-11-17T09:48:20.849+0000	index: &idx.IndexDocument{Options:bson.M{"expireAfterSeconds":0, "name":"expires_at_1", "v":2}, Key:bson.D{bson.E{Key:"expires_at", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.854+0000	no indexes to restore for collection `comein_disposable_test_release_20261117t094751z_restored.status_checks`
+2026-11-17T09:48:20.854+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.notifications` from metadata
+2026-11-17T09:48:20.854+0000	index: &idx.IndexDocument{Options:bson.M{"name":"user_id_1_created_at_-1", "v":2}, Key:bson.D{bson.E{Key:"user_id", Value:1}, bson.E{Key:"created_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.854+0000	index: &idx.IndexDocument{Options:bson.M{"name":"user_id_1_read_1", "v":2}, Key:bson.D{bson.E{Key:"user_id", Value:1}, bson.E{Key:"read", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.856+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.users` from metadata
+2026-11-17T09:48:20.856+0000	index: &idx.IndexDocument{Options:bson.M{"name":"email_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"email", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.856+0000	index: &idx.IndexDocument{Options:bson.M{"name":"referral_code_1", "sparse":true, "unique":true, "v":2}, Key:bson.D{bson.E{Key:"referral_code", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.876+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.financial_ledger` from metadata
+2026-11-17T09:48:20.876+0000	index: &idx.IndexDocument{Options:bson.M{"name":"idempotency_key_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"idempotency_key", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.876+0000	index: &idx.IndexDocument{Options:bson.M{"name":"beneficiary_user_id_1_recorded_at_-1", "v":2}, Key:bson.D{bson.E{Key:"beneficiary_user_id", Value:1}, bson.E{Key:"recorded_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.876+0000	index: &idx.IndexDocument{Options:bson.M{"name":"order_id_1_recorded_at_-1", "v":2}, Key:bson.D{bson.E{Key:"order_id", Value:1}, bson.E{Key:"recorded_at", Value:-1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.876+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.referrals` from metadata
+2026-11-17T09:48:20.876+0000	index: &idx.IndexDocument{Options:bson.M{"name":"referred_user_id_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"referred_user_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.877+0000	index: &idx.IndexDocument{Options:bson.M{"name":"referrer_id_1_status_1", "v":2}, Key:bson.D{bson.E{Key:"referrer_id", Value:1}, bson.E{Key:"status", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.877+0000	index: &idx.IndexDocument{Options:bson.M{"name":"qualifying_order_id_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"qualifying_order_id", Value:1}}, PartialFilterExpression:(*bson.D)(0x5caa4910210)}
+2026-11-17T09:48:20.877+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.restaurant_reviews` from metadata
+2026-11-17T09:48:20.877+0000	index: &idx.IndexDocument{Options:bson.M{"name":"restaurant_id_1_customer_id_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"restaurant_id", Value:1}, bson.E{Key:"customer_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.906+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.settlement_order_allocations` from metadata
+2026-11-17T09:48:20.906+0000	index: &idx.IndexDocument{Options:bson.M{"name":"order_key_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"order_key", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.906+0000	index: &idx.IndexDocument{Options:bson.M{"name":"settlement_id_1", "v":2}, Key:bson.D{bson.E{Key:"settlement_id", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.906+0000	no indexes to restore for collection `comein_disposable_test_release_20261117t094751z_restored.catalogue_import_jobs`
+2026-11-17T09:48:20.906+0000	restoring indexes for collection `comein_disposable_test_release_20261117t094751z_restored.home_service_settings` from metadata
+2026-11-17T09:48:20.906+0000	index: &idx.IndexDocument{Options:bson.M{"name":"key_1", "unique":true, "v":2}, Key:bson.D{bson.E{Key:"key", Value:1}}, PartialFilterExpression:(*bson.D)(nil)}
+2026-11-17T09:48:20.918+0000	2 document(s) restored successfully. 0 document(s) failed to restore.

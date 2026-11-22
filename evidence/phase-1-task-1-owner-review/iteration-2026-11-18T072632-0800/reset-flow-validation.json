@@ -1,0 +1,662 @@
+{
+  "project": "COME-IN",
+  "review_time_UTC": "2026-11-19T08:17:22.817899+00:00",
+  "review_time_UTC_minus08": "2026-11-19T00:17:22.817913-08:00",
+  "repository": "/workspace/come-in-current",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "iteration": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800",
+  "read_all_13_original_reports": [
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_MASTER_AUDIT_REPORT.md",
+      "read_in_full": true,
+      "bytes": 17889,
+      "sha256": "11f6a8fc518bf7f9f744a0a25f43c6ffc5137581bda879ed9c51d7abb3943bae"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_SCREEN_AND_ROUTE_INVENTORY.md",
+      "read_in_full": true,
+      "bytes": 215922,
+      "sha256": "a1fcf0bfbf7b726804c6d1f9ecb3afa4323c098f175e24da27f95f330f112eab"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_API_AND_DATABASE_INVENTORY.md",
+      "read_in_full": true,
+      "bytes": 91842,
+      "sha256": "dd011902bca281fcb9e3df991f4720e1a98d007f7fbe6ab23719a848e06ffef5"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_SECURITY_FINDINGS.md",
+      "read_in_full": true,
+      "bytes": 13804,
+      "sha256": "a51fcc660ab0534e5fe7a9e6e1c14ebfa66c9f510e7234482cbb2bd2e016be1c"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_GAP_AND_BLOCKER_REGISTER.md",
+      "read_in_full": true,
+      "bytes": 7061,
+      "sha256": "2542d2e4d4781281fa2526a4929459ce42a42c0fc77595e5462b66839e6b3568"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_FINAL_CHECKLIST.md",
+      "read_in_full": true,
+      "bytes": 7504,
+      "sha256": "9d664cb326cdff27e9905b5732e199b488674554ef8e846736fd61ad44f39e5c"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_EVIDENCE_MANIFEST.json",
+      "read_in_full": true,
+      "bytes": 42126,
+      "sha256": "292d73a3ff2e33ecdac587bb0ed4b58041e2fde89e72475d7186b5875f9925c0"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/OWNER_REVIEW_MASTER_REPORT.md",
+      "read_in_full": true,
+      "bytes": 8797,
+      "sha256": "d0d7d3c41d2498cdb0c57c448d1eb3673f1682b7c1e3d9adec5ed376a81feb2d"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/REPORT_BY_REPORT_REVIEW.md",
+      "read_in_full": true,
+      "bytes": 33926,
+      "sha256": "d9075ef0741db189a0d6ab31557deb68e3431a43e1206e3f2b2658efea95a0b5"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/SECURITY_FINDINGS_REVIEW.md",
+      "read_in_full": true,
+      "bytes": 11874,
+      "sha256": "621b3e64c4ef3a8366635fb2bffb288359000d817775975c86f9ca6c2e4ed645"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/EVIDENCE_GAP_REGISTER.md",
+      "read_in_full": true,
+      "bytes": 5115,
+      "sha256": "35ae09cb3976f790af75073b84206bed80c9b5e03a9c6a54909e668ca3fbe245"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/OWNER_APPROVAL_CHECKLIST.md",
+      "read_in_full": true,
+      "bytes": 3022,
+      "sha256": "37f6ef06e03d4f94cf5034ae66443325e6786480c5f2103fd06764d9e22b94a5"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/REVIEW_EVIDENCE_MANIFEST.json",
+      "read_in_full": true,
+      "bytes": 36072,
+      "sha256": "ac6f840e0ab60072429134f2d31996924580b9de212f96e9f9e9389ea2aac53a"
+    }
+  ],
+  "task_scope": "Complete source-only password-reset trace and existing-test evidence validation. No source/config/DB/accounts/provider calls,tests,exploits,credentials orfixes.",
+  "flow_stages": [
+    {
+      "stage": 1,
+      "name": "User-facing forgot/reset entry",
+      "symbols": "AuthScreen,PasswordResetScreen",
+      "evidence": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/auth.tsx",
+          "line_start": 174,
+          "line_end": 175
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/password-reset.tsx",
+          "line_start": 1,
+          "line_end": 7
+        }
+      ],
+      "verification": "VERIFIED source structure only;runtime UNVERIFIED",
+      "controls_found": [
+        "Forgot password button links to/password-reset.",
+        "Screen initializes reset token from URL query if present;supports email request and direct token/password reset POSTs with auth=false.",
+        "Loading,error,success messages and password min8/token min32 button guards exist;backend remains authoritative."
+      ],
+      "limits_or_gaps": [
+        "No fresh browser/device deep-link/render test.",
+        "Reset success displays message/back-to-signin but does not invoke logout or revoke active sessions."
+      ]
+    },
+    {
+      "stage": 2,
+      "name": "Input models",
+      "symbols": "ForgotPasswordIn,ResetPasswordIn,RegisterIn",
+      "evidence": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 1080,
+          "line_end": 1085
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 305,
+          "line_end": 315
+        }
+      ],
+      "verification": "VERIFIED source structure only;runtime UNVERIFIED",
+      "controls_found": [
+        "EmailStr input for forgot.",
+        "Reset token string length32..256;new_password length8..128.",
+        "Registration password length6..128;reset min8 is a distinct source policy."
+      ],
+      "limits_or_gaps": [
+        "Character constraints are not byte-aware bcrypt handling;UTF8 long-password behavior remains untested.",
+        "No authentication dependency on reset endpoints;bearer reset token is the intended proof."
+      ]
+    },
+    {
+      "stage": 3,
+      "name": "Rate identity/window controls",
+      "symbols": "AUTH_RATE_LIMITS,_client_ip,_rate_keys,_check_auth_rate_limit,_record_auth_attempt,_enforce_auth_rate_limit",
+      "evidence": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 813,
+          "line_end": 850
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 1106,
+          "line_end": 1108
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 1122,
+          "line_end": 1124
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 5847,
+          "line_end": 5847
+        }
+      ],
+      "verification": "VERIFIED source structure only;runtime UNVERIFIED",
+      "controls_found": [
+        "Forgot nominal subject cap5/hour;IP cap25/hour via multiplier5.",
+        "Reset has no subject argument:IP-only nominal cap50/900seconds (10*5),not a per-token10-attempt limit.",
+        "Fixed-time buckets;subject key is hashed lowercased email;expires_at TTL index declared.",
+        "Both calls count attempts before main forgot/reset work."
+      ],
+      "limits_or_gaps": [
+        "ForwardedIP trusted without in-functionproxy boundary.",
+        "Read-limit then increment is separate;strictconcurrency cap unproved.",
+        "TTL cleanup asynchronous;operation window counters do not prove current configured ingress protection."
+      ]
+    },
+    {
+      "stage": 4,
+      "name": "Forgot-user lookup and generic response",
+      "symbols": "forgot_password",
+      "evidence": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 1106,
+          "line_end": 1120
+        }
+      ],
+      "verification": "VERIFIED source structure only;runtime UNVERIFIED",
+      "controls_found": [
+        "Email normalizedlower/strip beforeusers lookup.",
+        "Unknown account receives same message string as known account.",
+        "Token never returned in public response;sender failure deletes that newly issued digest."
+      ],
+      "limits_or_gaps": [
+        "Same message is not a demonstrated timing/side-channel resistance guarantee;known account path performs DB/email work.",
+        "Endpoint writes/deletesreset records and rate counters;must NOT be called by this read-onlyreview."
+      ]
+    },
+    {
+      "stage": 5,
+      "name": "Reset token issuance/storage/expiry",
+      "symbols": "forgot_password,now_utc",
+      "evidence": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 1112,
+          "line_end": 1114
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 185,
+          "line_end": 187
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 5899,
+          "line_end": 5899
+        }
+      ],
+      "verification": "VERIFIED source structure only;runtime UNVERIFIED",
+      "controls_found": [
+        "secrets.token_urlsafe(36) requests36randombytes (no token generated in this review).",
+        "Stored token_hash=SHA256(rawtoken),not raw token.",
+        "Existing reset records for the user are deleted then new record inserted withused=False,created_at,expires_at now+30minutes.",
+        "password_resets.expires_at TTL index declared;expiry is separately enforced on consumption."
+      ],
+      "limits_or_gaps": [
+        "Delete/insert is not one atomicuser issuance operation;concurrentforgot requests can leave multiple tokens peruser. This is a staticinterleaving concern,not a tested exploit or separate newly scoredvulnerability.",
+        "Actual DBrecords/token counts and current TTLindex/runtime were not queried."
+      ]
+    },
+    {
+      "stage": 6,
+      "name": "Email provider/configuration boundary",
+      "symbols": "_send_password_reset_email",
+      "evidence": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 1087,
+          "line_end": 1104
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.env.example",
+          "line_start": 29,
+          "line_end": 30
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.env.example",
+          "line_start": 50,
+          "line_end": 54
+        }
+      ],
+      "verification": "VERIFIED source structure only;runtime UNVERIFIED",
+      "controls_found": [
+        "Requiresserver-sideSMTP_HOST,SMTP_FROM,PASSWORD_RESET_URL;returnsFalse ifmissing.",
+        "Token put only in recipientemail URL;template says30-minute expiry.",
+        "SMTP defaultsport587,timeout10seconds,callsSTARTTLS;logs onlyexceptiontype on send failure.",
+        "OptionalSMTP auth used onlyifboth user/password supplied."
+      ],
+      "limits_or_gaps": [
+        "No current bindings/credentials/real email/network inspected.",
+        "PASSWORD_RESET_URL scheme/HTTPS and SMTP certificate-verification policy not established by these source lines;STARTTLS call alone is not proof ofproductiontransport security.",
+        "SMTP_PORTint conversion occurs beforetry,so invalidport config mayescape the helperFalse result/cleanup flow;configurationerror path lacks supplied runtime evidence."
+      ]
+    },
+    {
+      "stage": 7,
+      "name": "Undelivered token cleanup",
+      "symbols": "forgot_password",
+      "evidence": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 1115,
+          "line_end": 1120
+        }
+      ],
+      "verification": "VERIFIED source structure only;runtime UNVERIFIED",
+      "controls_found": [
+        "False delivery result deletesmatchinguser_id+token_hash,not unrelated newdigest.",
+        "Generic response preserved;no resettoken logged/returned by caller."
+      ],
+      "limits_or_gaps": [
+        "ExceptionbeforehelperFalse orDBcleanup failure not covered by existing reset runtime tests.",
+        "Send success does not prove real provider delivery/recipientcontrol;no externaldelivery verification present."
+      ]
+    },
+    {
+      "stage": 8,
+      "name": "Reset validation and active-token lookup",
+      "symbols": "reset_password",
+      "evidence": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 1122,
+          "line_end": 1127
+        }
+      ],
+      "verification": "VERIFIED source structure only;runtime UNVERIFIED",
+      "controls_found": [
+        "Hashes suppliedtoken before lookup.",
+        "Lookup requiresmatching token_hash,usedFalse,expires_at greater than currenttime.",
+        "No matching token yields400 genericinvalid/expired message;TTLpurge delay doesnot by itself extend acceptance.",
+        "ObjectIdparse helper used for user reference."
+      ],
+      "limits_or_gaps": [
+        "No conditionalclaim consumes token atlookup time.",
+        "No database/applicationrecord read in this review;current validtoken availability UNVERIFIED."
+      ]
+    },
+    {
+      "stage": 9,
+      "name": "Password update then token marking",
+      "symbols": "reset_password,hash_password",
+      "evidence": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 1128,
+          "line_end": 1130
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 228,
+          "line_end": 243
+        }
+      ],
+      "verification": "VERIFIED source structure only;runtime UNVERIFIED",
+      "controls_found": [
+        "bcrypt12round hashing used for new password.",
+        "users.password_hash/updated_at written beforepassword_resets.used/used_at.",
+        "Reset response issuesno newaccessJWT."
+      ],
+      "limits_or_gaps": [
+        "Two awaited writes lackshared transaction/session/CAS tokenownership claim.",
+        "Secondwrite filters_id only;doesnot requireusedFalse/expiry orcheck modified_count.",
+        "Userupdate result notchecked:missing/deleteduser could still result in tokenmarking/successmessage.",
+        "Failure afterpasswordwrite can leave token reusable;concurrentvalidtoken readers mayboth overwritepassword. SOURCEVERIFIED potentialinterleavings only;NO race/failure/password changes executed."
+      ]
+    },
+    {
+      "stage": 10,
+      "name": "JWT/session state after reset",
+      "symbols": "create_access_token,get_current_user_optional,require_role,AuthProvider.logout",
+      "evidence": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 228,
+          "line_end": 230
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 246,
+          "line_end": 297
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/store/auth.tsx",
+          "line_start": 43,
+          "line_end": 45
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/store/auth.tsx",
+          "line_start": 100,
+          "line_end": 103
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line_start": 5827,
+          "line_end": 5839
+        }
+      ],
+      "verification": "VERIFIED source structure only;runtime UNVERIFIED",
+      "controls_found": [
+        "HS256accessJWT hasexp seven days,typeaccess,sub,role,email;DBuser reloaded androlechecks rely oncurrentDBuser.",
+        "Deleteduser rejected;expiry,type/signature androledependencies remain meaningful safeguards.",
+        "Clientlogout clearslocaltoken/userstate.",
+        "Productionstartup requiresnonemptyJWTsecret andmin32characters."
+      ],
+      "limits_or_gaps": [
+        "Nojti/sessionversion/passwordchanged cutoff used;resetdoesnot rotateJWTsecret orinvalidateexistingtokens.",
+        "Clientlogout test cannot proveserverrevocation ofcopiedJWT.",
+        "Actual productionsecretstrength,ingress andtokenstate notread/tested."
+      ]
+    }
+  ],
+  "finding": {
+    "id": "SEC-01",
+    "reported_severity": "HIGH",
+    "disposition": "OPEN",
+    "validation_status": "VALIDATION BLOCKED",
+    "source_structure_verdict": "VERIFIED",
+    "runtime_atomicity_or_exploit_verdict": "UNVERIFIED",
+    "owner_closure_approval": "NOT FOUND",
+    "severity_assessment": "High-priority account-recovery integrity concern is defensible;not proof of arbitrary unauthenticated account takeover. Severity/exposure remains conditional on validtokenavailability,authorized user/mailcontrol,concurrency/failure behavior,deploymentlimits andowner policy. Do not close solely from routeexistence/static testpasses.",
+    "preconditions": [
+      "An unused,unexpiredmatchingreset token andexistinguserreference must exist orbe obtained through theauthorizedresetflow;randomunauthenticatedinput is rejected byhash/expiry/used lookup.",
+      "Concurrent requests needboth to observevalidunusedrecord beforeeither marks it,or a failure mustoccurafterpasswordupdate beforeusedmark. Ratecontrol is notan atomic tokenclaim.",
+      "Actual SMTP/resetURL/currentDB/token availability anddeploymentmitigations were not inspected;prior reports do not prove liveissuance.",
+      "No request,account mutation,token generation,replay/race orfailureinjection was performed in this review."
+    ],
+    "potential_impact": [
+      "Competingacceptedresets mayoverwritepassword;single-use semantics lack a provenatomic guarantee.",
+      "Passwordwrite/tokenmark split canyieldsuccess/failure ambiguity andtokenreuse afterpartialfailure.",
+      "ExistingaccessJWTs are not password-reset-revoked by currentsource(relatedSEC-02),soreset successdoesnot establishcompromisedsessiontermination."
+    ],
+    "not_claimed": [
+      "No confirmed realaccounttakeover",
+      "No demonstratedreset replay",
+      "No successfulrealemail delivery",
+      "No currentruntimeAtomicityPASS",
+      "No fix orclosedHIGHfinding"
+    ]
+  },
+  "original_report_refs": [
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_SECURITY_FINDINGS.md",
+      "lines": [
+        13,
+        20
+      ],
+      "scope": "OriginalHIGHfinding andinaccuraterelatedtestpointer"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/SECURITY_FINDINGS_REVIEW.md",
+      "lines": [
+        11,
+        20
+      ],
+      "scope": "ReviewedHIGHremainsOPEN"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/OWNER_REVIEW_MASTER_REPORT.md",
+      "lines": [
+        28,
+        43
+      ],
+      "scope": "Citationcontradiction andopenHIGHdisposition"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/EVIDENCE_GAP_REGISTER.md",
+      "lines": [
+        15,
+        22
+      ],
+      "scope": "R05citationgap/R12HIGHclosure"
+    }
+  ],
+  "existing_test_source_matches": [
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_api_contract.py",
+      "matching_lines": [
+        {
+          "line": 33,
+          "text": "assert (\"POST\", \"/auth/password/forgot\") in ROUTES"
+        },
+        {
+          "line": 34,
+          "text": "assert (\"POST\", \"/auth/password/reset\") in ROUTES"
+        }
+      ]
+    }
+  ],
+  "related_existing_tests": [
+    {
+      "reference": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_api_contract.py",
+        "line_start": 32,
+        "line_end": 39
+      },
+      "test": "test_auth_address_payment_and_support_routes_exist",
+      "scope": "ASTrouteexistence only;lines33-34check forgot/resetroutes,not requestmodelvalidation,SMTP,expiry,one-timeuse,atomicity orsessionrevocation."
+    },
+    {
+      "reference": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_frontend_contracts.py",
+        "line_start": 14,
+        "line_end": 21
+      },
+      "test": "test_auth_token_uses_secure_storage_consistently",
+      "scope": "Source string assertions for client storage keys;doesnot exercisepasswordreset/revocation."
+    },
+    {
+      "reference": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shared_system_integration_contract.py",
+        "line_start": 116,
+        "line_end": 121
+      },
+      "test": "test_shared_logout_clears_the_same_token_and_existing_roles_remain_authoritative",
+      "scope": "Source assertions clientlogoutclearslocaltoken/current rolepolicy;notserverlogout-all orreset atomicity."
+    }
+  ],
+  "irrelevant_original_citation": {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_functional_blockers_regression.py",
+    "read_in_full": true,
+    "password_reset_specific_assertions_found": 0,
+    "original_citation_status": "CONTRADICTED forresetcoverage relevance",
+    "correction": "Use test_restaurant_api_contract.py:32\u201339 as routeexistenceONLY;there is NO located concurrency/atomic-reset/SMTP/provider/session-revocation runtime testproof."
+  },
+  "historical_artifacts": [
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/backend-final-v2.xml",
+      "sha256": "51fb23bdfaf50692e6919c342ad9be0a653b082e986f1ed825deb3706b3a00c2",
+      "recorded_suite_timestamp": "2026-11-18T13:25:23.275822+00:00",
+      "cases": [
+        {
+          "name": "test_auth_token_uses_secure_storage_consistently",
+          "class": "tests.test_frontend_contracts",
+          "result": "PASS",
+          "scope": "historical static source/route test,not reset runtime/concurrency"
+        },
+        {
+          "name": "test_shared_logout_clears_the_same_token_and_existing_roles_remain_authoritative",
+          "class": "tests.test_shared_system_integration_contract",
+          "result": "PASS",
+          "scope": "historical static source/route test,not reset runtime/concurrency"
+        },
+        {
+          "name": "test_auth_address_payment_and_support_routes_exist",
+          "class": "tests.test_restaurant_api_contract",
+          "result": "PASS",
+          "scope": "historical static source/route test,not reset runtime/concurrency"
+        }
+      ]
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/contract-focused.xml",
+      "sha256": "f1846403e7e88e38f253d9e06f3672e7076e9647ffb06fee2568df9d706b787f",
+      "recorded_suite_timestamp": "2026-11-18T13:20:06.480649+00:00",
+      "cases": [
+        {
+          "name": "test_auth_address_payment_and_support_routes_exist",
+          "class": "tests.test_restaurant_api_contract",
+          "result": "PASS",
+          "scope": "historical static source/route test,not reset runtime/concurrency"
+        },
+        {
+          "name": "test_shared_logout_clears_the_same_token_and_existing_roles_remain_authoritative",
+          "class": "tests.test_shared_system_integration_contract",
+          "result": "PASS",
+          "scope": "historical static source/route test,not reset runtime/concurrency"
+        }
+      ]
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/security-races-after.xml",
+      "sha256": "737878a8f6e366e435dfa466518b3bf5ae12686c9c87acde03cac02793ecee4d",
+      "recorded_suite_timestamp": "2026-11-18T13:23:10.051980+00:00",
+      "cases": [
+        {
+          "name": "test_auth_address_payment_and_support_routes_exist",
+          "class": "tests.test_restaurant_api_contract",
+          "result": "PASS",
+          "scope": "historical static source/route test,not reset runtime/concurrency"
+        },
+        {
+          "name": "test_shared_logout_clears_the_same_token_and_existing_roles_remain_authoritative",
+          "class": "tests.test_shared_system_integration_contract",
+          "result": "PASS",
+          "scope": "historical static source/route test,not reset runtime/concurrency"
+        }
+      ]
+    }
+  ],
+  "proposed_tests_NOT_EXECUTED": [
+    {
+      "id": "RESET-P01",
+      "name": "Input boundaries",
+      "proposal": "Offline modelvalidation checks valid/invalidEmailStr,token min/max/password min/max andUTF8 byte-boundary policy.",
+      "safety": "Noaccounts/providers;owner-approved isolated scope first.",
+      "execution_status": "NOT EXECUTED /futureapproval required"
+    },
+    {
+      "id": "RESET-P02",
+      "name": "Genericforgot and no rawtoken exposure",
+      "proposal": "Use entirelyin-memory DB/SMTP doubles to compare known/unknownresponsefields and verifyrawtoken neverinAPI/logs.",
+      "safety": "NoactualSMTPoraccounts.",
+      "execution_status": "NOT EXECUTED /futureapproval required"
+    },
+    {
+      "id": "RESET-P03",
+      "name": "Issuancehash/30minuteexpiry/cleanup",
+      "proposal": "Purecontrolledclock anddoubles verifySHA256storage,usedFalse,expiry,missingSMTPFalse andtargeteddigestcleanup.",
+      "safety": "Do notgeneratelivecredentials orwriteappDB.",
+      "execution_status": "NOT EXECUTED /futureapproval required"
+    },
+    {
+      "id": "RESET-P04",
+      "name": "SMTPexception/configerror paths",
+      "proposal": "MockSMTPsuccess/STARTTLSfailure/timeouts/missingfields/invalidport;assert honestfailure andtokencleanup policy.",
+      "safety": "Noemails/providerrequests;transportsecurityreviewseparate.",
+      "execution_status": "NOT EXECUTED /futureapproval required"
+    },
+    {
+      "id": "RESET-P05",
+      "name": "Normalreset/expired/used/wrong token",
+      "proposal": "Approveddisposable fixtures verifypasswordupdate exactlyonce,expiry400,usedtokenrejection,nonexistentuserresult policy.",
+      "safety": "Wouldmutateisolatedtestdata;NOT authorized/executed here.",
+      "execution_status": "NOT EXECUTED /futureapproval required"
+    },
+    {
+      "id": "RESET-P06",
+      "name": "Concurrent samevalidtoken consumption",
+      "proposal": "Barrier-synchronized isolatedrequests shouldprove atmostone accepted password update andno competing overwrite,with exact counts.",
+      "safety": "Acceptancecriterionproposal only;currentcodehasno passingproof.",
+      "execution_status": "NOT EXECUTED /futureapproval required"
+    },
+    {
+      "id": "RESET-P07",
+      "name": "Failurebetween token/passwordwrites",
+      "proposal": "InjectedDBfailures/unknowncommit outcomes need a consistent durablepassword+consumed-token result orsafe retry semantics.",
+      "safety": "Requires approvedisolated database/faultscope,notproduction.",
+      "execution_status": "NOT EXECUTED /futureapproval required"
+    },
+    {
+      "id": "RESET-P08",
+      "name": "Concurrentforgot invalidation",
+      "proposal": "Ownerdefinesone-active-token policy,then isolatedinterleavings validateissuance/delete/insert/senderfailure races.",
+      "safety": "No policy silentlyinvented.",
+      "execution_status": "NOT EXECUTED /futureapproval required"
+    },
+    {
+      "id": "RESET-P09",
+      "name": "OldJWTafterreset/clientlogout",
+      "proposal": "Ownerdefinesrevocationpolicy;isolatedtest proves copiedoldJWT accepted/denied accordingtopolicy anddeleted/rolechangeduser controls.",
+      "safety": "Existingclientstorage test doesnot fulfillthis.",
+      "execution_status": "NOT EXECUTED /futureapproval required"
+    },
+    {
+      "id": "RESET-P10",
+      "name": "Throttle/proxy boundary",
+      "proposal": "Approvedin-memory identity/countertests andtrusted-ingressconfiguration review verify fixedwindows,forgotemail/IP caps,resetIPcap andatomicburst behavior.",
+      "safety": "Noattacksimulation/externalspoofing now.",
+      "execution_status": "NOT EXECUTED /futureapproval required"
+    },
+    {
+      "id": "RESET-P11",
+      "name": "ProviderURL/TLS/securitysettings",
+      "proposal": "Read-onlyauthorizeddeployment evidence provesresetURLHTTPS,SMTPcertpolicy,secrets,allowedfrontend routes;controlledmail delivery onlyunderfutureauthorizednonproductionprovider scope.",
+      "safety": "No bindings/credentials accessed here.",
+      "execution_status": "NOT EXECUTED /futureapproval required"
+    }
+  ],
+  "additional_source_review_caveats": [
+    "Genericforgot message doesnot eliminate potentialtimingdifference;no enumeration test performed.",
+    "Forgotdelete/insert andSMTPcleanup interleavings areadditionalunvalidated paths;not newlynumberedcanonicaltasks ornewexploitedvulnerabilities.",
+    "SMTP STARTTLS callandenvURL presence alone do not prove productionTLSoractualdelivery;invalidSMTP_PORT parsing occursbeforetry.",
+    "No actual user/token/email/secret values were inspected orwritten.",
+    "Existingtoken/publicemailstringsandserver-sidevariable namesare described without exposingvalues."
+  ],
+  "fresh_tests_executed": 0,
+  "DB_reads_or_writes": 0,
+  "provider_or_network_calls": 0,
+  "account_or_token_creations": 0,
+  "existing_files_modified": false,
+  "source_files_modified": false,
+  "recommendation": "REVIEW PENDING. KeepSEC-01HIGHOPEN/VALIDATIONBLOCKED;owner decides allowedisolatedfurtherverification/remediation. NoTask2/implementation."
+}

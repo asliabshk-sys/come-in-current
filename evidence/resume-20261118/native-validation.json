@@ -1,0 +1,22 @@
+{
+  "checks": [
+    "dev microphone usage description present",
+    "prod microphone usage description present",
+    "production ATS and Android cleartext denied",
+    "android Razorpay autolink discovered (not native compilation)",
+    "ios Razorpay autolink discovered (not native compilation)"
+  ],
+  "host": "Linux",
+  "tools": {
+    "java": "/usr/bin/java",
+    "javac": null,
+    "adb": null,
+    "emulator": null,
+    "gradle": null,
+    "sdkmanager": null,
+    "xcodebuild": null,
+    "pod": null
+  },
+  "native_binary_build": "BLOCKED",
+  "device_test": "BLOCKED"
+}

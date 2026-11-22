@@ -1,0 +1,13 @@
+{
+  "module": "react-native-razorpay",
+  "version": "3.0.0",
+  "official_repository": {
+    "type": "git",
+    "url": "git+https://github.com/razorpay/react-native-razorpay.git"
+  },
+  "previous_autolink_evidence_retained": true,
+  "native_compile_verified": false,
+  "android_scratch_prebuild_completed": true,
+  "android_compile_blocker": "SDK path unavailable; spawn adb ENOENT",
+  "ios_compile_blocker": "Host Linux; macOS required"
+}

@@ -1,0 +1,278 @@
+{
+  "denominator": 37,
+  "basis": "37named review/validation gates,not unique vulnerabilities or Python testcases. Multiple evidence gates may share a suite. PASS only for the precisely bounded executed statement.",
+  "counts": {
+    "PASS": 21,
+    "FAIL": 3,
+    "BLOCKED": 12,
+    "NOT RUN": 1
+  },
+  "allowed_statuses": [
+    "PASS",
+    "FAIL",
+    "BLOCKED",
+    "NOT RUN",
+    "NOT APPLICABLE"
+  ],
+  "gates": [
+    {
+      "id": "V01",
+      "validation": "Repository identity",
+      "status": "PASS",
+      "evidence": "recovery.json",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V02",
+      "validation": "Previous manifest and27members",
+      "status": "PASS",
+      "evidence": "recovery.json",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V03",
+      "validation": "8476protected file integrity",
+      "status": "PASS",
+      "evidence": "final-preservation.json",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V04",
+      "validation": "8504previous-iteration baseline integrity",
+      "status": "PASS",
+      "evidence": "final-preservation.json",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V05",
+      "validation": "8533current baseline integrity",
+      "status": "PASS",
+      "evidence": "final-preservation.json",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V06",
+      "validation": "Local MongoDB PRIMARY",
+      "status": "PASS",
+      "evidence": "db-metadata-current.json",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V07",
+      "validation": "67declared indexes match current metadata",
+      "status": "PASS",
+      "evidence": "db-metadata-current.json",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V08",
+      "validation": "Current timestamp/raw relevant DB options captured",
+      "status": "PASS",
+      "evidence": "db-metadata-current.json",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V09",
+      "validation": "Offline backend/contracts",
+      "status": "PASS",
+      "evidence": "backend-offline.xml",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V10",
+      "validation": "Local ASGI/Mongo payment/refund mocks",
+      "status": "PASS",
+      "evidence": "backend-local-payments.xml",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V11",
+      "validation": "Isolated HTTP/Mongo regression",
+      "status": "PASS",
+      "evidence": "backend-live.xml",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V12",
+      "validation": "TypeScript zero-error check",
+      "status": "PASS",
+      "evidence": "frontend-validation.json",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V13",
+      "validation": "ESLint zero-error check",
+      "status": "PASS",
+      "evidence": "frontend-eslint.json",
+      "limit_or_next_action": "Executed bounded check only;not an owner approval,runtime/device/provider guarantee. ESLint retains10warnings;planner count caveat is recorded."
+    },
+    {
+      "id": "V14",
+      "validation": "CHAND planner helper check",
+      "status": "PASS",
+      "evidence": "frontend-planner.log",
+      "limit_or_next_action": "Executed bounded check only;not an owner approval,runtime/device/provider guarantee. ESLint retains10warnings;planner count caveat is recorded."
+    },
+    {
+      "id": "V15",
+      "validation": "Native SDK adapter VM mock",
+      "status": "PASS",
+      "evidence": "frontend-native-mock.log",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V16",
+      "validation": "Config/command guard checks",
+      "status": "PASS",
+      "evidence": "frontend-config-guard.log",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V17",
+      "validation": "Actual web export",
+      "status": "PASS",
+      "evidence": "frontend-web-build-execution.json",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V18",
+      "validation": "New execution source/provenance binding",
+      "status": "PASS",
+      "evidence": "source-state-binding.json",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V19",
+      "validation": "All20gap dispositions documented",
+      "status": "PASS",
+      "evidence": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V20",
+      "validation": "Android autolinking metadata",
+      "status": "PASS",
+      "evidence": "android-autolinking-current.stdout",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V21",
+      "validation": "iOS autolinking metadata",
+      "status": "PASS",
+      "evidence": "ios-autolinking-current.stdout",
+      "limit_or_next_action": "Bounded scope only;see linked report for exclusions."
+    },
+    {
+      "id": "V22",
+      "validation": "Password-reset security invariants",
+      "status": "FAIL",
+      "evidence": "password-reset-junit-v2.xml",
+      "limit_or_next_action": "23PASS/7FAIL. SEC01confirmed locally;protected source correction requires owner authorization."
+    },
+    {
+      "id": "V23",
+      "validation": "Last-admin security invariant",
+      "status": "FAIL",
+      "evidence": "broad-security-reproduced.xml",
+      "limit_or_next_action": "49PASS/1FAIL;synthetic collection doubles only,privileged concurrency preconditions."
+    },
+    {
+      "id": "V24",
+      "validation": "Legacy backend contract compatibility",
+      "status": "FAIL",
+      "evidence": "backend-legacy.xml",
+      "limit_or_next_action": "17PASS/2assertionFAIL/3fixtureERROR/1SKIP;owner reviews409contract and required product fixture fields before any source/assertion edits."
+    },
+    {
+      "id": "V25",
+      "validation": "Historical per-run exact source/commit attestation",
+      "status": "BLOCKED",
+      "evidence": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "limit_or_next_action": "Missing contemporaneous trusted binding cannot be fabricated or recreated by current hashes."
+    },
+    {
+      "id": "V26",
+      "validation": "Android native compilation",
+      "status": "BLOCKED",
+      "evidence": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "limit_or_next_action": "Missing javac/AndroidSDK/buildtools/Gradle development build prerequisites."
+    },
+    {
+      "id": "V27",
+      "validation": "Android device acceptance",
+      "status": "BLOCKED",
+      "evidence": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "limit_or_next_action": "No emulator/adb/KVM/physical device."
+    },
+    {
+      "id": "V28",
+      "validation": "iOS native compilation",
+      "status": "BLOCKED",
+      "evidence": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "limit_or_next_action": "Linux,no macOS/Xcode/CocoaPods/nativebuild host."
+    },
+    {
+      "id": "V29",
+      "validation": "iOS device acceptance",
+      "status": "BLOCKED",
+      "evidence": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "limit_or_next_action": "No iPhone/simulator/Xcode host."
+    },
+    {
+      "id": "V30",
+      "validation": "Actual RazorpayTEST payment",
+      "status": "BLOCKED",
+      "evidence": "RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+      "limit_or_next_action": "Explicit TESTkey/secret/mode unavailable;no provider call."
+    },
+    {
+      "id": "V31",
+      "validation": "Actual provider webhook delivery",
+      "status": "BLOCKED",
+      "evidence": "RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+      "limit_or_next_action": "TESTwebhook binding/owned delivery endpoint/evidence unavailable."
+    },
+    {
+      "id": "V32",
+      "validation": "Actual provider refund settlement",
+      "status": "BLOCKED",
+      "evidence": "RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+      "limit_or_next_action": "TESTpayment/refund credentials and genuine provider references unavailable."
+    },
+    {
+      "id": "V33",
+      "validation": "Actual production security/configuration",
+      "status": "BLOCKED",
+      "evidence": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "limit_or_next_action": "No authorized production infrastructure evidence;source/local checks cannot establish it."
+    },
+    {
+      "id": "V34",
+      "validation": "Four optional parser cases",
+      "status": "BLOCKED",
+      "evidence": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "limit_or_next_action": "Missing pypdf,openpyxl,PIL,fitz;no installation authorized/performed."
+    },
+    {
+      "id": "V35",
+      "validation": "Legacy object-storage upload case",
+      "status": "BLOCKED",
+      "evidence": "backend-legacy.xml",
+      "limit_or_next_action": "Storage provider unconfigured;HTTP503skip is not a passing upload."
+    },
+    {
+      "id": "V36",
+      "validation": "Personal owner approval/security disposition",
+      "status": "BLOCKED",
+      "evidence": "TASK_1_OWNER_APPROVAL_CHECKLIST.md",
+      "limit_or_next_action": "Owner has not authorized fixes or approved/closedTask1."
+    },
+    {
+      "id": "V37",
+      "validation": "Every rendered button/state/device workflow",
+      "status": "NOT RUN",
+      "evidence": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "limit_or_next_action": "Complete 579-binding/browser/device acceptance matrix was not executed. Static contracts/helpers/API tests are narrower evidence."
+    }
+  ]
+}

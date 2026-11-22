@@ -1,0 +1,21 @@
+SEC01-01 PASS 
+SEC01-02 PASS 
+SEC01-03 PASS 
+SEC01-04 PASS 
+SEC01-05 PASS 
+SEC01-06 FAIL Two same-token consumers did not produce exactly one success and one400
+SEC01-07 FAIL A repeated eight-way concurrency round did not have exactly one winner
+SEC01-08 FAIL An aborted reset left a committed password or consumed token
+SEC01-09 PASS 
+SEC01-10 FAIL An aborted reset left a committed password or consumed token
+SEC01-11 FAIL Transient failure was not safely retried
+SEC01-12 FAIL Unknown commit acknowledgement replayed the reset body or failed to retry commit
+SEC01-13 PASS 
+SEC01-14 FAIL Missing-user reset reported success or committed token consumption
+SEC01-15 FAIL Token expired after preflight was accepted
+SEC01-16 FAIL A token invalidated after preflight still changed the password
+SEC01-17 PASS 
+SEC01-18 FAIL Missing transaction support fell back to non-atomic writes
+SEC01-19 PASS 
+SEC01-20 PASS 
+{"stage": "before", "counts": {"PASS": 10, "FAIL": 10, "ERROR": 0, "SKIPPED": 0}, "database_retained": "comein_sec01_focused_before_20261119t161424z_f23513f3"}

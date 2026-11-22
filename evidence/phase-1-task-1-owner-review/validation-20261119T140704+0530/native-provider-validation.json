@@ -1,0 +1,505 @@
+{
+  "project": "COME-IN",
+  "timestamp_Asia_Kolkata": "2026-11-19T14:14:11.601290+05:30",
+  "repository": "/workspace/come-in-current",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "application_extraction": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+  "source_tree_is_git_HEAD": false,
+  "scope": "Current native prerequisites/autolink metadata and source/payment TEST-readiness audit. No app builds,devices,providers or configuration changes.",
+  "prior_inputs": [
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_EVIDENCE_GAP_CLOSURE_REPORT.md",
+      "sha256": "3d3c47c66f5997d2a90d8e41beee3ebee886f64a894ed60f4d0d2bf3689e6ce1",
+      "bytes": 67826,
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_SECURITY_VALIDATION_REPORT.md",
+      "sha256": "f2bac57653f5348adceaa8fa158fef2d7b6c9c3d61ac3e417e27fb682118715c",
+      "bytes": 24904,
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_NAVIGATION_AND_API_INVENTORY.md",
+      "sha256": "c3196394b04218f9220e7bbb77b2573736e8b56352b9cafb88eba2a266c8c044",
+      "bytes": 333626,
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_PRESERVATION_VERIFICATION.md",
+      "sha256": "5459f05e0daefde654244dc6d59425d0589caad31e8f1217d14f5e84114e1494",
+      "bytes": 7368,
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_OWNER_DECISION_READINESS.md",
+      "sha256": "71ca13c7180de6624a5844e483e6cd7966c177c71a5c206977a8656b32dab4c8",
+      "bytes": 7727,
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_REVIEW_MANIFEST.json",
+      "sha256": "7fbe1ee4d606157421f7192cc69fc0ee59f8fd9409ac655fe1fd4a6a8308b8af",
+      "bytes": 9059,
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/ITERATION_CHECKPOINT.md",
+      "sha256": "b402d622c2b33e7f8e7bf676f474a5f7eb544b3e38cd3fcfff6e033bf828a847",
+      "bytes": 6941,
+      "read": true
+    }
+  ],
+  "source_hashes": [
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/package.json",
+      "sha256": "eec01c2532ab0f74ce42bb180e803c13c1e0781787cd5c867c1867dcc82cf863",
+      "bytes": 2433
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app.json",
+      "sha256": "3420232b6827e3bbd595fca4b746541af1f6db7c365cb3719ef09e7d018f466e",
+      "bytes": 1909
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app.config.js",
+      "sha256": "642e4f961317a924ae6ffde4c318ffd3b68a659d9a854854e19fbec7bc0dbf79",
+      "bytes": 859
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/plugins/withReleaseSafety.js",
+      "sha256": "55b3a0712f0d816174f3fad395100e8d2d81796add21a5ca7763fc0413df7b40",
+      "bytes": 814
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/razorpay.ts",
+      "sha256": "e0e41ac6ab6087fcdb05d782e91eb91103db4c9ef18914991d173f0112e97aa9",
+      "bytes": 1307
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/razorpay-checkout.ts",
+      "sha256": "ffd002ad2c172c6b416b98ed01fc3248c6f40f5dd2ee9129862397f2506fe880",
+      "bytes": 1641
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/razorpay-checkout.native.ts",
+      "sha256": "69575525f94fd2041e3bc2f4446ab26f3eec14b6685b7f4115678071592027e7",
+      "bytes": 1501
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/GroceryOnlinePayment.tsx",
+      "sha256": "14b53a2152e7092ef97207c4b1f03e658216d1cbfdfd6192dc46b73d97ee9be5",
+      "bytes": 4799
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/checkout.tsx",
+      "sha256": "bb20b859e7b917cafbededaa16594407b2eab02400ccd1e7d94e5ac6dc2d81b0",
+      "bytes": 28937
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/checkout.tsx",
+      "sha256": "47e4a7f154b2a7606576f4d2a609a17c24d1c35b1a492caf5920e9408e9207f7",
+      "bytes": 13711
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/payment_config.py",
+      "sha256": "91269aa376d204e31a235161c09be0f46409c6b6820ed788e1b4b8c92e8a967c",
+      "bytes": 2012
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/payment_webhook.py",
+      "sha256": "f1870741c52e292e7ca019d508656670dbae886f52b065f65aa5a48de563b7a9",
+      "bytes": 2482
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/refund_rules.py",
+      "sha256": "7d05702e7c36d8cd3e16d21e0e9d728cfb79a5c1ab7f8a5697eb9c24f3161afa",
+      "bytes": 4112
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/security_config.py",
+      "sha256": "fe905d064168ec5cf76d2d4dfe9ec5dc656f7428a140cba15e45042f5d760001",
+      "bytes": 1190
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "sha256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+      "bytes": 430375
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.env.example",
+      "sha256": "0b60ae96e654f889d1c95ba07ecce878d96991e90dd702cfcb21a654b54031ed",
+      "bytes": 3384
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay/package.json",
+      "sha256": "53b03043db0ab4e7fc0b898cec4e9fcb6fe4e2badc758a6964656c38d5fcb192",
+      "bytes": 907
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay/react-native-razorpay.podspec",
+      "sha256": "a9ff9ef7d430a21b447f8b9cda47e4089e98654fb2f3b31842f7d5e4ad5e3d05",
+      "bytes": 1493
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay/android/build.gradle",
+      "sha256": "0a905cdf36658ee72ab8a5d2c1550aaad4b9371527d5de2177be2e5382ac9a40",
+      "bytes": 1605
+    }
+  ],
+  "platform": {
+    "system": "Linux",
+    "machine": "x86_64",
+    "release": "6.18.57"
+  },
+  "tools": {
+    "java": "/usr/bin/java",
+    "javac": null,
+    "gradle": null,
+    "adb": null,
+    "emulator": null,
+    "sdkmanager": null,
+    "xcodebuild": null,
+    "xcrun": null,
+    "pod": null,
+    "eas": null,
+    "node": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "yarn": null
+  },
+  "path_presence": {
+    "/dev/kvm": false,
+    "/dev/bus/usb": false,
+    "/opt/android-sdk": false,
+    "/usr/local/android-sdk": false,
+    "/home/agent/Android/Sdk": false,
+    "/Applications/Xcode.app": false,
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/android": false,
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/ios": false,
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/eas.json": false
+  },
+  "environment_presence_only": {
+    "JAVA_HOME": false,
+    "ANDROID_HOME": false,
+    "ANDROID_SDK_ROOT": false,
+    "DEVELOPER_DIR": false,
+    "EXPO_TOKEN": false,
+    "EAS_ACCESS_TOKEN": false,
+    "APP_ENV": false,
+    "ENVIRONMENT": false,
+    "RAZORPAY_MODE": false,
+    "RAZORPAY_KEY_ID": false,
+    "RAZORPAY_KEY_SECRET": false,
+    "RAZORPAY_WEBHOOK_SECRET": false
+  },
+  "binding_presence_only": [
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.env",
+      "exists": true,
+      "key_presence_only": {
+        "APP_ENV": {
+          "declared": true,
+          "nonempty": true
+        },
+        "ENVIRONMENT": {
+          "declared": false,
+          "nonempty": false
+        },
+        "RAZORPAY_KEY_ID": {
+          "declared": true,
+          "nonempty": false
+        },
+        "RAZORPAY_KEY_SECRET": {
+          "declared": true,
+          "nonempty": false
+        },
+        "RAZORPAY_MODE": {
+          "declared": false,
+          "nonempty": false
+        },
+        "RAZORPAY_WEBHOOK_SECRET": {
+          "declared": true,
+          "nonempty": false
+        }
+      }
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/.env",
+      "exists": true,
+      "key_presence_only": {
+        "APP_ENV": {
+          "declared": false,
+          "nonempty": false
+        },
+        "ENVIRONMENT": {
+          "declared": false,
+          "nonempty": false
+        },
+        "RAZORPAY_KEY_ID": {
+          "declared": false,
+          "nonempty": false
+        },
+        "RAZORPAY_KEY_SECRET": {
+          "declared": false,
+          "nonempty": false
+        },
+        "RAZORPAY_MODE": {
+          "declared": false,
+          "nonempty": false
+        },
+        "RAZORPAY_WEBHOOK_SECRET": {
+          "declared": false,
+          "nonempty": false
+        }
+      }
+    }
+  ],
+  "installed_package_versions": {
+    "expo": "58.0.17",
+    "react-native": "0.88.0",
+    "react-native-razorpay": "3.0.0",
+    "expo-dev-client": null
+  },
+  "native_command_results": [
+    {
+      "timestamp": "2026-11-19T14:10:13.926109+05:30",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": [
+        "java",
+        "-version"
+      ],
+      "exit_code": 0,
+      "stdout_artifact": "java-version.stdout",
+      "stderr_artifact": "java-version.stderr",
+      "scope": "Metadata/source resolution only;not native compilation or runtime linking."
+    },
+    {
+      "timestamp": "2026-11-19T14:10:13.965492+05:30",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": [
+        "node",
+        "node_modules/expo-modules-autolinking/bin/expo-modules-autolinking.js",
+        "react-native-config",
+        "--platform",
+        "android",
+        "--json"
+      ],
+      "exit_code": 0,
+      "stdout_artifact": "android-autolinking-current.stdout",
+      "stderr_artifact": "android-autolinking-current.stderr",
+      "scope": "Metadata/source resolution only;not native compilation or runtime linking.",
+      "razorpay": {
+        "root": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay",
+        "name": "react-native-razorpay",
+        "platforms": {
+          "android": {
+            "sourceDir": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay/android",
+            "packageImportPath": "import com.razorpay.rn.RazorpayPackage;",
+            "packageInstance": "new RazorpayPackage()",
+            "buildTypes": [],
+            "libraryName": "RNRazorpayCheckoutSpec",
+            "componentDescriptors": [],
+            "cmakeListsPath": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay/android/build/generated/source/codegen/jni/CMakeLists.txt",
+            "cxxModuleCMakeListsModuleName": null,
+            "cxxModuleCMakeListsPath": null,
+            "cxxModuleHeaderName": null,
+            "isPureCxxDependency": false
+          }
+        }
+      },
+      "razorpay_dependency_detected": true
+    },
+    {
+      "timestamp": "2026-11-19T14:10:14.704612+05:30",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": [
+        "node",
+        "node_modules/expo-modules-autolinking/bin/expo-modules-autolinking.js",
+        "react-native-config",
+        "--platform",
+        "ios",
+        "--json"
+      ],
+      "exit_code": 0,
+      "stdout_artifact": "ios-autolinking-current.stdout",
+      "stderr_artifact": "ios-autolinking-current.stderr",
+      "scope": "Metadata/source resolution only;not native compilation or runtime linking.",
+      "razorpay": {
+        "root": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay",
+        "name": "react-native-razorpay",
+        "platforms": {
+          "ios": {
+            "podspecPath": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay/react-native-razorpay.podspec",
+            "version": "3.0.0",
+            "configurations": [],
+            "scriptPhases": []
+          }
+        }
+      },
+      "razorpay_dependency_detected": true
+    }
+  ],
+  "native_checks": [
+    {
+      "id": "NATIVE-01",
+      "validation": "Current native host/toolchain inventory",
+      "status": "PASS",
+      "scope": "Executed read-only platform/tool/path inspection;PASS is inventory success,not build readiness."
+    },
+    {
+      "id": "NATIVE-02",
+      "validation": "Android Razorpay autolink metadata",
+      "status": "PASS",
+      "scope": "Fresh command exit0 resolves RazorpayPackage/codegen metadata;not compilation or runtime linking."
+    },
+    {
+      "id": "NATIVE-03",
+      "validation": "iOS Razorpay autolink metadata",
+      "status": "PASS",
+      "scope": "Fresh command exit0 resolves installed3.0.0podspec;not pod installation or runtime linking."
+    },
+    {
+      "id": "NATIVE-04",
+      "validation": "Android native debug build",
+      "status": "BLOCKED",
+      "scope": "No javac,Android SDK/build-tools/sdkmanager/Gradle or configured SDK path;no build attempted."
+    },
+    {
+      "id": "NATIVE-05",
+      "validation": "Android emulator/device runtime workflows",
+      "status": "BLOCKED",
+      "scope": "No adb/emulator/KVM/USB device evidence or compiled build."
+    },
+    {
+      "id": "NATIVE-06",
+      "validation": "iOS native debug build",
+      "status": "BLOCKED",
+      "scope": "Linux,no macOS/Xcode/xcrun/CocoaPods or generatediOSproject;no build attempted."
+    },
+    {
+      "id": "NATIVE-07",
+      "validation": "iOS simulator/device runtime workflows",
+      "status": "BLOCKED",
+      "scope": "No authorized Apple build host/simulator/device/binary/signing evidence."
+    },
+    {
+      "id": "NATIVE-08",
+      "validation": "Android actual TEST payment success/failure/cancel/resume",
+      "status": "BLOCKED",
+      "scope": "Requires native debug build/device and authorized actual provider TEST setup."
+    },
+    {
+      "id": "NATIVE-09",
+      "validation": "iOS actual TEST payment success/failure/cancel/resume",
+      "status": "BLOCKED",
+      "scope": "Requires native debug build/device and authorized actual provider TEST setup."
+    }
+  ],
+  "provider_checks": [
+    {
+      "id": "PROVIDER-01",
+      "validation": "Current TEST binding presence inspection",
+      "status": "PASS",
+      "scope": "Presence-only inspection succeeded;allthree backend key/secret values empty andmodeabsent. Not payment verification."
+    },
+    {
+      "id": "PROVIDER-02",
+      "validation": "Actual Razorpay TEST payment order creation",
+      "status": "BLOCKED",
+      "scope": "No explicitly configured nonempty TEST keypair/mode or authorized TEST account."
+    },
+    {
+      "id": "PROVIDER-03",
+      "validation": "Actual TEST checkout success/failure/pending/reconciliation",
+      "status": "BLOCKED",
+      "scope": "Missing TEST account/credentials/native/web checkout interaction and source-bound provider records."
+    },
+    {
+      "id": "PROVIDER-04",
+      "validation": "Actual provider webhook delivery/duplicate/retry validation",
+      "status": "BLOCKED",
+      "scope": "No configured webhook secret,owned reachable HTTPS TEST endpoint or provider delivery records."
+    },
+    {
+      "id": "PROVIDER-05",
+      "validation": "Actual TEST refund creation/status/duplicate/refund webhook",
+      "status": "BLOCKED",
+      "scope": "No eligible genuine TEST captured payment/provider account or refund/delivery evidence."
+    },
+    {
+      "id": "PROVIDER-06",
+      "validation": "Actual provider payment/refund database consistency",
+      "status": "BLOCKED",
+      "scope": "No genuine provider event/transaction records to reconcile against isolated appDB."
+    }
+  ],
+  "payment_source_matrix": [
+    [
+      "Environment/key separation",
+      "backend/payment_config.py:14",
+      "Explicitmode,matchingkeyprefix and production/environment consistency checks declared;no silent key-mode switch.",
+      "Source inspected;functional results belong to regression evidence."
+    ],
+    [
+      "Grocery server payment intent",
+      "backend/server.py:6348",
+      "Authenticated owner scope,server order total/INR,existing-intent reuse,atomic claim anduncertain state on provider error.",
+      "No actual provider order created."
+    ],
+    [
+      "Restaurant server payment intent",
+      "backend/server.py:4990",
+      "Customer ownership,pending-online eligibility,server total/INR,reuse andintentclaim.",
+      "No actual provider order created."
+    ],
+    [
+      "Callback verification inbothmodes",
+      "backend/server.py:5041 / 6470",
+      "HMAC check andprovider GET require capturedstatus,matchingpayment/order IDs,exact amount/INR beforeDBpaidtransition.",
+      "No callback or providerGETexecuted bythis workstream."
+    ],
+    [
+      "Raw webhook signature andevents",
+      "backend/server.py:5362",
+      "HMAC over raw requestbody,eventID/bodyhash duplicate check,explicitcaptured/failed/refundevents,recordafterprocessing.",
+      "Genuine delivery/retries remainBLOCKED;upstream requestsize limit stillunverified."
+    ],
+    [
+      "Grocery refund",
+      "backend/server.py:6254;backend/refund_rules.py:22",
+      "Admin-only,verifiedcaptured online/cancelled eligibility,full amount only,requestID duplicateprotection,transactional claim,providerhistorycheck anduncertain/reconciliation states.",
+      "CODdoesnotenterproviderrefund;partial policy notinvented or changed."
+    ],
+    [
+      "Restaurant refund",
+      "backend/server.py:5670",
+      "Admin dependency,verifiedpaidlinkedpayment,eligibleamount consistency,transactional claim,providerhistorychecks andpending/uncertain/finalstateguard.",
+      "Existingfullrefundbehaviorretained;actualprovideracceptance/settlement unverified."
+    ],
+    [
+      "Native checkout and lifecycle",
+      "frontend/src/lib/razorpay-checkout.native.ts:5;frontend/src/components/GroceryOnlinePayment.tsx:16",
+      "Runtime nativemoduleguard,SDK.open,duplicate-windowguard,cancellationmessages;sharedcomponentrefreshesonAppStateactive andasksbackendtoverifycallback.",
+      "Source/metadata only;Android/iOSinterruption,returnnavigation,crashesandSDKcallbackbehavior notexercised."
+    ],
+    [
+      "Web checkout",
+      "frontend/src/lib/razorpay-checkout.ts:4",
+      "Official checkoutscript URL,successcallback,dismiss/failurehandling;backendremainsauthoritative.",
+      "No web providerpayment or checkoutscriptrequest made."
+    ]
+  ],
+  "provider_calls_executed": 0,
+  "native_builds_executed": 0,
+  "device_tests_executed": 0,
+  "native_projects_generated": 0,
+  "production_credentials_used": false,
+  "secrets_printed_or_written": false,
+  "packages_installed": false,
+  "protected_files_modified": false,
+  "payment_mock_tests_executed_in_this_workstream": 0,
+  "mock_tests_owner": "Root/current_regression agent;results are separate from real provider acceptance.",
+  "final_native_status": "BLOCKED",
+  "final_actual_provider_status": "BLOCKED",
+  "Task2_started": false
+}

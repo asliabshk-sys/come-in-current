@@ -1,0 +1,63 @@
+{
+  "recorded_UTC": "2026-11-20T06:41:36.655152+00:00",
+  "checks": [
+    {
+      "id": "before-typecheck",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--incremental",
+        "false",
+        "--pretty",
+        "false"
+      ],
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "exit_code": 0
+    },
+    {
+      "id": "before-eslint",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        ".",
+        "--format",
+        "json",
+        "--no-cache"
+      ],
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 10
+    },
+    {
+      "id": "candidate-typecheck",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--incremental",
+        "false",
+        "--pretty",
+        "false"
+      ],
+      "cwd": "/tmp/comein-task1-frontend-candidate-1lhj7hr7",
+      "exit_code": 0
+    },
+    {
+      "id": "candidate-eslint",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        ".",
+        "--format",
+        "json",
+        "--no-cache"
+      ],
+      "cwd": "/tmp/comein-task1-frontend-candidate-1lhj7hr7",
+      "exit_code": 0,
+      "errors": 0,
+      "warnings": 8
+    }
+  ]
+}

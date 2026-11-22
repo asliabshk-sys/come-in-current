@@ -1,0 +1,61 @@
+{
+  "timestamp_UTC": "2026-11-19T16:21:00.956753+00:00",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "sec01_focused_regression_v2.py",
+      "bytes": 31009,
+      "SHA256": "523d84f49dfa6072059378752f0ca6326f99e0cee511ba58556f4adca9dd7afa"
+    },
+    {
+      "path": "focused-before.json",
+      "bytes": 5539,
+      "SHA256": "a324fcd9d06e397de9f09eb093f2182c754b3527adcec2fbda159731997625be"
+    },
+    {
+      "path": "focused-before.xml",
+      "bytes": 900,
+      "SHA256": "62c881a7d6f22d0a17407a45bec52d607f93b2eab9bc0207a64483c896425e99"
+    },
+    {
+      "path": "focused-before.log",
+      "bytes": 334,
+      "SHA256": "8f1b589bcdbd980f340d335d370913551c9104b49bb3588dd5687b73afb730cf"
+    },
+    {
+      "path": "focused-after.json",
+      "bytes": 5900,
+      "SHA256": "4668ee0b53accbd5f5794f8e768dfe60f476b16eaa419cffbaef1c3b45dd2a99"
+    },
+    {
+      "path": "focused-after.xml",
+      "bytes": 340,
+      "SHA256": "d40c0851c09b68b1d154846bcedc516c3a0b7d8d8cad4eaa20953e0adb1bb386"
+    },
+    {
+      "path": "focused-after.log",
+      "bytes": 186,
+      "SHA256": "08aad0306839d0f540dcbe3b8c404cacaca20569509cbfbd40d65c5842e95ad3"
+    },
+    {
+      "path": "V1_PRESERVATION.json",
+      "bytes": 577,
+      "SHA256": "f691a8abe43c0485fa8588a6dbe03747e48688733ab6a17d10087f48f677c5f9"
+    },
+    {
+      "path": "distinct-password-concurrency-summary.json",
+      "bytes": 2882,
+      "SHA256": "4039be026896e491ab7183d326abc2cb73f7b3c61fe00fadc3b3f2884815e72c"
+    },
+    {
+      "path": "SEC01_DISTINCT_CONCURRENCY_CHECKPOINT.json",
+      "bytes": 1145,
+      "SHA256": "731f84415d9b9d9d477a88197d200c7c299bf9800e5e5f6d8c0fb7a60db417d0"
+    },
+    {
+      "path": "DISTINCT_PASSWORD_CONCURRENCY_ADDENDUM.md",
+      "bytes": 6523,
+      "SHA256": "f484574fd800bc21bd4b92a60457c74a3def9a25b84b27d330edbb2aaccf2ac7"
+    }
+  ]
+}

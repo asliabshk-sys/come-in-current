@@ -1,0 +1,5 @@
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByTestId('restaurant-mode-card').first() to be visible[22m
+[2m    62 × locator resolved to hidden <button tabindex="0" role="button" type="button" data-testid="restaurant-mode-card" class="css-view-g5y9jx r-cursor-1loqt21 r-touchAction-1otgn73 r-alignItems-1awozwy r-borderColor-1xqj2tz r-borderRadius-y47klf r-borderWidth-ugvmm4 r-flexBasis-1eht3ou r-flexDirection-18u37iz r-flexGrow-16y2uox r-gap-580adz r-justifyContent-1wtj0ep r-minHeight-ipub7v r-minWidth-bcqeeo r-padding-edyy15">…</button>[22m
+

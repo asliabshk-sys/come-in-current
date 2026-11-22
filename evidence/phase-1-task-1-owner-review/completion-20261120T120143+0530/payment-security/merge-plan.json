@@ -1,0 +1,62 @@
+{
+  "candidate_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/payment-security/candidate-server.py",
+  "base_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/payment-security/before-server.py",
+  "changed_functions": [
+    {
+      "name": "create_restaurant_payment_intent",
+      "before_line": 5009,
+      "candidate_line": 5009,
+      "before_segment_SHA256": "248b234e00967cf7694c3fcb74ddd06b8eab52a6a2486e0b93486489920bfe5d",
+      "candidate_segment_SHA256": "e3e06e11a9efed575fcfff84cd08619a08006a8c3340695f4167e2ba147eac44"
+    },
+    {
+      "name": "verify_restaurant_payment",
+      "before_line": 5060,
+      "candidate_line": 5060,
+      "before_segment_SHA256": "81126a9cc2e694b2a2798926cf639fcad23718f0eaabd1e7bc5bbcd1a4f9830f",
+      "candidate_segment_SHA256": "6f611c8f144e0c0fd82b3c48439a84481753146ad313d2563ce31aea6d75c663"
+    },
+    {
+      "name": "razorpay_webhook",
+      "before_line": 5381,
+      "candidate_line": 5381,
+      "before_segment_SHA256": "142c4a3bc9781f8b1ba2df8ad5b3baee0b4014be8f45fa119e4716ef6532cbfe",
+      "candidate_segment_SHA256": "1d56995d0fe4e4cf0646356915fea80baf3130a40aa20f37c146f9ac21266934"
+    },
+    {
+      "name": "admin_refund_restaurant_order",
+      "before_line": 5689,
+      "candidate_line": 5707,
+      "before_segment_SHA256": "12cede6a4dc6f35ce586013576b71bedcdeb26bde003611e2347a111e323ea6a",
+      "candidate_segment_SHA256": "067423d8525cb10e87ef329c0f81498243e67076ddf350b4b5a44fa4854f7d7a"
+    },
+    {
+      "name": "admin_refund_grocery_order",
+      "before_line": 6273,
+      "candidate_line": 6291,
+      "before_segment_SHA256": "f41dc246a0f9b49dc9c3a685c19dea3dafc9f1c3d55d040c313285abf11e2323",
+      "candidate_segment_SHA256": "8455bed4b8707376d2b5a4031e284d8a159efff03a542acb37b019e818ec09bb"
+    },
+    {
+      "name": "create_grocery_payment_intent",
+      "before_line": 6367,
+      "candidate_line": 6385,
+      "before_segment_SHA256": "219e68e0f0a54a32a18a63f0742f06fac0aca0c12c765d6fc310bbfc84b3a54c",
+      "candidate_segment_SHA256": "cebdb9d940ccfd8c3a8e27a791d66c4398391e06aae0af9d6bda9f3889c486ad"
+    },
+    {
+      "name": "verify_grocery_payment",
+      "before_line": 6489,
+      "candidate_line": 6507,
+      "before_segment_SHA256": "2fd822f5d4ab78ae57f44c934b431b18a5c9387e8dff70d2bffb63b9546d8c8c",
+      "candidate_segment_SHA256": "9748407d4dc024f632cdbbd28375c1d3e7911fcba88c8d893fd7832db63c9ae2"
+    }
+  ],
+  "new_imports": [],
+  "new_top_level_functions": [],
+  "new_constants": [],
+  "changed_protected_paths_if_accepted": [
+    "backend/server.py"
+  ],
+  "all_other_AST_nodes_identical": true
+}

@@ -1,0 +1,180 @@
+.................F..............................                         [100%]
+=================================== FAILURES ===================================
+___________ test_local_signed_webhook_http_and_transaction_scenarios ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1545dc3350>
+
+    def test_local_signed_webhook_http_and_transaction_scenarios(monkeypatch):
+        if os.environ.get("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
+            pytest.skip("requires explicit local disposable payment-test opt-in")
+        import httpx
+        import server
+        from bson import ObjectId
+        from motor.motor_asyncio import AsyncIOMotorClient
+        from pymongo import MongoClient
+        from scripts.mongo.comein_mongo import init_db
+    
+        uri = "mongodb://127.0.0.1:27018/?replicaSet=rs0"
+        name = "comein_disposable_test_webhooks_" + uuid4().hex
+        sync = MongoClient(uri, serverSelectionTimeoutMS=3000)
+        assert sync.admin.command("hello")["setName"] == "rs0"
+>       init_db(sync[name]); sync.close()
+        ^^^^^^^^^^^^^^^^^^^
+
+tests/test_payment_webhook_local_integration.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../scripts/mongo/comein_mongo.py:132: in init_db
+    preflight = preflight_unique_indexes(db)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../scripts/mongo/comein_mongo.py:191: in preflight_unique_indexes
+    duplicate_groups = list(db[spec["collection"]].aggregate(pipeline, maxTimeMS=max_time_ms))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py:3016: in aggregate
+    return self._aggregate(
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/_csot.py:126: in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py:2913: in _aggregate
+    return self._database.client._retryable_read(
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py:2061: in _retryable_read
+    return self._retry_internal(
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/_csot.py:126: in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py:2022: in _retry_internal
+    ).run()
+      ^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py:2890: in run
+    res = self._read() if self._is_read else self._write()
+          ^^^^^^^^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py:3130: in _read
+    return self._func(self._session, self._server, conn, read_pref)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/aggregation.py:163: in get_cursor
+    result = conn.command(
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/helpers.py:51: in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/pool.py:396: in command
+    return run_command(
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/command_runner.py:440: in run_command
+    docs, _, _ = _run_command(
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/command_runner.py:214: in _run_command
+    helpers_shared._check_command_response(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+response = {'ok': 0.0, 'errmsg': 'db name must be at most 63 characters, found: 64', 'code': 73, 'codeName': 'InvalidNamespace', ...}
+max_wire_version = 21, allowable_errors = None, parse_write_concern_error = True
+pool_opts = None
+
+    def _check_command_response(
+        response: _DocumentOut,
+        max_wire_version: Optional[int],
+        allowable_errors: Optional[Container[Union[int, str]]] = None,
+        parse_write_concern_error: bool = False,
+        pool_opts: Optional[PoolOptions] = None,
+    ) -> None:
+        """Check the response to a command for errors."""
+        if "ok" not in response:
+            # Server didn't recognize our message as a command.
+            raise OperationFailure(
+                response.get("$err"),  # type: ignore[arg-type]
+                response.get("code"),
+                response,
+                max_wire_version,
+            )
+    
+        if parse_write_concern_error and "writeConcernError" in response:
+            _error = response["writeConcernError"]
+            _labels = response.get("errorLabels")
+            if _labels:
+                _error.update({"errorLabels": _labels})
+            _raise_write_concern_error(_error)
+    
+        if response["ok"]:
+            return
+    
+        details = response
+        errmsg = details["errmsg"]
+        code = details.get("code")
+    
+        # For allowable errors, only check for error messages when the code is not
+        # included.
+        if allowable_errors:
+            if code is not None:
+                if code in allowable_errors:
+                    return
+            elif errmsg in allowable_errors:
+                return
+    
+        # Server is "not primary" or "recovering"
+        if code is not None:
+            if code in _NOT_PRIMARY_CODES:
+                raise NotPrimaryError(errmsg, response)
+        elif HelloCompat.LEGACY_ERROR in errmsg or "node is recovering" in errmsg:
+            raise NotPrimaryError(errmsg, response)
+    
+        # Other errors
+        # findAndModify with upsert can raise duplicate key error
+        if code in (11000, 11001, 12582):
+            raise DuplicateKeyError(errmsg, code, response, max_wire_version)
+        elif code == 50:
+            # Append timeout details to MaxTimeMSExpired responses.
+            if pool_opts:
+                timeout_details = _get_timeout_details(pool_opts)
+                errmsg += format_timeout_details(timeout_details)
+            raise ExecutionTimeout(errmsg, code, response, max_wire_version)
+        elif code == 43:
+            raise CursorNotFound(errmsg, code, response, max_wire_version)
+    
+>       raise OperationFailure(errmsg, code, response, max_wire_version)
+E       pymongo.errors.OperationFailure: db name must be at most 63 characters, found: 64, full error: {'ok': 0.0, 'errmsg': 'db name must be at most 63 characters, found: 64', 'code': 73, 'codeName': 'InvalidNamespace', '$clusterTime': {'clusterTime': Timestamp(1794909568, 1), 'signature': {'hash': b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00', 'keyId': 0}}, 'operationTime': Timestamp(1794909568, 1)}
+
+../../../come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py:327: OperationFailure
+=============================== warnings summary ===============================
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+  /workspace/come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+  /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py:5773: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+  /workspace/come-in-tools/py311/lib/python3.11/site-packages/fastapi/applications.py:4495: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)
+
+tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+  /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py:5901: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("shutdown")
+
+tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+  /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py:6813: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+1 failed, 47 passed, 7 warnings in 4.62s

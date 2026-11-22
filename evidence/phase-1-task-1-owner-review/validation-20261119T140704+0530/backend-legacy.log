@@ -1,0 +1,100 @@
+.F.........E.FEE.....s.                                                  [100%]
+==================================== ERRORS ====================================
+_____________________ ERROR at setup of test_product_crud ______________________
+
+s = <requests.sessions.Session object at 0x7f51debdb550>
+shop_owner = {'token': '[REDACTED_SYNTHETIC_JWT]', 'user': {'name': 'Owner', 'email': 'test_shop_a6347d12@test.com', 'phone': '', 'role': 'customer', ...}}
+created_shop = {'name': 'TEST Shop d9cf', 'tagline': '', 'description': '', 'owner_name': '', ...}
+
+    @pytest.fixture(scope="session")
+    def created_product(s, shop_owner, created_shop):
+        body = {"name": "TEST Product", "price": 50.0, "stock": 10, "category_id": "grocery"}
+        r = s.post(f"{API}/shops/{created_shop['id']}/products", json=body, headers=h(shop_owner["token"]))
+>       assert r.status_code == 200, r.text
+E       AssertionError: {"detail":[{"type":"missing","loc":["body","description"],"msg":"Field required","input":{"name":"TEST Product","price":50.0,"stock":10,"category_id":"grocery"},"url":"https://errors.pydantic.dev/2.14/v/missing"}]}
+E       assert 422 == 200
+E        +  where 422 = <Response [422]>.status_code
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/legacy-tests/backend_test.py:197: AssertionError
+__________________ ERROR at setup of test_order_create_guest ___________________
+
+s = <requests.sessions.Session object at 0x7f51debdb550>
+shop_owner = {'token': '[REDACTED_SYNTHETIC_JWT]', 'user': {'name': 'Owner', 'email': 'test_shop_a6347d12@test.com', 'phone': '', 'role': 'customer', ...}}
+created_shop = {'name': 'TEST Shop d9cf', 'tagline': '', 'description': '', 'owner_name': '', ...}
+
+    @pytest.fixture(scope="session")
+    def created_product(s, shop_owner, created_shop):
+        body = {"name": "TEST Product", "price": 50.0, "stock": 10, "category_id": "grocery"}
+        r = s.post(f"{API}/shops/{created_shop['id']}/products", json=body, headers=h(shop_owner["token"]))
+>       assert r.status_code == 200, r.text
+E       AssertionError: {"detail":[{"type":"missing","loc":["body","description"],"msg":"Field required","input":{"name":"TEST Product","price":50.0,"stock":10,"category_id":"grocery"},"url":"https://errors.pydantic.dev/2.14/v/missing"}]}
+E       assert 422 == 200
+E        +  where 422 = <Response [422]>.status_code
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/legacy-tests/backend_test.py:197: AssertionError
+____________ ERROR at setup of test_order_customer_and_seller_views ____________
+
+s = <requests.sessions.Session object at 0x7f51debdb550>
+shop_owner = {'token': '[REDACTED_SYNTHETIC_JWT]', 'user': {'name': 'Owner', 'email': 'test_shop_a6347d12@test.com', 'phone': '', 'role': 'customer', ...}}
+created_shop = {'name': 'TEST Shop d9cf', 'tagline': '', 'description': '', 'owner_name': '', ...}
+
+    @pytest.fixture(scope="session")
+    def created_product(s, shop_owner, created_shop):
+        body = {"name": "TEST Product", "price": 50.0, "stock": 10, "category_id": "grocery"}
+        r = s.post(f"{API}/shops/{created_shop['id']}/products", json=body, headers=h(shop_owner["token"]))
+>       assert r.status_code == 200, r.text
+E       AssertionError: {"detail":[{"type":"missing","loc":["body","description"],"msg":"Field required","input":{"name":"TEST Product","price":50.0,"stock":10,"category_id":"grocery"},"url":"https://errors.pydantic.dev/2.14/v/missing"}]}
+E       assert 422 == 200
+E        +  where 422 = <Response [422]>.status_code
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/legacy-tests/backend_test.py:197: AssertionError
+=================================== FAILURES ===================================
+____________________________ test_register_login_me ____________________________
+
+s = <requests.sessions.Session object at 0x7f51debdb550>
+
+    def test_register_login_me(s):
+        email = f"TEST_u_{uuid.uuid4().hex[:8]}@test.com".lower()
+        r = s.post(f"{API}/auth/register", json={"name": "U", "email": email, "password": "[REDACTED_SYNTHETIC_FIXTURE]"})
+        assert r.status_code == 200
+        tok = r.json()["token"]
+        assert r.json()["user"]["role"] == "customer"
+    
+        # login
+        r2 = s.post(f"{API}/auth/login", json={"email": email, "password": "[REDACTED_SYNTHETIC_FIXTURE]"})
+        assert r2.status_code == 200
+        # me
+        me = s.get(f"{API}/auth/me", headers=h(tok))
+        assert me.status_code == 200
+        assert me.json()["email"] == email
+        # bad login
+        bad = s.post(f"{API}/auth/login", json={"email": email, "password": "wrong"})
+        assert bad.status_code == 401
+        # duplicate registration
+        dup = s.post(f"{API}/auth/register", json={"name": "U", "email": email, "password": "[REDACTED_SYNTHETIC_FIXTURE]"})
+>       assert dup.status_code == 400
+E       assert 409 == 400
+E        +  where 409 = <Response [409]>.status_code
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/legacy-tests/backend_test.py:80: AssertionError
+_____________________________ test_product_delete ______________________________
+
+s = <requests.sessions.Session object at 0x7f51debdb550>
+shop_owner = {'token': '[REDACTED_SYNTHETIC_JWT]', 'user': {'name': 'Owner', 'email': 'test_shop_a6347d12@test.com', 'phone': '', 'role': 'customer', ...}}
+created_shop = {'name': 'TEST Shop d9cf', 'tagline': '', 'description': '', 'owner_name': '', ...}
+
+    def test_product_delete(s, shop_owner, created_shop):
+        r = s.post(f"{API}/shops/{created_shop['id']}/products",
+                   json={"name": "TEST Del", "price": 1, "stock": 1}, headers=h(shop_owner["token"]))
+>       pid = r.json()["id"]
+              ^^^^^^^^^^^^^^
+E       KeyError: 'id'
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/legacy-tests/backend_test.py:229: KeyError
+=========================== short test summary info ============================
+FAILED ::test_register_login_me - assert 409 == 400
+FAILED ::test_product_delete - KeyError: 'id'
+ERROR ::test_product_crud - AssertionError: {"detail":[{"type":"missing","loc...
+ERROR ::test_order_create_guest - AssertionError: {"detail":[{"type":"missing...
+ERROR ::test_order_customer_and_seller_views - AssertionError: {"detail":[{"t...
+2 failed, 17 passed, 1 skipped, 3 errors in 1.94s

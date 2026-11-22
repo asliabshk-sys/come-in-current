@@ -1,0 +1,18 @@
+{
+  "configuration_present": {
+    "RAZORPAY_KEY_ID": false,
+    "RAZORPAY_KEY_SECRET": false,
+    "RAZORPAY_WEBHOOK_SECRET": false,
+    "RAZORPAY_MODE": false,
+    "OPENAI_API_KEY": false,
+    "EMERGENT_LLM_KEY": false,
+    "SMTP_HOST": false,
+    "SMTP_USER": false,
+    "SMTP_PASSWORD": false,
+    "EXPO_ACCESS_TOKEN": false
+  },
+  "provider_calls_executed": false,
+  "production_credentials_used": false,
+  "database_environment": "retained disposable local DB",
+  "sdk": "Expo58.0.17/RN0.88.0/react-native-razorpay3.0.0"
+}

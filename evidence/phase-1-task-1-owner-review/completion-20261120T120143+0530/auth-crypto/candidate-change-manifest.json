@@ -1,0 +1,19 @@
+{
+  "base_source_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "candidate_SHA256": "39b19e5674ed10f62d076c3f57ad804b86623277f9f32088c96482b5006a1294",
+  "changed_top_level_symbols": [
+    "doc_out",
+    "hash_password",
+    "verify_password",
+    "create_access_token",
+    "get_current_user_optional",
+    "login",
+    "_send_password_reset_email",
+    "reset_password"
+  ],
+  "new_imports": [],
+  "new_dependencies": [],
+  "actual_source_modified": false,
+  "schema_notes": "Optional password_version counter lazily created only during password-reset update;legacy missing value and JWT missingpwdv default0,no migration.",
+  "legacy_password_compatibility": "Raw bcrypt<=72byte passwords retain hashing/verification. Old raw bcrypt>72byte candidates now require reset because suffix cannot be recovered. New accepted long passwords use domain-separated SHA256hex64bytes then bcrypt12 with explicit stored version tag."
+}

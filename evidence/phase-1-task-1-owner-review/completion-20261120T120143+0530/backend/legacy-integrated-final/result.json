@@ -1,0 +1,225 @@
+{
+  "stage": "integrated-final",
+  "started_UTC": "2026-11-20T13:05:24.403445+00:00",
+  "command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-B",
+    "-m",
+    "pytest",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-integrated-final/test-copy/backend_test.py",
+    "-q",
+    "-n",
+    "0",
+    "-p",
+    "no:cacheprovider",
+    "-p",
+    "isolated_backend_guard",
+    "-c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/pytest.ini",
+    "--junitxml=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-integrated-final/junit.xml",
+    "--basetemp=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-integrated-final/pytest-tmp"
+  ],
+  "server_command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-B",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/isolated_backend_bootstrap.py"
+  ],
+  "database": "comein_disposable_test_completion_0fda7bb847804cd9",
+  "port": 47337,
+  "test_copy_byte_identical": true,
+  "source_bindings_before": {
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py": "b2274f00cd35c2f92f6e385fceeb025a3f66761cc0cef10741f8477a6f020f84",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/backend_test.py": "d726af9acb2786c60d4ff993ff179c9e9e768da0f7fde441faecdf0f4eee7925",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30"
+  },
+  "dotenv_read": false,
+  "real_provider_calls": 0,
+  "native_validation": false,
+  "exit_code": 0,
+  "cases": [
+    {
+      "classname": "",
+      "name": "test_health",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_register_login_me",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_me_unauth",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_shop_mine",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_duplicate_shop_rejected",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_availability_blocked_until_approved",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_public_list_hides_pending",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_public_shop_detail_hidden_until_approved",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_admin_approves_shop",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_non_admin_cannot_approve",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_availability_after_approval",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_product_crud",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_product_validation",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_product_delete",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_order_create_guest",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_order_customer_and_seller_views",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_order_empty_items_rejected",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_request_anything",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_agent_assist",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_admin_orders",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_admin_endpoints_require_admin",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_status_diagnostics_require_admin",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    },
+    {
+      "classname": "",
+      "name": "test_image_upload",
+      "status": "SKIPPED",
+      "message": "Object storage unavailable",
+      "detail": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-integrated-final/test-copy/backend_test.py:397: Object storage unavailable"
+    },
+    {
+      "classname": "",
+      "name": "test_image_upload_unauth",
+      "status": "PASS",
+      "message": null,
+      "detail": null
+    }
+  ],
+  "counts": {
+    "PASS": 23,
+    "FAIL": 0,
+    "ERROR": 0,
+    "SKIPPED": 1
+  },
+  "finished_UTC": "2026-11-20T13:05:29.700472+00:00",
+  "database_retained": true,
+  "database_drops": 0,
+  "isolated_backend_stopped": true,
+  "source_bindings_after": {
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py": "b2274f00cd35c2f92f6e385fceeb025a3f66761cc0cef10741f8477a6f020f84",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/backend_test.py": "d726af9acb2786c60d4ff993ff179c9e9e768da0f7fde441faecdf0f4eee7925",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30"
+  },
+  "source_changes": []
+}

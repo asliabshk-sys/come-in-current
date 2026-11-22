@@ -1,0 +1,160 @@
+--- a/backend/tests/backend_test.py
++++ b/backend/tests/backend_test.py
+@@ -77,7 +77,7 @@
+     assert bad.status_code == 401
+     # duplicate registration
+     dup = s.post(f"{API}/auth/register", json={"name": "U", "email": email, "password": "pw12345"})
+-    assert dup.status_code == 400
++    assert dup.status_code == 409
+ 
+ 
+ def test_me_unauth(s):
+@@ -103,6 +103,9 @@
+         "area": "Testville",
+         "city": "Testopolis",
+         "shop_type": "offline",
++        # Existing canonical catalogue category (frontend/src/data/catalog.ts).
++        "category_ids": ["atta-rice-dal"],
++        "delivery_available": True,
+     }
+     r = s.post(f"{API}/shops", json=body, headers=h(shop_owner["token"]))
+     assert r.status_code == 200, r.text
+@@ -192,7 +195,10 @@
+ # ---------- Products ----------
+ @pytest.fixture(scope="session")
+ def created_product(s, shop_owner, created_shop):
+-    body = {"name": "TEST Product", "price": 50.0, "stock": 10, "category_id": "grocery"}
++    assert created_shop["category_ids"] == ["atta-rice-dal"]
++    body = {"name": "TEST Product", "price": 50.0, "stock": 10,
++            "category_id": created_shop["category_ids"][0],
++            "description": "Synthetic regression product"}
+     r = s.post(f"{API}/shops/{created_shop['id']}/products", json=body, headers=h(shop_owner["token"]))
+     assert r.status_code == 200, r.text
+     return r.json()
+@@ -205,11 +211,16 @@
+     assert any(p["id"] == created_product["id"] for p in lst.json())
+     # Update
+     upd = s.patch(f"{API}/products/{created_product['id']}", json={
+-        "name": "TEST Product Edited", "price": 55.0, "stock": 8
++        "name": "TEST Product Edited", "price": 55.0, "stock": 8,
++        "category_id": created_product["category_id"],
++        "description": created_product["description"],
+     }, headers=h(shop_owner["token"]))
+     assert upd.status_code == 200
+     assert upd.json()["name"] == "TEST Product Edited"
+     assert upd.json()["price"] == 55.0
++    # This module intentionally exercises a shared shop lifecycle. Keep the
++    # fixture's independently asserted price/stock state current for checkout.
++    created_product.update(upd.json())
+ 
+ 
+ def test_product_validation(s, shop_owner, created_shop):
+@@ -225,14 +236,41 @@
+ 
+ def test_product_delete(s, shop_owner, created_shop):
+     r = s.post(f"{API}/shops/{created_shop['id']}/products",
+-               json={"name": "TEST Del", "price": 1, "stock": 1}, headers=h(shop_owner["token"]))
++               json={"name": "TEST Del", "price": 1, "stock": 1,
++                     "category_id": created_shop["category_ids"][0],
++                     "description": "Synthetic product for deletion"}, headers=h(shop_owner["token"]))
++    assert r.status_code == 200, r.text
+     pid = r.json()["id"]
+     d = s.delete(f"{API}/products/{pid}", headers=h(shop_owner["token"]))
+     assert d.status_code == 200
+ 
+ 
+ # ---------- Orders ----------
++def checkout_quote(s, product, qty, headers):
++    """Exercise the existing authoritative quote flow,not invented test tokens."""
++    response = s.post(f"{API}/grocery/quotes", json={
++        "items": [{"product_id": product["id"], "qty": qty}],
++        "fulfillment": "delivery",
++    }, headers=headers)
++    assert response.status_code == 200, response.text
++    quote = response.json()
++    assert len(quote["items"]) == 1
++    assert quote["items"][0]["product_id"] == product["id"]
++    assert quote["items"][0]["price"] == product["price"]
++    # Existing Grocery policy: delivery costs29 below a199 subtotal. Check
++    # independently from the quote instead of merely echoing its total.
++    subtotal = round(product["price"] * qty, 2)
++    delivery_fee = 0.0 if subtotal >= 199.0 else 29.0
++    assert quote["subtotal"] == subtotal
++    assert quote["delivery_fee"] == delivery_fee
++    assert quote["total"] == round(subtotal + delivery_fee, 2)
++    assert quote["currency"] == "INR"
++    return quote, subtotal, delivery_fee
++
++
+ def test_order_create_guest(s, created_product, created_shop):
++    headers = {"x-comein-guest-session": uuid.uuid4().hex}
++    quote, subtotal, delivery_fee = checkout_quote(s, created_product, 2, headers)
+     body = {
+         "items": [{"product_id": created_product["id"], "name": "x", "price": 55, "qty": 2, "shop_id": created_shop["id"]}],
+         "delivery_address": "Addr 1",
+@@ -240,16 +278,21 @@
+         "customer_phone": "9999",
+         "payment_method": "cod",
+         "shop_id": created_shop["id"],
++        "quote_token": quote["quote_token"],
++        "idempotency_key": uuid.uuid4().hex,
+     }
+-    r = s.post(f"{API}/orders", json=body)
++    r = s.post(f"{API}/orders", json=body, headers=headers)
+     assert r.status_code == 200, r.text
+     data = r.json()
+     assert data["ref"].startswith("CI-")
+-    assert data["total"] == 110.0
++    assert data["subtotal"] == subtotal
++    assert data["delivery_fee"] == delivery_fee
++    assert data["total"] == round(subtotal + delivery_fee, 2)
+     assert data["payment_status"] == "cod_pending"
+ 
+ 
+ def test_order_customer_and_seller_views(s, customer, shop_owner, created_shop, created_product):
++    quote, subtotal, delivery_fee = checkout_quote(s, created_product, 1, h(customer["token"]))
+     body = {
+         "items": [{"product_id": created_product["id"], "name": "x", "price": 55, "qty": 1, "shop_id": created_shop["id"]}],
+         "delivery_address": "Addr 1",
+@@ -257,9 +300,14 @@
+         "customer_phone": "9999",
+         "payment_method": "cod",
+         "shop_id": created_shop["id"],
++        "quote_token": quote["quote_token"],
++        "idempotency_key": uuid.uuid4().hex,
+     }
+     r = s.post(f"{API}/orders", json=body, headers=h(customer["token"]))
+     assert r.status_code == 200
++    assert r.json()["subtotal"] == subtotal
++    assert r.json()["delivery_fee"] == delivery_fee
++    assert r.json()["total"] == round(subtotal + delivery_fee, 2)
+     oid = r.json()["id"]
+ 
+     # Customer view
+@@ -315,9 +363,25 @@
+ 
+ # ---------- Role guards ----------
+ def test_admin_endpoints_require_admin(s, customer):
+-    for ep in ["/admin/shops", "/admin/orders", "/admin/requests/anything", "/admin/requests/assist"]:
++    for ep in ["/admin/shops", "/admin/orders", "/admin/requests/anything", "/admin/requests/assist", "/status"]:
+         r = s.get(f"{API}{ep}", headers=h(customer["token"]))
+         assert r.status_code == 403, f"{ep} expected 403 got {r.status_code}"
++
++
++def test_status_diagnostics_require_admin(s, admin, customer, shop_owner):
++    for headers, expected in [({}, 401), (h(customer["token"]), 403), (h(shop_owner["token"]), 403)]:
++        assert s.get(f"{API}/status", headers=headers).status_code == expected
++        denied = s.post(f"{API}/status", json={"client_name": "synthetic-regression"}, headers=headers)
++        assert denied.status_code == expected
++    name = f"synthetic-regression-{uuid.uuid4().hex}"
++    created = s.post(f"{API}/status", json={"client_name": name}, headers=h(admin["token"]))
++    assert created.status_code == 200, created.text
++    assert created.json()["client_name"] == name
++    listed = s.get(f"{API}/status", headers=h(admin["token"]))
++    assert listed.status_code == 200
++    assert any(row["client_name"] == name for row in listed.json())
++    oversized = s.post(f"{API}/status", json={"client_name": "x" * 257}, headers=h(admin["token"]))
++    assert oversized.status_code == 422
+ 
+ 
+ # ---------- Image upload ----------

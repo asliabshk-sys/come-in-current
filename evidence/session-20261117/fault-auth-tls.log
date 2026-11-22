@@ -1,0 +1,69 @@
+Traceback (most recent call last):
+  File "/workspace/come-in-current/evidence/session-20261117/fault-auth-tls-acceptance.py", line 45, in <module>
+    try:asyncio.run(main())
+        ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/workspace/come-in-current/evidence/session-20261117/fault-auth-tls-acceptance.py", line 41, in main
+    await run_transaction(c,ambiguous)
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py", line 48, in run_transaction
+    return await session.with_transaction(callback)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/motor/core.py", line 469, in with_transaction
+    async with self.start_transaction(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/motor/core.py", line 331, in __aexit__
+    await self._session.commit_transaction()
+  File "/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/client_session.py", line 666, in commit_transaction
+    _reraise_with_unknown_commit(exc)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/client_session_shared.py", line 241, in _reraise_with_unknown_commit
+    raise exc
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/client_session.py", line 660, in commit_transaction
+    self._finish_transaction_with_retry("commitTransaction")
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/client_session.py", line 721, in _finish_transaction_with_retry
+    return self._client._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/_csot.py", line 126, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2022, in _retry_internal
+    ).run()
+      ^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2890, in run
+    res = self._read() if self._is_read else self._write()
+                                             ^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 3105, in _write
+    return self._func(self._session, conn, self._retryable)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/client_session.py", line 719, in func
+    return self._finish_transaction(conn, command_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/client_session.py", line 748, in _finish_transaction
+    return self._client.admin._command(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/database.py", line 773, in _command
+    return conn.command(
+           ^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/helpers.py", line 51, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/pool.py", line 396, in command
+    return run_command(
+           ^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/command_runner.py", line 440, in run_command
+    docs, _, _ = _run_command(
+                 ^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/command_runner.py", line 214, in _run_command
+    helpers_shared._check_command_response(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py", line 310, in _check_command_response
+    raise NotPrimaryError(errmsg, response)
+pymongo.errors.NotPrimaryError: Failing command via 'failCommand' failpoint, full error: {'errorLabels': ['UnknownTransactionCommitResult'], 'ok': 0.0, 'errmsg': "Failing command via 'failCommand' failpoint", 'code': 91, 'codeName': 'ShutdownInProgress', '$clusterTime': {'clusterTime': Timestamp(1794904958, 4), 'signature': {'hash': b'\xb7\x84^?)7:H\x92\x07\x19\x87\xc3\xbe\xd9\x15\xdbC\xd3~', 'keyId': 7709057836340215815}}, 'operationTime': Timestamp(1794904958, 4)}

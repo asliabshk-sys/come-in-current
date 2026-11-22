@@ -1,0 +1,11 @@
+{
+  "denominator": 93,
+  "basis": "Materialreportclaim-units(groupedrowsets/scopedassertions),notuniqueissues,testcases,orallbuttons. Sourcepatternandseverityareseparateunitspersafetyfinding. Samefindingcitedacrossreportsmayhaveindependentscopeclaim.",
+  "counts": {
+    "VERIFIED": 47,
+    "PARTIALLY VERIFIED": 30,
+    "UNVERIFIED": 6,
+    "CONTRADICTED": 3,
+    "BLOCKED": 7
+  }
+}

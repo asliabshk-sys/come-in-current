@@ -1,0 +1,762 @@
+[
+  {
+    "path": "/workspace/come-in-current/COME_IN_MASTER_TASK_TRACKER.md",
+    "line": 34,
+    "text": "| 8 | Repeat Order | **COMPLETED** | Earlier TASK24 report and existing repeat-order source. | Measured repeat-order extension not fully verified. |"
+  },
+  {
+    "path": "/workspace/come-in-current/COME_IN_MASTER_TASK_TRACKER.md",
+    "line": 35,
+    "text": "| 9 | Out-of-Stock Replacement | **COMPLETED** | Earlier TASK25 report and existing source. | Not rerun in this batch. |"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_BACKUP_INCLUDED_FILES.txt",
+    "line": 469,
+    "text": "project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_BACKUP_INCLUDED_FILES.txt",
+    "line": 470,
+    "text": "project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_BACKUP_INCLUDED_FILES.txt",
+    "line": 471,
+    "text": "project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_BACKUP_INCLUDED_FILES.txt",
+    "line": 472,
+    "text": "project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_BACKUP_INCLUDED_FILES.txt",
+    "line": 473,
+    "text": "project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_MASTER_TASK_STATUS_REPORT.json",
+    "line": 67,
+    "text": "      \"evidence\": \"earlier TASK24 report; measured repeat extension NOT TESTED in this batch\""
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_MASTER_TASK_STATUS_REPORT.json",
+    "line": 73,
+    "text": "      \"evidence\": \"earlier TASK25 report; not re-tested\""
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_MASTER_TASK_TRACKER.json",
+    "line": 90,
+    "text": "      \"evidence\": \"earlier TASK24 report; measured repeat extension NOT TESTED in this batch\""
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_MASTER_TASK_TRACKER.json",
+    "line": 96,
+    "text": "      \"evidence\": \"earlier TASK25 report; not re-tested\""
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_MASTER_TASK_TRACKER.md",
+    "line": 34,
+    "text": "| 8 | Repeat Order | **COMPLETED** | Earlier TASK24 report and existing repeat-order source. | Measured repeat-order extension not fully verified. |"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/COME_IN_MASTER_TASK_TRACKER.md",
+    "line": 35,
+    "text": "| 9 | Out-of-Stock Replacement | **COMPLETED** | Earlier TASK25 report and existing source. | Not rerun in this batch. |"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_TASK_TRACKER.md",
+    "line": 17,
+    "text": "| 9 | Out-of-Stock Replacement | COMPLETED | Historical TASK25 | – |"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/PROJECT_MANIFEST.json",
+    "line": 2304,
+    "text": "      \"path\": \"project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/PROJECT_MANIFEST.json",
+    "line": 2308,
+    "text": "      \"path\": \"project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/PROJECT_MANIFEST.json",
+    "line": 2312,
+    "text": "      \"path\": \"project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/PROJECT_MANIFEST.json",
+    "line": 2316,
+    "text": "      \"path\": \"project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/PROJECT_MANIFEST.json",
+    "line": 2320,
+    "text": "      \"path\": \"project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/SHA256SUMS-STEP1-20261115.txt",
+    "line": 439,
+    "text": "8ccb9ea5f43eaab5d9579e113c36db1197ac12aa8de4278e46cf1796045bc420  project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/SHA256SUMS-STEP1-20261115.txt",
+    "line": 440,
+    "text": "8890787e4ddd291e055d420ef38cd30c891456656ac410fb455ba6a701d8019c  project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/SHA256SUMS-STEP1-20261115.txt",
+    "line": 441,
+    "text": "0c12216097c95caf811de33d500fbfeb5713eee86d502d3a27478b5e395b0a54  project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/SHA256SUMS-STEP1-20261115.txt",
+    "line": 442,
+    "text": "52ff03ee11b98b8d7e57f51ed4b89632272f54a791755b2328b0faa5d2ff4fc1  project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/SHA256SUMS-STEP1-20261115.txt",
+    "line": 443,
+    "text": "c204fc79a73c8809fc087334a7fc38a3f195fff66074617e71bc1b188652fb24  project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/SOURCE_SHA256SUMS_STEP1_FINAL_20261115.txt",
+    "line": 449,
+    "text": "8ccb9ea5f43eaab5d9579e113c36db1197ac12aa8de4278e46cf1796045bc420  project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/SOURCE_SHA256SUMS_STEP1_FINAL_20261115.txt",
+    "line": 450,
+    "text": "8890787e4ddd291e055d420ef38cd30c891456656ac410fb455ba6a701d8019c  project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/SOURCE_SHA256SUMS_STEP1_FINAL_20261115.txt",
+    "line": 451,
+    "text": "0c12216097c95caf811de33d500fbfeb5713eee86d502d3a27478b5e395b0a54  project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/SOURCE_SHA256SUMS_STEP1_FINAL_20261115.txt",
+    "line": 452,
+    "text": "52ff03ee11b98b8d7e57f51ed4b89632272f54a791755b2328b0faa5d2ff4fc1  project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/SOURCE_SHA256SUMS_STEP1_FINAL_20261115.txt",
+    "line": 453,
+    "text": "c204fc79a73c8809fc087334a7fc38a3f195fff66074617e71bc1b188652fb24  project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_BACKUP_EVIDENCE/MASTER_SOURCE_ORIGINAL_INVENTORY.txt",
+    "line": 450,
+    "text": "project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_BACKUP_EVIDENCE/MASTER_SOURCE_ORIGINAL_INVENTORY.txt",
+    "line": 451,
+    "text": "project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_BACKUP_EVIDENCE/MASTER_SOURCE_ORIGINAL_INVENTORY.txt",
+    "line": 452,
+    "text": "project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_BACKUP_EVIDENCE/MASTER_SOURCE_ORIGINAL_INVENTORY.txt",
+    "line": 453,
+    "text": "project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_BACKUP_EVIDENCE/MASTER_SOURCE_ORIGINAL_INVENTORY.txt",
+    "line": 454,
+    "text": "project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_BACKUP_EVIDENCE/HISTORICAL_DOCUMENT_VERSIONS/COME-IN-MONGODB-PHASE2-WORK/COME_IN_MASTER_TASK_TRACKER.md",
+    "line": 34,
+    "text": "| 8 | Repeat Order | **COMPLETED** | Earlier TASK24 report and existing repeat-order source. | Measured repeat-order extension not fully verified. |"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_BACKUP_EVIDENCE/HISTORICAL_DOCUMENT_VERSIONS/COME-IN-MONGODB-PHASE2-WORK/COME_IN_MASTER_TASK_TRACKER.md",
+    "line": 35,
+    "text": "| 9 | Out-of-Stock Replacement | **COMPLETED** | Earlier TASK25 report and existing source. | Not rerun in this batch. |"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_BACKUP_EVIDENCE/HISTORICAL_DOCUMENT_VERSIONS/COME-IN-MONGODB-STEP1-DEV-20261115/COME_IN_MASTER_TASK_TRACKER.md",
+    "line": 34,
+    "text": "| 8 | Repeat Order | **COMPLETED** | Earlier TASK24 report and existing repeat-order source. | Measured repeat-order extension not fully verified. |"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/MASTER_BACKUP_EVIDENCE/HISTORICAL_DOCUMENT_VERSIONS/COME-IN-MONGODB-STEP1-DEV-20261115/COME_IN_MASTER_TASK_TRACKER.md",
+    "line": 35,
+    "text": "| 9 | Out-of-Stock Replacement | **COMPLETED** | Earlier TASK25 report and existing source. | Not rerun in this batch. |"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-PAYMENT-REFUND-AUDIT-DESIGN-2026-10-30.md",
+    "line": 4,
+    "text": "**Scope:** Audit Grocery UPI, COD, Pay-at-Shop, gateway payment, refunds, additional payments, webhook security and the implications for Task 25 Order Replacement.  "
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-PAYMENT-REFUND-AUDIT-DESIGN-2026-10-30.md",
+    "line": 12,
+    "text": "- Task 24 post-change archive exists at `/mnt/data/COME-IN-TASK24-POST-CHANGE-20261030T082300Z.zip`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-PAYMENT-REFUND-AUDIT-DESIGN-2026-10-30.md",
+    "line": 178,
+    "text": "14. Regression checks for Task 21 Buy Now isolation, Task 22 Checkout blur cleanup, Task 23 tracking authorization and Task 24 Repeat Order quantity/stock behavior."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-PAYMENT-REFUND-AUDIT-DESIGN-2026-10-30.md",
+    "line": 189,
+    "text": "  **41 passed, 1 failed in 0.63s.** The single failure is `test_shared_tracking_endpoint_supports_restaurant_orders_without_fake_coordinates`, whose assertion expects the old direct `restaurant_owner_id` expression in `_tracking_can_read`; the current Task 23 implementation checks current role and live Restaurant ownership. This appears to be a stale source-contract expectation, not a payment failure. It is reported, not changed, because this audit is payment-only."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-PAYMENT-REFUND-AUDIT-DESIGN-2026-10-30.md",
+    "line": 201,
+    "text": "- No new Master ZIP created because no source changes occurred. Existing Task 24 ZIP remains the verified baseline; older backups were not overwritten or deleted."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-PAYMENT-REFUND-AUDIT-DESIGN-2026-10-30.md",
+    "line": 214,
+    "text": "## 12. Task 25 impact"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-PAYMENT-REFUND-AUDIT-DESIGN-2026-10-30.md",
+    "line": 216,
+    "text": "**Task 25 Payment/Refund blocker: NOT REMOVED.** There is still no verified Grocery gateway payment, additional-payment or refund/reconciliation implementation, and no sandbox verification. Grocery Order Replacement must remain blocked for paid UPI orders and for any price change requiring an unverified payment/refund. No replacement API or UI has been implemented."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-SANDBOX-INFRASTRUCTURE-READINESS-2026-10-30.md",
+    "line": 5,
+    "text": "**Explicit exclusions:** No Grocery Razorpay integration, no payment intent/capture/refund, no webhook integration, no Task 25 Order Replacement, no database mutation/migration, no dependency installation, no Preview/mobile testing."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-SANDBOX-INFRASTRUCTURE-READINESS-2026-10-30.md",
+    "line": 123,
+    "text": "The previously recorded Task 23 tracking assertion failure remains a separate known test issue from the earlier broader test run. It was not run or modified as part of this focused infrastructure audit."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-SANDBOX-INFRASTRUCTURE-READINESS-2026-10-30.md",
+    "line": 127,
+    "text": "- Task 24 baseline ZIP exists: `COME-IN-TASK24-POST-CHANGE-20261030T082300Z.zip`; size 4,132,820 bytes; SHA-256 `95ff21fc79742836cc4eb67a7751fb26eecb7b8b1580d658099a0004cebc68bd`; ZIP integrity PASS."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-SANDBOX-INFRASTRUCTURE-READINESS-2026-10-30.md",
+    "line": 129,
+    "text": "- Comparing the two ZIPs: 305 common files, **2 differing common files**, precisely the intended Pay-at-Shop source files (`backend/server.py` and `frontend/app/seller-earnings.tsx`); the Pay-at-Shop ZIP adds the dedicated source-contract test and reports. The five removed entries from the Task 24 ZIP are only `.pytest_cache` artifacts."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-SANDBOX-INFRASTRUCTURE-READINESS-2026-10-30.md",
+    "line": 131,
+    "text": "- The Task 21, Task 22, Task 23, and Task 24 report files are present in the active working copy and match their copies in the recent Pay-at-Shop ZIP byte-for-byte."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-GROCERY-SANDBOX-INFRASTRUCTURE-READINESS-2026-10-30.md",
+    "line": 148,
+    "text": "No Grocery payment/refund integration or Task 25 Order Replacement was implemented."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-PAYAT-SHOP-AND-GROCERY-SANDBOX-READINESS-2026-10-30.md",
+    "line": 9,
+    "text": "- Task 21–24 source was retained in place. No Task 24 ZIP was extracted over the workspace."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-PAYAT-SHOP-AND-GROCERY-SANDBOX-READINESS-2026-10-30.md",
+    "line": 74,
+    "text": "- Bind each payment attempt to one specific Grocery order and customer. Additional replacement payment (future Task 25 only) must also bind to the exact order-replacement proposal ID and exact difference amount; customer acceptance alone is not payment."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-PAYAT-SHOP-AND-GROCERY-SANDBOX-READINESS-2026-10-30.md",
+    "line": 129,
+    "text": "Separate known stale Task 23 tracking test was run independently:"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-PAYAT-SHOP-AND-GROCERY-SANDBOX-READINESS-2026-10-30.md",
+    "line": 136,
+    "text": "Result: **1 failed**. Its assertion expects the old direct `order.get(\"restaurant_owner_id\") == user.get(\"id\")` check. Current Task 23 implementation checks the current role and live Restaurant ownership. This unrelated stale assertion was not edited or counted as a passing test."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-PAYAT-SHOP-AND-GROCERY-SANDBOX-READINESS-2026-10-30.md",
+    "line": 156,
+    "text": "- Task 25 Payment/Refund blocker: **Still BLOCKED** for verified paid Grocery UPI/gateway orders, refunds, and additional payment. The Pay-at-Shop correction does not remove that blocker."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-PAYAT-SHOP-AND-GROCERY-SANDBOX-READINESS-2026-10-30.md",
+    "line": 157,
+    "text": "- Task 25 Order Replacement: **Not implemented and remains blocked** pending a separately approved, verified Grocery payment/refund foundation."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-PAYAT-SHOP-CANCELLATION-REGRESSION-FIX-2026-10-30.md",
+    "line": 8,
+    "text": "Fix only the Grocery cancellation guard for canonical Pay-at-Shop status `pay_at_pickup_pending`. No Grocery Razorpay integration, refund implementation, additional payment, Task 25 Order Replacement, Restaurant payment change, database migration, dependency installation, network retry, Preview launch, or mobile test was performed."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-PAYAT-SHOP-CANCELLATION-REGRESSION-FIX-2026-10-30.md",
+    "line": 46,
+    "text": "Separate Task 23 legacy assertion check:"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-PAYAT-SHOP-CANCELLATION-REGRESSION-FIX-2026-10-30.md",
+    "line": 53,
+    "text": "Result: **1 failed in 0.15s**. The assertion expects the old direct `restaurant_owner_id` comparison, while current Task 23 code checks current role and live Restaurant shop ownership. It is unrelated to this Grocery cancellation fix and was not changed or hidden."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-PAYAT-SHOP-CANCELLATION-REGRESSION-FIX-2026-10-30.md",
+    "line": 60,
+    "text": "- Task 24 ZIP retained unchanged: `COME-IN-TASK24-POST-CHANGE-20261030T082300Z.zip`, SHA-256 `95ff21fc79742836cc4eb67a7751fb26eecb7b8b1580d658099a0004cebc68bd`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-PAYAT-SHOP-CANCELLATION-REGRESSION-FIX-2026-10-30.md",
+    "line": 61,
+    "text": "- Comparing Task 24 archive files against current source showed only the expected subsequent Pay-at-Shop differences in `backend/server.py`, `frontend/app/seller-earnings.tsx`, and `backend/tests/test_task9_order_actions_contract.py`; remaining common archived files matched. The Pay-at-Shop status contract test was added after Task 24."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-PAYAT-SHOP-CANCELLATION-REGRESSION-FIX-2026-10-30.md",
+    "line": 68,
+    "text": "No live FastAPI request, MongoDB transaction, inventory mutation, Preview, Android/iOS device, Razorpay sandbox, payment, or refund test was performed. Grocery payment/refund and Task 25 Order Replacement remain BLOCKED and were not implemented."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK-PAYAT-SHOP-CANCELLATION-REGRESSION-FIX-2026-10-30.md",
+    "line": 5,
+    "text": "**Scope:** Grocery order cancellation handling only. No Grocery Razorpay integration, refund implementation, additional payment, or Task 25 Order Replacement."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK-PAYAT-SHOP-CANCELLATION-REGRESSION-FIX-2026-10-30.md",
+    "line": 66,
+    "text": "### Separate pre-existing Task 23 assertion"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK-PAYAT-SHOP-CANCELLATION-REGRESSION-FIX-2026-10-30.md",
+    "line": 72,
+    "text": "**Result: 1 failed.** It expects the old direct `order.get(\"restaurant_owner_id\") == user.get(\"id\")` check, while current Task 23 code checks current role and live Restaurant ownership. This unrelated assertion was not changed or hidden."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK-PAYAT-SHOP-CANCELLATION-REGRESSION-FIX-2026-10-30.md",
+    "line": 96,
+    "text": "- Grocery payment/refund and Task 25 Order Replacement remain BLOCKED and were not implemented."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK-PAYAT-SHOP-CANCELLATION-REGRESSION-FIX-2026-10-30.md",
+    "line": 97,
+    "text": "- The previously reported Task 23 stale assertion remains separate and unresolved."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md",
+    "line": 1,
+    "text": "# COME-IN Task 23 — Customer Order Tracking Audit & Targeted Fix Report"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md",
+    "line": 8,
+    "text": "**TASK 23 COMPLETE — TRACKING VERIFIED AT SOURCE LEVEL**  "
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md",
+    "line": 126,
+    "text": "- Filename: `COME-IN-TASK23-PRE-CHANGE-20261030T080145Z.zip`"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md",
+    "line": 134,
+    "text": "- Filename: `COME-IN-TASK23-POST-CHANGE-20261030T081012Z.zip`"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md",
+    "line": 139,
+    "text": "- Compared with the pre-change ZIP: one new Task 23 test file and two intended changed files (`backend/server.py`, `backend/tests/test_delivery_tracking_contract.py`); no files removed."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md",
+    "line": 140,
+    "text": "- The Task 23 report is delivered separately and intentionally excluded from the post-change ZIP to avoid a self-referential archive checksum."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md",
+    "line": 164,
+    "text": "**No real order, payment, refund, customer transaction or GPS update was performed.** Task 21/22 checkout work and existing Restaurant Mode remain untouched. No Task 24 work was started."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md",
+    "line": 1,
+    "text": "# COME-IN Task 24 — Repeat Order Audit & Targeted Fix Report"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md",
+    "line": 8,
+    "text": "**TASK 24 COMPLETE — REORDER VERIFIED AT SOURCE LEVEL**"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md",
+    "line": 18,
+    "text": "- Task 23 report exists and was read: `project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md",
+    "line": 19,
+    "text": "- Task 23 post-change ZIP exists, passes `unzip -t`, and has SHA-256 `f1ada6d418a63d982db55adadc6778cf6d3fe306375947e5f2af090a8ae2a5b8` (4,122,279 bytes). Before Task 24 edits, all 303 archived files were compared byte-for-byte with the active workspace: no missing files or mismatches."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md",
+    "line": 112,
+    "text": "- Python `py_compile` for the new Task 24 test and updated Task 9 test: **PASS**."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md",
+    "line": 122,
+    "text": "- File: `/mnt/data/COME-IN-TASK24-PRE-CHANGE-20261030T082000Z.zip`"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md",
+    "line": 130,
+    "text": "- File: `/mnt/data/COME-IN-TASK24-POST-CHANGE-20261030T082300Z.zip`"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md",
+    "line": 138,
+    "text": "- Old Task 23 backup was not modified."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md",
+    "line": 162,
+    "text": "**Task 24 is complete at source level only. No Task 25 or other feature was started.**"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md",
+    "line": 1,
+    "text": "# COME-IN Task 25 — Customer-approved Order Replacement Design Review"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md",
+    "line": 11,
+    "text": "- Task 24 report exists and SHA-256 matches: `8890787e4ddd291e055d420ef38cd30c891456656ac410fb455ba6a701d8019c`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md",
+    "line": 12,
+    "text": "- Task 24 post-change ZIP exists: `/mnt/data/COME-IN-TASK24-POST-CHANGE-20261030T082300Z.zip`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md",
+    "line": 17,
+    "text": "- The Task 24 source baseline is therefore consistent. No old archive was extracted over the active source."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md",
+    "line": 18,
+    "text": "- Task 21–24 changes remain in the active source. No source file was modified for this design review; no Task 25 pre/post source ZIP was created."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md",
+    "line": 133,
+    "text": "- Regression: Task 21 Buy Now isolation; Task 22 blur cleanup; Task 23 tracking authorization; Task 24 repeat-order aggregation; existing Cart replacement; support; Grocery checkout; Restaurant flows unchanged."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md",
+    "line": 147,
+    "text": "- Workspace and Task 24 baseline: VERIFIED."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md",
+    "line": 1,
+    "text": "# COME-IN TASK 25 — Replacement Implementation Decision Report"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md",
+    "line": 4,
+    "text": "**Final status:** TASK 25 INCOMPLETE — PAYMENT/REFUND SAFETY BLOCKER  "
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md",
+    "line": 11,
+    "text": "- Task 24 report exists and SHA-256 matches the previously recorded value: `8890787e4ddd291e055d420ef38cd30c891456656ac410fb455ba6a701d8019c`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md",
+    "line": 12,
+    "text": "- Task 24 post-change ZIP exists: `/mnt/data/COME-IN-TASK24-POST-CHANGE-20261030T082300Z.zip`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md",
+    "line": 16,
+    "text": "  - Earlier Task 25 baseline comparison: 310 archived files matched active source, 0 missing and 0 different."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md",
+    "line": 17,
+    "text": "- Task 25 design review exists and its SHA-256 matches: `0c12216097c95caf811de33d500fbfeb5713eee86d502d3a27478b5e395b0a54`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md",
+    "line": 104,
+    "text": "- Tests run in this implementation attempt: NONE; implementation was blocked before edits because the required paid-order refund behavior cannot be safely delivered by existing Grocery payment capabilities. Existing Task 24 baseline evidence remains as recorded above; it is not represented as a new Task 25 test run."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md",
+    "line": 108,
+    "text": "- No Task 25 pre-change source ZIP created: no source mutation occurred, and the verified Task 24 post-change archive remains the unchanged baseline."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md",
+    "line": 109,
+    "text": "- No Task 25 post-change Master ZIP created: there are no source changes to package."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md",
+    "line": 110,
+    "text": "- Existing Task 24 post-change ZIP remains intact with SHA-256 `95ff21fc79742836cc4eb67a7751fb26eecb7b8b1580d658099a0004cebc68bd`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md",
+    "line": 126,
+    "text": "**Final:** TASK 25 INCOMPLETE — PAYMENT/REFUND SAFETY BLOCKER. No source changes were made; Task 21–24 baseline remains preserved."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 1,
+    "text": "# COME-IN Task 25 — Out-of-Stock Replacement Audit Report"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 4,
+    "text": "**Final status:** **TASK 25 INCOMPLETE — ISSUES REMAIN**"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 10,
+    "text": "- Task 24 report exists: `project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 12,
+    "text": "- Task 24 post-change ZIP exists: `/mnt/data/COME-IN-TASK24-POST-CHANGE-20261030T082300Z.zip`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 17,
+    "text": "- Task 23 post-change ZIP exists and passes integrity:"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 18,
+    "text": "  - `/mnt/data/COME-IN-TASK23-POST-CHANGE-20261030T081012Z.zip`"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 20,
+    "text": "  - Compared against current source, 303 archived files: 0 missing; two expected differences in `frontend/app/orders.tsx` and `backend/tests/test_task9_order_actions_contract.py`, which Task 24 report identifies as Task 24 changes. The Task 24 archive matches the current workspace exactly."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 21,
+    "text": "- Task 23 report exists: `project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 22,
+    "text": "- Task 21/22/23/24 source changes were not overwritten. No source files were modified in Task 25."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 86,
+    "text": "The current support-ticket schema and status-only endpoints do not represent those facts. Implementing this safely would require a new data/API contract and likely a transaction design for order items, stock reservation/decrement, total changes, and payment/refund consequences. The user explicitly instructed not to make broad schema/API/architecture changes without a safe basis. Therefore Task 25 stops at the audit and records the blocker rather than creating a misleading partial workflow."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 112,
+    "text": "- No Task 25 source changes were made, so no Task 25 pre-change or post-change source ZIP was generated."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 113,
+    "text": "- The verified Task 24 post-change ZIP above remains the unchanged baseline/rollback artifact."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md",
+    "line": 134,
+    "text": "**Final status: TASK 25 INCOMPLETE — ISSUES REMAIN.**"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK5-MEASURED-SHOPPING-HANDOFF-2026-11-11.json",
+    "line": 22,
+    "text": "    \"Measured products are not offered as cart 'replacement' suggestions (Task 25 replacement stays pack-only).\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/COME-IN-TASK5-MEASURED-SHOPPING-HANDOFF-2026-11-11.json",
+    "line": 77,
+    "text": "    \"Repeat Order (Task 24) re-adds measured qty as grams through existing cart keys; verify in consolidated testing.\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/IMPLEMENTATION_STATUS.md",
+    "line": 4,
+    "text": "The approved Restaurant Mode work remains a subtask of the existing 22-task roadmap (related Tasks 2, 3, 4, 6, 7, 10, 11, 13, 14, 15, 16, 17 and 18). No Task 23 was added. The supplied roadmap is preserved at `memory/COME-IN-MASTER-ROADMAP.md`."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/IMPLEMENTATION_STATUS.md",
+    "line": 69,
+    "text": "- Existing 22-task roadmap remains unchanged; work maps to existing Restaurant Mode, cart/checkout, authentication, testing and security tasks. No Task 23 was added."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/PRE_REPLIT_TEST_REPORT.md",
+    "line": 10,
+    "text": "- Architecture retained: Expo Router / React Native / TypeScript frontend, FastAPI backend, MongoDB integration. Shopping and Restaurant cart/store paths remain separate. The existing 22-task roadmap is unchanged; no Task 23 added."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/THEME_REFERENCE_MATCH_TEST_REPORT.md",
+    "line": 33,
+    "text": "No backend application code, API contracts, database schemas, authentication, payments, Restaurant Mode screens, or roadmap tasks were changed. The existing 22-task roadmap is retained; no Task 23 was added."
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/chand-ai-phase5-20261112/change-manifest.json",
+    "line": 539,
+    "text": "    \"project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md\": \"8ccb9ea5f43eaab5d9579e113c36db1197ac12aa8de4278e46cf1796045bc420\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/chand-ai-phase5-20261112/change-manifest.json",
+    "line": 540,
+    "text": "    \"project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md\": \"8890787e4ddd291e055d420ef38cd30c891456656ac410fb455ba6a701d8019c\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/chand-ai-phase5-20261112/change-manifest.json",
+    "line": 541,
+    "text": "    \"project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md\": \"0c12216097c95caf811de33d500fbfeb5713eee86d502d3a27478b5e395b0a54\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/chand-ai-phase5-20261112/change-manifest.json",
+    "line": 542,
+    "text": "    \"project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md\": \"52ff03ee11b98b8d7e57f51ed4b89632272f54a791755b2328b0faa5d2ff4fc1\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/project-reports/chand-ai-phase5-20261112/change-manifest.json",
+    "line": 543,
+    "text": "    \"project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md\": \"c204fc79a73c8809fc087334a7fc38a3f195fff66074617e71bc1b188652fb24\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/STEP1_FINAL_BASELINE_INVENTORY.json",
+    "line": 74,
+    "text": "    \"project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md\": \"c204fc79a73c8809fc087334a7fc38a3f195fff66074617e71bc1b188652fb24\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/STEP1_FINAL_BASELINE_INVENTORY.json",
+    "line": 85,
+    "text": "    \"project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md\": \"8ccb9ea5f43eaab5d9579e113c36db1197ac12aa8de4278e46cf1796045bc420\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/STEP1_FINAL_BASELINE_INVENTORY.json",
+    "line": 90,
+    "text": "    \"project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md\": \"52ff03ee11b98b8d7e57f51ed4b89632272f54a791755b2328b0faa5d2ff4fc1\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/STEP1_FINAL_BASELINE_INVENTORY.json",
+    "line": 103,
+    "text": "    \"project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md\": \"0c12216097c95caf811de33d500fbfeb5713eee86d502d3a27478b5e395b0a54\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/STEP1_FINAL_BASELINE_INVENTORY.json",
+    "line": 135,
+    "text": "    \"project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md\": \"8890787e4ddd291e055d420ef38cd30c891456656ac410fb455ba6a701d8019c\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/MANIFESTS/DELIVERY_PARTNER_ONBOARDING_SHA256_MANIFEST.txt",
+    "line": 507,
+    "text": "8ccb9ea5f43eaab5d9579e113c36db1197ac12aa8de4278e46cf1796045bc420  APPLICATION_SOURCE/COME-IN-WORKING-COPY-RECOVERED-V1/project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/MANIFESTS/DELIVERY_PARTNER_ONBOARDING_SHA256_MANIFEST.txt",
+    "line": 508,
+    "text": "8890787e4ddd291e055d420ef38cd30c891456656ac410fb455ba6a701d8019c  APPLICATION_SOURCE/COME-IN-WORKING-COPY-RECOVERED-V1/project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/MANIFESTS/DELIVERY_PARTNER_ONBOARDING_SHA256_MANIFEST.txt",
+    "line": 509,
+    "text": "0c12216097c95caf811de33d500fbfeb5713eee86d502d3a27478b5e395b0a54  APPLICATION_SOURCE/COME-IN-WORKING-COPY-RECOVERED-V1/project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/MANIFESTS/DELIVERY_PARTNER_ONBOARDING_SHA256_MANIFEST.txt",
+    "line": 510,
+    "text": "52ff03ee11b98b8d7e57f51ed4b89632272f54a791755b2328b0faa5d2ff4fc1  APPLICATION_SOURCE/COME-IN-WORKING-COPY-RECOVERED-V1/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/MANIFESTS/DELIVERY_PARTNER_ONBOARDING_SHA256_MANIFEST.txt",
+    "line": 511,
+    "text": "c204fc79a73c8809fc087334a7fc38a3f195fff66074617e71bc1b188652fb24  APPLICATION_SOURCE/COME-IN-WORKING-COPY-RECOVERED-V1/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/MANIFESTS/FILE_SHA256_MANIFEST.txt",
+    "line": 502,
+    "text": "8ccb9ea5f43eaab5d9579e113c36db1197ac12aa8de4278e46cf1796045bc420  APPLICATION_SOURCE/COME-IN-WORKING-COPY-RECOVERED-V1/project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/MANIFESTS/FILE_SHA256_MANIFEST.txt",
+    "line": 503,
+    "text": "8890787e4ddd291e055d420ef38cd30c891456656ac410fb455ba6a701d8019c  APPLICATION_SOURCE/COME-IN-WORKING-COPY-RECOVERED-V1/project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/MANIFESTS/FILE_SHA256_MANIFEST.txt",
+    "line": 504,
+    "text": "0c12216097c95caf811de33d500fbfeb5713eee86d502d3a27478b5e395b0a54  APPLICATION_SOURCE/COME-IN-WORKING-COPY-RECOVERED-V1/project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/MANIFESTS/FILE_SHA256_MANIFEST.txt",
+    "line": 505,
+    "text": "52ff03ee11b98b8d7e57f51ed4b89632272f54a791755b2328b0faa5d2ff4fc1  APPLICATION_SOURCE/COME-IN-WORKING-COPY-RECOVERED-V1/project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/MANIFESTS/FILE_SHA256_MANIFEST.txt",
+    "line": 506,
+    "text": "c204fc79a73c8809fc087334a7fc38a3f195fff66074617e71bc1b188652fb24  APPLICATION_SOURCE/COME-IN-WORKING-COPY-RECOVERED-V1/project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/PROJECT_HISTORY/ADDITIONAL_LIBRARY_ARTIFACTS/COME-IN-CHAND-AI-PHASE-5-CHANGE-MANIFEST-2026-11-12.json",
+    "line": 539,
+    "text": "    \"project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md\": \"8ccb9ea5f43eaab5d9579e113c36db1197ac12aa8de4278e46cf1796045bc420\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/PROJECT_HISTORY/ADDITIONAL_LIBRARY_ARTIFACTS/COME-IN-CHAND-AI-PHASE-5-CHANGE-MANIFEST-2026-11-12.json",
+    "line": 540,
+    "text": "    \"project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md\": \"8890787e4ddd291e055d420ef38cd30c891456656ac410fb455ba6a701d8019c\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/PROJECT_HISTORY/ADDITIONAL_LIBRARY_ARTIFACTS/COME-IN-CHAND-AI-PHASE-5-CHANGE-MANIFEST-2026-11-12.json",
+    "line": 541,
+    "text": "    \"project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md\": \"0c12216097c95caf811de33d500fbfeb5713eee86d502d3a27478b5e395b0a54\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/PROJECT_HISTORY/ADDITIONAL_LIBRARY_ARTIFACTS/COME-IN-CHAND-AI-PHASE-5-CHANGE-MANIFEST-2026-11-12.json",
+    "line": 542,
+    "text": "    \"project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md\": \"52ff03ee11b98b8d7e57f51ed4b89632272f54a791755b2328b0faa5d2ff4fc1\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/PROJECT_HISTORY/ADDITIONAL_LIBRARY_ARTIFACTS/COME-IN-CHAND-AI-PHASE-5-CHANGE-MANIFEST-2026-11-12.json",
+    "line": 543,
+    "text": "    \"project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md\": \"c204fc79a73c8809fc087334a7fc38a3f195fff66074617e71bc1b188652fb24\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/PROJECT_HISTORY/ADDITIONAL_LIBRARY_ARTIFACTS/COME_IN_MASTER_TASK_TRACKER.md",
+    "line": 47,
+    "text": "The dated `COME-IN-TASK18` through `COME-IN-TASK25` reports use a later implementation-work numbering scheme. They are **not** the approved Master Roadmap task numbers. Map them by feature scope as follows:"
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/PROJECT_INVENTORY/COMPLETE_PROJECT_INVENTORY.json",
+    "line": 507,
+    "text": "    \"project-reports/COME-IN-TASK23-ORDER-TRACKING-REPORT-2026-10-30.md\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/PROJECT_INVENTORY/COMPLETE_PROJECT_INVENTORY.json",
+    "line": 508,
+    "text": "    \"project-reports/COME-IN-TASK24-REPEAT-ORDER-REPORT-2026-10-30.md\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/PROJECT_INVENTORY/COMPLETE_PROJECT_INVENTORY.json",
+    "line": 509,
+    "text": "    \"project-reports/COME-IN-TASK25-REPLACEMENT-DESIGN-REVIEW-2026-10-30.md\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/PROJECT_INVENTORY/COMPLETE_PROJECT_INVENTORY.json",
+    "line": 510,
+    "text": "    \"project-reports/COME-IN-TASK25-REPLACEMENT-IMPLEMENTATION-REPORT-2026-10-30.md\","
+  },
+  {
+    "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/reports/audit/previous-handoff-package-2026-11-12/PROJECT_INVENTORY/COMPLETE_PROJECT_INVENTORY.json",
+    "line": 511,
+    "text": "    \"project-reports/COME-IN-TASK25-REPLACEMENT-REPORT-2026-10-30.md\","
+  }
+]

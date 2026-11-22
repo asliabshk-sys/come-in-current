@@ -1,0 +1,82 @@
+{
+  "timestamp": "2026-11-20T12:11:24.328512+05:30",
+  "files": [
+    {
+      "file": "SEC05_SEC09_CANDIDATE.patch",
+      "bytes": 3902,
+      "SHA256": "af7e53a4cbba26ea491e4425e404e9830c68b2dcf8f1d9a11eef719cd9d505ee"
+    },
+    {
+      "file": "SEC05_SEC09_CANDIDATE_REPORT.md",
+      "bytes": 5168,
+      "SHA256": "32c0ee1cae2c4e0d759d3654fd2668fabe3057fac5870484016b88b0d91902c8"
+    },
+    {
+      "file": "SEC05_SEC09_RESULTS.json",
+      "bytes": 6613,
+      "SHA256": "80c1d26e9b4f654626770b73f4519ce5479dbac1036381c7f0fecf595bcfdb33"
+    },
+    {
+      "file": "candidate-metadata.json",
+      "bytes": 596,
+      "SHA256": "9273472398c1b0ebb95d883fe4fba4c9437ebc7754a42f36c7d7010a6ea5d0d2"
+    },
+    {
+      "file": "checkpoint.json",
+      "bytes": 681,
+      "SHA256": "87d8f2634090a935d7a8df85a76a4a349ba7a311bbf2490ae9be623173890e01"
+    },
+    {
+      "file": "finalize_candidate_evidence.py",
+      "bytes": 9657,
+      "SHA256": "4778e7a14b82998e7a3ef7fa79c6374d2d32da428cd86825119ff57edbb2f175"
+    },
+    {
+      "file": "prepare_candidate.py",
+      "bytes": 5020,
+      "SHA256": "fba6e5713d592ad634d2eca32d7a10c79cf498b0e36ca5f9998cab10a28f93fb"
+    },
+    {
+      "file": "roles-after.json",
+      "bytes": 12573,
+      "SHA256": "69248cfa335f2dc2f843f22599d471ce6638656972d950f7873fe0ed918222d8"
+    },
+    {
+      "file": "roles-after.log",
+      "bytes": 354,
+      "SHA256": "878682092bcc1e69d4c20cd0eadaf2986c55fe3c06c3662ac9b6e26c051c0cae"
+    },
+    {
+      "file": "roles-after.xml",
+      "bytes": 2212,
+      "SHA256": "2fff93e3c75c7b203ae7af432307aeafd26d16106a1633feb3c6e74a7f03599a"
+    },
+    {
+      "file": "roles-before.json",
+      "bytes": 13260,
+      "SHA256": "9d961ea9b39d53e9633373bc25130d59651dcda76ee5cff9d16af17bcabefb5c"
+    },
+    {
+      "file": "roles-before.log",
+      "bytes": 1130,
+      "SHA256": "e9f9fc329453bd4dd8e062ab0602c17b3a8f957eadf5e4cf1f2fc55b6a5816e0"
+    },
+    {
+      "file": "roles-before.xml",
+      "bytes": 4605,
+      "SHA256": "959deaa17ee66c8bd849b90336318bd1621779c65dd7c66a963ee990469dccba"
+    },
+    {
+      "file": "server.candidate.py",
+      "bytes": 432610,
+      "SHA256": "f054bfb4a25004ac334514ef6c67fa47cd800715a2df0919dc6c85c9e1b3fbcf"
+    },
+    {
+      "file": "validate_roles_diagnostics.py",
+      "bytes": 17319,
+      "SHA256": "a64b60a947f0edb8c5208e8924f9652bf32d7c4da1f31fad1e0521ebac9f1186"
+    }
+  ],
+  "self_excluded": true,
+  "production_source_edited": false
+}

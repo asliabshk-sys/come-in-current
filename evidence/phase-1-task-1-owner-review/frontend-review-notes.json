@@ -1,0 +1,155 @@
+{
+  "independent_counts": {
+    "app_tsx_files": 53,
+    "scoped_app_src_ts_tsx_files": 95,
+    "total_frontend_ts_tsx_including_expo_declaration": 96,
+    "JSX_on_event_bindings": 579,
+    "onPress": 391,
+    "parse_diagnostics": 0,
+    "event_record_multiset_matches": true,
+    "navigation_recorded_selected_targets": 108,
+    "navigation_ast_literal_leaf_occurrences": 113,
+    "navigation_dynamic_argument_calls": 14,
+    "navigation_back_calls": 30,
+    "href_attributes": 5
+  },
+  "omitted_static_branch_targets": [
+    {
+      "file": "app/(tabs)/index.tsx",
+      "line": 102,
+      "target": "/notifications"
+    },
+    {
+      "file": "app/(tabs)/index.tsx",
+      "line": 102,
+      "target": "/orders"
+    },
+    {
+      "file": "app/notifications.tsx",
+      "line": 42,
+      "target": "/restaurant/dashboard"
+    },
+    {
+      "file": "app/notifications.tsx",
+      "line": 42,
+      "target": "/seller/orders"
+    },
+    {
+      "file": "app/orders.tsx",
+      "line": 193,
+      "target": "/order-tracking"
+    }
+  ],
+  "href_attributes": [
+    {
+      "file": "app/+not-found.tsx",
+      "line": 21,
+      "expr": "\"/(tabs)\""
+    },
+    {
+      "file": "app/index.tsx",
+      "line": 4,
+      "expr": "\"/(tabs)\""
+    },
+    {
+      "file": "app/restaurant/account.tsx",
+      "line": 10,
+      "expr": "\"/(tabs)/account\""
+    },
+    {
+      "file": "app/restaurant/addresses.tsx",
+      "line": 3,
+      "expr": "\"/addresses\""
+    },
+    {
+      "file": "app/restaurant/support.tsx",
+      "line": 6,
+      "expr": "{`/chand?openHelp=1${suffix}` as never}"
+    }
+  ],
+  "claims": [
+    {
+      "id": "F01",
+      "claim": "53app route/layout files",
+      "verdict": "VERIFIED",
+      "source": "frontend/app/**/*.tsx;independent filesystem+AST count",
+      "report": "PHASE_1_TASK_1_SCREEN_AND_ROUTE_INVENTORY.md:11"
+    },
+    {
+      "id": "F02",
+      "claim": "95app/src TS/TSX modules,0parse diagnostics",
+      "verdict": "VERIFIED",
+      "scope": "App/src only;expo-env.d.ts is96th frontend TS file outside stated scan roots;not a semantic typecheck",
+      "report": "PHASE_1_TASK_1_SCREEN_AND_ROUTE_INVENTORY.md:11"
+    },
+    {
+      "id": "F03",
+      "claim": "579event bindings match source",
+      "verdict": "VERIFIED",
+      "scope": "Exact multiset(file,line,event,handler) matches all579 records;391onPress,not579buttons",
+      "report": "PHASE_1_TASK_1_SCREEN_AND_ROUTE_INVENTORY.md:11"
+    },
+    {
+      "id": "F04",
+      "claim": "108reported selected literal router targets resolve",
+      "verdict": "VERIFIED",
+      "scope": "All108recorded path candidates resolve to route/group index candidates;not runtime proof",
+      "report": "PHASE_1_TASK_1_SCREEN_AND_ROUTE_INVENTORY.md:11"
+    },
+    {
+      "id": "F05",
+      "claim": "Complete static navigation coverage",
+      "verdict": "PARTIALLY VERIFIED",
+      "scope": "Fresh AST reveals113 literal leaf occurrences:5additional conditional branches missing from selected108 checks,plus5hrefattributes and14dynamic push/replace arguments not covered by literal check. All five additional leaf paths exist;no dead route proven.",
+      "report": "PHASE_1_TASK_1_MASTER_AUDIT_REPORT.md:31;screen inventory:87",
+      "source": "frontend/app/(tabs)/index.tsx:102;frontend/app/notifications.tsx:42;frontend/app/orders.tsx:193"
+    },
+    {
+      "id": "F06",
+      "claim": "public path presentation accurately models Expo routes",
+      "verdict": "PARTIALLY VERIFIED",
+      "scope": "Rows label _layout and +html as layouts but still assign /_layout,+html pseudo public paths. These are special router files,not actual navigable pages. Rootgroup overlap explained;framework runtime ambiguity not tested.",
+      "report": "PHASE_1_TASK_1_SCREEN_AND_ROUTE_INVENTORY.md:21,27,28,29,41"
+    },
+    {
+      "id": "F07",
+      "claim": "UI-01stale online-payment information",
+      "verdict": "VERIFIED",
+      "source": "frontend/app/payment-methods.tsx:19,35 versus checkout.tsx gated online flow and Restaurant checkout",
+      "report": "PHASE_1_TASK_1_SCREEN_AND_ROUTE_INVENTORY.md:82"
+    },
+    {
+      "id": "F08",
+      "claim": "UI-02unconditional Restaurant sample notice",
+      "verdict": "VERIFIED",
+      "source": "frontend/src/restaurant/RestaurantPage.tsx:5",
+      "report": "PHASE_1_TASK_1_SCREEN_AND_ROUTE_INVENTORY.md:83"
+    },
+    {
+      "id": "F09",
+      "claim": "Screen and button workflows work at runtime",
+      "verdict": "UNVERIFIED",
+      "scope": "Audit correctly limits claims to source bindings and prior browser17checks;no new UI/runtime acceptance.",
+      "report": "PHASE_1_TASK_1_SCREEN_AND_ROUTE_INVENTORY.md:13,15,85"
+    },
+    {
+      "id": "F10",
+      "claim": "All6literal API mismatch candidates are query suffixes with existing base endpoints",
+      "verdict": "VERIFIED",
+      "scope": "earnings and Restaurant query construction reviewed;not comprehensive dynamic API contract validation",
+      "report": "PHASE_1_TASK_1_API_AND_DATABASE_INVENTORY.md permission/contract section"
+    }
+  ],
+  "no_source_changes": true,
+  "no_tests_browser_provider_or_database_actions": true,
+  "additional_validation": {
+    "screen_report_event_table_rows": 579,
+    "frontend_inventory_missing_files": [],
+    "independent_claim_counts": {
+      "VERIFIED": 7,
+      "PARTIALLY VERIFIED": 2,
+      "UNVERIFIED": 1
+    }
+  },
+  "additional_gap_note": "app/auth.tsx:64 accepts string next and passes it through router.replace(next as any). This is one of14 dynamic navigation calls not assessed by108 literal-target check. Allowed-return-target behavior requires review;external redirect/exploitability not proven and no navigation attempted."
+}

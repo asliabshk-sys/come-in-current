@@ -1,0 +1,110 @@
+--- a/backend/catalogue_import_engine.py
++++ b/backend/catalogue_import_engine.py
+@@ -142,10 +142,19 @@
+ 
+ def _rows_from_csv(raw: bytes, filename: str) -> tuple[list[dict], int, list[str]]:
+     text = raw.decode("utf-8-sig")
+-    try:
+-        dialect = csv.Sniffer().sniff(text[:8192], delimiters=",;\t|") if text.strip() else csv.excel
++    dialect = csv.excel
++    try:
++        if text.strip():
++            # Column separators come from the header, not punctuation inside
++            # untrusted cell values (for example a formula containing '|').
++            dialect = csv.Sniffer().sniff(text.splitlines()[0], delimiters=",;\t|")
++            try:
++                dialect = csv.Sniffer().sniff(text[:8192], delimiters=dialect.delimiter)
++            except csv.Error:
++                # Irregular source rows must not change the header's separator.
++                pass
+     except csv.Error:
+-        dialect = csv.excel
++        pass
+     reader = csv.DictReader(io.StringIO(text), dialect=dialect)
+     if not reader.fieldnames or any(not str(h or "").strip() for h in reader.fieldnames):
+         raise ValueError("CSV needs a non-empty header row")
+--- a/backend/tests/test_universal_catalogue_import_engine.py
++++ b/backend/tests/test_universal_catalogue_import_engine.py
+@@ -136,6 +136,30 @@
+     assert record["raw_values"]["name"].startswith("=HYPERLINK")
+     assert record["normalized"]["name"].startswith("=HYPERLINK")
+ 
++
++@pytest.mark.parametrize("delimiter", [",", ";", "\t", "|"])
++def test_csv_header_selects_separator_without_reinterpreting_cell_punctuation(delimiter):
++    import csv
++    stream = io.StringIO(newline="")
++    writer = csv.writer(stream, delimiter=delimiter)
++    writer.writerow(["name", "description"])
++    name = '=HYPERLINK("https://untrusted.invalid","click")'
++    description = 'Untrusted , ; | \t punctuation\nand a second line'
++    writer.writerow([name, description])
++
++    result = process_file("source.csv", stream.getvalue().encode("utf-8-sig"))
++
++    assert len(result.records) == 1
++    assert result.records[0]["raw_values"] == {"name": name, "description": description}
++    assert result.records[0]["normalized"]["name"] == name
++    assert result.records[0]["status"] == "NEEDS_REVIEW"
++
++
++def test_csv_quoted_header_punctuation_is_not_a_column_separator():
++    result = process_file("source.csv", b'"Product, label";price\nRice;65\n')
++    assert result.records[0]["raw_values"] == {"Product, label": "Rice", "price": "65"}
++    assert result.records[0]["normalized"]["price"] == "65"
++
+ def test_xls_signature_is_recognized_but_missing_xlrd_is_reported_cleanly():
+     payload = bytes.fromhex("D0CF11E0A1B11AE1") + b"\x00" * 64
+     with pytest.raises((RuntimeError, ValueError)):
+--- a/backend/tests/test_frontend_contracts.py
++++ b/backend/tests/test_frontend_contracts.py
+@@ -73,13 +73,14 @@
+         'testID="offline-shops-card"',
+         'testID="restaurant-mode-card"',
+         'testID="home-services-card"',
+-        'testID="request-anything-card"',
++        'testID="chand-home-entry"',
+         '{CATEGORIES.map((item) => (',
+         'testID="header-language"',
+         'testID="header-voice-search"',
+         'testID="fresh-groceries-banner"',
+         'router.push("/restaurant")',
+         'router.push("/services")',
++        'router.push("/chand")',
+     ):
+         assert marker in home
+     assert 'brandHeader: "#FFE34F"' in theme
+@@ -92,6 +93,10 @@
+     assert 'backgroundColor: colors.brandForest' in tabs
+     assert 'useLocalSearchParams<{ type?: string }>()' in shops
+     assert 'params.type === "online" || params.type === "offline"' in shops
++    # Approved product decision: CHAND is the shopping-assistant entry point;
++    # the old Request Anything shortcut must not be restored to satisfy a test.
++    assert 'testID="request-anything-card"' not in home
++    assert 'router.push("/request")' not in home
+ 
+ 
+ def test_bakery_has_no_fabricated_sample_inventory_and_voice_is_honest():
+@@ -100,8 +105,20 @@
+     assert 'id: "bakery"' in catalog
+     assert 'id: "p-bakery-bread"' not in catalog
+     assert 'name: "Fresh Bread Loaf"' not in catalog
+-    assert 'Voice search unavailable' in home
+-    assert 'Speech recognition is not configured for this app.' in home
++    # Home opens editable CHAND voice typing rather than claiming that every
++    # device lacks speech support. Native/provider capability stays conditional.
++    voice_button = home.split('testID="header-voice-search"', 1)[1].split('</Pressable>', 1)[0]
++    assert 'accessibilityLabel="Open CHAND AI voice typing"' in voice_button
++    assert 'router.push("/chand?voice=1")' in voice_button
++    assert 'Voice search unavailable' not in voice_button
++    assert 'Speech recognition is not configured for this app.' not in voice_button
++    chand = (ROOT / "frontend/app/chand.tsx").read_text()
++    assert 'routeParams.voice === "1"' in chand
++    assert 'messageInputRef.current?.focus()' in chand
++    assert 'if (!permission.granted)' in chand
++    assert 'Microphone permission was not granted.' in chand
++    assert 'api.chandTranscribe' in chand
++    assert 'Voice transcription failed. Please try again or type your request.' in chand
+ 
+ def test_bakery_category_uses_catalog_filter_and_existing_empty_state():
+     catalog = (ROOT / "frontend/src/data/catalog.ts").read_text()

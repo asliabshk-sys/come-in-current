@@ -1,0 +1,89 @@
+bringing up nodes...
+bringing up nodes...
+
+........................................................................ [ 92%]
+....FF                                                                   [100%]
+=================================== FAILURES ===================================
+___________ test_local_signed_webhook_http_and_transaction_scenarios ___________
+[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8ca69b7b90>
+
+    def test_local_signed_webhook_http_and_transaction_scenarios(monkeypatch):
+        if os.environ.get("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
+            pytest.skip("requires explicit local disposable payment-test opt-in")
+        import httpx
+        import server
+        from bson import ObjectId
+        from motor.motor_asyncio import AsyncIOMotorClient
+        from pymongo import MongoClient
+>       from scripts.mongo.comein_mongo import init_db
+E       ModuleNotFoundError: No module named 'scripts'
+
+tests/test_payment_webhook_local_integration.py:26: ModuleNotFoundError
+_________ test_local_grocery_refund_authorization_accounting_and_retry _________
+[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8ca4882b10>
+
+    def test_local_grocery_refund_authorization_accounting_and_retry(monkeypatch):
+        if os.environ.get("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
+            pytest.skip("requires explicit local disposable payment-test opt-in")
+        import httpx
+        import server
+        from bson import ObjectId
+        from motor.motor_asyncio import AsyncIOMotorClient
+        from pymongo import MongoClient
+>       from scripts.mongo.comein_mongo import init_db
+E       ModuleNotFoundError: No module named 'scripts'
+
+tests/test_grocery_refund_local_integration.py:19: ModuleNotFoundError
+=============================== warnings summary ===============================
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+  /workspace/come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+  /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py:5792: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+  /workspace/come-in-tools/py311/lib/python3.11/site-packages/fastapi/applications.py:4495: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)
+
+tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+  /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py:5920: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("shutdown")
+
+tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+  /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py:6988: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_payment_webhook_local_integration.py::test_local_signed_webhook_http_and_transaction_scenarios
+FAILED tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+2 failed, 76 passed, 8 warnings in 4.44s

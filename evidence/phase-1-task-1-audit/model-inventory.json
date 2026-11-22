@@ -1,0 +1,1919 @@
+[
+  {
+    "name": "BaseDoc",
+    "line": 193,
+    "fields": [
+      {
+        "name": "id",
+        "type": "Optional[PyObjectId]",
+        "constraint": "Field(default=None, alias=\"_id\")"
+      },
+      {
+        "name": "created_at",
+        "type": "datetime",
+        "constraint": "Field(default_factory=now_utc)"
+      },
+      {
+        "name": "updated_at",
+        "type": "datetime",
+        "constraint": "Field(default_factory=now_utc)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "RegisterIn",
+    "line": 305,
+    "fields": [
+      {
+        "name": "name",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=120)"
+      },
+      {
+        "name": "email",
+        "type": "EmailStr",
+        "constraint": null
+      },
+      {
+        "name": "password",
+        "type": "str",
+        "constraint": "Field(min_length=6, max_length=128)"
+      },
+      {
+        "name": "phone",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=20)"
+      },
+      {
+        "name": "referral_code",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, min_length=6, max_length=24)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "LoginIn",
+    "line": 313,
+    "fields": [
+      {
+        "name": "email",
+        "type": "EmailStr",
+        "constraint": null
+      },
+      {
+        "name": "password",
+        "type": "str",
+        "constraint": null
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "AuthOut",
+    "line": 318,
+    "fields": [
+      {
+        "name": "token",
+        "type": "str",
+        "constraint": null
+      },
+      {
+        "name": "user",
+        "type": "dict",
+        "constraint": null
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ReferralReviewIn",
+    "line": 323,
+    "fields": [
+      {
+        "name": "decision",
+        "type": "Literal[\"approve\", \"reject\", \"hold\"]",
+        "constraint": null
+      },
+      {
+        "name": "note",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=500)"
+      },
+      {
+        "name": "contact_verified",
+        "type": "bool",
+        "constraint": "False"
+      },
+      {
+        "name": "contact_verification_method",
+        "type": "Optional[Literal[\"email\", \"phone\", \"authorized_manual_check\"]]",
+        "constraint": "None"
+      },
+      {
+        "name": "payment_confirmed",
+        "type": "bool",
+        "constraint": "False"
+      },
+      {
+        "name": "refund_return_checks_passed",
+        "type": "bool",
+        "constraint": "False"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ReferralRewardDecisionIn",
+    "line": 332,
+    "fields": [
+      {
+        "name": "decision",
+        "type": "Literal[\"approve\", \"reject\", \"available\", \"processing\", \"paid\"]",
+        "constraint": null
+      },
+      {
+        "name": "note",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=500)"
+      },
+      {
+        "name": "payout_reference",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=120)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "BankAccountIn",
+    "line": 338,
+    "fields": [
+      {
+        "name": "account_holder_name",
+        "type": "str",
+        "constraint": "Field(min_length=2, max_length=120)"
+      },
+      {
+        "name": "bank_name",
+        "type": "str",
+        "constraint": "Field(min_length=2, max_length=120)"
+      },
+      {
+        "name": "account_number",
+        "type": "str",
+        "constraint": "Field(min_length=8, max_length=20, pattern=r\"^[0-9]{8,20}$\")"
+      },
+      {
+        "name": "ifsc",
+        "type": "str",
+        "constraint": "Field(min_length=11, max_length=11, pattern=r\"^[A-Za-z]{4}0[A-Za-z0-9]{6}$\")"
+      }
+    ],
+    "validators": [
+      "normalize_ifsc",
+      "trim_nonblank"
+    ]
+  },
+  {
+    "name": "FinancialPolicyIn",
+    "line": 358,
+    "fields": [
+      {
+        "name": "commission_rate_percent",
+        "type": "Decimal",
+        "constraint": "Field(ge=0, le=30)"
+      },
+      {
+        "name": "platform_service_fee_inr",
+        "type": "Decimal",
+        "constraint": "Field(default=Decimal(\"0\"), ge=0, le=100000)"
+      },
+      {
+        "name": "delivery_fee_beneficiary",
+        "type": "Literal[\"platform\", \"shopkeeper\", \"third_party\", \"not_applicable\"]",
+        "constraint": null
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "SettlementRequestIn",
+    "line": 364,
+    "fields": [
+      {
+        "name": "idempotency_key",
+        "type": "str",
+        "constraint": "Field(min_length=16, max_length=120)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "CashCollectionIn",
+    "line": 368,
+    "fields": [
+      {
+        "name": "confirmed",
+        "type": "bool",
+        "constraint": null
+      },
+      {
+        "name": "note",
+        "type": "str",
+        "constraint": "Field(default=\"Cash received by shop/restaurant owner\", max_length=240)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "SettlementDecisionIn",
+    "line": 373,
+    "fields": [
+      {
+        "name": "decision",
+        "type": "Literal[\"approve\", \"reject\", \"processing\", \"paid\", \"failed\", \"reverse\"]",
+        "constraint": null
+      },
+      {
+        "name": "note",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=500)"
+      },
+      {
+        "name": "payout_reference",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=160)"
+      },
+      {
+        "name": "manual_payment_confirmed",
+        "type": "bool",
+        "constraint": "False"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ShopIn",
+    "line": 383,
+    "fields": [
+      {
+        "name": "name",
+        "type": "str",
+        "constraint": "Field(min_length=2, max_length=120)"
+      },
+      {
+        "name": "tagline",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=160)"
+      },
+      {
+        "name": "description",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=1200)"
+      },
+      {
+        "name": "owner_name",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=120)"
+      },
+      {
+        "name": "phone",
+        "type": "str",
+        "constraint": "Field(min_length=5, max_length=20)"
+      },
+      {
+        "name": "alt_phone",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=20)"
+      },
+      {
+        "name": "whatsapp",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=20)"
+      },
+      {
+        "name": "category_ids",
+        "type": "List[str]",
+        "constraint": "Field(default_factory=list)"
+      },
+      {
+        "name": "area",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=160)"
+      },
+      {
+        "name": "address",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=400)"
+      },
+      {
+        "name": "city",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=80)"
+      },
+      {
+        "name": "state",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=80)"
+      },
+      {
+        "name": "pincode",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=12)"
+      },
+      {
+        "name": "latitude",
+        "type": "Optional[float]",
+        "constraint": "None"
+      },
+      {
+        "name": "longitude",
+        "type": "Optional[float]",
+        "constraint": "None"
+      },
+      {
+        "name": "hours",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=120)"
+      },
+      {
+        "name": "holidays",
+        "type": "List[str]",
+        "constraint": "Field(default_factory=list)"
+      },
+      {
+        "name": "services",
+        "type": "List[str]",
+        "constraint": "Field(default_factory=list)"
+      },
+      {
+        "name": "delivery_available",
+        "type": "bool",
+        "constraint": "False"
+      },
+      {
+        "name": "pickup_available",
+        "type": "bool",
+        "constraint": "True"
+      },
+      {
+        "name": "delivery_radius_km",
+        "type": "Optional[float]",
+        "constraint": "None"
+      },
+      {
+        "name": "payment_methods",
+        "type": "List[str]",
+        "constraint": "Field(default_factory=lambda: [\"cod\"], max_length=8)"
+      },
+      {
+        "name": "public_upi",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=80)"
+      },
+      {
+        "name": "shop_type",
+        "type": "Literal[\"online\", \"offline\", \"both\"]",
+        "constraint": "\"offline\""
+      },
+      {
+        "name": "offline_shop_type",
+        "type": "Literal[\"grocery_kirana\", \"chicken\", \"meat\", \"fish\", \"momos\", \"burger\", \"pizza\", \"chinese_food\", \"chaat_golgappa\", \"other_food\"]",
+        "constraint": "\"grocery_kirana\""
+      },
+      {
+        "name": "image_url",
+        "type": "Optional[str]",
+        "constraint": "None"
+      },
+      {
+        "name": "gallery",
+        "type": "List[str]",
+        "constraint": "Field(default_factory=list)"
+      },
+      {
+        "name": "business_registration",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=80)"
+      }
+    ],
+    "validators": [
+      "validate_shop_payment_methods",
+      "validate_public_upi"
+    ]
+  },
+  {
+    "name": "ProductVariantIn",
+    "line": 440,
+    "fields": [
+      {
+        "name": "id",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=80, pattern=r\"^[A-Za-z0-9._-]+$\")"
+      },
+      {
+        "name": "unit",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=40)"
+      },
+      {
+        "name": "price",
+        "type": "float",
+        "constraint": "Field(gt=0, le=100000000)"
+      },
+      {
+        "name": "mrp",
+        "type": "Optional[float]",
+        "constraint": "Field(default=None, ge=0, le=100000000)"
+      },
+      {
+        "name": "stock",
+        "type": "int",
+        "constraint": "Field(default=0, ge=0, le=100000000)"
+      },
+      {
+        "name": "available",
+        "type": "bool",
+        "constraint": "True"
+      }
+    ],
+    "validators": [
+      "variant_mrp_gte_price"
+    ]
+  },
+  {
+    "name": "MeasureIn",
+    "line": 461,
+    "fields": [
+      {
+        "name": "min_qty",
+        "type": "int",
+        "constraint": "Field(ge=1, le=MEASURED_QTY_LIMIT)"
+      },
+      {
+        "name": "max_qty",
+        "type": "int",
+        "constraint": "Field(ge=1, le=MEASURED_QTY_LIMIT)"
+      },
+      {
+        "name": "step",
+        "type": "int",
+        "constraint": "Field(ge=1, le=MEASURED_QTY_LIMIT)"
+      },
+      {
+        "name": "presets",
+        "type": "List[int]",
+        "constraint": "Field(default_factory=list, max_length=8)"
+      }
+    ],
+    "validators": [
+      "check_range"
+    ]
+  },
+  {
+    "name": "ProductIn",
+    "line": 478,
+    "fields": [
+      {
+        "name": "name",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=160)"
+      },
+      {
+        "name": "brand",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=80)"
+      },
+      {
+        "name": "unit",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=40)"
+      },
+      {
+        "name": "price",
+        "type": "float",
+        "constraint": "Field(gt=0, le=100000000)"
+      },
+      {
+        "name": "mrp",
+        "type": "Optional[float]",
+        "constraint": "Field(default=None, ge=0, le=100000000)"
+      },
+      {
+        "name": "stock",
+        "type": "int",
+        "constraint": "Field(default=0, ge=0, le=100000000)"
+      },
+      {
+        "name": "image_url",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=2048)"
+      },
+      {
+        "name": "category_id",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=40)"
+      },
+      {
+        "name": "description",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=1200)"
+      },
+      {
+        "name": "sku",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=80)"
+      },
+      {
+        "name": "available",
+        "type": "bool",
+        "constraint": "True"
+      },
+      {
+        "name": "variants",
+        "type": "Optional[List[ProductVariantIn]]",
+        "constraint": "None"
+      },
+      {
+        "name": "sell_by",
+        "type": "Optional[Literal[\"pack\", \"weight\", \"volume\"]]",
+        "constraint": "None"
+      },
+      {
+        "name": "measure",
+        "type": "Optional[MeasureIn]",
+        "constraint": "None"
+      }
+    ],
+    "validators": [
+      "check_measured",
+      "trim_product_text",
+      "product_name_must_not_be_blank",
+      "product_category_must_not_be_blank",
+      "product_description_must_not_be_blank",
+      "mrp_gte_price",
+      "normalize_sku",
+      "unique_variant_ids"
+    ]
+  },
+  {
+    "name": "CartLine",
+    "line": 564,
+    "fields": [
+      {
+        "name": "product_id",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=80)"
+      },
+      {
+        "name": "name",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=160)"
+      },
+      {
+        "name": "unit",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=40)"
+      },
+      {
+        "name": "price",
+        "type": "Optional[float]",
+        "constraint": "Field(default=None, ge=0)"
+      },
+      {
+        "name": "qty",
+        "type": "int",
+        "constraint": "Field(ge=1, le=MEASURED_QTY_LIMIT)"
+      },
+      {
+        "name": "image_url",
+        "type": "Optional[str]",
+        "constraint": "None"
+      },
+      {
+        "name": "shop_id",
+        "type": "Optional[str]",
+        "constraint": "None"
+      },
+      {
+        "name": "variant_id",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=80)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "QuoteLineIn",
+    "line": 575,
+    "fields": [
+      {
+        "name": "product_id",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=80)"
+      },
+      {
+        "name": "qty",
+        "type": "int",
+        "constraint": "Field(ge=1, le=MEASURED_QTY_LIMIT)"
+      },
+      {
+        "name": "variant_id",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=80)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "GroceryQuoteIn",
+    "line": 581,
+    "fields": [
+      {
+        "name": "items",
+        "type": "List[QuoteLineIn]",
+        "constraint": "Field(min_length=1, max_length=100)"
+      },
+      {
+        "name": "fulfillment",
+        "type": "Literal[\"delivery\", \"pickup\"]",
+        "constraint": "\"delivery\""
+      },
+      {
+        "name": "use_rewards",
+        "type": "bool",
+        "constraint": "False"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "OrderIn",
+    "line": 587,
+    "fields": [
+      {
+        "name": "items",
+        "type": "List[CartLine]",
+        "constraint": null
+      },
+      {
+        "name": "delivery_address",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=400)"
+      },
+      {
+        "name": "fulfillment",
+        "type": "Literal[\"delivery\", \"pickup\"]",
+        "constraint": "\"delivery\""
+      },
+      {
+        "name": "customer_name",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=120)"
+      },
+      {
+        "name": "customer_phone",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=20)"
+      },
+      {
+        "name": "delivery_fee",
+        "type": "float",
+        "constraint": "Field(default=0, ge=0)"
+      },
+      {
+        "name": "payment_method",
+        "type": "Literal[\"cod\", \"upi\", \"cash_shop\", \"pickup\", \"online_stripe\", \"online_razorpay\"]",
+        "constraint": "\"cod\""
+      },
+      {
+        "name": "notes",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=400)"
+      },
+      {
+        "name": "shop_id",
+        "type": "Optional[str]",
+        "constraint": "None"
+      },
+      {
+        "name": "quote_token",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, min_length=20, max_length=160)"
+      },
+      {
+        "name": "idempotency_key",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, min_length=16, max_length=120)"
+      },
+      {
+        "name": "confirm_price_changes",
+        "type": "bool",
+        "constraint": "False"
+      }
+    ],
+    "validators": [
+      "non_empty"
+    ]
+  },
+  {
+    "name": "DeliveryLocationUpdateIn",
+    "line": 610,
+    "fields": [
+      {
+        "name": "latitude",
+        "type": "float",
+        "constraint": "Field(ge=-90, le=90)"
+      },
+      {
+        "name": "longitude",
+        "type": "float",
+        "constraint": "Field(ge=-180, le=180)"
+      },
+      {
+        "name": "accuracy_m",
+        "type": "Optional[float]",
+        "constraint": "Field(default=None, ge=0, le=100000)"
+      }
+    ],
+    "validators": [
+      "finite_coordinate"
+    ]
+  },
+  {
+    "name": "OrderStatusUpdate",
+    "line": 624,
+    "fields": [
+      {
+        "name": "status",
+        "type": "Literal[\n        \"pending\", \"accepted\", \"preparing\", \"ready\", \"out_for_delivery\", \"delivered\", \"cancelled\"\n    ]",
+        "constraint": null
+      },
+      {
+        "name": "note",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=240)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "RequestAnythingIn",
+    "line": 634,
+    "fields": [
+      {
+        "name": "description",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=1200)"
+      },
+      {
+        "name": "pickup",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=240)"
+      },
+      {
+        "name": "drop",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=240)"
+      },
+      {
+        "name": "size",
+        "type": "str",
+        "constraint": "Field(default=\"Small\", max_length=24)"
+      },
+      {
+        "name": "quantity",
+        "type": "int",
+        "constraint": "Field(default=1, ge=1)"
+      },
+      {
+        "name": "budget",
+        "type": "Optional[float]",
+        "constraint": "Field(default=None, ge=0)"
+      },
+      {
+        "name": "category",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=80)"
+      },
+      {
+        "name": "reference_image_url",
+        "type": "Optional[str]",
+        "constraint": "None"
+      },
+      {
+        "name": "notes",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=400)"
+      },
+      {
+        "name": "customer_name",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=120)"
+      },
+      {
+        "name": "customer_phone",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=20)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "AgentAssistIn",
+    "line": 648,
+    "fields": [
+      {
+        "name": "shop_id",
+        "type": "Optional[str]",
+        "constraint": "None"
+      },
+      {
+        "name": "reason",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=600)"
+      },
+      {
+        "name": "preferred_time",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=80)"
+      },
+      {
+        "name": "instructions",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=600)"
+      },
+      {
+        "name": "customer_name",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=120)"
+      },
+      {
+        "name": "customer_phone",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=20)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "StatusCheck",
+    "line": 676,
+    "fields": [
+      {
+        "name": "id",
+        "type": "str",
+        "constraint": "Field(default_factory=lambda: str(uuid.uuid4()))"
+      },
+      {
+        "name": "client_name",
+        "type": "str",
+        "constraint": null
+      },
+      {
+        "name": "timestamp",
+        "type": "datetime",
+        "constraint": "Field(default_factory=now_utc)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "StatusCheckCreate",
+    "line": 682,
+    "fields": [
+      {
+        "name": "client_name",
+        "type": "str",
+        "constraint": null
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "UpdateProfileIn",
+    "line": 1063,
+    "fields": [
+      {
+        "name": "name",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=120)"
+      },
+      {
+        "name": "phone",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=20)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ForgotPasswordIn",
+    "line": 1080,
+    "fields": [
+      {
+        "name": "email",
+        "type": "EmailStr",
+        "constraint": null
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ResetPasswordIn",
+    "line": 1083,
+    "fields": [
+      {
+        "name": "token",
+        "type": "str",
+        "constraint": "Field(min_length=32, max_length=256)"
+      },
+      {
+        "name": "new_password",
+        "type": "str",
+        "constraint": "Field(min_length=8, max_length=128)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ShopAvailabilityIn",
+    "line": 1269,
+    "fields": [
+      {
+        "name": "online",
+        "type": "bool",
+        "constraint": null
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "AssistantTurn",
+    "line": 1332,
+    "fields": [
+      {
+        "name": "role",
+        "type": "Literal[\"user\", \"assistant\"]",
+        "constraint": null
+      },
+      {
+        "name": "content",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=1000)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "AssistantContextIn",
+    "line": 1337,
+    "fields": [
+      {
+        "name": "query",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=300)"
+      },
+      {
+        "name": "language",
+        "type": "str",
+        "constraint": "Field(default=\"en\", pattern=\"^(en|hi|gu|mr|ta|te|bn|pa|kn|ml|or|ur)$\")"
+      },
+      {
+        "name": "limit",
+        "type": "int",
+        "constraint": "Field(default=6, ge=1, le=12)"
+      },
+      {
+        "name": "history",
+        "type": "List[AssistantTurn]",
+        "constraint": "Field(default_factory=list, max_length=8)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ChandFeedbackIn",
+    "line": 1345,
+    "fields": [
+      {
+        "name": "rating",
+        "type": "Literal[\"positive\", \"negative\"]",
+        "constraint": null
+      },
+      {
+        "name": "category",
+        "type": "Literal[\"answer_quality\", \"product_match\", \"language\", \"safety\", \"other\"]",
+        "constraint": "\"answer_quality\""
+      },
+      {
+        "name": "comment",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=1000)"
+      },
+      {
+        "name": "conversation_ref",
+        "type": "str",
+        "constraint": "Field(min_length=8, max_length=80, pattern=r\"^[A-Za-z0-9_-]+$\")"
+      },
+      {
+        "name": "request_id",
+        "type": "str",
+        "constraint": "Field(min_length=8, max_length=100, pattern=r\"^[A-Za-z0-9_-]+$\")"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ChandFeedbackStatusIn",
+    "line": 1353,
+    "fields": [
+      {
+        "name": "status",
+        "type": "Literal[\"reviewing\", \"resolved\", \"closed\"]",
+        "constraint": null
+      },
+      {
+        "name": "resolution_note",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=500)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "MasterVariantIn",
+    "line": 1815,
+    "fields": [
+      {
+        "name": "id",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=80, pattern=r\"^[A-Za-z0-9._-]+$\")"
+      },
+      {
+        "name": "unit",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=40)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "MasterProductIn",
+    "line": 1820,
+    "fields": [
+      {
+        "name": "name",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=160)"
+      },
+      {
+        "name": "brand",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=80)"
+      },
+      {
+        "name": "category_id",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=40)"
+      },
+      {
+        "name": "source_reference",
+        "type": "str",
+        "constraint": "Field(min_length=4, max_length=500)"
+      },
+      {
+        "name": "description",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=1200)"
+      },
+      {
+        "name": "image_url",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=1000)"
+      },
+      {
+        "name": "variants",
+        "type": "List[MasterVariantIn]",
+        "constraint": "Field(min_length=1, max_length=100)"
+      }
+    ],
+    "validators": [
+      "source_reference_nonblank",
+      "master_variant_ids_unique"
+    ]
+  },
+  {
+    "name": "MasterLinkIn",
+    "line": 1846,
+    "fields": [
+      {
+        "name": "variant_id",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=80)"
+      },
+      {
+        "name": "price",
+        "type": "float",
+        "constraint": "Field(ge=0, le=100000000)"
+      },
+      {
+        "name": "mrp",
+        "type": "Optional[float]",
+        "constraint": "Field(default=None, ge=0, le=100000000)"
+      },
+      {
+        "name": "stock",
+        "type": "int",
+        "constraint": "Field(default=0, ge=0, le=100000000)"
+      },
+      {
+        "name": "available",
+        "type": "bool",
+        "constraint": "True"
+      },
+      {
+        "name": "sell_by",
+        "type": "Optional[Literal[\"pack\", \"weight\", \"volume\"]]",
+        "constraint": "None"
+      },
+      {
+        "name": "measure",
+        "type": "Optional[MeasureIn]",
+        "constraint": "None"
+      }
+    ],
+    "validators": [
+      "link_mrp_gte_price",
+      "check_link_measured"
+    ]
+  },
+  {
+    "name": "AnnouncementIn",
+    "line": 3750,
+    "fields": [
+      {
+        "name": "title",
+        "type": "str",
+        "constraint": "Field(min_length=3, max_length=120)"
+      },
+      {
+        "name": "body",
+        "type": "str",
+        "constraint": "Field(min_length=3, max_length=1200)"
+      },
+      {
+        "name": "audience",
+        "type": "Literal[\"all\", \"customers\", \"shopkeepers\"]",
+        "constraint": "\"all\""
+      },
+      {
+        "name": "active",
+        "type": "bool",
+        "constraint": "True"
+      },
+      {
+        "name": "expires_at",
+        "type": "Optional[datetime]",
+        "constraint": "None"
+      }
+    ],
+    "validators": [
+      "expiry_in_future"
+    ]
+  },
+  {
+    "name": "AdminRoleUpdateIn",
+    "line": 3866,
+    "fields": [
+      {
+        "name": "role",
+        "type": "Literal[\"customer\", \"shopkeeper\", \"admin\"]",
+        "constraint": null
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ShopApprovalIn",
+    "line": 3899,
+    "fields": [
+      {
+        "name": "status",
+        "type": "Literal[\"approved\", \"suspended\", \"pending\"]",
+        "constraint": null
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "RequestStatusIn",
+    "line": 4478,
+    "fields": [
+      {
+        "name": "status",
+        "type": "Literal[\"pending\", \"assigned\", \"in_progress\", \"completed\", \"cancelled\"]",
+        "constraint": null
+      },
+      {
+        "name": "note",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=240)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "AddressIn",
+    "line": 4535,
+    "fields": [
+      {
+        "name": "label",
+        "type": "str",
+        "constraint": "Field(default=\"Home\", min_length=1, max_length=40)"
+      },
+      {
+        "name": "recipient_name",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=120)"
+      },
+      {
+        "name": "phone",
+        "type": "str",
+        "constraint": "Field(min_length=5, max_length=20)"
+      },
+      {
+        "name": "address_line",
+        "type": "str",
+        "constraint": "Field(min_length=5, max_length=400)"
+      },
+      {
+        "name": "city",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=80)"
+      },
+      {
+        "name": "state",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=80)"
+      },
+      {
+        "name": "pincode",
+        "type": "str",
+        "constraint": "Field(min_length=4, max_length=12)"
+      },
+      {
+        "name": "latitude",
+        "type": "Optional[float]",
+        "constraint": "None"
+      },
+      {
+        "name": "longitude",
+        "type": "Optional[float]",
+        "constraint": "None"
+      },
+      {
+        "name": "is_default",
+        "type": "bool",
+        "constraint": "False"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "RestaurantIn",
+    "line": 4547,
+    "fields": [
+      {
+        "name": "name",
+        "type": "str",
+        "constraint": "Field(min_length=2, max_length=120)"
+      },
+      {
+        "name": "description",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=1600)"
+      },
+      {
+        "name": "cuisines",
+        "type": "List[str]",
+        "constraint": "Field(default_factory=list, max_length=20)"
+      },
+      {
+        "name": "phone",
+        "type": "str",
+        "constraint": "Field(min_length=5, max_length=20)"
+      },
+      {
+        "name": "address",
+        "type": "str",
+        "constraint": "Field(min_length=5, max_length=400)"
+      },
+      {
+        "name": "city",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=80)"
+      },
+      {
+        "name": "image_url",
+        "type": "Optional[str]",
+        "constraint": "None"
+      },
+      {
+        "name": "delivery_available",
+        "type": "bool",
+        "constraint": "True"
+      },
+      {
+        "name": "delivery_serviceable_pincodes",
+        "type": "Optional[List[str]]",
+        "constraint": "Field(default=None, max_length=100)"
+      },
+      {
+        "name": "pickup_available",
+        "type": "bool",
+        "constraint": "True"
+      },
+      {
+        "name": "payment_methods",
+        "type": "List[Literal[\"cod\", \"pickup\", \"razorpay\"]]",
+        "constraint": "Field(default_factory=lambda: [\"cod\", \"pickup\"], max_length=3)"
+      },
+      {
+        "name": "delivery_fee",
+        "type": "float",
+        "constraint": "Field(default=0, ge=0, le=10000)"
+      },
+      {
+        "name": "tax_rate",
+        "type": "float",
+        "constraint": "Field(default=5, ge=0, le=30)"
+      },
+      {
+        "name": "min_order",
+        "type": "float",
+        "constraint": "Field(default=0, ge=0)"
+      },
+      {
+        "name": "estimated_minutes",
+        "type": "int",
+        "constraint": "Field(default=35, ge=5, le=240)"
+      }
+    ],
+    "validators": [
+      "validate_delivery_serviceable_pincodes"
+    ]
+  },
+  {
+    "name": "MenuItemIn",
+    "line": 4579,
+    "fields": [
+      {
+        "name": "name",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=160)"
+      },
+      {
+        "name": "description",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=1200)"
+      },
+      {
+        "name": "category",
+        "type": "str",
+        "constraint": "Field(default=\"Main\", max_length=80)"
+      },
+      {
+        "name": "price",
+        "type": "float",
+        "constraint": "Field(ge=0, le=100000)"
+      },
+      {
+        "name": "image_url",
+        "type": "Optional[str]",
+        "constraint": "None"
+      },
+      {
+        "name": "available",
+        "type": "bool",
+        "constraint": "True"
+      },
+      {
+        "name": "vegetarian",
+        "type": "Optional[bool]",
+        "constraint": "None"
+      },
+      {
+        "name": "variants",
+        "type": "List[dict]",
+        "constraint": "Field(default_factory=list, max_length=30)"
+      },
+      {
+        "name": "add_ons",
+        "type": "List[dict]",
+        "constraint": "Field(default_factory=list, max_length=50)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "RestaurantOrderLineIn",
+    "line": 4590,
+    "fields": [
+      {
+        "name": "menu_item_id",
+        "type": "str",
+        "constraint": null
+      },
+      {
+        "name": "quantity",
+        "type": "int",
+        "constraint": "Field(ge=1, le=99)"
+      },
+      {
+        "name": "variant_id",
+        "type": "Optional[str]",
+        "constraint": "None"
+      },
+      {
+        "name": "add_on_ids",
+        "type": "List[str]",
+        "constraint": "Field(default_factory=list, max_length=50)"
+      },
+      {
+        "name": "instructions",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=300)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "RestaurantOrderIn",
+    "line": 4597,
+    "fields": [
+      {
+        "name": "restaurant_id",
+        "type": "str",
+        "constraint": null
+      },
+      {
+        "name": "items",
+        "type": "List[RestaurantOrderLineIn]",
+        "constraint": "Field(min_length=1, max_length=100)"
+      },
+      {
+        "name": "address_id",
+        "type": "Optional[str]",
+        "constraint": "None"
+      },
+      {
+        "name": "delivery_address",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, max_length=700)"
+      },
+      {
+        "name": "contact_name",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=120)"
+      },
+      {
+        "name": "contact_phone",
+        "type": "str",
+        "constraint": "Field(min_length=5, max_length=20)"
+      },
+      {
+        "name": "fulfillment",
+        "type": "Literal[\"delivery\", \"pickup\"]",
+        "constraint": "\"delivery\""
+      },
+      {
+        "name": "payment_method",
+        "type": "Literal[\"cod\", \"pickup\", \"razorpay\"]",
+        "constraint": "\"cod\""
+      },
+      {
+        "name": "notes",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=600)"
+      },
+      {
+        "name": "idempotency_key",
+        "type": "str",
+        "constraint": "Field(min_length=8, max_length=100)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "RestaurantStatusIn",
+    "line": 4609,
+    "fields": [
+      {
+        "name": "status",
+        "type": "Literal[\"accepted\", \"rejected\", \"preparing\", \"ready\", \"picked_up\", \"out_for_delivery\", \"delivered\", \"cancelled\"]",
+        "constraint": null
+      },
+      {
+        "name": "note",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=300)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "PaymentVerifyIn",
+    "line": 4613,
+    "fields": [
+      {
+        "name": "order_id",
+        "type": "str",
+        "constraint": null
+      },
+      {
+        "name": "razorpay_order_id",
+        "type": "str",
+        "constraint": null
+      },
+      {
+        "name": "razorpay_payment_id",
+        "type": "str",
+        "constraint": null
+      },
+      {
+        "name": "razorpay_signature",
+        "type": "str",
+        "constraint": null
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "RestaurantReviewIn",
+    "line": 4619,
+    "fields": [
+      {
+        "name": "rating",
+        "type": "int",
+        "constraint": "Field(ge=1, le=5)"
+      },
+      {
+        "name": "comment",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=1000)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "RestaurantCartIn",
+    "line": 4807,
+    "fields": [
+      {
+        "name": "restaurant_id",
+        "type": "str",
+        "constraint": null
+      },
+      {
+        "name": "items",
+        "type": "List[RestaurantOrderLineIn]",
+        "constraint": "Field(default_factory=list, max_length=100)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "RestaurantSupportIn",
+    "line": 5462,
+    "fields": [
+      {
+        "name": "order_id",
+        "type": "Optional[str]",
+        "constraint": "None"
+      },
+      {
+        "name": "order_kind",
+        "type": "Literal[\"grocery\", \"restaurant\"]",
+        "constraint": "\"restaurant\""
+      },
+      {
+        "name": "category",
+        "type": "Literal[\"order\", \"payment\", \"refund\", \"restaurant\", \"other\", \"order_late\", \"wrong_or_missing_item\", \"damaged_item\", \"cancellation_help\", \"payment_issue\", \"refund_status\"]",
+        "constraint": "\"order\""
+      },
+      {
+        "name": "request_id",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, min_length=8, max_length=100)"
+      },
+      {
+        "name": "message",
+        "type": "str",
+        "constraint": "Field(min_length=5, max_length=2000)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "SellerSupportStatusIn",
+    "line": 5520,
+    "fields": [
+      {
+        "name": "status",
+        "type": "Literal[\"in_progress\", \"resolved\"]",
+        "constraint": null
+      },
+      {
+        "name": "expected_status",
+        "type": "Literal[\"open\", \"in_progress\"]",
+        "constraint": null
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "HomeServiceFeePolicyIn",
+    "line": 5948,
+    "fields": [
+      {
+        "name": "mode",
+        "type": "Literal[\"provider\", \"fixed\", \"waived\"]",
+        "constraint": "\"provider\""
+      },
+      {
+        "name": "fixed_visit_fee",
+        "type": "float",
+        "constraint": "Field(default=0, ge=0, le=100000)"
+      },
+      {
+        "name": "currency",
+        "type": "Literal[\"INR\"]",
+        "constraint": "\"INR\""
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ServiceProviderIn",
+    "line": 5970,
+    "fields": [
+      {
+        "name": "full_name",
+        "type": "str",
+        "constraint": "Field(min_length=2, max_length=120)"
+      },
+      {
+        "name": "category",
+        "type": "str",
+        "constraint": "Field(min_length=2, max_length=80)"
+      },
+      {
+        "name": "specializations",
+        "type": "List[str]",
+        "constraint": "Field(default_factory=list, max_length=30)"
+      },
+      {
+        "name": "phone",
+        "type": "str",
+        "constraint": "Field(min_length=5, max_length=20)"
+      },
+      {
+        "name": "photo_url",
+        "type": "Optional[str]",
+        "constraint": "None"
+      },
+      {
+        "name": "experience_years",
+        "type": "int",
+        "constraint": "Field(default=0, ge=0, le=70)"
+      },
+      {
+        "name": "description",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=2000)"
+      },
+      {
+        "name": "tasks",
+        "type": "List[str]",
+        "constraint": "Field(default_factory=list, max_length=50)"
+      },
+      {
+        "name": "service_area",
+        "type": "str",
+        "constraint": "Field(min_length=2, max_length=240)"
+      },
+      {
+        "name": "working_hours",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=160)"
+      },
+      {
+        "name": "available_slots",
+        "type": "List[str]",
+        "constraint": "Field(default_factory=list, max_length=100)"
+      },
+      {
+        "name": "service_charge",
+        "type": "Optional[float]",
+        "constraint": "Field(default=None, ge=0)"
+      },
+      {
+        "name": "visit_fee",
+        "type": "float",
+        "constraint": "Field(default=0, ge=0)"
+      },
+      {
+        "name": "additional_charges",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=500)"
+      },
+      {
+        "name": "quotation_required",
+        "type": "bool",
+        "constraint": "True"
+      },
+      {
+        "name": "payment_preferences",
+        "type": "List[Literal[\"cash_after_service\", \"cash_visit_fee\"]]",
+        "constraint": "Field(default_factory=lambda: [\"cash_after_service\"], max_length=2)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ServiceAppointmentIn",
+    "line": 5988,
+    "fields": [
+      {
+        "name": "provider_id",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=64)"
+      },
+      {
+        "name": "requested_service",
+        "type": "str",
+        "constraint": "Field(min_length=2, max_length=600)"
+      },
+      {
+        "name": "appointment_at",
+        "type": "datetime",
+        "constraint": null
+      },
+      {
+        "name": "address",
+        "type": "str",
+        "constraint": "Field(min_length=3, max_length=500)"
+      },
+      {
+        "name": "notes",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=1000)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ServiceProviderPhotoIn",
+    "line": 6036,
+    "fields": [
+      {
+        "name": "photo_url",
+        "type": "str",
+        "constraint": "Field(min_length=1, max_length=1000)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ServiceAppointmentStatusIn",
+    "line": 6095,
+    "fields": [
+      {
+        "name": "status",
+        "type": "Literal[\"accepted\", \"rejected\", \"rescheduled\", \"cancelled\"]",
+        "constraint": null
+      },
+      {
+        "name": "note",
+        "type": "str",
+        "constraint": "Field(default=\"\", max_length=500)"
+      },
+      {
+        "name": "rescheduled_at",
+        "type": "Optional[datetime]",
+        "constraint": "None"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "ProviderApprovalIn",
+    "line": 6147,
+    "fields": [
+      {
+        "name": "status",
+        "type": "Literal[\"approved\", \"rejected\", \"suspended\"]",
+        "constraint": null
+      },
+      {
+        "name": "is_active",
+        "type": "bool",
+        "constraint": "False"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "GroceryRefundIn",
+    "line": 6180,
+    "fields": [
+      {
+        "name": "request_id",
+        "type": "str",
+        "constraint": "Field(min_length=8, max_length=100, pattern=r\"^[A-Za-z0-9_-]+$\")"
+      },
+      {
+        "name": "reason",
+        "type": "str",
+        "constraint": "Field(min_length=3, max_length=500)"
+      },
+      {
+        "name": "amount_paise",
+        "type": "Optional[int]",
+        "constraint": "Field(default=None, gt=0, strict=True)"
+      }
+    ],
+    "validators": []
+  },
+  {
+    "name": "DeliveryPartnerDraftIn",
+    "line": 6683,
+    "fields": [
+      {
+        "name": "full_name",
+        "type": "str",
+        "constraint": "Field(min_length=2, max_length=120)"
+      },
+      {
+        "name": "mobile",
+        "type": "str",
+        "constraint": "Field(min_length=10, max_length=16)"
+      },
+      {
+        "name": "residential_address",
+        "type": "str",
+        "constraint": "Field(min_length=8, max_length=500)"
+      },
+      {
+        "name": "alternate_contact",
+        "type": "str",
+        "constraint": "Field(min_length=10, max_length=16)"
+      },
+      {
+        "name": "consent_identity_verification",
+        "type": "bool",
+        "constraint": null
+      },
+      {
+        "name": "consent_data_processing",
+        "type": "bool",
+        "constraint": null
+      },
+      {
+        "name": "consent_declaration",
+        "type": "bool",
+        "constraint": null
+      },
+      {
+        "name": "referral_code",
+        "type": "Optional[str]",
+        "constraint": "Field(default=None, min_length=6, max_length=24)"
+      }
+    ],
+    "validators": [
+      "normalize_indian_phone",
+      "trim_required_text",
+      "validate_consent_and_contacts"
+    ]
+  },
+  {
+    "name": "DeliveryPartnerDecisionIn",
+    "line": 6720,
+    "fields": [
+      {
+        "name": "decision",
+        "type": "Literal[\"approve\", \"reject\", \"correction\", \"suspend\", \"reactivate\"]",
+        "constraint": null
+      },
+      {
+        "name": "reason",
+        "type": "str",
+        "constraint": "Field(min_length=3, max_length=500)"
+      }
+    ],
+    "validators": []
+  }
+]

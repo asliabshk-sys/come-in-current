@@ -1,0 +1,175 @@
+{
+  "project": "COME-IN",
+  "review_timestamp_Asia_Kolkata": "2026-11-19T21:41:20.449828+05:30",
+  "review_scope": "Independent source/design/diff review only;not runtime acceptance or owner approval.",
+  "reviewed_source": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+  "before_SHA256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+  "after_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "helper_SHA256": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30",
+  "helper_matches_protected_baseline": true,
+  "module_AST_nodes_before": 434,
+  "module_AST_nodes_after": 434,
+  "changed_AST_nodes": [
+    "reset_password"
+  ],
+  "checks": [
+    {
+      "area": "Scope",
+      "status": "PASS",
+      "evidence": "Only reset_password changes among434top-level ASTnodes;imports/helper/models/routes outside it remain unchanged."
+    },
+    {
+      "area": "Fast invalid/replayed path",
+      "status": "PASS",
+      "evidence": "Original unused/unexpired preflight and400response precede bcrypt;this remains an optimization,not an authorization/claim guarantee."
+    },
+    {
+      "area": "Conditional claim",
+      "status": "PASS",
+      "evidence": "find_one_and_update filters original_id,digest,usedFalse andfresh expiry then marks used within the supplied session. Installed Motor/PyMongo return_document defaultsFalse(BEFORE)."
+    },
+    {
+      "area": "Account binding",
+      "status": "PASS",
+      "evidence": "Target account ID comes from claimed token document,not client input or stale preflight account data."
+    },
+    {
+      "area": "Atomic account write",
+      "status": "PASS",
+      "evidence": "users.update_one uses the same session;matched_count must equal1or raisesHTTP400,causing transaction abort/token rollback."
+    },
+    {
+      "area": "Concurrency",
+      "status": "PASS",
+      "evidence": "Both contenders write the same token document;one can commit,other aborts/retries and must fail the used/expiry condition. Runtime proof remains the test owner responsibility."
+    },
+    {
+      "area": "Failure/retry",
+      "status": "PASS",
+      "evidence": "Password and used marker share one transaction;callback failure rolls both back. Existing helper manages TransientTransactionError whole-callback retry and UnknownTransactionCommitResult commit-only retry."
+    },
+    {
+      "area": "Retry-safe hash/time",
+      "status": "PASS",
+      "evidence": "bcrypt hash computed once outside callback;fresh now computed inside each callback retry,rechecking token expiry."
+    },
+    {
+      "area": "No unsafe fallback",
+      "status": "PASS",
+      "evidence": "No sequential/no-transaction fallback added. Unsupported transaction environments fail rather than accept partial writes."
+    },
+    {
+      "area": "Response compatibility",
+      "status": "PASS",
+      "evidence": "Successful reset dict and existing invalid/expired400response remain;no endpoint/model/schema/UI changes."
+    },
+    {
+      "area": "Other findings",
+      "status": "PASS",
+      "evidence": "SMTP,JWT/session,rate-limit,bcrypt,admin behavior source nodes remain byte-equivalent in AST;no fixes to other findings."
+    }
+  ],
+  "source_or_original_files_modified_by_reviewer": false,
+  "application_tests_run_by_reviewer": 0,
+  "DB_operations_by_reviewer": 0,
+  "runtime_acceptance": "NOT RUN by this reviewer;separate live/disposable regression required.",
+  "remaining_boundaries": [
+    "Uncertain commit beyond driver retry budget may still return an infrastructure error;atomic durable state must remain coupled and duplicate token retry must not overwrite an already committed reset.",
+    "Multiple independently issued tokens for one user are not given a new single-active-token policy.",
+    "SMTP malformed-port LOW subissue and unrelated SEC02..09 risks are not fixed by this patch."
+  ],
+  "suggested_runtime_scenarios": [
+    "Barrier before transaction claims,not after both successful claims.",
+    "Claim failure/user-write failure/after-write failure must roll back both documents.",
+    "Transient abort retries callback safely;unknown commit retries commit without rerunning callback.",
+    "Expiry or deletion between preflight and claim rejects without password write.",
+    "Missing token-bound user aborts and preserves unused token.",
+    "Post-commit request replay rejects without changing first committed password."
+  ],
+  "runtime_harness_evidence_review": {
+    "timestamp_Asia_Kolkata": "2026-11-19T21:51:15.906745+05:30",
+    "review_status": "PASS \u2014 independent harness and saved evidence review;no tests executed by reviewer.",
+    "reviewed_source_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+    "receipts": {
+      "focused20_before": {
+        "JSON": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/focused-before.json",
+        "JSON_SHA256": "0e50ed3e99a8ab8bd594a28f9e5287bcb633d955c74ae6616c5548bba00054dc",
+        "XML": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/focused-before.xml",
+        "XML_SHA256": "40fa6c520a4b5d3cd77dc2dd89a9affbdc83e5840766e1d9a48fd936e1f8d0ac",
+        "counts": {
+          "PASS": 10,
+          "FAIL": 10,
+          "ERROR": 0,
+          "SKIPPED": 0
+        },
+        "source_SHA256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+        "runner_SHA256": "71d15423b6bf06ce679af2b02456f53233a67ec324f655246855cf6775b70a85"
+      },
+      "focused20_after": {
+        "JSON": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/focused-after.json",
+        "JSON_SHA256": "68417220fe5e839351f33fce855f12c136e7e6843714820f261b323d134a00fe",
+        "XML": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/focused-after.xml",
+        "XML_SHA256": "d7ae72234cb3420968ea578dbe450719e054023f6e7d73ccb41879be1ee9efbb",
+        "counts": {
+          "PASS": 20,
+          "FAIL": 0,
+          "ERROR": 0,
+          "SKIPPED": 0
+        },
+        "source_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+        "runner_SHA256": "71d15423b6bf06ce679af2b02456f53233a67ec324f655246855cf6775b70a85"
+      },
+      "distinct2_before": {
+        "JSON": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/distinct-password-concurrency/focused-before.json",
+        "JSON_SHA256": "a324fcd9d06e397de9f09eb093f2182c754b3527adcec2fbda159731997625be",
+        "XML": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/distinct-password-concurrency/focused-before.xml",
+        "XML_SHA256": "62c881a7d6f22d0a17407a45bec52d607f93b2eab9bc0207a64483c896425e99",
+        "counts": {
+          "PASS": 0,
+          "FAIL": 2,
+          "ERROR": 0,
+          "SKIPPED": 0
+        },
+        "source_SHA256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+        "runner_SHA256": "523d84f49dfa6072059378752f0ca6326f99e0cee511ba58556f4adca9dd7afa"
+      },
+      "distinct2_after": {
+        "JSON": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/distinct-password-concurrency/focused-after.json",
+        "JSON_SHA256": "4668ee0b53accbd5f5794f8e768dfe60f476b16eaa419cffbaef1c3b45dd2a99",
+        "XML": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/distinct-password-concurrency/focused-after.xml",
+        "XML_SHA256": "d40c0851c09b68b1d154846bcedc516c3a0b7d8d8cad4eaa20953e0adb1bb386",
+        "counts": {
+          "PASS": 2,
+          "FAIL": 0,
+          "ERROR": 0,
+          "SKIPPED": 0
+        },
+        "source_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+        "runner_SHA256": "523d84f49dfa6072059378752f0ca6326f99e0cee511ba58556f4adca9dd7afa"
+      }
+    },
+    "non_vacuous_checks": [
+      "Source bodies are compiled from before backup/current server with only API decorators removed;helper is imported unchanged,source/runner hashes bind both stages.",
+      "Collection wrappers forward real Motor sessions;outside-state reads observe the real disposable MongoDB records rather than synthetic expected-state dictionaries.",
+      "Barrier holds successful preflight reads only and remains open after release;transactional claims are not required to both succeed before release.",
+      "One-shot faults before token write,before user write,and after actual user write assert real password and token are unchanged after abort,then safe retry and replay rejection.",
+      "Transient post-user-write error requires callback to rerun at least twice while bcrypt runs once and only coupled durable state remains.",
+      "Unknown commit fault awaits real commit first,then injects labelled acknowledgement error;requires exactly2commit calls/1callback/1userwrite/1tokenwrite and matching durable state.",
+      "Distinct-password concurrency requires exactly1success,all other responses be the precise invalid-reset400,and only the successful contender credential verify against the stored hash.",
+      "All contender inputs are distinct and below bcrypt72-byte boundary,so unchangedSEC06does not masquerade as loser acceptance.",
+      "Missing-user,between-preflight expiry/invalidation,wrong-account and unavailable-session cases assert failure without unauthorized or partial durable writes."
+    ],
+    "old30_harness_review": "Diff inspected:isolated source/output binding,actual transaction helper injection,post-user-write fault retargeting and explicit400 missing-user handling. Original no-partial-state failure assertion remains;new focused case14 additionally checks unused token rollback. No weakening found.",
+    "scope_limits": [
+      "Rate limiter is a documented no-op in the focused harness to isolateSEC01;the broader old30suite separately exercises unchanged rate behavior.",
+      "AST-extracted function/model execution is not completeHTTP routing/dependency/middleware acceptance.",
+      "Commit acknowledgement and unavailable session are controlled client-boundary faults,not actual network loss or a separately provisioned standalone server.",
+      "The distinct2 runs strengthen existingcase06/07 and are not22unique focused acceptance cases.",
+      "Other findings,including SMTPLOWsubissue/JWT/rate/bcrypt/admin,remain outside the source correction;owner approval is not inferred."
+    ],
+    "reviewer_application_test_executions": 0,
+    "reviewer_DB_operations": 0,
+    "protected_files_modified_by_reviewer": false,
+    "review_frozen": true
+  }
+}

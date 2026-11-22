@@ -1,0 +1,162 @@
+[
+  {
+    "id": "R01",
+    "area": "Navigation branches",
+    "missing": "Five conditional leaf occurrences are absent from the 108-check inventory.",
+    "closure_evidence": "Add a source-based branch inventory; all five destination files already exist.",
+    "owner": "Reviewer/owneraddendum",
+    "claims": "F05"
+  },
+  {
+    "id": "R02",
+    "area": "Href/dynamic navigation",
+    "missing": "Five href attributes and 14 dynamic arguments are outside literal checks.",
+    "closure_evidence": "Qualify scope and review allowed return targets; no malicious navigation is authorized.",
+    "owner": "Owner scopesfutureverification",
+    "claims": "F07/F13"
+  },
+  {
+    "id": "R03",
+    "area": "Special-file URL fields",
+    "missing": "Layout/document/fallback placeholders look like public paths.",
+    "closure_evidence": "Issue an explanatory addendum; do not change application routes.",
+    "owner": "Reportclarificationapproval",
+    "claims": "F06"
+  },
+  {
+    "id": "R04",
+    "area": "Endpoint signatures",
+    "missing": "Defaults and Query/Form/File constraints are not fully inventoried.",
+    "closure_evidence": "Provide complete parameter metadata in a separately approved addendum.",
+    "owner": "Revieweraddendumapproval",
+    "claims": "B06"
+  },
+  {
+    "id": "R05",
+    "area": "Reset test reference",
+    "missing": "The named test has no reset coverage; atomicity evidence is missing.",
+    "closure_evidence": "Correct the evidence citation in an addendum and retain HIGH as open.",
+    "owner": "OwnerHIGHdecision;no fix now",
+    "claims": "S09"
+  },
+  {
+    "id": "R06",
+    "area": "GET side effects",
+    "missing": "Some referral GET handlers write data.",
+    "closure_evidence": "Classify direct and transitive effects before runtime probes.",
+    "owner": "Ownerverificationplan",
+    "claims": "B10"
+  },
+  {
+    "id": "R07",
+    "area": "Preservation coverage",
+    "missing": "The original baseline excludes inherited root/evidence and historical XMLs.",
+    "closure_evidence": "Narrow the blanket statement; current hashes do not authenticate the past.",
+    "owner": "Ownerreviewaddendum",
+    "claims": "M05/P04"
+  },
+  {
+    "id": "R08",
+    "area": "Historical run provenance",
+    "missing": "Original XML hashes and complete command/source-run bindings are absent.",
+    "closure_evidence": "Use trusted run/source/environment provenance for decisive acceptance evidence.",
+    "owner": "Evidencecustodian/owner",
+    "claims": "P04"
+  },
+  {
+    "id": "R09",
+    "area": "DB snapshot provenance",
+    "missing": "No capture-specific time or raw validator options were retained.",
+    "closure_evidence": "Obtain scoped, timestamped, redacted metadata only if separately authorized.",
+    "owner": "OwnerDBevidencescope",
+    "claims": "B15-B17/P09"
+  },
+  {
+    "id": "R10",
+    "area": "Validator scope",
+    "missing": "Local false flags do not prove global/current/production absence.",
+    "closure_evidence": "Retain the bounded observation; do not infer a production result.",
+    "owner": "DBowner",
+    "claims": "B16"
+  },
+  {
+    "id": "R11",
+    "area": "Configuration preservation",
+    "missing": "Actual environment files and dependencies were excluded from the old baseline.",
+    "closure_evidence": "Define non-secret metadata/hash coverage; never print secret values.",
+    "owner": "Environmentowner",
+    "claims": "C04"
+  },
+  {
+    "id": "R12",
+    "area": "HIGH finding disposition",
+    "missing": "Reset atomicity has no owner closure or isolated failure/race evidence.",
+    "closure_evidence": "Owner must decide priority and authorize any future investigation/remediation.",
+    "owner": "Ownersecurityapproval",
+    "claims": "S01B"
+  },
+  {
+    "id": "R13",
+    "area": "Other security impacts",
+    "missing": "Policy/ingress/burst/body-limit and load evidence remain incomplete.",
+    "closure_evidence": "Approve operation-specific acceptance criteria; no attack or fix in this review.",
+    "owner": "Owner/security/operations",
+    "claims": "S02B-S08B"
+  },
+  {
+    "id": "R14",
+    "area": "Working actions",
+    "missing": "Event bindings and limited historical smoke checks do not prove all workflows.",
+    "closure_evidence": "Define an owner-approved disposable action/state/error/permission matrix.",
+    "owner": "OwnerQAapproval",
+    "claims": "F12/C01-C02"
+  },
+  {
+    "id": "R15",
+    "area": "Native binary/device",
+    "missing": "No corresponding compiled Android/iOS and physical-device evidence is supplied.",
+    "closure_evidence": "Provide actual build/device artifacts from authorized hosts and devices.",
+    "owner": "Developer/deviceowner",
+    "claims": "M11/G01"
+  },
+  {
+    "id": "R16",
+    "area": "Actual providers",
+    "missing": "Mocks and local signed events are not provider TEST delivery/settlement.",
+    "closure_evidence": "Provide authorized secure TEST configuration and real provider evidence.",
+    "owner": "Owner/provider",
+    "claims": "G02/G05/G06"
+  },
+  {
+    "id": "R17",
+    "area": "Production infrastructure",
+    "missing": "Actual TLS/CORS/DB/secrets/backup/log/abuse controls are unavailable.",
+    "closure_evidence": "Provide authorized read-only infrastructure evidence; do not deploy.",
+    "owner": "Productionowner",
+    "claims": "G03/B19"
+  },
+  {
+    "id": "R18",
+    "area": "Data/transaction consistency",
+    "missing": "Metadata cannot establish record integrity, financial consistency or recoverability.",
+    "closure_evidence": "Use trusted source-bound historical results or separately approved disposable checks.",
+    "owner": "DBowner/QA",
+    "claims": "B18"
+  },
+  {
+    "id": "R19",
+    "area": "Operational scope",
+    "missing": "Delivery, guest lifecycle and replacement acceptance need product decisions.",
+    "closure_evidence": "Keep existing functionality distinct from missing full lifecycle scope.",
+    "owner": "Product/operationsowner",
+    "claims": "G04/G07/G08/G16"
+  },
+  {
+    "id": "R20",
+    "area": "Remote/quality state",
+    "missing": "Remote main and remaining quality/advisory gates are not newly verified.",
+    "closure_evidence": "Owner must scope any further read-only evidence work; no install/upgrade/reset.",
+    "owner": "Owner/developer",
+    "claims": "G13-G15"
+  }
+]

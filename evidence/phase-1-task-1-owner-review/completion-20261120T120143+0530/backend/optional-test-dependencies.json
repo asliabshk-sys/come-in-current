@@ -1,0 +1,47 @@
+{
+  "started_UTC": "2026-11-20T06:37:08.853138+00:00",
+  "finished_UTC": "2026-11-20T06:37:16.569183+00:00",
+  "authorization": "Parent explicitly authorized only missing optional parser/OCR test tooling in existingpy311 environment;no source/framework/dependencyfile edits.",
+  "before_presence": {
+    "pypdf": false,
+    "openpyxl": false,
+    "Pillow": false,
+    "PyMuPDF": false,
+    "pytesseract": false
+  },
+  "cache_inspection": "No matching wheel/package filenames found in existing pip/uvcache;pipcache reused ifavailable. One installattempt,retries0.",
+  "command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-m",
+    "pip",
+    "install",
+    "--disable-pip-version-check",
+    "--no-input",
+    "--retries",
+    "0",
+    "--cache-dir",
+    "/workspace/come-in-tools/pip-cache",
+    "pypdf>=4,<7",
+    "openpyxl>=3.1,<4",
+    "Pillow>=10.1,<13",
+    "PyMuPDF>=1.24,<2",
+    "pytesseract>=0.3.13,<0.4"
+  ],
+  "exit_code": 0,
+  "after_presence": {
+    "pypdf": true,
+    "openpyxl": true,
+    "Pillow": true,
+    "PyMuPDF": true,
+    "pytesseract": true
+  },
+  "versions": {
+    "pypdf": "6.21.4",
+    "openpyxl": "3.1.5",
+    "Pillow": "12.3.0",
+    "PyMuPDF": "1.28.2",
+    "pytesseract": "0.3.13"
+  },
+  "system_tesseract": "/usr/bin/tesseract",
+  "framework_upgrade_requested": false
+}

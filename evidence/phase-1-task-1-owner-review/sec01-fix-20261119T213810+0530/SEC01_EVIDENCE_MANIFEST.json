@@ -1,0 +1,323 @@
+{
+  "project": "COME-IN",
+  "timestamp_Asia_Kolkata": "2026-11-19T21:53:23.407856+05:30",
+  "repository": "/workspace/come-in-current",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "scope": "Owner-authorized SEC-01HIGH minimum correction and focused regression only;not Task1approval or remaining-findings permission.",
+  "approved_source_changes": [
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "before_SHA256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+      "after_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07"
+    }
+  ],
+  "source_backup": "before/backend/server.py",
+  "source_after_snapshot": "after/backend/server.py",
+  "previous_master_manifest_SHA256": "24de73630bdcd28412a0b270e32ac5da7f88e61bb4ce85f2c2a405d17f563588",
+  "files": [
+    {
+      "path": "OLD_RELATED_REGRESSION_REPORT.md",
+      "bytes": 9512,
+      "SHA256": "aae50a94eada42a89e4726d8cd9da1834e1c3fcf90a1c2448115f37d63bb2112"
+    },
+    {
+      "path": "SEC01_FINAL_VERIFICATION.json",
+      "bytes": 786,
+      "SHA256": "609301da4414f72cc16324077df8c3843a00c298fc6e01e2aa47d70db701c51a"
+    },
+    {
+      "path": "SEC01_FIX_REPORT.md",
+      "bytes": 12577,
+      "SHA256": "a8a7b3dd31fd7b3d8124ab7dc32a3c80d9d6c5b420424aaf5e91c2919538c050"
+    },
+    {
+      "path": "SEC01_FOCUSED_REGRESSION_REPORT.md",
+      "bytes": 10870,
+      "SHA256": "dd170230e8f2a655e1c212231073ee2243df67d0d99770a608e00aeadf4d2e62"
+    },
+    {
+      "path": "SEC01_FOCUSED_TEST_CHECKPOINT.json",
+      "bytes": 1469,
+      "SHA256": "19213569b8558c69ada853531c45e57a482a12177a5ae60354c476d7e520c312"
+    },
+    {
+      "path": "SEC01_INDEPENDENT_DESIGN_REVIEW.json",
+      "bytes": 10809,
+      "SHA256": "3762adba892826521caead27c9776b3fb3f893e9e9772b06c0bb2bba130c9968"
+    },
+    {
+      "path": "SEC01_INDEPENDENT_DESIGN_REVIEW.md",
+      "bytes": 5696,
+      "SHA256": "128ae2ca68457d6a45e9de317b59a4ad5393ea9f49910b7e6ae94728542c7426"
+    },
+    {
+      "path": "SEC01_PRESERVATION_VERIFICATION.json",
+      "bytes": 1612,
+      "SHA256": "73b63e4dd027089afcd208098fc899010519298a65556e68a95cc5330a3f3744"
+    },
+    {
+      "path": "SEC01_RESUME_CHECKPOINT.md",
+      "bytes": 8792,
+      "SHA256": "a1bedfc979a7f4847c4660644b6f6d6290c1a7c785abd65f65e97f225fbf2cf6"
+    },
+    {
+      "path": "SEC01_SOURCE_CHANGE.patch",
+      "bytes": 1854,
+      "SHA256": "4ea5737400550d5fc56789f93eb5c39eb5d24e644e60e6d2cb8e08af5e27ea3d"
+    },
+    {
+      "path": "SEC01_TEST_AND_STATUS_SUMMARY.json",
+      "bytes": 1471,
+      "SHA256": "e25fee742fd2cbc39a82f27a7ed7264ff6932a826f0c2d487b79b7eda13638f8"
+    },
+    {
+      "path": "after/backend/server.py",
+      "bytes": 431058,
+      "SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07"
+    },
+    {
+      "path": "before/backend/server.py",
+      "bytes": 430375,
+      "SHA256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db"
+    },
+    {
+      "path": "distinct-password-concurrency/DISTINCT_PASSWORD_CONCURRENCY_ADDENDUM.md",
+      "bytes": 6523,
+      "SHA256": "f484574fd800bc21bd4b92a60457c74a3def9a25b84b27d330edbb2aaccf2ac7"
+    },
+    {
+      "path": "distinct-password-concurrency/SEC01_DISTINCT_CONCURRENCY_CHECKPOINT.json",
+      "bytes": 1145,
+      "SHA256": "731f84415d9b9d9d477a88197d200c7c299bf9800e5e5f6d8c0fb7a60db417d0"
+    },
+    {
+      "path": "distinct-password-concurrency/V1_PRESERVATION.json",
+      "bytes": 577,
+      "SHA256": "f691a8abe43c0485fa8588a6dbe03747e48688733ab6a17d10087f48f677c5f9"
+    },
+    {
+      "path": "distinct-password-concurrency/distinct-artifact-hashes.json",
+      "bytes": 1863,
+      "SHA256": "3d4958e0f408d876d3541aebd88638841262c192e5ce0e666d13cea20c08bae9"
+    },
+    {
+      "path": "distinct-password-concurrency/distinct-password-concurrency-summary.json",
+      "bytes": 2882,
+      "SHA256": "4039be026896e491ab7183d326abc2cb73f7b3c61fe00fadc3b3f2884815e72c"
+    },
+    {
+      "path": "distinct-password-concurrency/focused-after.json",
+      "bytes": 5900,
+      "SHA256": "4668ee0b53accbd5f5794f8e768dfe60f476b16eaa419cffbaef1c3b45dd2a99"
+    },
+    {
+      "path": "distinct-password-concurrency/focused-after.log",
+      "bytes": 186,
+      "SHA256": "08aad0306839d0f540dcbe3b8c404cacaca20569509cbfbd40d65c5842e95ad3"
+    },
+    {
+      "path": "distinct-password-concurrency/focused-after.xml",
+      "bytes": 340,
+      "SHA256": "d40c0851c09b68b1d154846bcedc516c3a0b7d8d8cad4eaa20953e0adb1bb386"
+    },
+    {
+      "path": "distinct-password-concurrency/focused-before.json",
+      "bytes": 5539,
+      "SHA256": "a324fcd9d06e397de9f09eb093f2182c754b3527adcec2fbda159731997625be"
+    },
+    {
+      "path": "distinct-password-concurrency/focused-before.log",
+      "bytes": 334,
+      "SHA256": "8f1b589bcdbd980f340d335d370913551c9104b49bb3588dd5687b73afb730cf"
+    },
+    {
+      "path": "distinct-password-concurrency/focused-before.xml",
+      "bytes": 900,
+      "SHA256": "62c881a7d6f22d0a17407a45bec52d607f93b2eab9bc0207a64483c896425e99"
+    },
+    {
+      "path": "distinct-password-concurrency/sec01_focused_regression_v2.py",
+      "bytes": 31009,
+      "SHA256": "523d84f49dfa6072059378752f0ca6326f99e0cee511ba58556f4adca9dd7afa"
+    },
+    {
+      "path": "finalize-sec01.py",
+      "bytes": 24529,
+      "SHA256": "03f7b837cdcd6341ac802fdfd270e75401349504dd3bd9aa7efaf40e810ddda3"
+    },
+    {
+      "path": "focused-after.json",
+      "bytes": 9727,
+      "SHA256": "68417220fe5e839351f33fce855f12c136e7e6843714820f261b323d134a00fe"
+    },
+    {
+      "path": "focused-after.log",
+      "bytes": 457,
+      "SHA256": "e19614175c29c238b6c7bdd160f6cff0fc3354839a58ce0a611e37a093ae43bd"
+    },
+    {
+      "path": "focused-after.xml",
+      "bytes": 1793,
+      "SHA256": "d7ae72234cb3420968ea578dbe450719e054023f6e7d73ccb41879be1ee9efbb"
+    },
+    {
+      "path": "focused-artifact-hashes.json",
+      "bytes": 1868,
+      "SHA256": "1d210edd5c8a6ccc59dd0ad4d52d5e5be8aa8759e16341ac95120b169d48e8d2"
+    },
+    {
+      "path": "focused-before-after-summary.json",
+      "bytes": 1725,
+      "SHA256": "4cbff2da3f1cbd58c72a1156a54cb84a24df4233295ed25c33e9cf5b6eab48d0"
+    },
+    {
+      "path": "focused-before.json",
+      "bytes": 10142,
+      "SHA256": "0e50ed3e99a8ab8bd594a28f9e5287bcb633d955c74ae6616c5548bba00054dc"
+    },
+    {
+      "path": "focused-before.log",
+      "bytes": 1069,
+      "SHA256": "527e77ecb1a4ac6e2148698549ccb6c5b55c69f5481396a67f192e2f43c533a8"
+    },
+    {
+      "path": "focused-before.xml",
+      "bytes": 4170,
+      "SHA256": "40fa6c520a4b5d3cd77dc2dd89a9affbdc83e5840766e1d9a48fd936e1f8d0ac"
+    },
+    {
+      "path": "git-diff-after.txt",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "git-status-after.txt",
+      "bytes": 61763,
+      "SHA256": "f62d6f3e4948443934289b6dd9f0781e9143e9bb4bf63ee8581da58b6533f4ad"
+    },
+    {
+      "path": "git-status-before.txt",
+      "bytes": 55538,
+      "SHA256": "f11e5ab0cefd6c669e419f86354ab1e1ea7fc6eea1a8bc4af47839b4f5da8ebd"
+    },
+    {
+      "path": "old-30-after/execution.log",
+      "bytes": 2403,
+      "SHA256": "61a2e2f0f91e48e26fb26f3da4701802358a1c7ac2da440de6091590c13c2044"
+    },
+    {
+      "path": "old-30-after/password-reset-junit-v2.xml",
+      "bytes": 5198,
+      "SHA256": "a8d8b62bb1c0b3bdeb5ec32fceed7e02313a302062cc13a273bcd35d29e4913b"
+    },
+    {
+      "path": "old-30-after/password-reset-results-v2.json",
+      "bytes": 20240,
+      "SHA256": "568fe92462615207fa46b26adfb216f22bdd2631078a0b387fdd3712f45e9bcd"
+    },
+    {
+      "path": "old-30-before/execution.log",
+      "bytes": 2403,
+      "SHA256": "fa0e611cbdab3251c6001143b6d8d0ccc818b1ed7239c03b16898a664052616a"
+    },
+    {
+      "path": "old-30-before/password-reset-junit-v2.xml",
+      "bytes": 5519,
+      "SHA256": "5f6da79edb316833ab71a718f07d3093db838b55947b1b8b4817dd0940c584af"
+    },
+    {
+      "path": "old-30-before/password-reset-results-v2.json",
+      "bytes": 20462,
+      "SHA256": "c985d904720bf3eb2c0e84d97a51ac793e17ee2650d0132fbb8e6d0b990d4166"
+    },
+    {
+      "path": "old-30-before-after-results.json",
+      "bytes": 2580,
+      "SHA256": "5206e9e2ce130e259b820eb6e952864e17feca141d46ef3adff3311fe6a1c333"
+    },
+    {
+      "path": "old-30-runner-compatibility.json",
+      "bytes": 1133,
+      "SHA256": "0b252375c277a6ecab530bfc9feada623295b70cda5cf83637f576a0eeb3dd21"
+    },
+    {
+      "path": "old-30-runner-compatible.py",
+      "bytes": 34450,
+      "SHA256": "35dce6bb6dd30c633ab74130adc36ee35c7e11cf3a45388f92a0ca47e150a6d6"
+    },
+    {
+      "path": "old-30-runner-harness.diff",
+      "bytes": 4164,
+      "SHA256": "5b21210cc4ea0acfe9d0d90fa92e4ce3d63357e69fc06cbc7db316b108b83a48"
+    },
+    {
+      "path": "old-30-runner-original.py",
+      "bytes": 33866,
+      "SHA256": "79952bdfc4bc80b54cb54709728eb9d80e299e469460c4ca50d3edc492ea27fd"
+    },
+    {
+      "path": "old-related-existing-results.json",
+      "bytes": 7101,
+      "SHA256": "333a70fcd59c1cf451b51066ff1253348aac5eca3014c099be408d78d15144e0"
+    },
+    {
+      "path": "old-related-existing.log",
+      "bytes": 615,
+      "SHA256": "4c14b20e367877693a2ae341b92265434b24d489d1dc2b6a3b6d179e56a40672"
+    },
+    {
+      "path": "old-related-existing.xml",
+      "bytes": 12225,
+      "SHA256": "7f1ac2799495c0988b05c8f3ebd7a5f44c0236ed329022a570aac664a2b9f312"
+    },
+    {
+      "path": "old_related_network_guard.py",
+      "bytes": 165,
+      "SHA256": "7469ba90901cadc35ca771871fb8d0cf95a4c11c20cb7d588abee9f92ad8a79e"
+    },
+    {
+      "path": "owner-authorization-and-recovery.json",
+      "bytes": 851,
+      "SHA256": "5a2e4bafb081413216b9a6f8b0f8a6bf11891dc64689ede6539761fbd84a5ebb"
+    },
+    {
+      "path": "preservation-before.json",
+      "bytes": 2015952,
+      "SHA256": "f37f1a2a0a5091479a98a7efcb0b2915d0f8ee306225901f690a1d5bbc538cf3"
+    },
+    {
+      "path": "related-regression.json",
+      "bytes": 20910,
+      "SHA256": "c3e32aa427b7d5a971406a79222f71920966ecfc1a4a21f063ce161b63ab90e2"
+    },
+    {
+      "path": "run-existing-related.py",
+      "bytes": 2500,
+      "SHA256": "c98490f8077f4a7c87262b46589d414752b02fcea26a7066a66110fb164088a3"
+    },
+    {
+      "path": "run-old-related-regression.py",
+      "bytes": 1550,
+      "SHA256": "fab11c53fb77de9e0cc5bc3ef3268f097b27025fef62abffd6033e57f46450e5"
+    },
+    {
+      "path": "sec01_focused_regression.py",
+      "bytes": 28689,
+      "SHA256": "71d15423b6bf06ce679af2b02456f53233a67ec324f655246855cf6775b70a85"
+    },
+    {
+      "path": "source-change-before-after.json",
+      "bytes": 446,
+      "SHA256": "76d3a95ae8650e61e129302d8f45e252de515e82212f8fa04f4a79275ea7e6a7"
+    }
+  ],
+  "self_hash_policy": "Self and sidecar excluded from members;sidecar contains this manifest SHA256.",
+  "test_summary": "SEC01_TEST_AND_STATUS_SUMMARY.json",
+  "preservation": "SEC01_PRESERVATION_VERIFICATION.json",
+  "SEC01_HIGH": "FIXED — scoped tests passed",
+  "Task1_status": "REVIEW PENDING",
+  "Task1_approved_or_closed": false,
+  "remaining_other_findings_modified": false,
+  "Task2_commit_push_deploy_publish": false
+}

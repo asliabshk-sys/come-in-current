@@ -1,0 +1,1102 @@
+{
+  "project": "COME-IN",
+  "created_Asia_Kolkata": "2026-11-19T21:30:36.783643+05:30",
+  "repository": "/workspace/come-in-current",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "application_extraction": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+  "source_state_binding": "source-state-binding.json",
+  "previous_manifest_SHA256": "7fbe1ee4d606157421f7192cc69fc0ee59f8fd9409ac655fe1fd4a6a8308b8af",
+  "required_reports": [
+    "TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+    "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+    "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+    "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+    "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+    "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+    "RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+    "FINAL_PRESERVATION_AND_GIT_AUDIT_REPORT.md",
+    "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+    "PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+    "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+    "TASK_1_OWNER_APPROVAL_CHECKLIST.md",
+    "TASK_1_FINAL_RESUME_CHECKPOINT.md"
+  ],
+  "files": [
+    {
+      "relative_path": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "bytes": 9480,
+      "SHA256": "572843dc0a04d2c11f9e4dd49268c81af416b9098dd3fb671c6b5e92a391ad38"
+    },
+    {
+      "relative_path": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "bytes": 37895,
+      "SHA256": "79a3b372c50f30471ceaaf01d9c35f48c61e0300034853a6b4e76a6274d62166"
+    },
+    {
+      "relative_path": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "bytes": 26209,
+      "SHA256": "61a6ad3748a6f677db22ea4531cee06f273c1ba7f4028f00e83df06c75529c2e"
+    },
+    {
+      "relative_path": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "bytes": 33919,
+      "SHA256": "e53da2cbc435cae03037ae6eeab61de2afd845372540fa1663b0cf1e5d0239da"
+    },
+    {
+      "relative_path": "FINAL_PRESERVATION_AND_GIT_AUDIT_REPORT.md",
+      "bytes": 4961,
+      "SHA256": "16b11460b6efc2860a8148109ad968c6f2b9cfad541794ba618a94370e74a805"
+    },
+    {
+      "relative_path": "FRONTEND_VALIDATION_NOTES.md",
+      "bytes": 7549,
+      "SHA256": "a92ecea191b663135273183398e8315cb4eec0751e4a601b8c2877497b97b114"
+    },
+    {
+      "relative_path": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "bytes": 19486,
+      "SHA256": "e754482ef849b988a651ab7a2b604cb0bd820b589bfc79cb195e9842e5c8324f"
+    },
+    {
+      "relative_path": "PASSWORD_RESET_VALIDATION_CHECKPOINT.md",
+      "bytes": 2642,
+      "SHA256": "3fd8830d7896663117ec9814e86b645397fef027c11e164484b2684cdbbbe7d7"
+    },
+    {
+      "relative_path": "PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "bytes": 9000,
+      "SHA256": "19f8e1a20ad832dd7644cf3a5534c4ee3a8d558d76a70903db870824b9879657"
+    },
+    {
+      "relative_path": "RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+      "bytes": 9888,
+      "SHA256": "c543de9409bc548141cb9b99cd9711688933e910aa136083803cf81ba528c972"
+    },
+    {
+      "relative_path": "TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+      "bytes": 19115,
+      "SHA256": "ec9fd2dd215b5c5470ec070be085a165132b48114f4ba0ad1a9b911f4a1e5d40"
+    },
+    {
+      "relative_path": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "bytes": 27358,
+      "SHA256": "27eb9ab483cb201f0a589904c4371542bf248e6a0764b1252c600d9658dd2593"
+    },
+    {
+      "relative_path": "TASK_1_FINAL_RESUME_CHECKPOINT.md",
+      "bytes": 12676,
+      "SHA256": "6be49968a279409ec8cfcd28ba8a65565991c988eeb5abfaa7e9982f1c59af0d"
+    },
+    {
+      "relative_path": "TASK_1_OWNER_APPROVAL_CHECKLIST.md",
+      "bytes": 3170,
+      "SHA256": "1ee2ff8f0084f5212466e05fca4ac617d89be3668fe3e93c72aa169f8dbdaa85"
+    },
+    {
+      "relative_path": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "bytes": 124505,
+      "SHA256": "ea4b66465880d3ba6ed6323f8414365239e7e51e3e7e1ff2defad411f348e1cd"
+    },
+    {
+      "relative_path": "android-autolinking-current.stderr",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative_path": "android-autolinking-current.stdout",
+      "bytes": 11465,
+      "SHA256": "76d0a9e384a268227efb51d5dcc513df5b70c50b9c39d393450031ed40f4855b"
+    },
+    {
+      "relative_path": "backend-legacy-result.json",
+      "bytes": 33491,
+      "SHA256": "012cf0cb588498982651a5da6b3b94ea661c75c7122a48ad5070bce54869d194"
+    },
+    {
+      "relative_path": "backend-legacy.log",
+      "bytes": 6495,
+      "SHA256": "21f922185f94f5f3d41ed90321c8e245008d0429f81a1b8985e6d6ef0fdbb107"
+    },
+    {
+      "relative_path": "backend-legacy.xml",
+      "bytes": 9349,
+      "SHA256": "89920e0251f3fe7dd642ffb98c501cf8aa560980c330842eb58fe590fa927250"
+    },
+    {
+      "relative_path": "backend-live-seed.log",
+      "bytes": 234,
+      "SHA256": "6548131cc21522b3309a86d6d9020ae528cfaf82bb3037060701a93021cc37f0"
+    },
+    {
+      "relative_path": "backend-live.log",
+      "bytes": 100,
+      "SHA256": "c5f7bdd792f388a17724f454276aca600c21df009c7bace0e0f90a5a687f09ea"
+    },
+    {
+      "relative_path": "backend-live.xml",
+      "bytes": 6491,
+      "SHA256": "26797a7253e516ac5ea0c0ba9fd8b51595bfebddb5a48f19a7dd2d45cad47902"
+    },
+    {
+      "relative_path": "backend-local-payments.log",
+      "bytes": 2626,
+      "SHA256": "35eb43397b4f64044ee32955dd19bdf5efba3b6356a13ce45507c9f2f3eb033e"
+    },
+    {
+      "relative_path": "backend-local-payments.xml",
+      "bytes": 543,
+      "SHA256": "8fcd274eed4d1d244a2013b92e04a088784c42d0821ee23ec21f5a9787652c10"
+    },
+    {
+      "relative_path": "backend-local-result.json",
+      "bytes": 38250,
+      "SHA256": "4e751c87296efe31265fabc5934827487abf6ee79bd10c15622488b88d050367"
+    },
+    {
+      "relative_path": "backend-offline-result.json",
+      "bytes": 140897,
+      "SHA256": "c028f7f33bcda10fb91fee8a922ea0cc8806e528e3082cbbe4870f579139cd2a"
+    },
+    {
+      "relative_path": "backend-offline-tmp/test_all_fastapi_startup_handl0/server.py",
+      "bytes": 250,
+      "SHA256": "ece2e8781e7fb2fae47b118ebe300ef72a0215c53bfc29f79e407a2be10e41a7"
+    },
+    {
+      "relative_path": "backend-offline-tmp/test_backup_creates_unique_nev0/backups/comein_disposable_test_mock_backup-20261119T084023Z-6t4xViM9/comein_disposable_test_mock_backup.archive.gz",
+      "bytes": 31,
+      "SHA256": "b1b10e91e554c188d0eb857120cb84bf3148d230da6d0a832810e6a48af9bc36"
+    },
+    {
+      "relative_path": "backend-offline-tmp/test_backup_creates_unique_nev0/backups/comein_disposable_test_mock_backup-20261119T084023Z-6t4xViM9/comein_disposable_test_mock_backup.archive.gz.sha256",
+      "bytes": 329,
+      "SHA256": "3bbc44d8a3ce4f4d898f024afd00b35a342f9f9768329bb910a0fa82da56c447"
+    },
+    {
+      "relative_path": "backend-offline-tmp/test_backup_creates_unique_nev0/backups/comein_disposable_test_mock_backup-20261119T084023Z-mpVYRrFW/comein_disposable_test_mock_backup.archive.gz",
+      "bytes": 31,
+      "SHA256": "b1b10e91e554c188d0eb857120cb84bf3148d230da6d0a832810e6a48af9bc36"
+    },
+    {
+      "relative_path": "backend-offline-tmp/test_backup_creates_unique_nev0/backups/comein_disposable_test_mock_backup-20261119T084023Z-mpVYRrFW/comein_disposable_test_mock_backup.archive.gz.sha256",
+      "bytes": 329,
+      "SHA256": "d4179b9113086c322cba4f0779ab3e3543e26215a3c3f187a397a216e3df20db"
+    },
+    {
+      "relative_path": "backend-offline-tmp/test_backup_creates_unique_nev0/bin/mongodump",
+      "bytes": 343,
+      "SHA256": "8356d7a797c393c0fbaf97aafa38ebd3b55c07d624975c5a9dc486d94dd1964f"
+    },
+    {
+      "relative_path": "backend-offline-tmp/test_restore_refuses_non_dispo0/mock.archive.gz",
+      "bytes": 4,
+      "SHA256": "a152d9568d84788386ed06560799f7b0f2220051af3399d2aa78862c556eabcb"
+    },
+    {
+      "relative_path": "backend-offline-tmp/test_restore_refuses_productio0/test.archive.gz",
+      "bytes": 14,
+      "SHA256": "803e01669e100d043722ecbb830f7d4ba8b0e894c980b590cfe0904f6ec02a60"
+    },
+    {
+      "relative_path": "backend-offline-tmp/test_restore_refuses_remote_se0/mock.archive.gz",
+      "bytes": 22,
+      "SHA256": "69ad1cab1790c721f1c0d132459d14c236257adbe703d662d269fba24afdd426"
+    },
+    {
+      "relative_path": "backend-offline.log",
+      "bytes": 1188,
+      "SHA256": "9a2ad1ed89c1e735a357ae1994d3ccdbf89b1faae138d46469d9046842e74366"
+    },
+    {
+      "relative_path": "backend-offline.xml",
+      "bytes": 91179,
+      "SHA256": "be0d66a07a501d0fe2c996aeab7cf6b95f1b5a555a4b5e727246b256b706d0e7"
+    },
+    {
+      "relative_path": "backend-regression.json",
+      "bytes": 68082,
+      "SHA256": "053aaf8f932c399d09f2c3da1e3fb7991b45c040162944427abfcc1f14583b1f"
+    },
+    {
+      "relative_path": "backend_local_guard.py",
+      "bytes": 1025,
+      "SHA256": "4a625b5923f71cadc8883528717a587ba9d51ad9bbf30f919df8089a89e303f0"
+    },
+    {
+      "relative_path": "backend_network_guard.py",
+      "bytes": 366,
+      "SHA256": "3c9ce7b5d3941f2efab39952f5ec799c7e41b21d91ecc9ca991cc1fb0e58e5a0"
+    },
+    {
+      "relative_path": "broad-security-isolated-harness-v1.py",
+      "bytes": 9472,
+      "SHA256": "03e127471f17c6eba66107af552b07f77536c762ae3775933d06639e11ef092d"
+    },
+    {
+      "relative_path": "broad-security-isolated-v2.log",
+      "bytes": 3160,
+      "SHA256": "9a73111a7fb67d80746cc04dba45b0a9bbff433391a4d956bcaa34e8431b045e"
+    },
+    {
+      "relative_path": "broad-security-isolated-v2.xml",
+      "bytes": 10606,
+      "SHA256": "ff5130c54c07fc2b298ecdfb693beb97b7e7df3120efa8460bf6bad1e6ed270f"
+    },
+    {
+      "relative_path": "broad-security-isolated.log",
+      "bytes": 4035,
+      "SHA256": "3924d1d180d1f7fdc8360632db983660d4a8ab3e59ebf249372a8f6531774f6d"
+    },
+    {
+      "relative_path": "broad-security-isolated.xml",
+      "bytes": 11630,
+      "SHA256": "0d07523e8b2d7a0213fc1d6a551891fa1b1e36357ea16bf75dedb530539d20ef"
+    },
+    {
+      "relative_path": "broad-security-reproduced.log",
+      "bytes": 3200,
+      "SHA256": "50d5a79eb05f35cf8ca056c8d468f9a0fdc11647873f80f9b20f49bbd4340abe"
+    },
+    {
+      "relative_path": "broad-security-reproduced.xml",
+      "bytes": 9206,
+      "SHA256": "3b89fca9bae7286d852d31e788a497e6031d2a45573d6900c815123597435424"
+    },
+    {
+      "relative_path": "broad-security-reproduction.json",
+      "bytes": 2090,
+      "SHA256": "997611121fc9dcf9c80d7f4d4d86c902ee53863a113681acb169a54895449667"
+    },
+    {
+      "relative_path": "build_reset_validation_report.py",
+      "bytes": 20701,
+      "SHA256": "158972d3667fbd0224df97fc6bebe06a585943e21ca32eff6999a313d6b3eb22"
+    },
+    {
+      "relative_path": "consolidated-action-register.json",
+      "bytes": 175765,
+      "SHA256": "27b6960db20c9731677cd0ef7024672d4e91f2638c0eb2d14dc3abaf91818925"
+    },
+    {
+      "relative_path": "current-test-results.json",
+      "bytes": 2204,
+      "SHA256": "afbdd84f3e8be429bae156a7dd66b23f09f9dbc3d87c02a254be989d0d14e247"
+    },
+    {
+      "relative_path": "db-metadata-check.py",
+      "bytes": 3447,
+      "SHA256": "46f949e5f8f3c1e5f5fb75d835d4dfaec8e369150d4efffca493aaf15b3e97be"
+    },
+    {
+      "relative_path": "db-metadata-current.json",
+      "bytes": 51002,
+      "SHA256": "a69d49de14375d0bcc5f30b994001e7dda6b9589618e974993c73f04f4647814"
+    },
+    {
+      "relative_path": "final-package-verification.json",
+      "bytes": 835,
+      "SHA256": "36d543aefe673386653c87642a73107ee776386b68af88d2a87505b19a1b9ec6"
+    },
+    {
+      "relative_path": "final-preservation.json",
+      "bytes": 1184,
+      "SHA256": "b879e02ceff3de48ce79755992917c4efd29151b3434df75d5b902b278f9e11f"
+    },
+    {
+      "relative_path": "final-reference-verification.json",
+      "bytes": 96413,
+      "SHA256": "956ab73191ee668944fa55db6546d0ac26be5e43333574b81653abe1ad48c47c"
+    },
+    {
+      "relative_path": "finalize-backend-regression.py",
+      "bytes": 19031,
+      "SHA256": "90975b4685c941634f12517245a59127e237da5b09b7bcf5e0242440ed6804dc"
+    },
+    {
+      "relative_path": "finalize-task1-package.py",
+      "bytes": 39221,
+      "SHA256": "9ca8c92105dda2409e0ed568b255761c634117140af28e1890d6e14e8cce041b"
+    },
+    {
+      "relative_path": "finalizer-attempts.json",
+      "bytes": 661,
+      "SHA256": "fdad80116c902248317d3179b8cf4932ceb285c22e592c3ce4d6563d7686d0bd"
+    },
+    {
+      "relative_path": "frontend-config-guard.log",
+      "bytes": 111,
+      "SHA256": "aba47c6943c947eca4d39f6973c7f475ce850fac50e7656fb992e4b48d0930cd"
+    },
+    {
+      "relative_path": "frontend-eslint.json",
+      "bytes": 229545,
+      "SHA256": "3fa8a008f86583b4871cda3359b163d135efc12d4a6f09df22e6d588f2de1e4f"
+    },
+    {
+      "relative_path": "frontend-eslint.stderr.log",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative_path": "frontend-native-mock.log",
+      "bytes": 107,
+      "SHA256": "e320361f683233c83375631a1badbe85d4b77803a204305e24eaa98021eebfb4"
+    },
+    {
+      "relative_path": "frontend-planner.log",
+      "bytes": 45,
+      "SHA256": "56d1c3343a70a8beda739106bd28173e8e0c5fbbe003ff9fa436e61250be3ee3"
+    },
+    {
+      "relative_path": "frontend-preservation-before.json",
+      "bytes": 1846197,
+      "SHA256": "3834ecf6eb3394ccc0f5e0489f880df0aca72006e9c940db94a252a3021563a0"
+    },
+    {
+      "relative_path": "frontend-typecheck.log",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative_path": "frontend-validation.json",
+      "bytes": 38080,
+      "SHA256": "68fe4bd577043a7b749ec901bef289125c3d5de4972f6b0efe19fcf30c4c5fc3"
+    },
+    {
+      "relative_path": "frontend-web-build-execution.json",
+      "bytes": 28738,
+      "SHA256": "9c6d74cb867d814023c195915a3d86aa8adc2b3cfc0324bbf0086323b83326e7"
+    },
+    {
+      "relative_path": "frontend-web-build.log",
+      "bytes": 9178,
+      "SHA256": "2a5aeeb3b3d2c249cb3fb7398144abe35c8dbede8b8a27e4cec98db700aa0b8b"
+    },
+    {
+      "relative_path": "frontend-web-export-manifest.json",
+      "bytes": 60463,
+      "SHA256": "f2108028a16e486ec15ef747c978c7cba74daecd88e5b1f70ac5b73d05cb610c"
+    },
+    {
+      "relative_path": "git-diff-after.txt",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative_path": "git-diff-cached-after.txt",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative_path": "git-status-after.txt",
+      "bytes": 55346,
+      "SHA256": "6b85d18cac7dcd6ea33c289dadd2ac98422d4ca65861f71b4ba8d94b790d5324"
+    },
+    {
+      "relative_path": "git-status-before.txt",
+      "bytes": 25285,
+      "SHA256": "724c02443f61b3ee270239d33d606e59b48f53c087fac1e810fb8675a68cc35a"
+    },
+    {
+      "relative_path": "ios-autolinking-current.stderr",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative_path": "ios-autolinking-current.stdout",
+      "bytes": 5383,
+      "SHA256": "702292a47f7aeffd590e55b6af8673bc7270b1e95efb179289ddc03280958c47"
+    },
+    {
+      "relative_path": "isolated-backend-server.log",
+      "bytes": 8097,
+      "SHA256": "46a52167957c1cb427d2ec0948ea10c2b3ba45d954672a3d00b1a7f97f11c541"
+    },
+    {
+      "relative_path": "isolated-legacy-server.log",
+      "bytes": 160,
+      "SHA256": "8a7c2cd084619fbb58fd04ab7c60f2432d48d07cad073af9e5aa578d528bb2f2"
+    },
+    {
+      "relative_path": "java-version.stderr",
+      "bytes": 181,
+      "SHA256": "0fc83381287ccbc8623d257bce2b0d03997ba0e85ff4492d38b409aea37a8aa9"
+    },
+    {
+      "relative_path": "java-version.stdout",
+      "bytes": 0,
+      "SHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative_path": "legacy-tests/backend_test.py",
+      "bytes": 12502,
+      "SHA256": "a4e9c990c972790e4f6f6c9fd0aca31d280c3bdac5bc5a0ab9cc56d34d5935b9"
+    },
+    {
+      "relative_path": "live-tests/seed_preview_test_accounts.py",
+      "bytes": 1696,
+      "SHA256": "276a1a5d6a291db9351cec34daf1ff2474c4bb803a3b97645d92ef9d58520f1e"
+    },
+    {
+      "relative_path": "live-tests/test_batch_5task_runtime.py",
+      "bytes": 12350,
+      "SHA256": "35b3215536d929fcd506479fae565713ee06f0490299ab1372ceb63e756de4d0"
+    },
+    {
+      "relative_path": "live-tests/test_iter_notifications_admin_measured.py",
+      "bytes": 5684,
+      "SHA256": "6ed2254af71c42db2b86140aed4d579ecd0cdcc5ca85ef267cc620df50a53571"
+    },
+    {
+      "relative_path": "live-tests/test_preview_runtime_e2e.py",
+      "bytes": 11663,
+      "SHA256": "63ae057dedb96604d498ceafea24ec5ab6b1bc9c81609359cf931d1e131bed6e"
+    },
+    {
+      "relative_path": "live-tests/test_task5_live_mongo_transactions.py",
+      "bytes": 15205,
+      "SHA256": "99e2cbaf0a8e1ade73294ed127c6ecb0f2acad4987aa896468bcea444846ef50"
+    },
+    {
+      "relative_path": "local_backend_bootstrap.py",
+      "bytes": 493,
+      "SHA256": "27c8c4c836d70e75a52b554f7dd76939db404819a44822b91a1e03df1836594d"
+    },
+    {
+      "relative_path": "native-current-command-results.json",
+      "bytes": 3136,
+      "SHA256": "75e23fadbcd4625a5e41848648cf99d22bbc083af4b229bf930223c073d09eea"
+    },
+    {
+      "relative_path": "native-provider-audit.py",
+      "bytes": 24046,
+      "SHA256": "327b7f2f3ab4713d7abff4c1c61177395a2e9e17f1bfe75507e3b5b808911e73"
+    },
+    {
+      "relative_path": "native-provider-validation.json",
+      "bytes": 20149,
+      "SHA256": "db0c0289f99e1741cbb7bc5d6bd7202ad3297189d89feb8d07bbfcf1fbdcc971"
+    },
+    {
+      "relative_path": "password-reset-execution-provenance.json",
+      "bytes": 4816,
+      "SHA256": "4ad4407fa6ed451d96d682a1b018b0014b51d8df5d1d06b02b70b4546e5f13ba"
+    },
+    {
+      "relative_path": "password-reset-final-artifact-verification.json",
+      "bytes": 1607,
+      "SHA256": "5ceda8c2dc6d8b022dd823b308026e2303a17a34dc217c9bb51b0a25a2a43e18"
+    },
+    {
+      "relative_path": "password-reset-junit-v2.xml",
+      "bytes": 5516,
+      "SHA256": "40c79ad03d4be8a8abaf22d1fa5bb8b438effae87329af2393cee358791245cd"
+    },
+    {
+      "relative_path": "password-reset-junit.xml",
+      "bytes": 5923,
+      "SHA256": "c08ff40503aa1c125fb0e2d76842b03a5607ee9de65a592da0aff4421d6176ee"
+    },
+    {
+      "relative_path": "password-reset-report-build.log",
+      "bytes": 472,
+      "SHA256": "f9f2adee5bfd661b798bbe7109d11775b8eca9bda3fb618ef4d02853f5c9ddca"
+    },
+    {
+      "relative_path": "password-reset-results-v2.json",
+      "bytes": 20367,
+      "SHA256": "be5a75734eba51bda75879a956001b6abd7fcd740550b35ffa7b9b1cc1e9da1b"
+    },
+    {
+      "relative_path": "password-reset-results.json",
+      "bytes": 19850,
+      "SHA256": "8bc1f77f7ad4379aa15e8670718a5d6849b202a14d6b56810453769e8d2cbd43"
+    },
+    {
+      "relative_path": "password-reset-run-v2.log",
+      "bytes": 2401,
+      "SHA256": "a6e9b740f5691b501df7a9680780e0edec7852159773fd1491fd441793d29a46"
+    },
+    {
+      "relative_path": "password-reset-run.log",
+      "bytes": 2410,
+      "SHA256": "5d2609705cf5959d1a7286584ad9006fd959967fccc6dfae80b82d286f5a2b04"
+    },
+    {
+      "relative_path": "preservation-baseline.json",
+      "bytes": 1965781,
+      "SHA256": "84975d08c020570c1d1baaa1007ca45ad8edf4fb8756394d633852a85cfa6b7b"
+    },
+    {
+      "relative_path": "recovery.json",
+      "bytes": 3411,
+      "SHA256": "3d1e9a9d1563b35fa677c0a7f0d5740176edd884932e1b49b1efc35b3b9f35d8"
+    },
+    {
+      "relative_path": "reproduce-broad-security.py",
+      "bytes": 2376,
+      "SHA256": "932c2ddef544c96c2c2161d52f5b5b4b417c5ab86f7d27543b3356cf322cd0d9"
+    },
+    {
+      "relative_path": "run_backend_regression.py",
+      "bytes": 3847,
+      "SHA256": "6a678ea081c18a8f9b3397390ef091fe9a459325a357eae6467fcfe45306f386"
+    },
+    {
+      "relative_path": "run_legacy_backend_validation.py",
+      "bytes": 5637,
+      "SHA256": "6c56794de0f7d563e303fde7bcd66fe8956fba5553b665e5c3d270bc79aa2269"
+    },
+    {
+      "relative_path": "run_local_backend_validation.py",
+      "bytes": 8077,
+      "SHA256": "ea2b2d5ad028f4b3bcef669ca908d0fc14a9ca378ec003fbb516b2158c0a61f9"
+    },
+    {
+      "relative_path": "security-audit.json",
+      "bytes": 59264,
+      "SHA256": "8b8c77be5608d583870e4e0aac407a935ee5fdab4625f6aa063b1a76da81af9f"
+    },
+    {
+      "relative_path": "source-state-binding.json",
+      "bytes": 1073,
+      "SHA256": "65894c12ea236e4dd26fb5b3fe97580699103b25d17836280cf48e510622c554"
+    },
+    {
+      "relative_path": "test_broad_security_isolated.py",
+      "bytes": 9471,
+      "SHA256": "8e02180373829fd4c09e57c3cdd64f9f5483bb86fc186ef15894dc91acdd73ea"
+    },
+    {
+      "relative_path": "validate_password_reset.py",
+      "bytes": 33866,
+      "SHA256": "79952bdfc4bc80b54cb54709728eb9d80e299e469460c4ca50d3edc492ea27fd"
+    },
+    {
+      "relative_path": "validation-status-register.json",
+      "bytes": 10170,
+      "SHA256": "b047f1cbfd1afa7016b61cb55c9c04251732af016f1f102e665e7e4eb7fc4022"
+    },
+    {
+      "relative_path": "web-export/_expo/static/css/native-tabs.module-55ce705d99cc7a8e9d8dbb7dd284d2a6.css",
+      "bytes": 2540,
+      "SHA256": "b08f276a0a6e1b35fdaf4a6b99ebeeabb4dae4cf52246e7d768a0bd8045d56a9"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/+not-found-6711dc4060ef73e9c74d0286f99ce480.js",
+      "bytes": 1472,
+      "SHA256": "fed9cb7ef02bc247fea823a22883384f582edade2df6559080335502dea33a3b"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/[id]-220b069fb63e649e7155396eab96fc94.js",
+      "bytes": 5583,
+      "SHA256": "a2703b46c0fefca8d7a775858b472dbedfaea4586a646ff6e3e0b2e798ba6434"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/[id]-5c205dfca14ceb3d993bbb774d3dfe1c.js",
+      "bytes": 13038,
+      "SHA256": "700b7094e12245fe94ce3e35d790bcde68de0a842e3fa1256a8a489f017b91db"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/[id]-b32cec64035a5374e47ade6124307946.js",
+      "bytes": 22528,
+      "SHA256": "1fa1cef6831e15a42a8db1f2e7cdbd6c44f4f9a6802282c7c00038dcda0afd6f"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/[id]-b646f4a3d7125c6725c80d98f9616249.js",
+      "bytes": 4353,
+      "SHA256": "cd87013c147398696b133fc91dc1994898ae423d78957dfe903bf606cbf90776"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/[slug]-608a578eb48fcff82f5b343ba0cd05a2.js",
+      "bytes": 3313,
+      "SHA256": "43ad26d97da5a7e45231f9dfbde541c60c3fa84b1046d85d3aa128573dc82a68"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/__common-e3b38e1723a5b54f0c450b114e37461d.js",
+      "bytes": 423312,
+      "SHA256": "7fa1428701103565ad97e1608ca83abbbe5f003f5da312e763e272a5c992235f"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/__expo-metro-runtime-8c088df87a31e4e6accd81c554ec290d.js",
+      "bytes": 3751,
+      "SHA256": "80e3ab02b3bac22608cdf29a2e3cc1270616a695bbe479f7f500941e8d2bbe41"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/_layout-1c8f7598653c9b867b802b35c3315ed2.js",
+      "bytes": 48742,
+      "SHA256": "d049181552321aae1f37c19786b5d67c869420e569aa9cef3db16619575acd98"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/_layout-3284071a55f62ea6724e31cc9a70a8e3.js",
+      "bytes": 1183903,
+      "SHA256": "6f60acd5d197011ea7180168c050b19896323bbe52e51cfe8b4a9362d694f818"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/account-76f8fe6a8062c59797439e9d97605b92.js",
+      "bytes": 271,
+      "SHA256": "557253e4de4c432b19925b89c3722c263b00fd65ee4ecba790b854859196884b"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/account-b609a974a8aed309911fe1483133c2fe.js",
+      "bytes": 10097,
+      "SHA256": "77849352dfc070495c9a9a7282e622a26aefb65154ef5dde2ef19157052de037"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/addresses-18e74a5407d49f6b9b1471d2b86d976a.js",
+      "bytes": 266,
+      "SHA256": "4f5dc38008b610441cc894edca3095a3b472adf4cb752ca26d917b2d17e09bb4"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/addresses-90e8837b9e8736b9d0693a94fd54ccee.js",
+      "bytes": 3586,
+      "SHA256": "4634c68bd7048ac9ef55ebd6c86de6d053c076b03cce35e60e6540005192fd46"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/admin-delivery-partners-e26d40cabd54ce2c10cce027bcc9c4ff.js",
+      "bytes": 4462,
+      "SHA256": "ac3975a0ad126135a4a980b8fcca43c51cc31646d3bc82abdedd87cac4a85c95"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/admin-e28b4db21e68ecf6cba67591854b8668.js",
+      "bytes": 41771,
+      "SHA256": "8d45f1a59ea2c3131d23996b886014cd20aa02a8a38c5ffded4c2a827362dfe2"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/admin-earnings-9cadbd4f0bad8c6b1daedb749c5824c0.js",
+      "bytes": 17854,
+      "SHA256": "037710a60574a229303b2e10d85c4efd6326c1157efdb573fd4eeb2dd1c3445b"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/auth-2a0fb90d6f0dcd42cf56cca171526f81.js",
+      "bytes": 6415,
+      "SHA256": "5c7bf4825f0b3873e24fbb8b7d515fba99a147bdca342723825e5d56d4d38715"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/become-seller-69fb1a85f09d58d6ed768c391bfd0798.js",
+      "bytes": 17034,
+      "SHA256": "4c714875d2abb60821b9c8022574be97de44d54dbda6a0f8e97394697deb3fd4"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/cart-41ac224c7e1bcc19c0134b2777fa8235.js",
+      "bytes": 3666,
+      "SHA256": "f726434954636765a6fe21b616fe502c306a153c392d74d5240170abd5cf3a2a"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/cart-6245e09f70cf1f9e953ebadc5c887e9f.js",
+      "bytes": 14662,
+      "SHA256": "78b4f235c1663307c8104bdd7f71e27bb0bdc473cce2163a08ab70b6d2a32d40"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/categories-78e5eef6599981e0e22e57cd511c9751.js",
+      "bytes": 2352,
+      "SHA256": "f05eb71f8a2bfae6665a1572dc2a2cefc0fc7a04ee9ea53f1fa4a7a66e5918f1"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/chand-80f012da21b8a2abba1953ce80fdf223.js",
+      "bytes": 109670,
+      "SHA256": "073517410d63a76e14548df31cb8d1ac4574a52815361bb66bbb44abb4fb0bb2"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/checkout-59440e5caf58bb3897cb14b1b8371db7.js",
+      "bytes": 20696,
+      "SHA256": "60fc2cfb60e04051ddf7bbd2e9bde4d9072cbce7c7435976ec0ec03cd864a2c6"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/checkout-ad0626b7f01b55d7231e32f7484b1f2f.js",
+      "bytes": 9531,
+      "SHA256": "a98db017d1a9cba7f00ffef51ca2156a858476870daedb1a3e31f17700417ae0"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/dashboard-e9e44d8430468b1165d6c646d23521f4.js",
+      "bytes": 13470,
+      "SHA256": "6b555c50a040edf335a920e018b2bf21486485a5ec69ea1297969c46fcac2fbb"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/delivery-address-a1b0f38f2d61988b6804a349ee3742b0.js",
+      "bytes": 7069,
+      "SHA256": "b85dfb63fa8bb67d5057cedc42794974f299c4d267ce2b957ff2d96d44e0752c"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/delivery-partner-052023113dac6fa37780eb8c51ea30d1.js",
+      "bytes": 8331,
+      "SHA256": "6c060793e66b991da8e37740fb0c133aefeb251c36e95099b5ea95ed4bfcad61"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/entry-ced0defcb01c5401a5385265b0e5a85c.js",
+      "bytes": 1116282,
+      "SHA256": "a3b80336bc73d9295949b8fc1e25608db45c49cfff21e2bf288fafe84e531c5f"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/index-95cae7c932dc7d3c0cceeefdd33dbd2e.js",
+      "bytes": 5872,
+      "SHA256": "fe2ec03df717206810e1401b21435944b456e7c94b241f4efe15c6488ee56524"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/index-b881b73fc507bc99663108b0edd6317c.js",
+      "bytes": 263,
+      "SHA256": "b1fcd99e7b2d5f0d5e2e3580e7b2efcd4313ab4921218a3214639e79c1571d34"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/index-e7fd6cf80c4215f21154742ed0147e94.js",
+      "bytes": 25446,
+      "SHA256": "494f158fe22487337104aabe792013b4de3f89c0f5f87978c9ad980e915403eb"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/index-fd9ec9a2570b210063261a5f0dbbdf89.js",
+      "bytes": 3776,
+      "SHA256": "ea1f0991538e2ab9027fe632e06c9c1e7ac2db2e95f9e4188c93f7a8c3f93cda"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/language-be69f21d1448be44916743b81d8f6db8.js",
+      "bytes": 3506,
+      "SHA256": "e3557befd8a4d79e325592239b1233ddc3f847a6f9aba0dfff45be35ab0cedd1"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/menu-ad8ee24b8472a1705f09d9dfd7ab0666.js",
+      "bytes": 241,
+      "SHA256": "68b68de768817e91fa11e1449065ed0b173ea9d6a506415e6b08cb6244da3b77"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/notifications-9aa3af9a8d2b897546a6d9f15f829138.js",
+      "bytes": 4031,
+      "SHA256": "96ecd372a70fc62f691396394d776ec40659443b28977a44338789911c9faf0b"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/order-confirmation-c588e242478173ad6631dcfb0c86fb7b.js",
+      "bytes": 1516,
+      "SHA256": "871097dcdb1b7f9f4906f9d52214868889eebfcbdc85bc410507815fc8ac6d43"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/order-tracking-0cb5a7091319f16ad26c9132f57d2c7a.js",
+      "bytes": 6601,
+      "SHA256": "9f57e4c42d38761509ab7687eb9d9f1c69b60f2f8d62b03caa4cda08872b4c86"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/orders-15639b19b8d2cd5ee35ff3ae7839b710.js",
+      "bytes": 10326,
+      "SHA256": "024710c29a954fbbe64bcff28efd33ffdc6b6adec0217d1081036728d897ebf2"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/orders-650647aaa3de48dc14097236d30fa6e2.js",
+      "bytes": 7111,
+      "SHA256": "4a471a149a872da9d95eb30be4a4d4ea9be2ca7c497c9abd1a7dd0645acf7aff"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/password-reset-b2ae0e17794129fff5776ea472742b43.js",
+      "bytes": 2652,
+      "SHA256": "65daaf08f988b7ca07be9937eace2dffe652f4f1254ad39ac4c148aa24f97ecc"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/payment-methods-ebceb0d7eb81bab16a54490d45064d83.js",
+      "bytes": 3788,
+      "SHA256": "ea6c99d6ceec991811a43d739fd342ff1d635c4765a6411f85139ce79a1b327c"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/products-0a54e3e2476986d18384473cb3929030.js",
+      "bytes": 41654,
+      "SHA256": "3d1171bc79dbd2332999f864339a85e4ca8c4aa2d332db02eb5acd77038ede22"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/referral-c10b87a5700d466b038e5c5ee35f63f5.js",
+      "bytes": 2818,
+      "SHA256": "ddd9c4d0e80211a67478ddb8fd2eb2633d07a5f2dc0f1745e063ef9a0410a701"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/referral-dashboard-b5873fbc7e9c6704c86653d674c9cafa.js",
+      "bytes": 8818,
+      "SHA256": "bf987f163cceb9aaa6e1e1b75adfc48965283a69474977373e761b5a8746037f"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/request-4c869ab659a5b2f7390515b10a36eafc.js",
+      "bytes": 9002,
+      "SHA256": "76e6b7452820982fdde87a642584f35939ddd90c84cebb1b8a518b44f5edd0d6"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/retail-prices-1b690844db011ded8450b08aa840d5f0.js",
+      "bytes": 4793,
+      "SHA256": "40c8e210b4fca24c517299e637b526186f394b1d06983e9fe0104c5a39975cbe"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/search-83549bf20ce6d22b93b1bbef447baa81.js",
+      "bytes": 4527,
+      "SHA256": "6094b22db4fe29da8ab7b7c2d3d8a9f6c02a1252ec1549b2c5f16c25829b5a9e"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/search-97dfb32f91dff607fa578bca6b784b3c.js",
+      "bytes": 3409,
+      "SHA256": "23b4348f71b263070213b18e0553700dc4ad474e14dda24680820dc58017b779"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/seller-earnings-3bd228f292da07164784555b7f777286.js",
+      "bytes": 13822,
+      "SHA256": "38db61f8907e4f33f0fb2f3cd9336961d80694016f4cb3cc9da224997e3e9c37"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/services-2a74947bc1db211acff3a5f7a6be4d4e.js",
+      "bytes": 16501,
+      "SHA256": "776ab253ebfddd959479798e436a544aa69754838ae59407e2b653cffd194316"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/shops-71261f760fdf5802b7c82f2a22fccc8e.js",
+      "bytes": 9223,
+      "SHA256": "7ea50bd0e64de0c9d28fc350dbd8436f29e1a3f64ca5666e7d6251d146e89afd"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/support-6849e92b37e9a0697b1cc736b81fc70c.js",
+      "bytes": 432,
+      "SHA256": "27cab0cca2f17d7fb68e972f15619cf249eec4bd440ed5477620ff66dc734946"
+    },
+    {
+      "relative_path": "web-export/_expo/static/js/web/support-b19d7a463b48edb33c02698401a60e31.js",
+      "bytes": 6962,
+      "SHA256": "cdbcd971682ad064480bc9c980234d2564a0f46043594e1f286ee8d48597ee7f"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@react-native-vector-icons/feather/fonts/Feather.ca4b48e04dc1ce10bfbddb262c8b835f.ttf",
+      "bytes": 55596,
+      "SHA256": "02b88ead91ade5710d7ca18edb43a6965a71d93732c06f290cc07a6dd249e987"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/arrow_down.017bc6ba3fc25503e5eb5e53826d48a8.png",
+      "bytes": 9456,
+      "SHA256": "6deca32b56b97fa1fa87facd6996b46cc45190a553400e7febdf1d2093099b57"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/error.d1ea1496f9057eb392d5bbf3732a61b7.png",
+      "bytes": 469,
+      "SHA256": "c15ec72a74d13957211808313d5c35deb7f7606c6d22dbddceb0000d4e0547ad"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/file.19eeb73b9593a38f8e9f418337fc7d10.png",
+      "bytes": 138,
+      "SHA256": "a69a2edb5b6c60b8433d5b6d23c69f520ccd8a602f3f60e7996e489718bc175c"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/forward.d8b800c443b8972542883e0b9de2bdc6.png",
+      "bytes": 188,
+      "SHA256": "708a79cf561b8a2a4850ce0254584d3a5231046be08fb7fadf4b6edfdb31178b"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/pkg.ab19f4cbc543357183a20571f68380a3.png",
+      "bytes": 364,
+      "SHA256": "27f4d229d440925bf7212d5dfffa45d596b2c7b3bb2905c96b839b2081a1dbeb"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/back-icon-mask.0a328cd9c1afd0afe8e3b1ec5165b1b4.png",
+      "bytes": 653,
+      "SHA256": "9adb8c5efca932e2b732b293da813bd2e31952263056bce9e2517fec0f0b6a76"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/back-icon.35ba0eaec5a4f5ed12ca16fabeae451d.png",
+      "bytes": 207,
+      "SHA256": "84cf5eb3b20250f69e0e4733beb4da5f417f0682892a5ad1b5e62570753c21b1"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/clear-icon.c94f6478e7ae0cdd9f15de1fcb9e5e55.png",
+      "bytes": 220,
+      "SHA256": "d03a5cd7a66ef10c5147916f9d5878b2d0a0a5ad46f405a31cd9967efaa55afd"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/clear-icon.c94f6478e7ae0cdd9f15de1fcb9e5e55@2x.png",
+      "bytes": 334,
+      "SHA256": "ab5613d2ce70fa67c5926e831353664945199fc195fa6fe76c5fe3cec452e31a"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/clear-icon.c94f6478e7ae0cdd9f15de1fcb9e5e55@3x.png",
+      "bytes": 502,
+      "SHA256": "c4e54e6a0a7de636aa153378fbc62ea4a41695bfedf807f90df7b18ffd733f67"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/clear-icon.c94f6478e7ae0cdd9f15de1fcb9e5e55@4x.png",
+      "bytes": 645,
+      "SHA256": "c86bb485eee687e06c500fc4234f51a6784b4530c2ae11d0c76481110bce3105"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/close-icon.808e1b1b9b53114ec2838071a7e6daa7.png",
+      "bytes": 141,
+      "SHA256": "b1bc1810ca23e2c38cd76971c43591d726161061240d8b792b05757196ddb528"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/close-icon.808e1b1b9b53114ec2838071a7e6daa7@2x.png",
+      "bytes": 201,
+      "SHA256": "cbdf9213e55f65c48d076acd8423b7c9aee4f1b81101ff6c95a38c4cd8a86461"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/close-icon.808e1b1b9b53114ec2838071a7e6daa7@3x.png",
+      "bytes": 266,
+      "SHA256": "d05c9d30d79f45a78e5585a2e7ec67c6a06a883dd9137e1d5059e8c87b33ce76"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/close-icon.808e1b1b9b53114ec2838071a7e6daa7@4x.png",
+      "bytes": 332,
+      "SHA256": "2325c53a73e54c438cbbc60dffdd8b513d471ba42e2f56713ef404b95e0ca1fc"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/react-navigation/elements/search-icon.286d67d3f74808a60a78d3ebf1a5fb57.png",
+      "bytes": 928,
+      "SHA256": "5d075e0c287c4f4441b5b5c8fc7ea5cd27c11bb617ecea09755955bcb1889083"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/sitemap.412dd9275b6b48ad28f5e3d81bb1f626.png",
+      "bytes": 465,
+      "SHA256": "acf691957a3bcce7d195856dce98a5cf14dce10bea28aa5c10b3550c078e23b5"
+    },
+    {
+      "relative_path": "web-export/assets/__workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/assets/unmatched.20e71bdf79e3a97bf55fd9e164041578.png",
+      "bytes": 4752,
+      "SHA256": "efc79da3c4c97dfb1571bff6202958ab0529c5aa31e8392600578b3e359d1447"
+    },
+    {
+      "relative_path": "web-export/assets/assets/branding/come-in-official-app-icon-from-reference.5a1d67bcf4d962f4377220b824502f60.png",
+      "bytes": 42622,
+      "SHA256": "9373ba8487c00eedd3bfa5a449fbc803582ca5663165aad85f88172baf6ca72f"
+    },
+    {
+      "relative_path": "web-export/assets/assets/branding/come-in-official-logo-from-reference.2eddcaf4edc278b066c5d5a02e4c2c85.png",
+      "bytes": 102319,
+      "SHA256": "35a408a14fac60ce3a5abc889eb9060c0cd35c4ed72db311e8bf3d0ccd444183"
+    },
+    {
+      "relative_path": "web-export/assets/assets/illustrations/home-services.8d9200b63f1aaf6aac3a0347ab8af468.png",
+      "bytes": 47499,
+      "SHA256": "b2625ec81f25865c03e7132ca4f807776d77e0c4fb0c477705001f57247a7499"
+    },
+    {
+      "relative_path": "web-export/assets/assets/illustrations/offline-shops.2de92785ae1464b81a00524e261e38a7.png",
+      "bytes": 27434,
+      "SHA256": "952ee4077ba849eba732c5a69332c4f7229f66bdf7fb26692d7c4e7327135b25"
+    },
+    {
+      "relative_path": "web-export/assets/assets/illustrations/online-shops.ed03b85c3018a314983412eca36aef8f.png",
+      "bytes": 32255,
+      "SHA256": "6febf6dd2b8595dee34a33f415a4bc4e0a20ddbf95f5358ba04903d269dc6587"
+    },
+    {
+      "relative_path": "web-export/assets/assets/illustrations/restaurants.abaf9b4dcb072bc086d5e85964cfcdf2.png",
+      "bytes": 36779,
+      "SHA256": "be61e192c708e12f2e006286a2e0b6b27fa30ad084369cf30244e5d77ce12c35"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/atta-rice-dal.b985cc6eaeea0b37501ee5be5ddf7cc6.png",
+      "bytes": 3098,
+      "SHA256": "25e943eee89cd05121a1d29a7562e4a312ad768732b5c50fd9b3ee111c375782"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/baby-care.59ba528c31ac786c2f725acb9014958c.png",
+      "bytes": 3944,
+      "SHA256": "254bb99d74b92e51eee4d592e4835a8ab28917bbcaed944c25a54776b03f7d43"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/bakery.1efa2cd9ccaf161c1f581592527a6507.png",
+      "bytes": 2676,
+      "SHA256": "8c01c04ad930b9f6d7a3e3a2579482629ca0e8f357c7dcf8d4dae6aae16b38ce"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/beverages.db536fc07542bd807e6af70e5592639c.png",
+      "bytes": 2596,
+      "SHA256": "143e0e81ca84e529dc3ff4dc97e162aebb7fa20ac1b7db047d812244dfa66696"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/dairy-breakfast.d1aab0047bf1ae41f8dbe9cbdc040c14.png",
+      "bytes": 2182,
+      "SHA256": "d439466c838efe96951c92f6dfb5d9a4674da38321a1c296c2b5ac8bf02265d8"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/eggs.4b30845402729d56214275dc68fa7f44.png",
+      "bytes": 4449,
+      "SHA256": "88db9bc1ce455f4cf97470eaf0aa8b1e471e292b72271fb4d48e8b1650912734"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/frozen-foods.ba7203009910e0b3fd22934060af2a4d.png",
+      "bytes": 4162,
+      "SHA256": "5243f83738e27f4863a5876b477153b65a7986fcdfdbe249a2ca129452ee8e67"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/fruits-veggies.82d349b5d14ddeb3bc6707347621bef9.png",
+      "bytes": 2562,
+      "SHA256": "6a3191f8437d0b663d53690eee5bd1d95a0155d2b444ff2843a3b2f21e258c83"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/fruits.8562be3d03bc4b017619f524f2fbbdf1.png",
+      "bytes": 4782,
+      "SHA256": "7cdcbd0deb7bf120f7e9b8053d30874010fbdd2d78aecb465591c949138e0e98"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/household.e0a6e80ce14bd17cef9ef5c4f19a90fd.png",
+      "bytes": 1908,
+      "SHA256": "8905d77d009ee4c07d2adade9d43323f119035f52079e2874168e8d3123de99a"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/masalas-oils.c8815a863ef604e196007dfbe9ffbbeb.png",
+      "bytes": 2648,
+      "SHA256": "e82fae97a433e79fcedf1a3b161fcbc8af855704cc7e9be720f42342d85eb8fc"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/packaged-foods.777920edfd2299ed60aba65b3971cc0d.png",
+      "bytes": 3696,
+      "SHA256": "d26269dfe277e8fb038f5a4f76f9623a2fc0bc90527ace0c8d38e50eebaf6a52"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/personal-care.a85f3dc695b6289e08bf527f9310b9f8.png",
+      "bytes": 1961,
+      "SHA256": "d3bd99443fe7b78f33f12a83eb358fb0b1b99a618b0b4c6120a1744b18ccf66b"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/pet-supplies.9d9157a6a184ac8a1712b212af5abb14.png",
+      "bytes": 4659,
+      "SHA256": "aed2ee1df009b0c1fb3bdbf202f1fef0fa353688f3acd00b0702789b7d70c7a9"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/snacks.b5a270211e19ce500a7d3359f1e6653c.png",
+      "bytes": 2356,
+      "SHA256": "d61c4b01dd8202d71b8bb0deaa5b21a9faf4e217041828aa7b1b44c22ea67c07"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/stationery.52693d9eb6fe0f961b9b21f02491019e.png",
+      "bytes": 4276,
+      "SHA256": "ecb9cea6a1c813004b7d8a3c21271ab9d1c4314c8106c4291cd2b4928f67e73a"
+    },
+    {
+      "relative_path": "web-export/assets/assets/images/placeholders/tea-coffee.f3bf8e4f20127a234040282ed4ff2241.png",
+      "bytes": 4271,
+      "SHA256": "4cc191016c28d4de03bd515bb4f49ded77197780449a614ec874f0d9829bb8c6"
+    },
+    {
+      "relative_path": "web-export/favicon.ico",
+      "bytes": 14510,
+      "SHA256": "f0a9a9aac6492320ca6a6b17a3486036a733c0edf2e511644b3f12c7ec6bd4e5"
+    },
+    {
+      "relative_path": "web-export/index.html",
+      "bytes": 1621,
+      "SHA256": "87279dbb2c3128396334a720d63ce5310dffc4e460436fc71a50889e19e3dd8d"
+    },
+    {
+      "relative_path": "web-export/metadata.json",
+      "bytes": 49,
+      "SHA256": "aa5f19cc84d41c0f8c70ececb2bc82e863227ea1e121632aca879eb616056991"
+    }
+  ],
+  "self_hash_policy": "Self and sidecar excluded to avoid recursive hashes;sidecar stores manifest SHA256. Original manifests untouched.",
+  "test_results": "current-test-results.json",
+  "gate_counts": {
+    "PASS": 21,
+    "FAIL": 3,
+    "BLOCKED": 12,
+    "NOT RUN": 1
+  },
+  "gate_denominator": 37,
+  "risk_severity_counts": {
+    "HIGH": 1,
+    "MEDIUM": 6,
+    "LOW": 2
+  },
+  "protected_files": 8533,
+  "protected_hash_mismatches": 0,
+  "original_source_changes": 0,
+  "owner_approved": false,
+  "Task1_status": "REVIEW PENDING",
+  "Task2_started": false
+}

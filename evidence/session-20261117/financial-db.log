@@ -1,0 +1,49 @@
+Traceback (most recent call last):
+  File "/workspace/come-in-current/evidence/session-20261117/financial-db-acceptance.py", line 59, in <module>
+    asyncio.run(main())
+  File "/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/workspace/come-in-current/evidence/session-20261117/financial-db-acceptance.py", line 39, in main
+    oid,pid=await seed()
+            ^^^^^^^^^^^^
+  File "/workspace/come-in-current/evidence/session-20261117/financial-db-acceptance.py", line 21, in seed
+    await server.db.restaurant_orders.insert_one({'_id':oid,'total':120.0,'status':'delivered','payment_status':'paid','refund_status':'refund_requested'})
+  File "/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 875, in insert_one
+    self._insert_one(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 815, in _insert_one
+    self._database.client._retryable_write(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2099, in _retryable_write
+    return self._retry_with_session(retryable, func, s, bulk, operation, operation_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 1969, in _retry_with_session
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/_csot.py", line 126, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2022, in _retry_internal
+    ).run()
+      ^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2890, in run
+    res = self._read() if self._is_read else self._write()
+                                             ^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 3103, in _write
+    return self._func(self._session, conn, self._retryable)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 813, in _insert_command
+    _check_write_command_response(result)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py", line 365, in _check_write_command_response
+    _raise_last_write_error(write_errors)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py", line 335, in _raise_last_write_error
+    raise DuplicateKeyError(error.get("errmsg"), 11000, error)
+pymongo.errors.DuplicateKeyError: E11000 duplicate key error collection: comein_disposable_test_financial_20261117.restaurant_orders index: customer_id_1_idempotency_key_1 dup key: { customer_id: null, idempotency_key: null }, full error: {'index': 0, 'code': 11000, 'errmsg': 'E11000 duplicate key error collection: comein_disposable_test_financial_20261117.restaurant_orders index: customer_id_1_idempotency_key_1 dup key: { customer_id: null, idempotency_key: null }', 'keyPattern': {'customer_id': 1, 'idempotency_key': 1}, 'keyValue': {'customer_id': None, 'idempotency_key': None}}

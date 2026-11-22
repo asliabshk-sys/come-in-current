@@ -1,0 +1,28 @@
+D01 PASS 
+D02 FAIL Diagnostic authorization boundary not enforced
+D03 FAIL Diagnostic authorization boundary not enforced
+D04 FAIL Diagnostic authorization boundary not enforced
+D05 FAIL Diagnostic authorization boundary not enforced
+D06 FAIL Diagnostic authorization boundary not enforced
+D07 FAIL Diagnostic authorization boundary not enforced
+D08 FAIL Diagnostic authorization boundary not enforced
+D09 FAIL Diagnostic authorization boundary not enforced
+D10 PASS 
+D11 PASS 
+D12 PASS 
+D13 FAIL Oversized diagnostic name was accepted
+D14 FAIL Empty diagnostic name was accepted
+D15 PASS 
+R01 PASS 
+R02 PASS 
+R03 PASS 
+R04 PASS 
+R05 FAIL Demoted in-flight actor retained mutation authority
+R06 FAIL Concurrent cross-demotion removed every admin
+R07 FAIL Concurrent cross-demotion removed every admin
+R08 FAIL Concurrent cross-demotion removed every admin
+R09 FAIL Concurrent cross-demotion removed every admin
+R10 FAIL Aborted role write left a committed user change
+R11 FAIL Unavailable transactions allowed standalone role mutation
+R12 PASS 
+{"counts": {"PASS": 10, "FAIL": 17, "ERROR": 0, "SKIPPED": 0}, "database_count": 27}

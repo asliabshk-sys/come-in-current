@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="1" tests="24" time="1.955" timestamp="2026-11-20T06:40:49.850572+00:00" hostname="79f36a8fe5e1"><testcase classname="" name="test_health" time="0.005" /><testcase classname="" name="test_register_login_me" time="0.814" /><testcase classname="" name="test_me_unauth" time="0.002" /><testcase classname="" name="test_shop_mine" time="0.278" /><testcase classname="" name="test_duplicate_shop_rejected" time="0.003" /><testcase classname="" name="test_availability_blocked_until_approved" time="0.003" /><testcase classname="" name="test_public_list_hides_pending" time="0.002" /><testcase classname="" name="test_public_shop_detail_hidden_until_approved" time="0.002" /><testcase classname="" name="test_admin_approves_shop" time="0.274" /><testcase classname="" name="test_non_admin_cannot_approve" time="0.003" /><testcase classname="" name="test_availability_after_approval" time="0.008" /><testcase classname="" name="test_product_crud" time="0.014" /><testcase classname="" name="test_product_validation" time="0.005" /><testcase classname="" name="test_product_delete" time="0.009" /><testcase classname="" name="test_order_create_guest" time="0.017" /><testcase classname="" name="test_order_customer_and_seller_views" time="0.298" /><testcase classname="" name="test_order_empty_items_rejected" time="0.002" /><testcase classname="" name="test_request_anything" time="0.015" /><testcase classname="" name="test_agent_assist" time="0.014" /><testcase classname="" name="test_admin_orders" time="0.003" /><testcase classname="" name="test_admin_endpoints_require_admin" time="0.011"><failure message="AssertionError: /status expected 403 got 200&#10;assert 200 == 403&#10; +  where 200 = &lt;Response [200]&gt;.status_code">s = &lt;requests.sessions.Session object at 0x7f280e319510&gt;
+customer = {'token': '[REDACTED_SYNTHETIC_JWT]', 'phone': '9999900000', 'role': 'customer', ...}, 'email': 'TEST_cust_d1359320@test.com', 'password': '[REDACTED_SYNTHETIC_FIXTURE]'}
+
+    def test_admin_endpoints_require_admin(s, customer):
+        for ep in ["/admin/shops", "/admin/orders", "/admin/requests/anything", "/admin/requests/assist", "/status"]:
+            r = s.get(f"{API}{ep}", headers=h(customer["token"]))
+&gt;           assert r.status_code == 403, f"{ep} expected 403 got {r.status_code}"
+E           AssertionError: /status expected 403 got 200
+E           assert 200 == 403
+E            +  where 200 = &lt;Response [200]&gt;.status_code
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-before-candidate-v2/test-copy/backend_test.py:368: AssertionError</failure></testcase><testcase classname="" name="test_status_diagnostics_require_admin" time="0.003"><failure message="AssertionError: assert 200 == 401&#10; +  where 200 = &lt;Response [200]&gt;.status_code&#10; +    where &lt;Response [200]&gt; = get('http://127.0.0.1:46053/api/status', headers={})&#10; +      where get = &lt;requests.sessions.Session object at 0x7f280e319510&gt;.get">s = &lt;requests.sessions.Session object at 0x7f280e319510&gt;
+admin = {'token': '[REDACTED_SYNTHETIC_JWT]'user': {'name': 'Come In Admin', 'email': 'completion.admin.b0130f83@example.com', 'phone': '', 'role': 'admin', ...}}
+customer = {'token': '[REDACTED_SYNTHETIC_JWT]', 'phone': '9999900000', 'role': 'customer', ...}, 'email': 'TEST_cust_d1359320@test.com', 'password': '[REDACTED_SYNTHETIC_FIXTURE]'}
+shop_owner = {'token': '[REDACTED_SYNTHETIC_JWT]', 'user': {'name': 'Owner', 'email': 'test_shop_2b5fdc0c@test.com', 'phone': '', 'role': 'customer', ...}}
+
+    def test_status_diagnostics_require_admin(s, admin, customer, shop_owner):
+        for headers, expected in [({}, 401), (h(customer["token"]), 403), (h(shop_owner["token"]), 403)]:
+&gt;           assert s.get(f"{API}/status", headers=headers).status_code == expected
+E           AssertionError: assert 200 == 401
+E            +  where 200 = &lt;Response [200]&gt;.status_code
+E            +    where &lt;Response [200]&gt; = get('http://127.0.0.1:46053/api/status', headers={})
+E            +      where get = &lt;requests.sessions.Session object at 0x7f280e319510&gt;.get
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-before-candidate-v2/test-copy/backend_test.py:373: AssertionError</failure></testcase><testcase classname="" name="test_image_upload" time="0.007"><skipped type="pytest.skip" message="Object storage unavailable">/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-before-candidate-v2/test-copy/backend_test.py:397: Object storage unavailable</skipped></testcase><testcase classname="" name="test_image_upload_unauth" time="0.002" /></testsuite></testsuites>

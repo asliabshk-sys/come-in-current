@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "checks": [
+    "CUSTOMER real UI login",
+    "CUSTOMER /orders renders",
+    "CUSTOMER /delivery-partner renders",
+    "SELLER real UI login",
+    "SELLER /seller/products renders",
+    "SELLER /seller/support renders",
+    "RESTO real UI login",
+    "RESTO /restaurant/dashboard renders",
+    "RESTO /restaurant/orders renders",
+    "ADMIN real UI login",
+    "ADMIN /admin renders",
+    "ADMIN /admin-delivery-partners renders"
+  ],
+  "pageErrors": [],
+  "scope": "Web login/render only; no provider/device workflows"
+}

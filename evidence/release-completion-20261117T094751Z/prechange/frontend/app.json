@@ -1,0 +1,64 @@
+{
+  "expo": {
+    "name": "Come In",
+    "slug": "come-in",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/branding/come-in-official-app-icon-from-reference.png",
+    "scheme": "frontend",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.emergent.doorstepmarketplace.eulkc9"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/come-in-adaptive-icon-reference.png",
+        "backgroundColor": "#FFE84D"
+      },
+      "package": "com.emergent.doorstepmarketplace.eulkc9"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/images/come-in-favicon-reference.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/come-in-splash-logo-reference.png",
+          "imageWidth": 300,
+          "resizeMode": "contain",
+          "backgroundColor": "#FFE84D"
+        }
+      ],
+      "expo-font",
+      "expo-image",
+      "expo-secure-store",
+      "expo-web-browser",
+      "expo-status-bar",
+      "@react-native-vector-icons/feather",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "COME-IN uses your selected product photo only to identify matching products.",
+          "cameraPermission": "COME-IN uses your camera only when you choose to take a product photo.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "COME-IN uses your microphone only when you choose to record a shopping request.",
+          "recordAudioAndroid": true,
+          "enableBackgroundRecording": false
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

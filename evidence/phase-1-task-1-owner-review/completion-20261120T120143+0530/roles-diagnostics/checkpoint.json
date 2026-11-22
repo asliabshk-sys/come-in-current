@@ -1,0 +1,24 @@
+{
+  "timestamp_Asia_Kolkata": "2026-11-20T12:11:24.328512+05:30",
+  "last_completed_operation": "Candidate27casebefore/afterrun and source/runner/XML/hash verification complete.",
+  "before": {
+    "PASS": 10,
+    "FAIL": 17,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "after": {
+    "PASS": 27,
+    "FAIL": 0,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "production_edits": 0,
+  "candidate_scope": [
+    "StatusCheckCreate",
+    "create_status_check",
+    "list_status_checks",
+    "admin_update_user_role"
+  ],
+  "next": "Parent sequential merge and actual-source regression;do not rerun this baseline without a reason. No operation running/interrupted. Original evidence preserved."
+}

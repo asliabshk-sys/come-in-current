@@ -1,0 +1,28 @@
+IP01 FAIL Trusted-proxy client identity mismatch
+IP02 FAIL Trusted-proxy client identity mismatch
+IP03 PASS 
+IP04 FAIL Trusted-proxy client identity mismatch
+IP05 PASS 
+IP06 FAIL Trusted-proxy client identity mismatch
+IP07 FAIL Trusted-proxy client identity mismatch
+IP08 FAIL Trusted-proxy client identity mismatch
+IP09 FAIL Trusted-proxy client identity mismatch
+IP10 FAIL Trusted-proxy client identity mismatch
+IP11 PASS 
+IP12 PASS 
+IP13 FAIL Trusted-proxy client identity mismatch
+IP14 FAIL Trusted-proxy client identity mismatch
+RATE01 PASS 
+RATE02 PASS 
+RATE03 FAIL Concurrent check/record overshoots or partially charges rejected request
+RATE04 FAIL New bucket allocation or atomic subject capacity failed
+RATE05 FAIL Shared-IP cap overshot or legitimate configured slots were lost
+RATE06 PASS 
+RATE07 PASS 
+RATE08 FAIL Partial counter update committed after second-key failure
+RATE09 PASS 
+LOGIN01 PASS 
+LOGIN02 PASS 
+LOGIN03 FAIL Concurrent login failures overshot final subject slot
+LOGIN04 PASS 
+{"counts": {"PASS": 12, "FAIL": 15, "ERROR": 0, "SKIPPED": 0}, "database_retained": "comein_rate_proxy_before_20261120t064411z_f0592e70"}

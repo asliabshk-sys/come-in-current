@@ -1,0 +1,678 @@
+{
+  "classification": "VERIFIED",
+  "scope": "Static possibility inventory only;not safe-to-execute permission.",
+  "GET_endpoints": [
+    {
+      "path": "/api/",
+      "function": "root",
+      "line": 669,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/status",
+      "function": "list_status_checks",
+      "line": 694,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/referrals/me",
+      "function": "referral_dashboard",
+      "line": 901,
+      "possible_local_transitive_write_sites": [
+        {
+          "function": "_ensure_referral_code",
+          "line": 722,
+          "method": "update_one",
+          "receiver": "db.users",
+          "scope": "Possible source-level write site;branch and receiver must be interpreted,not executed."
+        }
+      ],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/referral/validate",
+      "function": "validate_referral",
+      "line": 943,
+      "possible_local_transitive_write_sites": [
+        {
+          "function": "validate_referral",
+          "line": 945,
+          "method": "insert_one",
+          "receiver": "db.referral_link_events",
+          "scope": "Possible source-level write site;branch and receiver must be interpreted,not executed."
+        }
+      ],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/referral",
+      "function": "open_referral",
+      "line": 950,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/referrals",
+      "function": "admin_referrals",
+      "line": 960,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/auth/me",
+      "function": "me",
+      "line": 1059,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/uploads/{storage_path:path}",
+      "function": "serve_upload",
+      "line": 1185,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/shops/mine",
+      "function": "my_shop",
+      "line": 1251,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/shops",
+      "function": "list_shops",
+      "line": 1289,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/shops/{shop_id}",
+      "function": "get_shop",
+      "line": 1322,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/chand/feedback/mine",
+      "function": "my_chand_feedback",
+      "line": 1394,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/chand/feedback",
+      "function": "admin_chand_feedback",
+      "line": 1399,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/chand/feedback/summary",
+      "function": "admin_chand_feedback_summary",
+      "line": 1404,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/assistant/health",
+      "function": "assistant_health",
+      "line": 1644,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/catalog/master-products",
+      "function": "search_master_products",
+      "line": 1897,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/shops/{shop_id}/catalogue-import/jobs/{job_id}",
+      "function": "get_catalogue_import_job",
+      "line": 2103,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/shops/{shop_id}/catalogue-import/jobs",
+      "function": "list_catalogue_import_jobs",
+      "line": 2154,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/shops/{shop_id}/catalogue-import/categories",
+      "function": "list_catalogue_import_categories",
+      "line": 2162,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/shops/{shop_id}/products/import-template",
+      "function": "shop_product_import_template",
+      "line": 2684,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/catalog-import-history",
+      "function": "admin_catalog_import_history",
+      "line": 2696,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/catalog-price-audit",
+      "function": "admin_catalog_price_audit",
+      "line": 2702,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/catalog/price-comparison",
+      "function": "compare_master_product_prices",
+      "line": 2708,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/retail-price-import/template",
+      "function": "retail_price_import_template",
+      "line": 2760,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/catalog/retail-prices",
+      "function": "public_retail_prices",
+      "line": 2863,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/retail-price-import/history",
+      "function": "admin_retail_price_import_history",
+      "line": 2875,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/shops/{shop_id}/products",
+      "function": "list_shop_products",
+      "line": 2881,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/catalog/products",
+      "function": "list_catalog_products",
+      "line": 2899,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/orders/mine",
+      "function": "my_orders",
+      "line": 3446,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/shops/{shop_id}/orders",
+      "function": "shop_orders",
+      "line": 3533,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/orders/{order_id}",
+      "function": "get_grocery_order_details",
+      "line": 3634,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/orders/{order_id}/tracking",
+      "function": "get_order_tracking",
+      "line": 3643,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/requests/anything/mine",
+      "function": "my_requests_anything",
+      "line": 3720,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/announcements",
+      "function": "admin_announcements",
+      "line": 3769,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/dashboard",
+      "function": "admin_dashboard",
+      "line": 3828,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/announcements/active",
+      "function": "active_announcements",
+      "line": 3854,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/users",
+      "function": "admin_users",
+      "line": 3871,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/shops",
+      "function": "admin_shops",
+      "line": 3894,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/orders",
+      "function": "admin_orders",
+      "line": 3917,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/earnings",
+      "function": "admin_earnings",
+      "line": 4121,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/earnings/ledger",
+      "function": "admin_earnings_ledger",
+      "line": 4155,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/earnings/transactions",
+      "function": "admin_earnings_transactions",
+      "line": 4166,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/earnings/mine",
+      "function": "shopkeeper_earnings",
+      "line": 4193,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/earnings/bank-account",
+      "function": "admin_platform_bank_account",
+      "line": 4290,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/shops/{shop_id}/bank-account",
+      "function": "get_shop_bank_account",
+      "line": 4300,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/restaurants/{restaurant_id}/bank-account",
+      "function": "get_restaurant_bank_account",
+      "line": 4314,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/earnings/settlements",
+      "function": "admin_settlement_list",
+      "line": 4340,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/requests/anything",
+      "function": "admin_requests_anything",
+      "line": 4467,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/requests/assist",
+      "function": "admin_agent_assist",
+      "line": 4473,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/restaurants",
+      "function": "list_restaurants",
+      "line": 4651,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/restaurants/mine",
+      "function": "my_restaurants",
+      "line": 4673,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/restaurants/{restaurant_id}",
+      "function": "restaurant_detail",
+      "line": 4691,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/restaurants/{restaurant_id}/serviceability",
+      "function": "restaurant_delivery_serviceability",
+      "line": 4698,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/restaurants/{restaurant_id}/menu",
+      "function": "restaurant_menu",
+      "line": 4732,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/addresses",
+      "function": "list_addresses",
+      "line": 4775,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/restaurant/cart",
+      "function": "get_restaurant_cart",
+      "line": 4812,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/restaurant/orders/mine",
+      "function": "my_restaurant_orders",
+      "line": 4924,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/restaurants/{restaurant_id}/orders",
+      "function": "restaurant_orders",
+      "line": 4931,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/restaurant/payments/config",
+      "function": "restaurant_payment_config",
+      "line": 4984,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/restaurant/support/mine",
+      "function": "my_restaurant_support",
+      "line": 5500,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/seller/support",
+      "function": "seller_order_support",
+      "line": 5504,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/restaurant/support",
+      "function": "admin_restaurant_support",
+      "line": 5578,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/restaurant/orders",
+      "function": "admin_restaurant_orders",
+      "line": 5792,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/restaurants",
+      "function": "admin_restaurants",
+      "line": 5796,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/home-services/fee-policy",
+      "function": "get_home_service_fee_policy",
+      "line": 5954,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/home-services/providers",
+      "function": "list_service_providers",
+      "line": 5996,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/home-services/providers/mine",
+      "function": "my_service_provider",
+      "line": 6011,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/home-services/appointments/mine",
+      "function": "my_service_appointments",
+      "line": 6085,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/home-services/appointments/provider",
+      "function": "provider_service_appointments",
+      "line": 6089,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/home-services/providers",
+      "function": "admin_service_providers",
+      "line": 6144,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/admin/grocery/refunds",
+      "function": "admin_grocery_refunds",
+      "line": 6324,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/grocery/payments/config",
+      "function": "grocery_payment_config",
+      "line": 6332,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/notifications/mine",
+      "function": "my_notifications",
+      "line": 6628,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/notifications/unread-count",
+      "function": "my_unread_notifications",
+      "line": 6635,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/products/{product_id}/restock-alert",
+      "function": "restock_alert_status",
+      "line": 6655,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/delivery-partner/provider-status",
+      "function": "delivery_partner_provider_status",
+      "line": 6769,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/delivery-partner/application/mine",
+      "function": "my_delivery_partner_application",
+      "line": 6903,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/delivery-partner/referral",
+      "function": "delivery_partner_referral",
+      "line": 6911,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/delivery-partner/admin/applications",
+      "function": "admin_delivery_partner_applications",
+      "line": 6920,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/delivery-partner/admin/applications/{application_id}",
+      "function": "admin_delivery_partner_application_detail",
+      "line": 6927,
+      "possible_local_transitive_write_sites": [
+        {
+          "function": "admin_delivery_partner_application_detail",
+          "line": 6936,
+          "method": "insert_one",
+          "receiver": "db.delivery_partner_audit",
+          "scope": "Possible source-level write site;branch and receiver must be interpreted,not executed."
+        }
+      ],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    },
+    {
+      "path": "/api/delivery-partner/access",
+      "function": "delivery_partner_access",
+      "line": 6999,
+      "possible_local_transitive_write_sites": [],
+      "classification": "VERIFIED",
+      "scope": "Bounded static local call-graph only. Presence is a possible write,not proof every request writes. Absence does not prove purity:dynamic aliases/external helpers/telemetry/conditions are not fully resolved. No GET request issued."
+    }
+  ]
+}

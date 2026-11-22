@@ -1,0 +1,79 @@
+[
+  {
+    "timestamp": "2026-11-19T14:10:13.926109+05:30",
+    "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+    "command": [
+      "java",
+      "-version"
+    ],
+    "exit_code": 0,
+    "stdout_artifact": "java-version.stdout",
+    "stderr_artifact": "java-version.stderr",
+    "scope": "Metadata/source resolution only;not native compilation or runtime linking."
+  },
+  {
+    "timestamp": "2026-11-19T14:10:13.965492+05:30",
+    "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+    "command": [
+      "node",
+      "node_modules/expo-modules-autolinking/bin/expo-modules-autolinking.js",
+      "react-native-config",
+      "--platform",
+      "android",
+      "--json"
+    ],
+    "exit_code": 0,
+    "stdout_artifact": "android-autolinking-current.stdout",
+    "stderr_artifact": "android-autolinking-current.stderr",
+    "scope": "Metadata/source resolution only;not native compilation or runtime linking.",
+    "razorpay": {
+      "root": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay",
+      "name": "react-native-razorpay",
+      "platforms": {
+        "android": {
+          "sourceDir": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay/android",
+          "packageImportPath": "import com.razorpay.rn.RazorpayPackage;",
+          "packageInstance": "new RazorpayPackage()",
+          "buildTypes": [],
+          "libraryName": "RNRazorpayCheckoutSpec",
+          "componentDescriptors": [],
+          "cmakeListsPath": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay/android/build/generated/source/codegen/jni/CMakeLists.txt",
+          "cxxModuleCMakeListsModuleName": null,
+          "cxxModuleCMakeListsPath": null,
+          "cxxModuleHeaderName": null,
+          "isPureCxxDependency": false
+        }
+      }
+    },
+    "razorpay_dependency_detected": true
+  },
+  {
+    "timestamp": "2026-11-19T14:10:14.704612+05:30",
+    "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+    "command": [
+      "node",
+      "node_modules/expo-modules-autolinking/bin/expo-modules-autolinking.js",
+      "react-native-config",
+      "--platform",
+      "ios",
+      "--json"
+    ],
+    "exit_code": 0,
+    "stdout_artifact": "ios-autolinking-current.stdout",
+    "stderr_artifact": "ios-autolinking-current.stderr",
+    "scope": "Metadata/source resolution only;not native compilation or runtime linking.",
+    "razorpay": {
+      "root": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay",
+      "name": "react-native-razorpay",
+      "platforms": {
+        "ios": {
+          "podspecPath": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay/react-native-razorpay.podspec",
+          "version": "3.0.0",
+          "configurations": [],
+          "scriptPhases": []
+        }
+      }
+    },
+    "razorpay_dependency_detected": true
+  }
+]

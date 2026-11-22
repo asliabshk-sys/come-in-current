@@ -1,0 +1,3642 @@
+{
+  "scope": "All reviewed offline backend/source-contract tests,unmodified;not provider/device/live acceptance",
+  "started_UTC": "2026-11-19T08:40:05.003614+00:00",
+  "finished_UTC": "2026-11-19T08:40:51.732500+00:00",
+  "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend",
+  "command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-m",
+    "pytest",
+    "tests",
+    "-q",
+    "-n",
+    "0",
+    "-p",
+    "no:cacheprovider",
+    "-p",
+    "backend_network_guard",
+    "--ignore=tests/test_preview_runtime_e2e.py",
+    "--ignore=tests/test_batch_5task_runtime.py",
+    "--ignore=tests/test_iter_notifications_admin_measured.py",
+    "--ignore=tests/test_task5_live_mongo_transactions.py",
+    "--ignore=tests/backend_test.py",
+    "--junitxml=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline.xml",
+    "--basetemp=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline-tmp"
+  ],
+  "python": "/workspace/come-in-tools/py311/bin/python",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "exit_code": 0,
+  "excluded_network_suites": [
+    "test_preview_runtime_e2e.py",
+    "test_batch_5task_runtime.py",
+    "test_iter_notifications_admin_measured.py",
+    "test_task5_live_mongo_transactions.py",
+    "backend_test.py"
+  ],
+  "network": "Python socket connections fail closed;reviewed shell subprocesses only fake backup binary/restore refusal paths",
+  "cache_and_bytecode": "pytest cacheprovider disabled;PYTHONDONTWRITEBYTECODE=1;tmp_path outside source",
+  "source_before": {
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/catalogue_chand_adapter.py": "d46062e072c98333a5d4032ee88eecb3d1618a42bc113584860894d12e8065ee",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/catalogue_import_engine.py": "aa45e66150b4b2eca39e165eefccffbb5adde9e1337b20cf044f4db023aa8a9f",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/financial_rules.py": "572ee43ce5e4d775070b67ca73d0f2ce6fe4347395aaec622caeff680986b9e5",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/integrations/__init__.py": "ca2b225ec3d1b6a0e84fa20d7d7c225e87153ad2367cd911c38e0eee1b2b237e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/integrations/delivery_provider.py": "dc2f8ceec322c162907f461eb03282775b6108f23e05d2c7dddaa3a69f65f68e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/integrations/order_notifications.py": "80e78e5b6e4fa68d81cdb6219b862cbc0cc177a57f578e411d41abf1867da60a",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_config.py": "7c98c6cd6447d71db65dccbca7fc4688acc3862b13ce6104660c2e4a5bc8af1e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/payment_config.py": "91269aa376d204e31a235161c09be0f46409c6b6820ed788e1b4b8c92e8a967c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/payment_webhook.py": "f1870741c52e292e7ca019d508656670dbae886f52b065f65aa5a48de563b7a9",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/referral_rules.py": "e87665ccecb819854f6910c73c0f45fab66d0301a212e63097bcf47f33d4508b",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/refund_rules.py": "7d05702e7c36d8cd3e16d21e0e9d728cfb79a5c1ab7f8a5697eb9c24f3161afa",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/restaurant_pricing.py": "1f083ce73f8e6722b4578f0ba75edd68b295f1f5b6c3f4ae5061bd17da336583",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/restaurant_serviceability.py": "674b8f1d8e35d14f294ef3bfac6631cac959a12e41627d132469b9ddbb547258",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/security_config.py": "fe905d064168ec5cf76d2d4dfe9ec5dc656f7428a140cba15e45042f5d760001",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/backend_test.py": "a4e9c990c972790e4f6f6c9fd0aca31d280c3bdac5bc5a0ab9cc56d34d5935b9",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/seed_preview_test_accounts.py": "276a1a5d6a291db9351cec34daf1ff2474c4bb803a3b97645d92ef9d58520f1e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_assistant_context_contract.py": "50cf7bf7297fb06f2f0195767d3119f33494794b5bb2589a6944119e452cfa84",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_batch_5task_runtime.py": "35b3215536d929fcd506479fae565713ee06f0490299ab1372ceb63e756de4d0",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalog_import_security_contract.py": "2c965472655c0e5d33dc7a3d7bc2304f58f7b946a382f3d398a54fe5c99f0967",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalog_reference_minimum.py": "3c48248b23269dd47d1018b1af4d13b354a4f543f43c4f9a62ee8463034343fa",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_chand_adapter.py": "768425aecb161d3b5411db943d0f92f0121f99cd36d069090aa16bf9a97b6458",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_import_job_api_contract.py": "06d397b82f7c36763fb5fc79335c5d8cd539a9d2361aa47e56962c1d8243448f",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_import_workflow_contract.py": "ac041fdeecefe46ef166810f2978d7a7a62d77dae13e25bbe681884fbfdfb485",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_transaction_apply_offline.py": "28f2048b4d7b1b0be5f200d655a12aa19b691242d74182e5ca35203e90602a61",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_catalogue_validator_migration.py": "0cd1aed9a921e2f0b94eefe2fcc3d550ca6fd32f68a8fb205da828a51b8ead6e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_demo_contract.py": "347ea51e9ca00a8b76bfeaa6b0bc6685a59da089a4a29cded9be8cdb6b03a06c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_feedback_contract.py": "f01889102344304592f8107ead6ddb190ba7344e8359b20e1ec26e373ee766be",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_localization_contract.py": "d28dba696672ee9e47d1b300cb8008e76b8bd3b21236979b163b718aac9ff797",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_media_contract.py": "689f9b926a29baf4d14ad2613dca247eebf7dffdab9a343b5bb38ffa8551b09e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_ollama_provider_contract.py": "9ba12d2c8fd7f967d1683f53d8844fbfdba7a06436c1584c6edca78baf5dad35",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_chand_shopping_integration_contract.py": "9f2e79e05117bfc0fb8e771eee9f59f87a13e1d304747fd70661200ecff3fba2",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_delivery_partner_onboarding_contract.py": "7ba9cecec4b3e5f6b2db7308497f7c27070cca2940f89d6a5041c33eee3fb861",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_delivery_tracking_contract.py": "745d67212a79974aad4e9f77cbffd1378889efc9514e3920f23149a1f4e82b32",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_directory_only_category_contract.py": "ef74727b381a8315a3d5e9722c047342a4927e3cb8045bcc998110279c98f46b",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_final_payment_transition_races.py": "7dfb070f7429abfc49aa88a627f281c481156b547d9efe6306cb15ac1e6333be",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_financial_rules.py": "0a0c3478ab0ea28038f58100f3bfcd54c686fdb4328a263dd42b2d92659ed187",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_financial_security_contract.py": "b023d65b62390f66d20ce741f601f533c775795c07a1a471f69640b57db917de",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_frontend_contracts.py": "88729edf5570aa56e0a524caae9aeab10ef1e6c867182c916c4e923630fcbe41",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_functional_blockers_regression.py": "9fe007d9ef3f0839eac8b9cfd21dfd1e98e978887b0ccf56931818b38b5bd995",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_capture_transaction_offline.py": "98b6385f9722cba618a5d99cb7a692493fe475db49337e022da0f9f9d7321c84",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_checkout_security_contract.py": "2956c5ffe8a0b195ea84b6a2d0a441c2d7574a115fab4df92c4b5d613904e85c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_pay_at_shop_status_contract.py": "f26128aff897e1f8c555bca80f86d7a3d4c78e9993433458e6dd6c292d2dc66d",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_refund_eligibility.py": "9101564d1c0be2cef9d4c82f789e8938dc52a2b94f813ab3c463d71300e57338",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_grocery_refund_local_integration.py": "3f0fd3472a92534275a9b3c32d01b9fdac6152970a8aab714cdc013b71b2567f",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_home_services_remaining_contract.py": "63be79d5b2689ba70b935990437cc00febe85db33ed3d07aa9eb2e2fbfdb5b5f",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_image_upload_type_boundary.py": "9b53945200d6eb15ad4ed75de55e4fd03ce4e163b7ca58471c50c55b2669decd",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_iter_notifications_admin_measured.py": "6ed2254af71c42db2b86140aed4d579ecd0cdcc5ca85ef267cc620df50a53571",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_master_catalog_api_contract.py": "2c0a68e617520c3dd455acda883fb287b24bbcf9e8aa1c3894904989a2541014",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_master_catalog_seller_ui_contract.py": "897fdcd092512635af8988af715fc22416911d98afa62ea496c4fca196e3a274",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_backup_safety_offline.py": "58b359f05dfe73147a3594831556b3f1dc7ebe40af4393b899a1a0bc9daee6ee",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_config.py": "fff096c24a0f1a7c0bf74b24cde23767ffa3e1d89d97478728d32af7fa6d2eaa",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_portability_tool.py": "83ecfbec1df574fc06fd49c54cf1fe353321c7ebfb93d9b60ca013fce4de3784",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_transactions.py": "edb13ec2ce29af32a744f03886735e6c941bc1a6e32390ea3f35915fef023704",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_online_shop_product_listing_contract.py": "7831d414f412e54989867d2f7f62ecf38da77ad4380026edebdd48c7d0ad8ac7",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_p0_payment_checkout_completion.py": "aac547707930b2ede703c17c4cccc2be1baf901316296116a990a73751db593d",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_p0_restaurant_delivery_panel.py": "45eb0a82cdf5fa3e1bec75d0cf7a85275b88fa5a67e85ded138cf69301c3876c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_payment_environment_boundary.py": "03f900295de6de210561fe3b4d3d20fd84da908bab81925a8d215b9ea55f48f0",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_payment_webhook_local_integration.py": "d1811f5b465311bd08cfba5be16594e27eabca6dca461696d841f4d4676cb873",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_preview_runtime_e2e.py": "63ae057dedb96604d498ceafea24ec5ab6b1bc9c81609359cf931d1e131bed6e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_provider_adapter_contracts.py": "e25d0146b66ee9b64432493d7c23022f1a13e8a096b857d4d545fe5ae0dfce65",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_referral_implementation_contract.py": "e749067b2f7768e090f9f2934281ceceb50c2f7b9b3ebf7bd0db563378663532",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_referral_rules.py": "22db3efc5953096e74677d937e93ceb8d6fdf405b40a06ec58fe1cffdb30d960",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_api_contract.py": "a5cbf0085a4e83d6465ecf6932a946b4e4c4d3f99b57268a23d7fa4e7db24fbb",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_capture_transaction_offline.py": "fdf8de7ac76a630dd9b43ed79464e8cc06953281dd0199039c9e8f6b1494de2c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_pricing.py": "4c6998598dad7be39271af53f1c2ca17b8c2038ede7608c62c70534de845700c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_refund_webhook_transaction_offline.py": "c3970297a1b489b4d4e26eaa88a12a8a2fe2a1694484f2edc966ea70b88668d4",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_restaurant_serviceability.py": "8f8085bce77efd00aa243b61300b9b236f47134372a3cb0f377ba125dc70e793",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_role_security_retail_import_contract.py": "c662f797e136190bcf29bee85ae0be16e4d04f25ce951c189a4e1cbfc8dfbfea",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shared_system_integration_contract.py": "0278c5ee3d818a731bb97f622490c1a79b18f0897527bf5ea6fe9c4597a1cc6e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shop_registration_browse_entrypoints.py": "0c4190d2cd94ff5af3209ad2fd07a8d7393f5b1515563530f13ad2c4f63c153d",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shopping_cart_variants_contract.py": "e040b403a3bf302bdc603f9f092d3948a9d5acd5f13310d36d0abe4ffd64ed97",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shopping_catalog_contract.py": "c090d00bae13d0f267900596e024e83ec51f6fad502738e6c166887bb07e1987",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_shopping_rewards_redemption_contract.py": "1dfae876a6409a138e329dd8c66e19b38aff00e9f125da768c0beb41a3938988",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_standard_ui_image_shop_cta_contract.py": "45df4b3247f47a41b5b26c363cbdf75151546573cca5aff31cfa65b057b89eea",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_step1_final_delivery_partner_transactions_offline.py": "7557719eb9a3746bd6f374d56c44283396406ac21c61670697fe9b8a73442369",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_step1_final_refund_admin_offline.py": "f9dcb811e5ea98e83e8a4dd86e4f9eb36df9617ef4cd4740eaa7541642ea1b6b",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_step1_final_restore_index_profile_offline.py": "c326a30993a7d20817ff6ec7db89c966739687fe8f2b7ed501ea6d7fbf7ebef6",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_targeted_tasks_9_12_15_18_21.py": "188b24e701e1ad5adc6e987681c94dbc7725d70766f71f67fe10dfe26e98d249",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task10_payment_refund_notification_contract.py": "295dec77bb5c0891a4526e4de0ca04cff9bca96b7a7b7fd0c9fa7adf7f4f0e91",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task11_grocery_refund_status_contract.py": "049c4c08ee551f8a5c99b0a50677bccb66748879e1986475a86f05265e028b90",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task11_live_order_tracking_contract.py": "4409608fe859d1e77e2af419dc1d12c8c1d2ff4521ec2f95bd59d2091ba3e36d",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task12_customer_support_contract.py": "1b92dae8da9fe78e2001a47417848c52d12ec877d641c6de4c18c568ea54e4bf",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task13_seller_support_status_contract.py": "dca531bfad3d6ab44369d66e666537b275b47af49f09f9bec341eb75c7daedea",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task14_seller_support_ui_contract.py": "ab2b9a65e31e583af353e2221a5dcc806d2ce59ef874f669570349b8bfca13d0",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task16_production_cors_contract.py": "2b7f03aef63baa6d4a9287214eac08077e3fa586d6af4c1f31d42dea370e9b04",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task17_grocery_payment_gate_contract.py": "8ec19d148172f189ca1aa08ac10811e9a3b2ead7f191001a1395444c55078662",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task18_refund_safety_iteration3.py": "23ab4a264750c3b130e56bec4f8772d7a891972b36fde8b3cef3ffca43e6e346",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task19_seller_admin_workflows_contract.py": "259509f438227ccc84aa96e9a5278cc4db0bd09a60eb2056541c56e8ee9c8949",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task20_product_catalog_variants_stock_contract.py": "551af2a78fa572de763ea32f4c9dee9305cb92704f4ac335ad7f8f50601237a9",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task21_customer_shopping_workflow_contract.py": "b488f0df6ff591ae8c9e6c20566bce0dd99c6f6bc210794b3ed7d587de11e64e",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task22_checkout_audit_contract.py": "06a858cecc8eaf430e89b8d3f82c28266a984a9704823422571fbf8bde63de8f",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task23_order_tracking_authorization_contract.py": "8b832c11381bd9dc97c4484366e1fcd56c72470b2e65897b38f87c9468f65382",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task24_repeat_order_contract.py": "ec7b00d8d37c1bf1e46aa24eea2e9daf285e9601206563befe7db9258ecaa94b",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_customer_measured_shopping_contract.py": "7e852b54f9cb8b41cbbe628993b8728d2b61f8e5e2170f1d7b73f08c53137eb8",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_live_mongo_transactions.py": "99e2cbaf0a8e1ade73294ed127c6ecb0f2acad4987aa896468bcea444846ef50",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_measured_import_contract.py": "2ecf5916ccb9983f94930c9db69845a0617ad765d5a26e35c868e04c812199fb",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task5_task7_ui_implementation_contract.py": "e6514698347b2fa500be113b2a170e1cbdf51f7af8f7ca5cc043c01dcafd3c98",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_task9_order_actions_contract.py": "7dba730afa3fa39bca9b3d1e4fc7141a438e8435ba7f0541d3c2ccc3f39689bd",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_transaction_commit_retry.py": "3ca910cad4f85917780bbfcac54167650d979b64f8a5256523a732fcc3ae936a",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_universal_catalogue_import_engine.py": "e0bce41bc5c605f4046eaef324fb802f74b815d1dd268de209eae787b0a17e82",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_upload_allocation_bound.py": "242cd1bd61ff2d395338d82f62574c60f69fd1e54af961169935d8f5f37e6c77",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_webhook_envelope_security.py": "05165bdfa7180f77347d48cbfaaf152e4eaf9f7c14afec08f1987cf83de4e865",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/scripts/mongo/catalogue_audit_validator.py": "d98990088a4f2803828b68f08c4fc4c0ee95c9457e0d28a20acabe6df5e98a41",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/scripts/mongo/comein_mongo.py": "7296a9498f5037d2063bfb9af0b6d229e8aac24d680fe887a8270318e6d3a434",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/scripts/mongo/export_sanitized_preview_backup.py": "15e56ea455b3aaba09f1f464df37f49e18253febc222079584541a3fc99e6ba3",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/scripts/mongo/legacy_profile_disposable.py": "bcc4ea80d7322486ec08c5a147881f0d7a0c61bcea1a5593075f643ef3ebb4b5",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/scripts/mongo/verify_disposable_restore.py": "8162882f483d1056a8be97ed41697f8b575a2ab4e7e4d270f61d3fff1bac406b",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/pytest.ini": "6cb1fc884360a028c18965b664932f7caef56074ed2db617ae356876521b15b3",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/requirements.txt": "b6ea2378cf265d1d44b8c638a0fbbe92a507de63273f9bdc21334fbdcba194cb",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/package.json": "eec01c2532ab0f74ce42bb180e803c13c1e0781787cd5c867c1867dcc82cf863",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/yarn.lock": "29645e6b445f8bbda255b6a079558202a35e7993197bb93f69616cdcbb8d9ea2"
+  },
+  "source_changed": [],
+  "counts": {
+    "PASS": 574,
+    "FAIL": 0,
+    "SKIPPED": 6
+  },
+  "cases": [
+    {
+      "class": "tests.test_assistant_context_contract",
+      "name": "test_chand_context_endpoint_uses_bounded_query_and_language_allowlist",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_assistant_context_contract",
+      "name": "test_chand_retrieval_only_uses_approved_public_business_records",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_assistant_context_contract",
+      "name": "test_chand_provider_is_optional_and_prompt_marks_retrieved_text_untrusted",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_import_security_contract",
+      "name": "test_import_template_and_upload_are_authenticated_and_store_scoped",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_import_security_contract",
+      "name": "test_global_import_history_and_price_audit_are_admin_only",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_import_security_contract",
+      "name": "test_preview_has_no_writes_and_apply_is_explicit",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_import_security_contract",
+      "name": "test_sku_matching_rejects_brand_or_pack_identity_conflicts",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_import_security_contract",
+      "name": "test_unsupported_file_and_invalid_duplicate_rows_are_reported",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_import_security_contract",
+      "name": "test_import_rejects_duplicate_headers_identifiers_and_duplicate_targets",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_import_security_contract",
+      "name": "test_seller_import_template_is_available_from_seller_products_ui",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_import_security_contract",
+      "name": "test_import_requires_product_listing_fields_and_positive_bounded_price_stock",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_reference_minimum",
+      "name": "test_reference_catalog_has_minimum_per_supported_category",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_reference_minimum",
+      "name": "test_all_reference_categories_are_visible_in_customer_category_cards",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_reference_minimum",
+      "name": "test_reference_products_are_not_fake_shop_offers_or_orderable",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_reference_minimum",
+      "name": "test_category_count_does_not_claim_reference_items_are_in_stock",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalog_reference_minimum",
+      "name": "test_reference_catalog_names_are_not_duplicated_across_categories_and_placeholders_are_bundled",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_chand_adapter",
+      "name": "test_unconfigured_chand_returns_unknown_without_fake_suggestions",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_chand_adapter",
+      "name": "test_chand_suggestions_require_verbatim_evidence_and_never_replace_extracted",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_chand_adapter",
+      "name": "test_chand_provider_failure_keeps_reviewable_source",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_chand_adapter",
+      "name": "test_chand_rejects_invalid_numeric_values_and_prompt_injection",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_chand_adapter",
+      "name": "test_chand_retries_one_transient_provider_failure",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_import_job_api_contract",
+      "name": "test_job_create_and_retrieve_routes_are_authenticated_and_shop_scoped",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_import_job_api_contract",
+      "name": "test_job_preview_is_staged_and_does_not_publish_products",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_import_job_api_contract",
+      "name": "test_existing_csv_xlsx_import_endpoint_remains_present",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_import_workflow_contract",
+      "name": "test_import_workflow_endpoints_are_shop_scoped_and_separate_from_legacy_import",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_import_workflow_contract",
+      "name": "test_record_approval_requires_validation_and_bulk_skips_uncertain_ai",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_import_workflow_contract",
+      "name": "test_confirm_apply_transactions_only_approved_products_and_never_publishes",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_import_workflow_contract",
+      "name": "test_legacy_products_keep_backward_compatible_visibility_but_imported_require_approval",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_import_workflow_contract",
+      "name": "test_cart_quote_rejects_unapproved_import_before_pricing_and_stock_checks",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_import_workflow_contract",
+      "name": "test_checkout_reuses_quote_line_resolver_and_task5_contract_is_retained",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_import_workflow_contract",
+      "name": "test_review_actions_lock_after_seller_apply_confirmation",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_transaction_apply_offline",
+      "name": "test_atomic_import_commit_and_idempotent_repeat_returns_existing_ids",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_transaction_apply_offline",
+      "name": "test_partial_insert_error_rolls_back_job_product_stock_and_audit",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_transaction_apply_offline",
+      "name": "test_transient_retry_starts_clean_and_commits_only_once",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_transaction_apply_offline",
+      "name": "test_unknown_commit_is_reconciled_without_second_inventory_insert",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_transaction_apply_offline",
+      "name": "test_sku_conflict_with_another_import_is_refused_without_partial_writes",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_transaction_apply_offline",
+      "name": "test_ownership_is_rechecked_inside_transaction",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_transaction_apply_offline",
+      "name": "test_legacy_pending_emergent_import_can_finish_without_changing_review",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_validator_migration",
+      "name": "test_production_or_unconfirmed_target_fails_closed",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_validator_migration",
+      "name": "test_new_audit_schema_requires_provenance_count_product_ids_and_time",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_validator_migration",
+      "name": "test_never_overwrite_existing_nonempty_audit_collection",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_catalogue_validator_migration",
+      "name": "test_create_audit_collection_with_strict_error_validation",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_demo_contract",
+      "name": "test_chand_brand_disclosure_and_live_catalog_connection_are_present",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_demo_contract",
+      "name": "test_chand_has_four_explicit_role_modes_and_prompt_sets",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_demo_contract",
+      "name": "test_chand_chat_uses_live_catalog_or_safe_fallback_and_does_not_mutate_orders_or_payments",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_demo_contract",
+      "name": "test_chand_support_uses_authenticated_existing_support_api_only",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_demo_contract",
+      "name": "test_chand_does_not_trigger_real_refund_and_distinguishes_request_from_payment",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_demo_contract",
+      "name": "test_chand_support_has_confirmation_and_status_disclosures",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_demo_contract",
+      "name": "test_existing_home_screen_links_to_chand_without_replacing_modes",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_demo_contract",
+      "name": "test_refund_execution_remains_admin_only_and_customer_refund_api_is_absent",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_demo_contract",
+      "name": "test_existing_support_api_scopes_tickets_to_authenticated_user_and_checks_order_ownership",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_demo_contract",
+      "name": "test_existing_refund_flow_checks_paid_order_and_duplicate_refund_status",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_demo_contract",
+      "name": "test_chand_demo_has_safe_guidance_for_common_support_issues_and_unknown_requests",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_feedback_contract",
+      "name": "test_feedback_requires_authenticated_customer_and_validated_payload",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_feedback_contract",
+      "name": "test_feedback_minimizes_personal_data_and_redacts_common_secrets",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_feedback_contract",
+      "name": "test_admin_feedback_endpoints_are_role_protected_and_status_limited",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_feedback_contract",
+      "name": "test_chand_ui_submits_feedback_without_sending_transcript",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_feedback_contract",
+      "name": "test_admin_has_feedback_review_queue_and_status_actions",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_feedback_contract",
+      "name": "test_budget_plan_supports_live_packs_variants_measured_items_and_existing_cart",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_feedback_contract",
+      "name": "test_assistant_context_has_per_actor_minute_rate_limit_and_ttl_cleanup",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_feedback_contract",
+      "name": "test_party_planner_builds_catalog_search_and_reuses_budget_list",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_feedback_contract",
+      "name": "test_admin_feedback_summary_is_role_protected_and_aggregate_only",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_localization_contract",
+      "name": "test_chand_uses_shared_global_language_context_and_persisted_preference",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_localization_contract",
+      "name": "test_core_chand_ui_keys_have_english_hindi_and_punjabi_values",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_localization_contract",
+      "name": "test_chand_fetches_live_context_and_does_not_claim_unconfigured_ai_is_live",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_media_contract",
+      "name": "test_health_diagnostic_never_exposes_provider_credentials_or_claims_live_probe",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_media_contract",
+      "name": "test_transcription_is_authenticated_bounded_and_ephemeral",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_media_contract",
+      "name": "test_photo_vision_validates_content_calls_provider_and_searches_live_catalog",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_media_contract",
+      "name": "test_upload_rate_limits_are_separate_and_expire",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_media_contract",
+      "name": "test_frontend_api_client_has_authenticated_multipart_adapters",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_media_contract",
+      "name": "test_native_photo_and_voice_mobile_integration_is_wired_to_existing_adapters",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_ollama_provider_contract",
+      "name": "test_chand_supports_native_ollama_without_cloud_api_key",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_ollama_provider_contract",
+      "name": "test_ollama_timeout_and_fallback_are_bounded",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_ollama_provider_contract",
+      "name": "test_provider_configuration_and_safety_docs_are_present",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_shopping_integration_contract",
+      "name": "test_chand_uses_real_catalog_product_metadata_and_existing_product_cards",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_shopping_integration_contract",
+      "name": "test_chand_preserves_task5_measured_product_contract_for_product_cards",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_shopping_integration_contract",
+      "name": "test_chand_sends_bounded_session_history_without_persisting_conversations",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_shopping_integration_contract",
+      "name": "test_home_account_and_header_voice_shortcuts_open_one_chand_route",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_shopping_integration_contract",
+      "name": "test_voice_typing_requires_user_to_review_and_send_transcript",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_shopping_integration_contract",
+      "name": "test_provider_prompt_limits_chand_to_comein_and_grounded_budget_data",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_shopping_integration_contract",
+      "name": "test_chand_reports_transport_failure_and_offers_retry_without_fake_live_data",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_shopping_integration_contract",
+      "name": "test_chand_discloses_shop_type_and_shop_declared_fulfillment_separately",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_chand_shopping_integration_contract",
+      "name": "test_legacy_pickup_drop_service_is_preserved_but_no_longer_branded_request_anything",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_delivery_partner_draft_is_separate_and_rejects_seller_role",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_sensitive_fields_are_encrypted_before_database_write",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_public_application_projection_never_returns_sensitive_fields",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_submit_and_approval_fail_closed_without_all_verified_requirements",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_admin_review_routes_are_role_protected_and_audited",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_otp_and_identity_provider_absence_never_simulates_success",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_approved_state_is_required_for_delivery_partner_access",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_partner_referral_sharing_is_approval_gated_and_no_rewards_are_auto_granted",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_onboarding_frontend_is_separate_and_never_collects_raw_aadhaar_pan",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_admin_screen_uses_delivery_partner_api_and_not_seller_approval_api",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_admin_reason_is_redacted_before_audit_or_application_storage",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_admin_state_transition_is_atomic_against_concurrent_review",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_partner_onboarding_contract",
+      "name": "test_account_entry_is_customer_only_and_admin_review_is_separate",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_tracking_contract",
+      "name": "test_location_update_coordinates_are_bounded_and_finite",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_tracking_contract",
+      "name": "test_tracking_read_is_authenticated_and_order_scoped",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_tracking_contract",
+      "name": "test_location_update_requires_authorized_operator_and_out_for_delivery",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_tracking_contract",
+      "name": "test_tracking_stops_exposing_location_after_terminal_status",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_tracking_contract",
+      "name": "test_frontend_location_is_explicit_one_shot_with_manual_fallback",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_tracking_contract",
+      "name": "test_customer_tracking_screen_polls_only_authenticated_order_endpoint_and_never_fabricates_eta",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_tracking_contract",
+      "name": "test_customer_cancellation_clears_any_stored_restaurant_delivery_location",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_tracking_contract",
+      "name": "test_tracking_update_is_atomic_against_order_status_changes",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_tracking_contract",
+      "name": "test_project_has_no_delivery_partner_role_or_assignment_in_tracking_api",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_tracking_contract",
+      "name": "test_tracking_update_atomic_filter_excludes_pickup_and_terminal_status_races",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_tracking_contract",
+      "name": "test_current_location_ui_explains_timeout_and_does_not_background_track",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_delivery_tracking_contract",
+      "name": "test_tracking_read_permissions_are_scoped_to_customer_or_related_operator",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_directory_only_category_contract",
+      "name": "test_medical_and_stationery_are_blocked_when_creating_or_updating_online_products",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_directory_only_category_contract",
+      "name": "test_checkout_rejects_legacy_or_malicious_directory_only_product_records",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_directory_only_category_contract",
+      "name": "test_guard_uses_category_identifier_not_product_name_guessing",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_final_payment_transition_races",
+      "name": "test_customer_transition_cannot_overwrite_concurrent_final_state[concurrent0-cancel_restaurant_order]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_final_payment_transition_races",
+      "name": "test_customer_transition_cannot_overwrite_concurrent_final_state[concurrent0-retry_restaurant_payment]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_final_payment_transition_races",
+      "name": "test_customer_transition_cannot_overwrite_concurrent_final_state[concurrent1-cancel_restaurant_order]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_final_payment_transition_races",
+      "name": "test_customer_transition_cannot_overwrite_concurrent_final_state[concurrent1-retry_restaurant_payment]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_rules",
+      "name": "test_money_uses_decimal_half_up_not_binary_float_arithmetic",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_rules",
+      "name": "test_platform_commission_is_not_gross_merchandise_value",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_rules",
+      "name": "test_missing_commission_policy_is_unavailable_not_assumed_zero",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_rules",
+      "name": "test_cancelled_and_refunded_orders_do_not_count_as_completed_platform_income",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_rules",
+      "name": "test_date_range_uses_inclusive_local_dates_and_exclusive_next_day_boundary",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_rules",
+      "name": "test_new_policy_is_not_applied_retroactively_to_older_orders",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_rules",
+      "name": "test_delivered_cash_orders_need_explicit_collection_attestation_before_payable",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_rules",
+      "name": "test_delivery_fee_beneficiary_changes_only_the_documented_party_split",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_security_contract",
+      "name": "test_admin_financial_endpoints_require_server_side_admin_role",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_security_contract",
+      "name": "test_shopkeeper_earnings_and_bank_routes_check_server_side_ownership",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_security_contract",
+      "name": "test_bank_storage_fails_closed_without_encryption_key_and_never_returns_plaintext",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_security_contract",
+      "name": "test_cash_collection_requires_shopkeeper_role_ownership_and_completed_order",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_security_contract",
+      "name": "test_manual_settlement_requires_reference_and_confirmation_to_mark_paid",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_financial_security_contract",
+      "name": "test_frontend_has_separate_admin_and_shopkeeper_earnings_routes",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_expo_public_backend_url_is_documented_and_used",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_auth_token_uses_secure_storage_consistently",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_frontend_exposes_typecheck_and_production_web_build_scripts",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_restaurant_checkout_never_creates_local_demo_orders",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_auth_persistence_failure_is_not_silently_accepted",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_upload_handles_missing_backend_and_network_errors",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_app_does_not_globally_suppress_runtime_diagnostics",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_shopping_and_restaurant_carts_use_distinct_storage_keys",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_shopping_home_theme_contract_and_separate_mode_routes",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_bakery_has_no_fabricated_sample_inventory_and_voice_is_honest",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_bakery_category_uses_catalog_filter_and_existing_empty_state",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_shopping_search_and_cart_contracts_remain_separate_from_restaurant_mode",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_account_notification_payment_and_help_rows_have_real_routes_and_honest_status_screens",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_restaurant_account_route_redirects_to_the_single_shared_account_screen",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_restaurant_login_and_account_links_preserve_shared_auth_and_address_contracts",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_restaurant_account_alias_keeps_existing_links_compatible",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_shared_payment_methods_screen_links_only_to_supported_checkout_flows",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_restaurant_account_and_address_routes_are_shared_compatibility_aliases",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_frontend_contracts",
+      "name": "test_restaurant_support_route_redirects_to_shared_chand_with_order_context",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_grocery_order_contract_requires_quote_idempotency_and_fails_closed_for_unconfigured_gateways",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_restaurant_payment_methods_enforce_fulfillment_and_gateway_configuration",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_restaurant_duplicate_order_retries_return_existing_order_and_unique_index_is_declared",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_razorpay_intent_verify_webhook_and_failure_paths_are_guarded",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_support_contract_validates_grocery_and_restaurant_order_ownership",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_shared_address_route_and_restaurant_compatibility_alias_are_present",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_shared_orders_screen_combines_both_order_domains_without_merging_carts",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_notification_contract_is_fail_closed_and_no_token_registration_route_is_exposed",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_shared_auth_and_address_contracts_remain_owner_scoped",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_shopping_and_restaurant_cart_persistence_remains_separate",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_gps_permission_timeout_and_tracking_provider_unavailable_are_explicit",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_tracking_endpoint_never_exposes_location_after_terminal_order_status",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_functional_blockers_regression",
+      "name": "test_restaurant_checkout_requires_shared_saved_address_not_unvalidated_manual_text",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_capture_transaction_offline",
+      "name": "test_grocery_capture_atomic_and_post_commit_notification_once",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_capture_transaction_offline",
+      "name": "test_grocery_order_failure_aborts_payment_and_no_notification",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_capture_transaction_offline",
+      "name": "test_grocery_transient_retry_and_unknown_commit_reconciliation",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_capture_transaction_offline",
+      "name": "test_grocery_late_capture_marks_review_and_does_not_reopen_cancelled_order",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_capture_transaction_offline",
+      "name": "test_grocery_conflicting_gateway_capture_rejected",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_product_schema_supports_stable_variants_and_rejects_duplicate_ids",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_quote_is_guest_session_bound_and_ten_minutes",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_order_requires_quote_and_idempotency_and_ignores_client_prices",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_stock_decrement_is_atomic_and_conditional_for_base_and_variant",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_mixed_shop_and_invalid_demo_ids_are_rejected_by_server_resolver",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_delivery_fee_rule_is_authoritative_and_boundary_based",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_delivery_fee_boundaries_execute_authoritative_quote_totals",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_legacy_seller_product_update_preserves_variants_when_omitted",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_grocery_checkout_allows_configured_manual_methods_but_fails_closed_for_unconfigured_gateways",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_frontend_persists_grocery_idempotency_key_for_same_cart_retry",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_frontend_live_variant_mapper_excludes_nonpositive_stock",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_quote_is_claimed_once_inside_transaction_before_stock_and_order_writes",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_concurrent_duplicate_idempotency_key_returns_existing_order",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_duplicate_cart_rows_are_aggregated_by_product_and_variant_before_stock_check",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_duplicate_cart_rows_aggregate_without_merging_distinct_variants",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_checkout_shop_revalidation_uses_the_active_transaction_session",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_checkout_security_contract",
+      "name": "test_grocery_payment_capture_updates_payment_and_order_in_one_transaction",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_pay_at_shop_status_contract",
+      "name": "test_new_grocery_cash_shop_and_pickup_orders_use_pickup_specific_pending_state",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_pay_at_shop_status_contract",
+      "name": "test_grocery_cash_collection_accepts_legacy_state_but_restaurant_does_not_expand_it",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_pay_at_shop_status_contract",
+      "name": "test_cash_confirmation_requires_explicit_attestation_and_completed_fulfillment",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_pay_at_shop_status_contract",
+      "name": "test_seller_earnings_shows_cash_confirmation_for_legacy_and_canonical_grocery_states",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_pay_at_shop_status_contract",
+      "name": "test_grocery_cancellation_accepts_new_and_legacy_pay_at_shop_states_without_changing_cod",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_pay_at_shop_status_contract",
+      "name": "test_grocery_cancellation_keeps_protected_payment_states_outside_allowlist",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_only_full_confirmed_cancelled_online_amount_is_eligible",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_cash_and_manual_payment_methods_cannot_use_gateway_refunds[cod]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_cash_and_manual_payment_methods_cannot_use_gateway_refunds[upi]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_cash_and_manual_payment_methods_cannot_use_gateway_refunds[pickup]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_cash_and_manual_payment_methods_cannot_use_gateway_refunds[cash_shop]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_no_new_eligibility_policy_is_invented_for_active_or_delivered_orders[status-pending]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_no_new_eligibility_policy_is_invented_for_active_or_delivered_orders[status-delivered]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_uncaptured_mismatched_and_unrelated_payments_are_not_refunded[status-created]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_uncaptured_mismatched_and_unrelated_payments_are_not_refunded[order_id-unrelated]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_uncaptured_mismatched_and_unrelated_payments_are_not_refunded[amount-19]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_uncaptured_mismatched_and_unrelated_payments_are_not_refunded[currency-USD]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_uncaptured_mismatched_and_unrelated_payments_are_not_refunded[gateway_payment_id-None]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_partial_or_excess_refund_initiation_is_explicitly_rejected[True]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_partial_or_excess_refund_initiation_is_explicitly_rejected[1]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_partial_or_excess_refund_initiation_is_explicitly_rejected[1999]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_eligibility",
+      "name": "test_partial_or_excess_refund_initiation_is_explicitly_rejected[2001]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_grocery_refund_local_integration",
+      "name": "test_local_grocery_refund_authorization_accounting_and_retry",
+      "status": "SKIPPED",
+      "reason": "requires explicit local disposable payment-test opt-in"
+    },
+    {
+      "class": "tests.test_home_services_remaining_contract",
+      "name": "test_atomic_slot_reservation_and_unique_index_are_present",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_home_services_remaining_contract",
+      "name": "test_reservation_release_and_reschedule_guards_are_present",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_home_services_remaining_contract",
+      "name": "test_fee_policy_is_admin_configurable_and_snapshotted",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_home_services_remaining_contract",
+      "name": "test_provider_photo_uses_owned_existing_upload_storage",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_home_services_remaining_contract",
+      "name": "test_customer_and_provider_dashboards_explain_status_and_payment",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_home_services_remaining_contract",
+      "name": "test_existing_provider_approval_and_private_fields_remain_guarded",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_home_services_remaining_contract",
+      "name": "test_offline_shop_payment_options_are_configured_and_publicly_explained",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_home_services_remaining_contract",
+      "name": "test_home_service_call_and_supported_payment_preferences_are_explicit",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_home_services_remaining_contract",
+      "name": "test_restaurant_owner_can_edit_profile_and_upload_image",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_declared_image_mime_cannot_store_non_image_bytes[-image/jpeg]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_declared_image_mime_cannot_store_non_image_bytes[-image/png]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_declared_image_mime_cannot_store_non_image_bytes[-image/gif]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_declared_image_mime_cannot_store_non_image_bytes[-image/webp]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/jpeg]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/png]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/gif]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/webp]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_matching_format_headers_preserve_supported_upload_paths[image/jpeg-\\xff\\xd8\\xff\\xe0local-header-test]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_matching_format_headers_preserve_supported_upload_paths[image/png-\\x89PNG\\r\\n\\x1a\\nlocal-header-test]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_matching_format_headers_preserve_supported_upload_paths[image/gif-GIF89alocal-header-test]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_matching_format_headers_preserve_supported_upload_paths[image/webp-RIFF\\x04\\x00\\x00\\x00WEBP]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_mismatched_or_truncated_headers_are_not_stored[image/jpeg-\\x89PNG\\r\\n\\x1a\\n]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_mismatched_or_truncated_headers_are_not_stored[image/png-GIF89a]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_mismatched_or_truncated_headers_are_not_stored[image/gif-\\xff\\xd8\\xff]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_image_upload_type_boundary",
+      "name": "test_mismatched_or_truncated_headers_are_not_stored[image/webp-RIFFno-webp]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_master_catalog_api_contract",
+      "name": "test_master_catalog_routes_are_admin_gated_and_authenticated",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_master_catalog_api_contract",
+      "name": "test_master_link_enforces_shop_ownership_variant_and_duplicate_guard",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_master_catalog_api_contract",
+      "name": "test_directory_only_categories_rejected_for_master_creation_and_linking",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_master_catalog_seller_ui_contract",
+      "name": "test_seller_panel_has_real_master_search_and_variant_link_flow",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_master_catalog_seller_ui_contract",
+      "name": "test_seller_master_flow_handles_loading_empty_and_expected_errors",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_master_catalog_seller_ui_contract",
+      "name": "test_shop_specific_price_stock_and_availability_are_sent_to_backend",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_backup_safety_offline",
+      "name": "test_backup_creates_unique_never_overwritten_outputs_with_private_mode",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_backup_safety_offline",
+      "name": "test_restore_refuses_production_or_same_source_names_before_tool_invocation",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_config",
+      "name": "test_development_configuration_sets_bounded_pool_timeouts_and_retry_options",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_config",
+      "name": "test_invalid_configuration_fails_closed[overrides0]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_config",
+      "name": "test_invalid_configuration_fails_closed[overrides1]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_config",
+      "name": "test_invalid_configuration_fails_closed[overrides2]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_config",
+      "name": "test_invalid_configuration_fails_closed[overrides3]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_config",
+      "name": "test_invalid_configuration_fails_closed[overrides4]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_config",
+      "name": "test_invalid_configuration_fails_closed[overrides5]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_config",
+      "name": "test_invalid_configuration_fails_closed[overrides6]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_config",
+      "name": "test_invalid_configuration_fails_closed[overrides7]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_config",
+      "name": "test_production_requires_expected_database_and_tls_without_exposing_uri",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_config",
+      "name": "test_expected_database_name_must_match_actual_target",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_config",
+      "name": "test_production_rejects_insecure_tls_certificate_options",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_portability_tool",
+      "name": "test_index_inventory_includes_both_startup_initializers_exactly_once",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_portability_tool",
+      "name": "test_spec_and_init_use_complete_67_index_inventory",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_portability_tool",
+      "name": "test_drift_detection_checks_unique_sparse_ttl_and_partial_options",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_portability_tool",
+      "name": "test_missing_delivery_partner_index_is_reported_by_health_drift_primitive",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_portability_tool",
+      "name": "test_health_reports_all_67_indexes_and_index_status",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_portability_tool",
+      "name": "test_unexpected_ttl_or_partial_filter_option_is_also_drift",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_portability_tool",
+      "name": "test_index_matching_checks_explicit_names_but_accepts_server_generated_names",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_portability_tool",
+      "name": "test_all_fastapi_startup_handlers_are_discovered_for_index_inventory",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_portability_tool",
+      "name": "test_index_init_returns_only_after_all_declared_indexes_verify",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_portability_tool",
+      "name": "test_application_collection_inventory_includes_catalogue_audit_and_payment_collections",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_portability_tool",
+      "name": "test_health_never_emits_the_connection_uri",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_portability_tool",
+      "name": "test_unique_index_preflight_is_read_only_and_does_not_expose_duplicate_keys",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_transactions",
+      "name": "test_error_label_classification_is_explicit_and_conservative",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_transactions",
+      "name": "test_transient_checkout_failure_maps_to_409_only_when_fresh_stock_read_proves_it",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_mongo_transactions",
+      "name": "test_every_direct_database_operation_inside_explicit_transaction_passes_session",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_online_shop_product_listing_contract",
+      "name": "test_product_api_requires_positive_price_category_and_description",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_online_shop_product_listing_contract",
+      "name": "test_pending_shop_products_are_private_but_owner_can_manage_drafts",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_online_shop_product_listing_contract",
+      "name": "test_public_catalog_only_uses_approved_shop_records_and_eligible_stock",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_online_shop_product_listing_contract",
+      "name": "test_seller_form_explains_price_and_requires_valid_listing_fields",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_online_shop_product_listing_contract",
+      "name": "test_customer_catalog_shows_saved_description_and_full_detail_uses_text_rendering",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_online_shop_product_listing_contract",
+      "name": "test_checkout_price_is_resolved_server_side_not_from_client_snapshot",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_p0_payment_checkout_completion",
+      "name": "test_grocery_checkout_exposes_only_configured_shop_payment_methods",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_p0_payment_checkout_completion",
+      "name": "test_grocery_upi_order_is_pending_until_shopkeeper_confirms_receipt",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_p0_payment_checkout_completion",
+      "name": "test_seller_can_confirm_upi_only_from_owner_orders_screen",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_p0_payment_checkout_completion",
+      "name": "test_restaurant_registration_saves_selected_payment_methods",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_p0_restaurant_delivery_panel",
+      "name": "test_restaurant_search_does_not_render_removed_delivery_area_panel",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_p0_restaurant_delivery_panel",
+      "name": "test_restaurant_categories_does_not_render_delivery_area_panel",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_p0_restaurant_delivery_panel",
+      "name": "test_product_detail_has_distinct_buy_now_checkout_action",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_p0_restaurant_delivery_panel",
+      "name": "test_shop_payment_settings_are_nonempty_and_cod_is_enforced_on_order",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_p0_restaurant_delivery_panel",
+      "name": "test_checkout_only_offers_shop_enabled_payment_methods_and_does_not_claim_gateway",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_disabled_is_allowed_but_an_operation_requires_both_keys",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_conflicting_environment_or_key_modes_fail_closed[test-live-live]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_conflicting_environment_or_key_modes_fail_closed[development-live-live]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_conflicting_environment_or_key_modes_fail_closed[production-test-test]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_conflicting_environment_or_key_modes_fail_closed[prod-test-test]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_conflicting_environment_or_key_modes_fail_closed[test-test-live]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_conflicting_environment_or_key_modes_fail_closed[production-live-test]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_explicit_consistent_mode_is_retained_without_fallback[test-test]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_explicit_consistent_mode_is_retained_without_fallback[development-test]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_explicit_consistent_mode_is_retained_without_fallback[production-live]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_missing_mode_is_not_inferred_from_key",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_webhook_requires_its_separate_secret",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_errors_never_echo_key_values",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_environment_boundary",
+      "name": "test_conflicting_environment_aliases_fail_closed",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_payment_webhook_local_integration",
+      "name": "test_local_signed_webhook_http_and_transaction_scenarios",
+      "status": "SKIPPED",
+      "reason": "requires explicit local disposable payment-test opt-in"
+    },
+    {
+      "class": "tests.test_provider_adapter_contracts",
+      "name": "test_unconfigured_delivery_provider_never_fabricates_rider_coordinates_or_eta",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_provider_adapter_contracts",
+      "name": "test_tracking_freshness_rejects_missing_stale_future_and_naive_timestamps",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_provider_adapter_contracts",
+      "name": "test_unconfigured_notifications_never_claim_sent_or_delivered",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_referral_implementation_contract",
+      "name": "test_backend_referral_code_and_attribution_are_server_generated_and_indexed",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_referral_implementation_contract",
+      "name": "test_referral_attribution_and_reward_are_backend_authoritative",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_referral_implementation_contract",
+      "name": "test_account_referral_and_registration_capture_are_wired",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_referral_implementation_contract",
+      "name": "test_no_client_supplied_reward_amount_or_eligibility_count_is_trusted_for_reward_credit",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_referral_rules",
+      "name": "test_generated_codes_are_formatted_and_unique_in_sample",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_referral_rules",
+      "name": "test_invalid_codes_are_rejected_by_format",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_referral_rules",
+      "name": "test_purchase_below_100_does_not_qualify",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_referral_rules",
+      "name": "test_100_or_more_only_becomes_a_candidate_after_delivery_and_not_blocked",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_referral_rules",
+      "name": "test_ten_customer_reward_threshold_is_exactly_ten_or_more",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_referral_rules",
+      "name": "test_shopping_reward_discount_never_exceeds_total_or_available_balance",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_api_contract",
+      "name": "test_restaurant_discovery_and_menu_routes_exist",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_api_contract",
+      "name": "test_server_order_and_cart_routes_exist",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_api_contract",
+      "name": "test_auth_address_payment_and_support_routes_exist",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_api_contract",
+      "name": "test_admin_seeding_has_no_predictable_default_password",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_api_contract",
+      "name": "test_payment_verification_checks_amount_and_webhook_deduplication",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_api_contract",
+      "name": "test_payment_webhook_validates_captured_amount_and_currency",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_api_contract",
+      "name": "test_webhook_event_is_recorded_after_processing_for_retry_safety",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_api_contract",
+      "name": "test_captured_payment_amount_currency_and_order_match_helper",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_capture_transaction_offline",
+      "name": "test_capture_commits_payment_and_order_once",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_capture_transaction_offline",
+      "name": "test_failed_order_update_aborts_payment_write",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_capture_transaction_offline",
+      "name": "test_captured_after_cancellation_never_resurrects_order",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_capture_transaction_offline",
+      "name": "test_unknown_commit_reconciles_stored_payment_and_order",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_capture_transaction_offline",
+      "name": "test_failed_restaurant_payment_transaction_rolls_back_and_does_not_unpay_captured_order",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_capture_transaction_offline",
+      "name": "test_failed_payment_second_write_error_aborts_all",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_capture_transaction_offline",
+      "name": "test_refund_claim_is_atomic_and_before_any_provider_action",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_capture_transaction_offline",
+      "name": "test_refund_claim_partial_update_aborts_without_provider_request",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_capture_transaction_offline",
+      "name": "test_different_gateway_payment_cannot_replace_captured_id",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_pricing",
+      "name": "test_delivery_totals_rounding",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_pricing",
+      "name": "test_pickup_does_not_charge_delivery",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_pricing",
+      "name": "test_invalid_pricing_rejected[-1-0-5]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_pricing",
+      "name": "test_invalid_pricing_rejected[10--1-5]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_pricing",
+      "name": "test_invalid_pricing_rejected[10-0-31]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_refund_webhook_transaction_offline",
+      "name": "test_processed_refund_commits_both_documents_and_repeat_is_idempotent",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_refund_webhook_transaction_offline",
+      "name": "test_second_document_write_failure_rolls_back_first_document",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_refund_webhook_transaction_offline",
+      "name": "test_out_of_order_failed_event_cannot_downgrade_provider_confirmed_completion",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_refund_webhook_transaction_offline",
+      "name": "test_pending_then_processed_moves_both_documents_together",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_refund_webhook_transaction_offline",
+      "name": "test_conflicting_duplicate_refund_id_flags_both_for_reconciliation",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_refund_webhook_transaction_offline",
+      "name": "test_oversized_provider_total_fails_closed_without_partial_writes",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_refund_webhook_transaction_offline",
+      "name": "test_failed_status_does_not_count_toward_refunded_total",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_refund_webhook_transaction_offline",
+      "name": "test_unknown_commit_does_not_make_second_provider_call_or_double_refund",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_refund_webhook_transaction_offline",
+      "name": "test_ledger_failure_aborts_payment_and_order_updates_together",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_serviceability",
+      "name": "test_pincode_normalization_accepts_only_six_digit_indian_pincodes",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_serviceability",
+      "name": "test_missing_coverage_fails_closed_without_fabricating_radius",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_serviceability",
+      "name": "test_explicit_configured_pincode_controls_delivery_eligibility",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_serviceability",
+      "name": "test_delivery_disabled_overrides_configured_coverage",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_restaurant_serviceability",
+      "name": "test_configured_coverage_discards_invalid_legacy_values",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_role_security_retail_import_contract",
+      "name": "test_public_registration_never_accepts_a_role_field_and_defaults_to_customer",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_role_security_retail_import_contract",
+      "name": "test_shop_mutations_require_shopkeeper_role_and_shop_ownership",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_role_security_retail_import_contract",
+      "name": "test_restaurant_mutations_require_seller_role_and_ownership",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_role_security_retail_import_contract",
+      "name": "test_retail_import_is_admin_only_source_scoped_and_preview_first",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_role_security_retail_import_contract",
+      "name": "test_retail_price_public_feed_labels_source_and_import_time",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_role_security_retail_import_contract",
+      "name": "test_admin_ui_exposes_retail_import_preview_template_and_history",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_role_security_retail_import_contract",
+      "name": "test_admin_role_management_is_backend_protected_and_cannot_remove_last_admin",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_role_security_retail_import_contract",
+      "name": "test_public_serialization_removes_internal_actor_ids",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_shopping_and_restaurant_share_one_auth_provider_and_token_store",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_saved_addresses_are_authenticated_and_scoped_to_the_signed_in_user",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_restaurant_checkout_reuses_saved_address_ids_and_defaults_without_faking_gps",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_backend_resolves_saved_address_by_authenticated_owner_and_validates_delivery_availability",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_restaurant_orders_reuse_authenticated_customer_order_contract_and_idempotency",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_shared_tracking_endpoint_supports_restaurant_orders_without_fake_coordinates",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_restaurant_payment_ui_does_not_claim_success_or_call_gateway_without_sdk",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_shared_logout_clears_the_same_token_and_existing_roles_remain_authoritative",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_no_shared_notification_delivery_provider_is_claimed_by_current_source",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_restaurant_payment_intents_reuse_existing_gateway_order_and_reject_closed_orders",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_restaurant_payment_verification_requires_gateway_captured_payment_lookup",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_restaurant_checkout_uses_backend_configured_pincode_serviceability",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_captured_webhook_never_resurrects_cancelled_restaurant_order",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_payment_failure_retry_and_late_capture_paths_are_guarded",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_restaurant_discovery_uses_shared_saved_address_and_refreshes_pincode_filter",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shared_system_integration_contract",
+      "name": "test_discovery_address_handles_missing_or_invalid_pincode_without_claiming_serviceability",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shop_registration_browse_entrypoints",
+      "name": "test_online_and_offline_browsing_has_no_shop_registration_entrypoint",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shop_registration_browse_entrypoints",
+      "name": "test_approved_shop_browsing_and_existing_filters_remain",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shop_registration_browse_entrypoints",
+      "name": "test_account_is_the_shop_registration_entrypoint_and_exposes_four_modes",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shop_registration_browse_entrypoints",
+      "name": "test_shop_registration_requires_login_and_shop_approval_is_admin_only",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_cart_variants_contract",
+      "name": "test_catalog_declares_explicit_stable_variant_fields",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_cart_variants_contract",
+      "name": "test_variant_cart_keys_are_separate_and_legacy_keys_are_preserved",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_cart_variants_contract",
+      "name": "test_cart_line_price_comes_from_selected_variant_and_subtotal_uses_line_price",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_cart_variants_contract",
+      "name": "test_cart_screen_uses_unique_line_identity_for_multiple_variants",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_cart_variants_contract",
+      "name": "test_product_details_selects_variant_and_uses_variant_specific_values",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_cart_variants_contract",
+      "name": "test_variant_products_route_to_options_instead_of_adding_ambiguous_base_item",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_cart_variants_contract",
+      "name": "test_legacy_persisted_cart_shape_remains_supported",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_catalog_contract",
+      "name": "test_catalog_includes_eligible_products_from_approved_online_and_offline_shops",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_catalog_contract",
+      "name": "test_catalog_returns_empty_without_approved_shops_and_does_not_query_products",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_catalog_contract",
+      "name": "test_catalog_route_is_public_get_route_and_does_not_filter_online_status",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_catalog_contract",
+      "name": "test_imported_products_need_approval_and_application_while_legacy_products_remain_visible",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_catalog_contract",
+      "name": "test_catalogue_visibility_guard_preserves_stock_and_available_filters",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_rewards_redemption_contract",
+      "name": "test_reward_redemption_is_opt_in_customer_only_and_server_calculated",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_rewards_redemption_contract",
+      "name": "test_order_revalidates_and_consumes_rewards_inside_inventory_transaction",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_shopping_rewards_redemption_contract",
+      "name": "test_checkout_has_customer_only_reward_toggle_and_displays_server_discount",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_standard_ui_image_shop_cta_contract",
+      "name": "test_mode_cards_use_compact_consistent_artwork_dimensions",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_standard_ui_image_shop_cta_contract",
+      "name": "test_shop_registration_is_not_offered_from_online_or_offline_browse_pages",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_standard_ui_image_shop_cta_contract",
+      "name": "test_browse_only_catalog_items_get_category_or_product_relevant_illustration_without_fake_price",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_standard_ui_image_shop_cta_contract",
+      "name": "test_shop_registration_validates_phone_and_upi_before_saving",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_delivery_partner_transactions_offline",
+      "name": "test_admin_approval_status_audit_referral_commit_together",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_delivery_partner_transactions_offline",
+      "name": "test_admin_referral_write_failure_rolls_back_approval_and_audit",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_delivery_partner_transactions_offline",
+      "name": "test_duplicate_admin_approval_conflicts_and_does_not_duplicate_audit",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_delivery_partner_transactions_offline",
+      "name": "test_submission_rolls_back_status_if_audit_insert_fails",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_delivery_partner_transactions_offline",
+      "name": "test_submission_requires_verified_documents_even_on_transaction_retry",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_delivery_partner_transactions_offline",
+      "name": "test_transient_retry_does_not_duplicate_approval_audit",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_delivery_partner_transactions_offline",
+      "name": "test_draft_persists_only_encrypted_fields_and_its_audit_atomically",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_delivery_partner_transactions_offline",
+      "name": "test_seller_account_cannot_create_delivery_partner_draft",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_refund_admin_offline",
+      "name": "test_refund_state_updates_both_documents_in_single_transaction",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_refund_admin_offline",
+      "name": "test_second_write_failure_rolls_back_first_write",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_refund_admin_offline",
+      "name": "test_unknown_commit_is_reconciled_using_both_committed_records",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_refund_admin_offline",
+      "name": "test_concurrent_webhook_advance_cannot_be_downgraded_by_admin",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_refund_admin_offline",
+      "name": "test_missing_payment_order_link_rejects_without_mutations",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_refund_admin_offline",
+      "name": "test_refund_route_never_places_provider_call_in_retried_callback",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_restore_index_profile_offline",
+      "name": "test_restore_refuses_remote_server_and_missing_confirmation_without_tools",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_restore_index_profile_offline",
+      "name": "test_restore_refuses_non_disposable_source_and_non_test_environment",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_restore_index_profile_offline",
+      "name": "test_restore_verification_comparison_detects_document_count_and_index_drift",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_restore_index_profile_offline",
+      "name": "test_empty_source_is_not_called_successful_restore",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_restore_index_profile_offline",
+      "name": "test_index_creation_preflight_blocks_mutation_when_unique_duplicates_present",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_step1_final_restore_index_profile_offline",
+      "name": "test_disposable_legacy_profile_guard_refuses_unconfirmed_or_remote_target",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_targeted_tasks_9_12_15_18_21",
+      "name": "test_task9_cart_has_explicit_remove_and_user_selected_same_shop_replacements",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_targeted_tasks_9_12_15_18_21",
+      "name": "test_task12_import_is_owner_scoped_preview_first_and_idempotent_by_sku",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_targeted_tasks_9_12_15_18_21",
+      "name": "test_task15_admin_master_catalog_requires_source_reference_and_admin_role",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_targeted_tasks_9_12_15_18_21",
+      "name": "test_task21_comparison_uses_exact_master_variant_and_approved_available_offers",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_targeted_tasks_9_12_15_18_21",
+      "name": "test_task18_preview_environment_example_exists_without_secrets",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_targeted_tasks_9_12_15_18_21",
+      "name": "test_offline_specialty_shop_types_are_supported_without_changing_online_mode",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_targeted_tasks_9_12_15_18_21",
+      "name": "test_offline_specialty_filter_stays_inside_existing_shops_screen",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_targeted_tasks_9_12_15_18_21",
+      "name": "test_grocery_checkout_supports_shop_configured_pickup_and_delivery",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_targeted_tasks_9_12_15_18_21",
+      "name": "test_product_image_fallbacks_are_bundled_and_seller_suggestions_require_real_listing_details",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task10_payment_refund_notification_contract",
+      "name": "test_refund_is_admin_only_and_requires_verified_paid_gateway_payment",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task10_payment_refund_notification_contract",
+      "name": "test_refund_claim_prevents_concurrent_duplicate_and_blocks_ambiguous_retry",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task10_payment_refund_notification_contract",
+      "name": "test_refund_completion_requires_provider_status_and_id",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task10_payment_refund_notification_contract",
+      "name": "test_payment_verification_and_webhook_still_require_server_confirmation",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task10_payment_refund_notification_contract",
+      "name": "test_notification_provider_fails_closed_without_claiming_delivery",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task11_grocery_refund_status_contract",
+      "name": "test_cancelled_before_payment_is_not_misrepresented_as_refunded",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task11_grocery_refund_status_contract",
+      "name": "test_ambiguous_payment_activity_is_under_review_not_confirmed_refund",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task11_grocery_refund_status_contract",
+      "name": "test_pending_partial_reconciliation_and_completed_states_are_distinct",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task11_live_order_tracking_contract",
+      "name": "test_tracking_endpoint_returns_persisted_status_timeline_for_both_order_kinds",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task11_live_order_tracking_contract",
+      "name": "test_restaurant_status_transition_uses_compare_and_set_to_reject_stale_concurrent_updates",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task11_live_order_tracking_contract",
+      "name": "test_customer_tracking_screen_renders_restaurant_timeline_and_drops_stale_data_on_error",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task11_live_order_tracking_contract",
+      "name": "test_tracking_never_fabricates_eta_or_gps_location",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task12_customer_support_contract",
+      "name": "test_support_request_is_authenticated_and_linked_order_is_customer_owned",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task12_customer_support_contract",
+      "name": "test_support_request_deduplicates_by_customer_and_request_id",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task12_customer_support_contract",
+      "name": "test_support_categories_cover_customer_order_help_reasons",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task12_customer_support_contract",
+      "name": "test_support_creation_does_not_trigger_cancellation_or_refund",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task12_customer_support_contract",
+      "name": "test_customer_support_ui_requires_backend_confirmation_and_keeps_retry_key",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task12_customer_support_contract",
+      "name": "test_seller_support_is_role_gated_and_scoped_to_owned_shop_or_restaurant_orders",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task12_customer_support_contract",
+      "name": "test_combined_order_history_opens_help_with_exact_order_kind_and_id",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task13_seller_support_status_contract",
+      "name": "test_seller_status_endpoint_is_role_gated_and_validates_expected_state",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task13_seller_support_status_contract",
+      "name": "test_seller_status_update_checks_order_kind_and_actual_shop_or_restaurant_ownership",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task13_seller_support_status_contract",
+      "name": "test_seller_status_update_is_compare_and_set_and_records_actor_history",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task13_seller_support_status_contract",
+      "name": "test_seller_status_endpoint_does_not_execute_refund_or_cancellation",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task13_seller_support_status_contract",
+      "name": "test_admin_and_customer_support_routes_remain_available_and_separate",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task13_seller_support_status_contract",
+      "name": "test_seller_status_model_rejects_unknown_and_terminal_status_values",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task14_seller_support_ui_contract",
+      "name": "test_seller_support_screen_uses_existing_authenticated_endpoints_and_response_fields",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task14_seller_support_ui_contract",
+      "name": "test_seller_ui_sends_actual_expected_status_and_only_allowed_transitions",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task14_seller_support_ui_contract",
+      "name": "test_seller_screen_prevents_duplicate_submission_and_refreshes_stale_conflicts",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task14_seller_support_ui_contract",
+      "name": "test_seller_account_navigation_exposes_support_for_shopkeeper_and_restaurant_roles",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task14_seller_support_ui_contract",
+      "name": "test_support_ui_does_not_trigger_refund_cancellation_or_notification_claims",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task16_production_cors_contract",
+      "name": "test_development_keeps_legacy_wildcard_default",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task16_production_cors_contract",
+      "name": "test_production_requires_explicit_origins",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task16_production_cors_contract",
+      "name": "test_production_rejects_wildcard_even_when_mixed_with_explicit_origin",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task16_production_cors_contract",
+      "name": "test_production_accepts_trimmed_explicit_origins",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task16_production_cors_contract",
+      "name": "test_fastapi_server_uses_guarded_origins_and_documents_environment",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task17_grocery_payment_gate_contract",
+      "name": "test_grocery_payment_requires_explicit_feature_flag",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task17_grocery_payment_gate_contract",
+      "name": "test_grocery_payment_requires_both_server_side_keys",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task17_grocery_payment_gate_contract",
+      "name": "test_grocery_payment_returns_keys_only_when_flag_and_both_keys_exist",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_amount_to_paise_uses_decimal_half_up",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_refund_summary_counts_pending_and_completed_against_captured_amount",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_failed_provider_refund_does_not_consume_captured_amount",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_full_provider_refund_is_recognized_as_already_refunded",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_refund_total_above_captured_amount_fails_closed",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_malformed_or_duplicate_provider_refund_records_fail_closed[records0]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_malformed_or_duplicate_provider_refund_records_fail_closed[records1]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_malformed_or_duplicate_provider_refund_records_fail_closed[records2]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_malformed_or_duplicate_provider_refund_records_fail_closed[records3]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_admin_refund_checks_provider_history_and_claims_once_before_posting",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_refund_webhook_accumulates_refund_ids_and_only_reverses_full_refunds",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_checkout_explains_unavailable_fulfillment_and_suppresses_empty_cart_payment_error",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_grocery_pickup_order_does_not_show_delivery_address_copy",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task18_refund_safety_iteration3",
+      "name": "test_admin_refund_ui_reports_provider_state_and_hides_retry_for_blocked_states",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task19_seller_admin_workflows_contract",
+      "name": "test_grocery_order_status_requires_current_shopkeeper_role_or_admin_and_shop_ownership",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task19_seller_admin_workflows_contract",
+      "name": "test_every_admin_api_route_has_explicit_admin_role_dependency",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task19_seller_admin_workflows_contract",
+      "name": "test_product_and_import_writes_remain_shop_scoped",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task19_seller_admin_workflows_contract",
+      "name": "test_seller_support_stays_role_gated_and_order_owned",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task20_product_catalog_variants_stock_contract",
+      "name": "test_product_variant_price_mrp_and_stock_have_finite_business_bounds",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task20_product_catalog_variants_stock_contract",
+      "name": "test_master_link_price_mrp_and_stock_use_same_upper_bounds",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task20_product_catalog_variants_stock_contract",
+      "name": "test_product_catalog_exposes_only_approved_available_in_stock_products_and_variants",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task20_product_catalog_variants_stock_contract",
+      "name": "test_quote_resolves_variant_identity_and_authoritative_server_price_and_stock",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task20_product_catalog_variants_stock_contract",
+      "name": "test_checkout_keeps_transactional_conditional_variant_stock_decrement_and_server_totals",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task20_product_catalog_variants_stock_contract",
+      "name": "test_import_stays_store_scoped_validated_and_transactional",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task20_product_catalog_variants_stock_contract",
+      "name": "test_product_update_preserves_variant_identity_and_checks_actual_owner",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task21_customer_shopping_workflow_contract",
+      "name": "test_buy_now_is_an_isolated_checkout_line_and_does_not_replace_persisted_cart",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task21_customer_shopping_workflow_contract",
+      "name": "test_product_detail_keeps_variant_identity_and_quantity_controls_connected",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task21_customer_shopping_workflow_contract",
+      "name": "test_product_card_buy_now_uses_isolated_checkout_and_variants_route_to_detail",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task21_customer_shopping_workflow_contract",
+      "name": "test_checkout_quotes_only_the_selected_buy_now_line_or_normal_cart_lines",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task21_customer_shopping_workflow_contract",
+      "name": "test_existing_cart_variant_identity_and_checkout_error_handling_remain_present",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task22_checkout_audit_contract",
+      "name": "test_buy_now_selection_is_cleared_when_checkout_blurs_by_any_navigation_path",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task22_checkout_audit_contract",
+      "name": "test_buy_now_is_separate_from_persisted_cart_and_checkout_selects_only_one_mode",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task22_checkout_audit_contract",
+      "name": "test_checkout_uses_quote_token_and_idempotency_key_not_client_totals_as_authority",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task22_checkout_audit_contract",
+      "name": "test_backend_keeps_quote_claim_stock_decrement_and_order_insert_in_one_transaction",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task22_checkout_audit_contract",
+      "name": "test_pickup_fee_is_zero_and_grocery_online_gateways_remain_disabled",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task23_order_tracking_authorization_contract",
+      "name": "test_customer_can_read_own_order_but_historical_seller_owner_requires_current_role",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task23_order_tracking_authorization_contract",
+      "name": "test_tracking_location_write_requires_current_seller_role_and_current_ownership",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task23_order_tracking_authorization_contract",
+      "name": "test_tracking_read_remains_authenticated_and_terminal_orders_do_not_expose_location",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task23_order_tracking_authorization_contract",
+      "name": "test_tracking_location_write_remains_limited_to_active_non_pickup_delivery",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task24_repeat_order_contract",
+      "name": "test_repeat_order_is_customer_grocery_history_action_and_never_auto_submits",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task24_repeat_order_contract",
+      "name": "test_repeat_order_aggregates_duplicate_product_variant_rows_before_stock_checks",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task24_repeat_order_contract",
+      "name": "test_repeat_order_resolves_current_live_product_and_exact_variant_not_old_price",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task24_repeat_order_contract",
+      "name": "test_repeat_order_checks_existing_cart_stock_and_quantity_limit_without_partial_adds",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task24_repeat_order_contract",
+      "name": "test_repeat_order_uses_normal_cart_then_checkout_requests_a_fresh_authoritative_quote",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_customer_measured_shopping_contract",
+      "name": "test_measured_modes_keep_weight_and_volume_base_units_distinct_from_pack",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_customer_measured_shopping_contract",
+      "name": "test_customer_picker_is_live_product_only_and_requests_server_quote",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_customer_measured_shopping_contract",
+      "name": "test_customer_picker_exposes_seller_min_step_max_and_safe_invalid_state",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_customer_measured_shopping_contract",
+      "name": "test_quantity_validation_requires_integer_min_max_step_and_available_stock",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_customer_measured_shopping_contract",
+      "name": "test_customer_product_detail_identifies_measured_and_fixed_pack_units",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_customer_measured_shopping_contract",
+      "name": "test_measured_quantity_is_preserved_as_base_unit_amount_in_cart",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_customer_measured_shopping_contract",
+      "name": "test_measured_and_variant_pack_cart_lines_have_distinct_stable_identity",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_customer_measured_shopping_contract",
+      "name": "test_buy_now_validates_measured_amount_without_mutating_normal_cart",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_customer_measured_shopping_contract",
+      "name": "test_backend_quote_resolves_measured_line_and_uses_decimal_server_total",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_customer_measured_shopping_contract",
+      "name": "test_backend_rejects_invalid_or_unavailable_measured_quantities",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_customer_measured_shopping_contract",
+      "name": "test_order_uses_transaction_for_quote_claim_stock_deduction_and_insert",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_customer_measured_shopping_contract",
+      "name": "test_checkout_displays_and_submits_server_confirmed_quote_before_order",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_measured_import_contract",
+      "name": "test_legacy_pack_rows_remain_unchanged",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_measured_import_contract",
+      "name": "test_weight_import_normalizes_stock_basis_and_presets",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_measured_import_contract",
+      "name": "test_volume_import_accepts_ml_stock_and_per_litre_price",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_measured_import_contract",
+      "name": "test_invalid_measured_import_rows_fail_closed[row0]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_measured_import_contract",
+      "name": "test_invalid_measured_import_rows_fail_closed[row1]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_measured_import_contract",
+      "name": "test_invalid_measured_import_rows_fail_closed[row2]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_measured_import_contract",
+      "name": "test_invalid_measured_import_rows_fail_closed[row3]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_measured_import_contract",
+      "name": "test_invalid_measured_import_rows_fail_closed[row4]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_measured_import_contract",
+      "name": "test_invalid_measured_import_rows_fail_closed[row5]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_task7_ui_implementation_contract",
+      "name": "test_live_product_cards_offer_buy_now_and_keep_variant_selection_flow",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task5_task7_ui_implementation_contract",
+      "name": "test_referral_home_banner_is_customer_only_and_uses_server_side_one_time_claim",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task9_order_actions_contract",
+      "name": "test_customer_grocery_cancel_is_owner_scoped_and_only_cancels_unaccepted_unpaid_orders",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task9_order_actions_contract",
+      "name": "test_grocery_cancel_accepts_canonical_and_legacy_pay_at_shop_without_widening_protected_states",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task9_order_actions_contract",
+      "name": "test_grocery_seller_status_changes_enforce_transition_map_and_atomic_compare",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task9_order_actions_contract",
+      "name": "test_customer_history_exposes_repeat_and_cancel_only_for_grocery_with_live_catalog_revalidation",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task9_order_actions_contract",
+      "name": "test_grocery_order_detail_endpoint_uses_existing_customer_shop_owner_admin_authorization",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task9_order_actions_contract",
+      "name": "test_grocery_order_details_screen_displays_items_amounts_and_status_history",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task9_order_actions_contract",
+      "name": "test_existing_customer_selected_same_shop_cart_replacement_remains_intact",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task9_order_actions_contract",
+      "name": "test_repeat_order_replays_original_quantity_and_rejects_unavailable_variants",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task9_order_actions_contract",
+      "name": "test_seller_can_decline_unaccepted_upi_order_before_payment_confirmation",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_task9_order_actions_contract",
+      "name": "test_cart_replacement_requires_same_shop_category_and_sufficient_stock",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_transaction_commit_retry",
+      "name": "test_unknown_commit_retries_commit_without_replaying_callback",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_transaction_commit_retry",
+      "name": "test_timeout_and_nonretryable_commit_errors_are_not_retried[error0]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_transaction_commit_retry",
+      "name": "test_timeout_and_nonretryable_commit_errors_are_not_retried[error1]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_transaction_commit_retry",
+      "name": "test_unknown_commit_retry_stops_at_transaction_budget",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_transaction_commit_retry",
+      "name": "test_intentionally_ended_transaction_is_not_committed_again",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_csv_extracts_source_rows_without_inventing_fields",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_csv_hindi_headers_are_recognized_as_aliases",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_extension_and_content_mismatch_is_rejected",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_unsupported_file_is_rejected",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_upload_size_limit_is_enforced",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_pdf_text_adapter_preserves_page_provenance",
+      "status": "SKIPPED",
+      "reason": "could not import 'pypdf': No module named 'pypdf'"
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_zip_batch_extracts_supported_members",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_zip_path_traversal_is_rejected",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_xlsx_processes_multiple_sheets_when_openpyxl_available",
+      "status": "SKIPPED",
+      "reason": "could not import 'openpyxl': No module named 'openpyxl'"
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_image_ocr_extracts_visible_text_without_promoting_fields",
+      "status": "SKIPPED",
+      "reason": "could not import 'PIL': No module named 'PIL'"
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_task5_measured_headers_are_preserved_as_source_values",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_upload_metadata_rejects_mismatched_mime_and_control_filename",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_upload_metadata_accepts_browser_octet_stream_when_signature_matches",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_csv_formula_like_cells_are_preserved_as_untrusted_source_text",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_csv_header_selects_separator_without_reinterpreting_cell_punctuation[,]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_csv_header_selects_separator_without_reinterpreting_cell_punctuation[;]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_csv_header_selects_separator_without_reinterpreting_cell_punctuation[\\t]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_csv_header_selects_separator_without_reinterpreting_cell_punctuation[|]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_csv_quoted_header_punctuation_is_not_a_column_separator",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_xls_signature_is_recognized_but_missing_xlrd_is_reported_cleanly",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_universal_catalogue_import_engine",
+      "name": "test_scanned_pdf_uses_optional_ocr_without_promoting_product_fields",
+      "status": "SKIPPED",
+      "reason": "could not import 'fitz': No module named 'fitz'"
+    },
+    {
+      "class": "tests.test_upload_allocation_bound",
+      "name": "test_image_upload_bounds_read_before_rejecting_oversize",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_exact_signed_bytes_and_event_header_are_required",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_invalid_envelopes_are_rejected[payload0]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_invalid_envelopes_are_rejected[None]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_invalid_envelopes_are_rejected[7]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_invalid_envelopes_are_rejected[payload3]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_invalid_envelopes_are_rejected[payload4]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_invalid_envelopes_are_rejected[payload5]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_invalid_envelopes_are_rejected[payload6]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_malformed_payment_evidence_never_becomes_capture[amount-True]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_malformed_payment_evidence_never_becomes_capture[amount--1]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_malformed_payment_evidence_never_becomes_capture[amount-2000]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_malformed_payment_evidence_never_becomes_capture[currency-USD]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_malformed_payment_evidence_never_becomes_capture[id-../unrelated]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_malformed_payment_evidence_never_becomes_capture[order_id-None]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_malformed_payment_evidence_never_becomes_capture[status-failed]",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_unknown_signed_event_can_be_audited_without_business_dispatch",
+      "status": "PASS",
+      "reason": null
+    },
+    {
+      "class": "tests.test_webhook_envelope_security",
+      "name": "test_invalid_json_and_wrong_secret_are_rejected",
+      "status": "PASS",
+      "reason": null
+    }
+  ],
+  "source_identity": "Archive extraction outside Git;source hashes identify this exact run;Git HEAD alone does not identify applied uncommitted extraction changes."
+}

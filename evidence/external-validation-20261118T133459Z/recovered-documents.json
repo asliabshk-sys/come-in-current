@@ -1,0 +1,30 @@
+{
+  "COME_IN_LIVE_CHECKPOINT.md": {
+    "bytes": 108122,
+    "sha256": "2b0a9bbbbfa1b1130326f635f5650f3d2ebc90f3c54b096e9a985759ad357eeb"
+  },
+  "COME_IN_MASTER_TASK_TRACKER.md": {
+    "bytes": 147191,
+    "sha256": "b1706111cdb759edaeeae0149d8838f23fe760a9297eb512b9d9ec9b2372a191"
+  },
+  "COME_IN_DECISIONS_AND_BLOCKERS.md": {
+    "bytes": 124320,
+    "sha256": "6039cd1fe0ae5f8bf79a8146bcbce2f1fc7493afd14dd970e8bfb717ec52f51f"
+  },
+  "COME_IN_SESSION_LOG.md": {
+    "bytes": 118259,
+    "sha256": "639fc89604af24ac8343814526ca4d106d28a219e39e41ca3fac868c8b78fa76"
+  },
+  "COME_IN_NEXT_SESSION_RESUME_PROMPT.md": {
+    "bytes": 9086,
+    "sha256": "3f581a20a1d02bf13fce3826e8d9c08c07b328a2b0725603ae887315832ee3f9"
+  },
+  "COME_IN_RELEASE_READINESS.md": {
+    "bytes": 40128,
+    "sha256": "89e73cd3d11935d5b20a114e9c7316765a9ad479cb975c52d873d1eca009774d"
+  },
+  "FINAL_REGRESSION_REPORT.md": {
+    "bytes": 5705,
+    "sha256": "d050e6b913f0264d61299cfd3322d6347690aeba654a854828394493005fc469"
+  }
+}

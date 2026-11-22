@@ -1,0 +1,9 @@
+- Creating native directory (./android)
+✔ Created native directory
+- Updating package.json
+✔ Updated package.json
+- Running prebuild
+✔ Finished prebuild
+Failed to resolve the Android SDK path. Default install location not found: /home/agent/Android/Sdk. Use ANDROID_HOME to set the Android SDK location.
+CommandError: spawn adb ENOENT
+Check that Android SDK Platform-Tools is installed and ADB is available.

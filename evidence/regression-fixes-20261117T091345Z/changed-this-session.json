@@ -1,0 +1,5 @@
+[
+  "backend/catalogue_import_engine.py",
+  "backend/tests/test_universal_catalogue_import_engine.py",
+  "backend/tests/test_frontend_contracts.py"
+]

@@ -1,0 +1,172 @@
+INFO:     Started server process [1162]
+INFO:     Waiting for application startup.
+WARNING:comein:EMERGENT_LLM_KEY missing; uploads disabled
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:59506 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59514 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46892 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42288 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42296 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:42298 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42304 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:42320 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42328 - "PATCH /api/admin/users/6afc11827d481fcdbb5e5249/role HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42334 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:42348 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42350 - "PATCH /api/admin/users/6afc11827d481fcdbb5e524a/role HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42358 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42372 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42384 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42398 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:42400 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42408 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42424 - "POST /api/auth/register HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:42426 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42440 - "GET /api/shops/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42454 - "POST /api/shops HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42464 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42466 - "PATCH /api/admin/shops/6afc11847d481fcdbb5e524c/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42482 - "PATCH /api/shops/6afc11847d481fcdbb5e524c/availability HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42496 - "GET /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42504 - "POST /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42512 - "POST /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42528 - "GET /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42542 - "GET /api/shops HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42544 - "GET /api/catalog/products?q=Dal HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42546 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42548 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42558 - "GET /api/orders/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42572 - "GET /api/shops/6afc11847d481fcdbb5e524c/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42584 - "PATCH /api/orders/6afc11857d481fcdbb5e524f/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42588 - "GET /api/orders/6afc11857d481fcdbb5e524f/tracking HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42602 - "PATCH /api/orders/6afc11857d481fcdbb5e524f/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:42604 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42618 - "GET /api/restaurants/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42620 - "POST /api/restaurants HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42624 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42632 - "PATCH /api/admin/restaurants/6afc11857d481fcdbb5e5252/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42636 - "GET /api/restaurants/6afc11857d481fcdbb5e5252/menu HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42642 - "POST /api/restaurants/6afc11857d481fcdbb5e5252/menu HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42656 - "GET /api/restaurants/6afc11857d481fcdbb5e5252/menu HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42660 - "GET /api/restaurants HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42674 - "POST /api/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42688 - "POST /api/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42700 - "GET /api/restaurant/orders/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42706 - "GET /api/restaurant/payments/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42718 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42720 - "GET /api/admin/shops HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42732 - "GET /api/admin/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42738 - "GET /api/admin/earnings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42748 - "GET /api/admin/restaurants HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42762 - "GET /api/admin/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42766 - "GET /api/admin/users HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:42780 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42782 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42786 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42802 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42806 - "GET /api/shops/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42816 - "PATCH /api/admin/shops/6afc11847d481fcdbb5e524c/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42826 - "PATCH /api/shops/6afc11847d481fcdbb5e524c/availability HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42842 - "GET /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42854 - "POST /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42864 - "GET /api/admin/dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42876 - "GET /api/admin/dashboard HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:42882 - "GET /api/admin/dashboard HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:42896 - "GET /api/admin/dashboard HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:42904 - "POST /api/admin/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42916 - "PATCH /api/admin/announcements/6afc11877d481fcdbb5e5259 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42918 - "PATCH /api/admin/announcements/6afc11877d481fcdbb5e5259 HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:42926 - "PATCH /api/admin/announcements/6afc11877d481fcdbb5e5259 HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:42932 - "PATCH /api/admin/announcements/6afc11877d481fcdbb5e5259 HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:42944 - "PATCH /api/admin/announcements/6afc11877d481fcdbb5e5259 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42954 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42966 - "PATCH /api/admin/users/6afc11827d481fcdbb5e5248/role HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:42976 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42990 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43004 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43008 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43014 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43020 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43034 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43038 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43042 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43054 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43062 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43072 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43088 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43096 - "POST /api/auth/login HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:43110 - "POST /api/auth/login HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:43118 - "POST /api/grocery/quotes HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:43132 - "GET /api/shops/6afc11847d481fcdbb5e524c/orders HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:43146 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43156 - "POST /api/grocery/quotes HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:43160 - "POST /api/grocery/measured-price HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43164 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43170 - "POST /api/grocery/quotes HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:43172 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43176 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43182 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43188 - "POST /api/orders HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:43190 - "GET /api/grocery/payments/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43202 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43210 - "PATCH /api/orders/6afc11877d481fcdbb5e525d/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43226 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43238 - "GET /api/notifications/unread-count HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43252 - "POST /api/notifications/6afc11877d481fcdbb5e525f/read HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43268 - "GET /api/notifications/unread-count HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43278 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43294 - "POST /api/notifications/6afc11877d481fcdbb5e525f/read HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:43308 - "GET /api/restaurants/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43324 - "GET /api/restaurants/6afc11857d481fcdbb5e5252/menu HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43336 - "POST /api/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43350 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43362 - "PATCH /api/restaurant/orders/6afc11877d481fcdbb5e5260/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43378 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43394 - "POST /api/notifications/read-all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43402 - "GET /api/notifications/unread-count HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43414 - "GET /api/notifications/mine HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43422 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43434 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43448 - "GET /api/notifications/mine HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:43452 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43468 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43478 - "POST /api/notifications/6afc11877d481fcdbb5e525e/read HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:43490 - "POST /api/notifications/read-all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43492 - "GET /api/notifications/unread-count HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43496 - "POST /api/notifications/notanid/read HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:43504 - "GET /api/admin/announcements HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:43508 - "PATCH /api/admin/users/000000000000000000000000/role HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:43518 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35714 - "POST /api/admin/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35726 - "PATCH /api/admin/announcements/6afc11887d481fcdbb5e5263 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35728 - "PATCH /api/admin/announcements/6afc11887d481fcdbb5e5263 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35744 - "GET /api/admin/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35752 - "GET /api/announcements/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35760 - "GET /api/shops/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35768 - "GET /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35780 - "POST /api/grocery/measured-price HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35786 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:35802 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:35812 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:35814 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:34008 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34022 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34026 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34038 - "GET /api/delivery-partner/provider-status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34042 - "PUT /api/delivery-partner/application HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34056 - "GET /api/delivery-partner/application/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34072 - "POST /api/delivery-partner/application/submit HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:34084 - "POST /api/delivery-partner/otp/request HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:34090 - "GET /api/delivery-partner/admin/applications HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:34094 - "GET /api/delivery-partner/admin/applications HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34098 - "GET /api/delivery-partner/access HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:34106 - "GET /api/delivery-partner/application/mine HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:34122 - "GET /api/delivery-partner/application/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57502 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57614 - "GET /api/catalog/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47710 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1162]

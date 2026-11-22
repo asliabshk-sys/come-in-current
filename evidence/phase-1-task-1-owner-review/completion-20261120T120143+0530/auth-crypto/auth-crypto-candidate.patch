@@ -1,0 +1,101 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -207,6 +207,7 @@
+         d["id"] = str(d.pop("_id"))
+     # Never leak password hashes
+     d.pop("password_hash", None)
++    d.pop("password_version", None)
+     # Internal Grocery idempotency/session credentials must never reach clients.
+     d.pop("grocery_idempotency_scope", None)
+     return d
+@@ -231,14 +232,28 @@
+ 
+ 
+ def hash_password(password: str) -> str:
+-    return bcrypt.hashpw(
+-        password.encode("utf-8"), bcrypt.gensalt(rounds=BCRYPT_ROUNDS)
+-    ).decode("utf-8")
++    encoded = password.encode("utf-8")
++    prefix = ""
++    if len(encoded) > 72:
++        # A versioned prehash preserves the full accepted input beyond bcrypt's limit.
++        encoded = hashlib.sha256(b"comein-bcrypt-sha256-v1\0" + encoded).hexdigest().encode("ascii")
++        prefix = "bcrypt_sha256_v1$"
++    return prefix + bcrypt.hashpw(encoded, bcrypt.gensalt(rounds=BCRYPT_ROUNDS)).decode("utf-8")
+ 
+ 
+ def verify_password(plain: str, hashed: str) -> bool:
+-    try:
+-        return bcrypt.checkpw(plain.encode("utf-8"), hashed.encode("utf-8"))
++    if not isinstance(plain, str) or not isinstance(hashed, str):
++        return False
++    try:
++        encoded = plain.encode("utf-8")
++        prefix = "bcrypt_sha256_v1$"
++        if hashed.startswith(prefix):
++            encoded = hashlib.sha256(b"comein-bcrypt-sha256-v1\0" + encoded).hexdigest().encode("ascii")
++            hashed = hashed[len(prefix):]
++        elif len(encoded) > 72:
++            # Legacy bcrypt discarded the suffix; require recovery rather than accept aliases.
++            return False
++        return bcrypt.checkpw(encoded, hashed.encode("utf-8"))
+     except (ValueError, TypeError):
+         return False
+ 
+@@ -247,12 +262,13 @@
+     return os.environ["JWT_SECRET"]
+ 
+ 
+-def create_access_token(user_id: str, role: str, email: str) -> str:
++def create_access_token(user_id: str, role: str, email: str, password_version: int = 0) -> str:
+     payload = {
+         "sub": user_id,
+         "role": role,
+         "email": email,
+         "type": "access",
++        "pwdv": password_version,
+         "exp": now_utc() + timedelta(minutes=ACCESS_TTL_MIN),
+     }
+     return jwt.encode(payload, _jwt_secret(), algorithm=JWT_ALG)
+@@ -275,6 +291,8 @@
+             return None
+         user = await db.users.find_one({"_id": ObjectId(payload["sub"])})
+         if not user:
++            return None
++        if int(payload.get("pwdv", 0)) != int(user.get("password_version", 0)):
+             return None
+         return doc_out(user)
+     except (jwt.PyJWTError, Exception):
+@@ -893,7 +911,8 @@
+     if not user or not verify_password(body.password, user.get("password_hash", "")):
+         await _record_auth_attempt("login", request, email)  # only failed attempts count
+         raise HTTPException(status_code=401, detail="Invalid email or password")
+-    token = create_access_token(str(user["_id"]), user.get("role", "customer"), email)
++    token = create_access_token(str(user["_id"]), user.get("role", "customer"), email,
++                                password_version=int(user.get("password_version", 0)))
+     return {"token": token, "user": doc_out(user)}
+ 
+ 
+@@ -1092,8 +1111,11 @@
+     from email.message import EmailMessage
+     msg=EmailMessage(); msg["Subject"]="Reset your Come-In password"; msg["From"]=sender; msg["To"]=email
+     msg.set_content(f"Use this one-time link to reset your Come-In password: {base.rstrip('/')}?token={token}\nIf you did not request this, ignore this email. The link expires in 30 minutes.")
+-    port=int(os.environ.get("SMTP_PORT","587")); user=os.environ.get("SMTP_USER"); password=os.environ.get("SMTP_PASSWORD")
+-    try:
++    user=os.environ.get("SMTP_USER"); password=os.environ.get("SMTP_PASSWORD")
++    try:
++        port = int(os.environ.get("SMTP_PORT", "587"))
++        if not 1 <= port <= 65535:
++            raise ValueError("Invalid SMTP port")
+         with smtplib.SMTP(host,port,timeout=10) as smtp:
+             smtp.starttls()
+             if user and password: smtp.login(user,password)
+@@ -1139,7 +1161,7 @@
+         user_id = _object_id_or_404(claimed["user_id"],"User")
+         updated = await db.users.update_one(
+             {"_id":user_id},
+-            {"$set":{"password_hash":password_hash,"updated_at":now}},
++            {"$set":{"password_hash":password_hash,"updated_at":now}, "$inc":{"password_version":1}},
+             session=session,
+         )
+         if updated.matched_count != 1:

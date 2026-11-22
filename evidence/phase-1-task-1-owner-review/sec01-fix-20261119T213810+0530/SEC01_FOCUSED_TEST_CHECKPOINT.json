@@ -1,0 +1,31 @@
+{
+  "timestamp_UTC": "2026-11-19T16:16:40.606836+00:00",
+  "task": "SEC01 focused before/after real-Mongo regression",
+  "stage": "COMPLETE",
+  "last_completed": "Same unchanged20-case runner executed against before backup and current source;JSON/JUnit counts/source+runner/helper SHA bindings verified.",
+  "counts": {
+    "before": {
+      "PASS": 10,
+      "FAIL": 10,
+      "ERROR": 0,
+      "SKIPPED": 0
+    },
+    "after": {
+      "PASS": 20,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIPPED": 0
+    }
+  },
+  "before_exit_code": 1,
+  "after_exit_code": 0,
+  "source_edits_by_this_agent": 0,
+  "databases_retained": [
+    "comein_sec01_focused_before_20261119t161424z_f23513f3",
+    "comein_sec01_focused_after_20261119t161450z_ed7b5aed"
+  ],
+  "test_operations_interrupted": false,
+  "test_operations_running": false,
+  "next": "Parent final report/preservation/manifest;then stop for owner review. Do not rerun these tests absent a new source change or unresolved issue.",
+  "resume_prompt": "Read SEC01_FOCUSED_REGRESSION_REPORT.md,focused-before-after-summary.json,focused-before.json,focused-after.json and parent SEC01_RESUME_CHECKPOINT.md before any work. Verify source and runner hashes,Git status and owner scope. Twenty focused after cases pass;before10failures retained. Source edits were performed only by parent under SEC01 authorization. No other finding is authorized for changes. Do not assume any unrecorded operation succeeded or startTask2."
+}

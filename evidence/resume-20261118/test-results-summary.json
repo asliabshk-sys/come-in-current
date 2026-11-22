@@ -1,0 +1,86 @@
+{
+  "backend-full": {
+    "tests": "559",
+    "failures": "2",
+    "errors": "0",
+    "skipped": "6",
+    "time": "35.620"
+  },
+  "contract-focused": {
+    "tests": "24",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "2.650"
+  },
+  "backend-full-v2": {
+    "tests": "559",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "6",
+    "time": "32.255"
+  },
+  "security-races-before": {
+    "tests": "4",
+    "failures": "4",
+    "errors": "0",
+    "skipped": "0",
+    "time": "1.533"
+  },
+  "security-races-after": {
+    "tests": "28",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "2.685"
+  },
+  "security-final-focused": {
+    "tests": "5",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "1.123"
+  },
+  "security-tracking-final": {
+    "tests": "17",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "1.741"
+  },
+  "backend-final": {
+    "tests": "564",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "6",
+    "time": "31.268"
+  },
+  "backend-final-v2": {
+    "tests": "564",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "6",
+    "time": "32.190"
+  },
+  "payment-local": {
+    "tests": "78",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "8.279"
+  },
+  "affected-local-final": {
+    "tests": "7",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "5.576"
+  },
+  "live-regression-final": {
+    "tests": "70",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "9.343"
+  }
+}

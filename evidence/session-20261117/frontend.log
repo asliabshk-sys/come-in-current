@@ -1,0 +1,61 @@
+yarn run v1.22.22
+$ expo start --web --host lan --port 3000 --max-workers 2
+env: load .env
+env: export EXPO_PUBLIC_BACKEND_URL
+Starting project at /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend
+ ERROR  An unexpected error occurred while installing the latest version of React Native DevTools. Using a fallback version instead. Details:
+
+dotslash error: 'fetch' command failed
+caused by: failed to create directory `/home/agent/.cache/dotslash/f3`
+caused by: Read-only file system (os error 30)
+
+Metro is running in CI mode, reloads are disabled. Remove CI=true to enable watch mode.
+Starting Metro Bundler
+
+Waiting on http://localhost:3000
+
+Logs for your project will appear below.
+| (node:1180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:1180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+Web Bundled 4774ms node_modules/expo-router/entry.js (1699 modules)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+Web Bundled 255ms node_modules/expo-router/entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+Web Bundled 239ms node_modules/expo-router/entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+Web Bundled 244ms node_modules/expo-router/entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+Web Bundled 333ms node_modules/expo-router/entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+Web Bundled 153ms node_modules/expo-router/entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+Web Bundled 234ms node_modules/expo-router/entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+Web Bundled 158ms node_modules/expo-router/entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+Web Bundled 101ms node_modules/expo-router/entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+Web Bundled 185ms node_modules/expo-router/entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+Web Bundled 92ms node_modules/expo-router/entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+Web Bundled 124ms node_modules/expo-router/entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+Web Bundled 82ms node_modules/expo-router/entry.js (1 module)
+Web  INFO  %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+Web  WARN  `expo-router/unstable-native-tabs` is deprecated. Use `expo-router/native-tabs` instead.
+› Detected a change in metro.config.js. Restart the server to see the new results.

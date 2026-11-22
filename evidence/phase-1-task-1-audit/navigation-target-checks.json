@@ -1,0 +1,650 @@
+[
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 39,
+    "target": "/admin",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 40,
+    "target": "/admin-delivery-partners",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 41,
+    "target": "/admin-earnings",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 45,
+    "target": "/become-seller",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 50,
+    "target": "/seller/products",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 51,
+    "target": "/seller/orders",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 52,
+    "target": "/seller/support",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 53,
+    "target": "/seller-earnings",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 56,
+    "target": "/seller/support",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 72,
+    "target": "/(tabs)/cart",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 74,
+    "target": "/orders",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 81,
+    "target": "/referral-dashboard",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 84,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 89,
+    "target": "/delivery-partner",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 94,
+    "target": "/addresses",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 96,
+    "target": "/chand",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 97,
+    "target": "/shops",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 98,
+    "target": "/services",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 108,
+    "target": "/language",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 110,
+    "target": "/notifications",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 111,
+    "target": "/payment-methods",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 112,
+    "target": "/chand",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 141,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 202,
+    "target": "/become-seller",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 203,
+    "target": "/become-seller",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 204,
+    "target": "/restaurant/dashboard",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/account.tsx",
+    "line": 205,
+    "target": "/services",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 54,
+    "target": "/(tabs)",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/cart.tsx",
+    "line": 211,
+    "target": "/checkout",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/categories.tsx",
+    "line": 24,
+    "target": "/services",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 96,
+    "target": "/chand",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 99,
+    "target": "/language",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 106,
+    "target": "/(tabs)/account",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 118,
+    "target": "/(tabs)/search",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 128,
+    "target": "/(tabs)/categories",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 143,
+    "target": "/(tabs)/categories",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 178,
+    "target": "/referral-dashboard",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 187,
+    "target": "/shops",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 188,
+    "target": "/shops",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 189,
+    "target": "/restaurant",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 190,
+    "target": "/services",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 196,
+    "target": "/(tabs)/categories",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 239,
+    "target": "/chand",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 268,
+    "target": "/(tabs)/categories",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 278,
+    "target": "/services",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/(tabs)/index.tsx",
+    "line": 288,
+    "target": "/services",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 37,
+    "target": "/(tabs)/account",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 124,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/admin.tsx",
+    "line": 258,
+    "target": "/admin-earnings",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/auth.tsx",
+    "line": 65,
+    "target": "/(tabs)/account",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/auth.tsx",
+    "line": 174,
+    "target": "/password-reset",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 110,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 396,
+    "target": "/seller/products",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/become-seller.tsx",
+    "line": 397,
+    "target": "/seller/orders",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 788,
+    "target": "/(tabs)/categories",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 789,
+    "target": "/restaurant",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 790,
+    "target": "/services",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 791,
+    "target": "/orders",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/chand.tsx",
+    "line": 792,
+    "target": "/request",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 224,
+    "target": "/(tabs)",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/checkout.tsx",
+    "line": 227,
+    "target": "/orders",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/notifications.tsx",
+    "line": 44,
+    "target": "/order-tracking",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/orders.tsx",
+    "line": 147,
+    "target": "/(tabs)/cart",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/orders.tsx",
+    "line": 168,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/orders.tsx",
+    "line": 193,
+    "target": "/restaurant/orders/[id]",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/orders.tsx",
+    "line": 208,
+    "target": "/chand",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/password-reset.tsx",
+    "line": 6,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/payment-methods.tsx",
+    "line": 29,
+    "target": "/(tabs)/cart",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/payment-methods.tsx",
+    "line": 30,
+    "target": "/restaurant/cart",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 107,
+    "target": "/checkout",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/product/[id].tsx",
+    "line": 132,
+    "target": "/(tabs)/cart",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/referral.tsx",
+    "line": 29,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/referral.tsx",
+    "line": 30,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/request.tsx",
+    "line": 134,
+    "target": "/delivery-address",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/[id].tsx",
+    "line": 16,
+    "target": "/restaurant",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/[id].tsx",
+    "line": 28,
+    "target": "/restaurant/cart",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/cart.tsx",
+    "line": 7,
+    "target": "/restaurant",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/cart.tsx",
+    "line": 7,
+    "target": "/restaurant/checkout",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/categories.tsx",
+    "line": 10,
+    "target": "/restaurant/[id]",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 114,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 119,
+    "target": "/addresses",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 138,
+    "target": "/addresses",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 168,
+    "target": "/restaurant/orders/[id]",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 169,
+    "target": "/restaurant/order-confirmation",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 182,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 201,
+    "target": "/addresses",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/checkout.tsx",
+    "line": 202,
+    "target": "/delivery-address",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/dashboard.tsx",
+    "line": 32,
+    "target": "/restaurant",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/index.tsx",
+    "line": 11,
+    "target": "/restaurant/search",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/index.tsx",
+    "line": 11,
+    "target": "/restaurant/search",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/index.tsx",
+    "line": 11,
+    "target": "/restaurant/categories",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/index.tsx",
+    "line": 11,
+    "target": "/restaurant/search",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/index.tsx",
+    "line": 11,
+    "target": "/restaurant/[id]",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/order-confirmation.tsx",
+    "line": 4,
+    "target": "/restaurant/orders",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/order-confirmation.tsx",
+    "line": 4,
+    "target": "/restaurant",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/orders/[id].tsx",
+    "line": 9,
+    "target": "/order-tracking",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/orders/[id].tsx",
+    "line": 9,
+    "target": "/restaurant/support",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/orders/index.tsx",
+    "line": 69,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/orders/index.tsx",
+    "line": 93,
+    "target": "/restaurant",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/orders/index.tsx",
+    "line": 102,
+    "target": "/restaurant/orders/[id]",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/restaurant/search.tsx",
+    "line": 11,
+    "target": "/restaurant/[id]",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/seller/orders.tsx",
+    "line": 77,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/seller/products.tsx",
+    "line": 326,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/seller/support.tsx",
+    "line": 98,
+    "target": "/auth",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 23,
+    "target": "/(tabs)/account",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "app/shops.tsx",
+    "line": 167,
+    "target": "/retail-prices",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "src/components/ProductCard.tsx",
+    "line": 36,
+    "target": "/checkout",
+    "status": "STATICALLY VERIFIED route target present"
+  },
+  {
+    "file": "src/restaurant/RestaurantModeShell.tsx",
+    "line": 41,
+    "target": "/(tabs)",
+    "status": "STATICALLY VERIFIED route target present"
+  }
+]

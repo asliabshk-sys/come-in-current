@@ -1,0 +1,18 @@
+yarn run v1.22.22
+$ /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/.bin/expo install react-native-razorpay@3.0.0 --yarn
+env: load .env
+env: export EXPO_PUBLIC_BACKEND_URL
+Unable to fetch compatibility data from React Native Directory. Skipping check.
+Error: HTTP Proxy Network Error: Forbidden
+Error: HTTP Proxy Network Error: Forbidden
+    at ClientRequest.<anonymous> (/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/fetch-nodeshim/dist/minifetch.js:353:13)
+    at ClientRequest.wrapper (node:events:639:12)
+    at ClientRequest.emit (node:events:514:28)
+    at Socket.socketOnData (node:_http_client:854:11)
+    at Socket.emit (node:events:514:28)
+    at addChunk (node:internal/streams/readable:569:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:520:3)
+    at Readable.push (node:internal/streams/readable:400:5)
+    at TCP.onStreamRead (node:internal/stream_base_commons:194:23)
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

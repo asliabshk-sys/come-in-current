@@ -1,0 +1,54 @@
+{
+  "COME_IN_LIVE_CHECKPOINT.md": {
+    "bytes": 108122,
+    "sha256": "2b0a9bbbbfa1b1130326f635f5650f3d2ebc90f3c54b096e9a985759ad357eeb",
+    "saved_and_read_verified": true
+  },
+  "COME_IN_MASTER_TASK_TRACKER.md": {
+    "bytes": 147191,
+    "sha256": "b1706111cdb759edaeeae0149d8838f23fe760a9297eb512b9d9ec9b2372a191",
+    "saved_and_read_verified": true
+  },
+  "COME_IN_DECISIONS_AND_BLOCKERS.md": {
+    "bytes": 124320,
+    "sha256": "6039cd1fe0ae5f8bf79a8146bcbce2f1fc7493afd14dd970e8bfb717ec52f51f",
+    "saved_and_read_verified": true
+  },
+  "COME_IN_SESSION_LOG.md": {
+    "bytes": 118259,
+    "sha256": "639fc89604af24ac8343814526ca4d106d28a219e39e41ca3fac868c8b78fa76",
+    "saved_and_read_verified": true
+  },
+  "COME_IN_NEXT_SESSION_RESUME_PROMPT.md": {
+    "bytes": 9086,
+    "sha256": "3f581a20a1d02bf13fce3826e8d9c08c07b328a2b0725603ae887315832ee3f9",
+    "saved_and_read_verified": true
+  },
+  "COME_IN_RELEASE_READINESS.md": {
+    "saved": true
+  },
+  "NATIVE_ANDROID_VALIDATION_REPORT.md": {
+    "saved": true
+  },
+  "NATIVE_IOS_VALIDATION_REPORT.md": {
+    "saved": true
+  },
+  "RAZORPAY_TEST_INTEGRATION_REPORT.md": {
+    "saved": true
+  },
+  "WEBHOOK_VERIFICATION_REPORT.md": {
+    "saved": true
+  },
+  "REFUND_VERIFICATION_REPORT.md": {
+    "saved": true
+  },
+  "FINAL_REGRESSION_REPORT.md": {
+    "saved": true
+  },
+  "ENVIRONMENT_DEPENDENCY_REPORT.md": {
+    "saved": true
+  },
+  "SECURITY_FINAL_REVIEW.md": {
+    "saved": true
+  }
+}

@@ -1,0 +1,367 @@
+{
+  "role": "database/history independent owner review",
+  "read_only": true,
+  "queried_database": false,
+  "tests_executed": 0,
+  "reports_fully_read": [
+    "PHASE_1_TASK_1_API_AND_DATABASE_INVENTORY.md",
+    "PHASE_1_TASK_1_MASTER_AUDIT_REPORT.md",
+    "PHASE_1_TASK_1_EVIDENCE_MANIFEST.json"
+  ],
+  "method": "Read allactualcontents/JSON;independent AST/metadata/XML parsing and hashes.No originalextractor executed.",
+  "claims": [
+    {
+      "id": "DBH-01",
+      "claim": "67 declared indexes in current server.py",
+      "verdict": "VERIFIED",
+      "evidence": [
+        "Independent ast.walk of current server.py:67 literal db.<collection>.create_index calls",
+        "index-inventory.json exactly matches independent collection/line/keys/options extraction"
+      ],
+      "report_reference": "API_AND_DATABASE:11,212,271-341;MASTER:11,43"
+    },
+    {
+      "id": "DBH-02",
+      "claim": "27 unique declarations",
+      "verdict": "VERIFIED",
+      "evidence": [
+        "Independent AST option count27;metadata contains27 unique=true secondary indexes"
+      ],
+      "report_reference": "API_AND_DATABASE:212;MASTER:43"
+    },
+    {
+      "id": "DBH-03",
+      "claim": "All67 source declarations match saved metadata",
+      "verdict": "VERIFIED",
+      "evidence": [
+        "Independent matching included key order,unique/sparse defaults,partialFilterExpression,expireAfterSeconds,collation and explicitname;0mismatches. Original comparator is weaker because it ignores undeclared extra options/defaults, but no mismatch was found under stronger check."
+      ],
+      "report_reference": "API_AND_DATABASE:212,271-341;index-metadata-comparison.json"
+    },
+    {
+      "id": "DBH-04",
+      "claim": "52 collections/119 indexes in inspected snapshot",
+      "verdict": "VERIFIED",
+      "evidence": [
+        "Parsed52distinct collection names,119indexes,52_id plus67secondary. All51source collection names present;extra collection _portability_healthcheck."
+      ],
+      "report_reference": "API_AND_DATABASE:212,214-269;MASTER:43"
+    },
+    {
+      "id": "DBH-05",
+      "claim": "Local rs0PRIMARY and absence of validators are live/runtime findings",
+      "verdict": "PARTIALLY VERIFIED",
+      "evidence": [
+        "Savedmetadata has rs0,is_primary=true,52validator_present=false;script hardcodes loopback/disposable DB and onlyhello/listCollections/listIndexes",
+        "No fresh DB query performed by owner review. No capturetimestamp/serverversion/rawhello/rawcollectionoptions saved. Snapshot cannot establish current live state or other DBs/production. bool(options.validator) collapses absent vs{};safe wording is no nonempty validator observed in that inspected52collection snapshot."
+      ],
+      "report_reference": "API_AND_DATABASE:208-212;MASTER:43;read-only-db-metadata.py:9-16;local-db-readonly-metadata.json:2-16"
+    },
+    {
+      "id": "DBH-06",
+      "claim": "39 existing JUnit artifacts classified as historical",
+      "verdict": "VERIFIED",
+      "evidence": [
+        "39unique existing XML paths;allstored suite attrs match actual XML parsed independently;allpre-date06:59:35-08auditmanifest",
+        "10failed-run XMLs and1zero-test artifact are retained,not described as allgreen. Do not totaloverlapping runs."
+      ],
+      "report_reference": "MASTER:98;EVIDENCE_MANIFEST:test_artifact_references;existing-test-result-index.json"
+    },
+    {
+      "id": "DBH-07",
+      "claim": "Historical558passed6skipped,70live,78focused,25upload",
+      "verdict": "VERIFIED",
+      "evidence": [
+        "Actualtestcases backend-final-v2.xml564total0fail0error6skip=558pass timestamp2026-11-18T13:25:23.275822+00:00",
+        "live-regression-final.xml70pass timestamp13:25:37.302305Z",
+        "payment-local.xml78pass timestamp13:20:26.013737Z",
+        "upload-security-after.xml25pass timestamp13:37:38.548339Z"
+      ],
+      "report_reference": "MASTER:98;API_AND_DATABASE:416,420;historical XMLs noted"
+    },
+    {
+      "id": "DBH-08",
+      "claim": "Fresh application tests0 and historical results not promoted as current execution",
+      "verdict": "VERIFIED",
+      "evidence": [
+        "MASTER:98-100 explicitly separates parser/CRC/metadata checks from pytest/frontend/provider/device suites;manifestfresh_checks application_test_suites_run=0",
+        "No newlyexecuted suite output exists in original auditfolder."
+      ],
+      "report_reference": "MASTER:98-100;EVIDENCE_MANIFEST:1093-1102"
+    },
+    {
+      "id": "DBH-09",
+      "claim": "Payment/webhook/refund tests prove real provider verification",
+      "verdict": "BLOCKED",
+      "evidence": [
+        "The reports correctlydoNOTmakethatclaim. Current localintegration sources monkeypatch provider settings and HTTPcalls:payment_webhook_local_integration.py34-39,123-148;grocery_refund_local_integration.py25-38. They use realisolated Mongo+ASGI but localmessages/provider mocks. No actualprovider success evidence found."
+      ],
+      "report_reference": "MASTER:80-94;API_AND_DATABASE:416;MASTER:98-104"
+    },
+    {
+      "id": "DBH-10",
+      "claim": "Native device and production gates verified",
+      "verdict": "BLOCKED",
+      "evidence": [
+        "Reports correctlykeepthese blocked;prior JSexports/autolink and local fault/auth/TLS/restore artifacts cannot establish APK/IPA,physicaldevice,actualproduction DB/TLS/security."
+      ],
+      "report_reference": "MASTER:33,45,80-94,104;API_AND_DATABASE:420"
+    },
+    {
+      "id": "DBH-11",
+      "claim": "All six Markdown reports and supporting evidence hashes match originalmanifest",
+      "verdict": "VERIFIED",
+      "evidence": [
+        "Independently read allmanifest reports/support files and recalculateSHA256+sizes:0mismatches. Selfhash exclusion is explicit and acceptable."
+      ],
+      "report_reference": "EVIDENCE_MANIFEST:reports,supporting_evidence,manifest_self_hash"
+    },
+    {
+      "id": "DBH-12",
+      "claim": "All inherited report/history/source/ZIP/patch files were hash-protected",
+      "verdict": "CONTRADICTED",
+      "evidence": [
+        "protected-file-hashes-before.json8150entries=8128extractedapp+20rootfiles+2patchfiles. ZEROexistingroot/evidence files covered;noneof39referenced historical XMLs hashed in preservationbaseline or directmanifestartifact entries. Wording \u201call inherited report/history\u201d is therefore broader than actualcoverage. This does NOT prove anyfile was modified."
+      ],
+      "report_reference": "MASTER:19;EVIDENCE_MANIFEST:1104-1111;protected-file-hashes-before.json"
+    },
+    {
+      "id": "DBH-13",
+      "claim": "Current source binding for backendserver",
+      "verdict": "VERIFIED",
+      "evidence": [
+        "Current server.pySHA256 equals originalprotected baseline entry. Source index extraction therefore applies to unchanged currentlyavailable file."
+      ],
+      "report_reference": "EVIDENCE_MANIFEST:preservation;protected-file-hashes-before.json"
+    },
+    {
+      "id": "DBH-14",
+      "claim": "Historical artifact content immutable and bound to audited source execution",
+      "verdict": "UNVERIFIED",
+      "evidence": [
+        "Suitepath/metadata copied to index but underlying39XMLhashes omitted;no per-run Git/sourceSHA link. ExactcurrentXMLcountsverified,authentic historical execution/sourcebindingcannotbe cryptographicallyproven. Need source/buildhash plus environment/command provenance for each decisive runtime claim."
+      ],
+      "report_reference": "EVIDENCE_MANIFEST:test_artifact_references;existing-test-result-index.json"
+    }
+  ],
+  "gap_recommendations": [
+    "Timestamp and identify DBsnapshot with rawredacted relevant collectionoptions;state inspectedscope without production/globalclaim.",
+    "Hash39underlying decisive historicalXML/log/browser/build artifacts and bind decisive runs tosourceSHA/command/env;record zero-test/failing runs explicitly.",
+    "Narrow protectionclaim to exactbaseline coverage;do not silentlyedit originalreports.",
+    "No fresh runtime/provider/device/production signoff from historical ormock artifacts."
+  ],
+  "suggested_final_decision": "REVIEW PENDING",
+  "note": "Evidence insuf\ufb01cient for ownerapproval; noHIGHsecurity finding closed by this review.",
+  "review_timestamp_utc_minus08": "2026-11-18T07:08:30.569537-08:00",
+  "observed_snapshot_hashes": {
+    "local-db-readonly-metadata.json": "4f5b09febb2599df801ad533316004e6de3c2b3fb8e4b533ff6a5df0bc657d8e",
+    "index-inventory.json": "469f3f2a0a8ae1ef03b331a626af9fa03122f1eeadd2c80c6940054c3424aa83",
+    "index-metadata-comparison.json": "33909d0027dab2bd48bea61bcf3a54141de89bce12e2be4c62a655a4b3d1d196",
+    "existing-test-result-index.json": "8fca6b4eacffc4c806dada2c5c42e27ff7e7eb8ca301fac78d3d6290e617abf8",
+    "protected-file-hashes-before.json": "0aec6669a759667a84ce5e83a63eda24a3b661c18b35dc2910afa0a8148a7bc4"
+  },
+  "current_historical_artifact_hashes": [
+    {
+      "path": "/workspace/come-in-current/evidence/session-20261117/frontend-group-regression.xml",
+      "sha256_computed_during_owner_review": "3659aa064aa2e98d1a07292206f42b058ecb32f86d332124428f85a09e6f60a1",
+      "recorded_suite_timestamp": "2026-11-17T08:49:58.304638+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/session-20261117/transaction-regression.xml",
+      "sha256_computed_during_owner_review": "fc702faeca5972e27918f5226b879a79fce6983db6c5f24f764f1541f6493826",
+      "recorded_suite_timestamp": "2026-11-17T08:44:44.935425+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/session-20261117/release-offline.xml",
+      "sha256_computed_during_owner_review": "140a797f97882168ba3f7e72a785510634f148013bd2ad16539a75561f2263d7",
+      "recorded_suite_timestamp": "2026-11-17T09:00:25.345305+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/session-20261117/frontend-effects-regression.xml",
+      "sha256_computed_during_owner_review": "03c233bdd178dbfdbd31584e5085e08b63510cc74e9b87f63cc6ab00566767c4",
+      "recorded_suite_timestamp": "2026-11-17T08:58:28.605813+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/session-20261117/seller-support-contract-final.xml",
+      "sha256_computed_during_owner_review": "5d5ad560bfb6792ca63411d014f015913baaf2f7a353e591d58db345bf896784",
+      "recorded_suite_timestamp": "2026-11-17T09:05:04.600192+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/session-20261117/state-group-regression.xml",
+      "sha256_computed_during_owner_review": "6853f233f83b16626f3c71bc607c0279d878c195776daf6864d1376862ff233e",
+      "recorded_suite_timestamp": "2026-11-17T08:53:01.253335+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/session-20261117/live-after-fix.xml",
+      "sha256_computed_during_owner_review": "f367042785cb34f972c0ac2b36b5b4c924dcb87ac6b4e6b310ce2afb895fd32b",
+      "recorded_suite_timestamp": "2026-11-17T08:46:06.225606+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/session-20261117/release-offline-final.xml",
+      "sha256_computed_during_owner_review": "cee43f2fd0e14447f9959dbe0ea449a373dc67c8dea4c8cef2bd3bd6175e3e9e",
+      "recorded_suite_timestamp": "2026-11-17T09:03:00.046180+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/session-20261117/transaction-regression-v2.xml",
+      "sha256_computed_during_owner_review": "5454680de27a9b8cec742eb473722a9571a085b38c9cab80ed3e51140769e4bc",
+      "recorded_suite_timestamp": "2026-11-17T08:45:09.556386+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/session-20261117/remaining-runtime.xml",
+      "sha256_computed_during_owner_review": "87eca641c9ce12708b55b296149b53ca6fc0c8669537bc9d36eda90dc85b634d",
+      "recorded_suite_timestamp": "2026-11-17T08:34:11.054102+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/session-20261117/auth-contract-correction.xml",
+      "sha256_computed_during_owner_review": "eb82a0acb4848c58d600c6dd6b04e03cd8db96145bec7c0ab2970ab30a4de46b",
+      "recorded_suite_timestamp": "2026-11-17T09:01:56.741822+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step3-tests.xml",
+      "sha256_computed_during_owner_review": "d5f646a021c24df23a76b964473d26476a3f247f7017f324b17b6cccd140191d",
+      "recorded_suite_timestamp": "2026-11-17T09:54:32.373710+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step9-payment-v2.xml",
+      "sha256_computed_during_owner_review": "7b2362e8287b6f8a620bc11ed67c05cceec4c88619a9a7e1e6575c6cb0be374d",
+      "recorded_suite_timestamp": "2026-11-17T10:20:57.816035+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step5-tests.xml",
+      "sha256_computed_during_owner_review": "75158bad5f8ba207355d9f58a6c31aa4946cb4a3f1cf1ec3f5c4406bf5eb6303",
+      "recorded_suite_timestamp": "2026-11-17T10:10:34.571365+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-tests-v2.xml",
+      "sha256_computed_during_owner_review": "02102ae671b9463770780a6b7391f8065742bd2e656a2d5b1f5619e07b6dabda",
+      "recorded_suite_timestamp": "2026-11-17T10:00:06.714995+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step1-live.xml",
+      "sha256_computed_during_owner_review": "cdf984b0b591dda55a6b2ea3845e6843131090e574b59e320495801cd2b27286",
+      "recorded_suite_timestamp": "2026-11-17T09:48:07.463618+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step9-payment.xml",
+      "sha256_computed_during_owner_review": "27c7ab90c8daaf1d5f2f553beb841032fe448f35e0c6761bedad169dc948079d",
+      "recorded_suite_timestamp": "2026-11-17T10:20:33.399228+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step5-tests-v2.xml",
+      "sha256_computed_during_owner_review": "575c2e1211728fea32e78a300ef4319bb9f405aceabde7ce78bbfdd79f3a760a",
+      "recorded_suite_timestamp": "2026-11-17T10:10:53.981523+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-final.xml",
+      "sha256_computed_during_owner_review": "dbe8429e0f760e2489571c75783cad952204d5805ae1547efc0b52778e66483c",
+      "recorded_suite_timestamp": "2026-11-17T10:03:25.232767+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-tests.xml",
+      "sha256_computed_during_owner_review": "4129c08d91e2176bc01a7a7726efa091e39bcaca7bf4b6429c17e29f59d149ee",
+      "recorded_suite_timestamp": "2026-11-17T09:59:30.429540+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/three-failures-after.xml",
+      "sha256_computed_during_owner_review": "fb48f614b43fde1d3607ff9b6d8514295d406baf07d2629793918945fbdab880",
+      "recorded_suite_timestamp": "2026-11-17T09:15:24.609966+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/csv-focused.xml",
+      "sha256_computed_during_owner_review": "a3c4031e9235813c72d590a856e2d91d843b838ed4290a64d643544421aa07b9",
+      "recorded_suite_timestamp": "2026-11-17T09:14:24.008321+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/three-failures-before.xml",
+      "sha256_computed_during_owner_review": "2a7bfbb5abd96645bf505427349d710aca75026dce955f601c56f9453576fc89",
+      "recorded_suite_timestamp": "2026-11-17T09:13:46.165158+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/relevant-regression.xml",
+      "sha256_computed_during_owner_review": "b49002aa2c9ee4475c06dd72b6754e39fc01e060e070a65eb77ab4022bf2ab40",
+      "recorded_suite_timestamp": "2026-11-17T09:17:07.795784+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/external-validation-20261118T133459Z/upload-types-before.xml",
+      "sha256_computed_during_owner_review": "e880146295adae5e6e24874a64bea1f2ef61aec8e0e4f39d2665381acec271e3",
+      "recorded_suite_timestamp": "2026-11-18T13:36:52.433912+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/external-validation-20261118T133459Z/upload-security-after.xml",
+      "sha256_computed_during_owner_review": "f171157678f722b030bb12e97612cd29e7a3787b67d6b8dcf1627eda15a02d4c",
+      "recorded_suite_timestamp": "2026-11-18T13:37:38.548339+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/security-races-before.xml",
+      "sha256_computed_during_owner_review": "a5823d72863f9e395701315e26859655a9ca72aa2f8dff95d320d2a1094686f9",
+      "recorded_suite_timestamp": "2026-11-18T13:22:31.668987+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/backend-final.xml",
+      "sha256_computed_during_owner_review": "039d4c3f0ddc4a0741ede271ccb71b0a8eb9315b7c13577ad1516b73d0efedbc",
+      "recorded_suite_timestamp": "2026-11-18T13:23:45.698295+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/payment-local.xml",
+      "sha256_computed_during_owner_review": "e59c2522b2ffded9573e5b8f288db83154cbe62e5fd2ea197d05d79e1100d4c9",
+      "recorded_suite_timestamp": "2026-11-18T13:20:26.013737+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/backend-full.xml",
+      "sha256_computed_during_owner_review": "0786bac0b221c114389c016b2ba730f114047a39f743d246a620d258deca291b",
+      "recorded_suite_timestamp": "2026-11-18T13:18:58.261920+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/contract-focused.xml",
+      "sha256_computed_during_owner_review": "f1846403e7e88e38f253d9e06f3672e7076e9647ffb06fee2568df9d706b787f",
+      "recorded_suite_timestamp": "2026-11-18T13:20:06.480649+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/backend-final-v2.xml",
+      "sha256_computed_during_owner_review": "51fb23bdfaf50692e6919c342ad9be0a653b082e986f1ed825deb3706b3a00c2",
+      "recorded_suite_timestamp": "2026-11-18T13:25:23.275822+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/security-races-after.xml",
+      "sha256_computed_during_owner_review": "737878a8f6e366e435dfa466518b3bf5ae12686c9c87acde03cac02793ecee4d",
+      "recorded_suite_timestamp": "2026-11-18T13:23:10.051980+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/security-final-focused.xml",
+      "sha256_computed_during_owner_review": "af87bfce8a43298e8bf3406da36a9fd6a5979f2faab33ee59fb5768d8c92e8a4",
+      "recorded_suite_timestamp": "2026-11-18T13:23:44.317153+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/security-tracking-final.xml",
+      "sha256_computed_during_owner_review": "6f6b90e1e7e92cd62dddf92b35b126b1f8d755a7562c80465f6c947d71f79521",
+      "recorded_suite_timestamp": "2026-11-18T13:24:54.575700+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/live-regression.xml",
+      "sha256_computed_during_owner_review": "3fcec03b36752f0b7b3b08516a3fc8212f55bbf8fd3684acc21e1ed61f4c37eb",
+      "recorded_suite_timestamp": "2026-11-18T13:20:25.773575+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/affected-local-final.xml",
+      "sha256_computed_during_owner_review": "d918bbb7c34881c510dccc9eab14c22c49d972953133816f1cef2b75a9416616",
+      "recorded_suite_timestamp": "2026-11-18T13:25:23.245605+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/live-regression-final.xml",
+      "sha256_computed_during_owner_review": "ec16a54d1d43efad79c261408ee43a2216a1a92ec3ce0e53d724c2a9c09e990e",
+      "recorded_suite_timestamp": "2026-11-18T13:25:37.302305+00:00"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/resume-20261118/backend-full-v2.xml",
+      "sha256_computed_during_owner_review": "d657160d4a8faffa3959e6d3cd4b36c7715b4f0c92b880538a30d719651ae2d6",
+      "recorded_suite_timestamp": "2026-11-18T13:20:38.725101+00:00"
+    }
+  ],
+  "timestamp_limitations": {
+    "audit_manifest_timestamp": "2026-11-18T06:59:35.625897-08:00",
+    "metadata_capture_timestamp": "NOT PRESENT in local-db-readonly-metadata.json",
+    "specific_DB_endpoint_name": "Only script hardcodes localendpoint/disposableDB;JSONtarget is generic",
+    "historical_XML_timestamps": "Self-reported suite timestamps present;independent service/runtime/source attestation NOT FOUND",
+    "old_XML_hash_binding": "CurrentSHA256addedinthisreview;originalaudit didNOTrecord39XMLhashes and baselineexcludedallroot/evidence files"
+  }
+}

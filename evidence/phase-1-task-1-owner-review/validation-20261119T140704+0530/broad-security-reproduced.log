@@ -1,0 +1,56 @@
+................................................F.                       [100%]
+=================================== FAILURES ===================================
+_________ test_concurrent_cross_demotion_preserves_at_least_one_admin __________
+
+    def test_concurrent_cross_demotion_preserves_at_least_one_admin():
+        async def run():
+            a,b=ObjectId(),ObjectId()
+            users=AdminUsers([a,b])
+            NS['db']=SimpleNamespace(users=users)
+            body=NS['AdminRoleUpdateIn'](role='customer')
+            result=await asyncio.gather(
+              NS['admin_update_user_role'](str(b),body,{'id':str(a),'role':'admin'}),
+              NS['admin_update_user_role'](str(a),body,{'id':str(b),'role':'admin'}),
+            )
+            remaining=sum(row['role']=='admin' for row in users.rows.values())
+            assert remaining>=1, f'Last-admin invariant failed:both demotions returned;remaining_admins={remaining}'
+            return result
+>       asyncio.run(run())
+
+test_broad_security_isolated.py:181: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    async def run():
+        a,b=ObjectId(),ObjectId()
+        users=AdminUsers([a,b])
+        NS['db']=SimpleNamespace(users=users)
+        body=NS['AdminRoleUpdateIn'](role='customer')
+        result=await asyncio.gather(
+          NS['admin_update_user_role'](str(b),body,{'id':str(a),'role':'admin'}),
+          NS['admin_update_user_role'](str(a),body,{'id':str(b),'role':'admin'}),
+        )
+        remaining=sum(row['role']=='admin' for row in users.rows.values())
+>       assert remaining>=1, f'Last-admin invariant failed:both demotions returned;remaining_admins={remaining}'
+E       AssertionError: Last-admin invariant failed:both demotions returned;remaining_admins=0
+E       assert 0 >= 1
+
+test_broad_security_isolated.py:179: AssertionError
+=============================== warnings summary ===============================
+../../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+  /workspace/come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../../../come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend::test_concurrent_cross_demotion_preserves_at_least_one_admin
+1 failed, 49 passed, 1 warning in 0.59s

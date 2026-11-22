@@ -1,0 +1,43 @@
+yarn run v1.22.22
+$ tsc --noEmit
+app/(tabs)/account.tsx(53,11): error TS2367: This comparison appears to be unintentional because the types '"customer" | "admin" | undefined' and '"restaurant"' have no overlap.
+app/chand.tsx(180,32): error TS2339: Property 'focus' does not exist on type 'TextInputType'.
+app/chand.tsx(738,22): error TS2322: Type 'RefObject<TextInputType | null>' is not assignable to type 'Ref<_TextInputInstance> | undefined'.
+  Type 'RefObject<TextInputType | null>' is not assignable to type 'RefObject<_TextInputInstance | null>'.
+    Type 'TextInputType | null' is not assignable to type '_TextInputInstance | null'.
+      Type 'TextInputType' is not assignable to type '_TextInputInstance | null'.
+app/chand.tsx(739,204): error TS2339: Property 'focus' does not exist on type 'TextInputType'.
+app/checkout.tsx(84,56): error TS7006: Parameter 'method' implicitly has an 'any' type.
+app/checkout.tsx(275,224): error TS2367: This comparison appears to be unintentional because the types '"delivery"' and '"pickup"' have no overlap.
+app/order-tracking.tsx(56,45): error TS2339: Property 'quantity_label' does not exist on type '{ product_id: string; variant_id?: string | null | undefined; name: string; unit: string; qty: number; price: number; }'.
+app/order-tracking.tsx(56,70): error TS2339: Property 'quantity_label' does not exist on type '{ product_id: string; variant_id?: string | null | undefined; name: string; unit: string; qty: number; price: number; }'.
+app/order-tracking.tsx(57,47): error TS2339: Property 'line_total' does not exist on type '{ product_id: string; variant_id?: string | null | undefined; name: string; unit: string; qty: number; price: number; }'.
+app/order-tracking.tsx(57,80): error TS2339: Property 'line_total' does not exist on type '{ product_id: string; variant_id?: string | null | undefined; name: string; unit: string; qty: number; price: number; }'.
+app/restaurant/orders/[id].tsx(8,3555): error TS18047: 'order' is possibly 'null'.
+app/seller/products.tsx(292,155): error TS18048: 'v.stock' is possibly 'undefined'.
+app/seller/products.tsx(511,84): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/seller/products.tsx(512,85): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/seller/products.tsx(513,125): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/seller/products.tsx(517,239): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/seller/products.tsx(520,122): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/seller/products.tsx(523,97): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/seller/products.tsx(546,84): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/seller/products.tsx(548,119): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/seller/products.tsx(549,142): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/seller/products.tsx(550,114): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/seller/products.tsx(560,146): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/seller/support.tsx(56,39): error TS2367: This comparison appears to be unintentional because the types '"customer" | "admin"' and '"restaurant"' have no overlap.
+app/seller/support.tsx(99,37): error TS2367: This comparison appears to be unintentional because the types '"customer" | "admin"' and '"restaurant"' have no overlap.
+app/services.tsx(12,30): error TS2300: Duplicate identifier 'photo_url'.
+app/services.tsx(12,401): error TS2300: Duplicate identifier 'photo_url'.
+src/restaurant/RestaurantModeShell.tsx(26,42): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: Readonly<Omit<Readonly<{ showHideTransition?: "none" | "fade" | "slide" | undefined; }>, "hidden" | "animated" | "barStyle"> & Omit<Readonly<{ hidden?: boolean | undefined; animated?: boolean | undefined; barStyle?: "auto" | ... 3 more ... | undefined; }>, never>>): StatusBar', gave the following error.
+    Type '{ barStyle: "dark-content"; backgroundColor: "#FFF1F5"; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<StatusBar> & Readonly<Readonly<Omit<Readonly<{ showHideTransition?: "none" | "fade" | "slide" | undefined; }>, "hidden" | ... 1 more ... | "barStyle"> & Omit<...>>>'.
+      Property 'backgroundColor' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<StatusBar> & Readonly<Readonly<Omit<Readonly<{ showHideTransition?: "none" | "fade" | "slide" | undefined; }>, "hidden" | ... 1 more ... | "barStyle"> & Omit<...>>>'.
+  Overload 2 of 2, '(props: Readonly<Omit<Readonly<{ showHideTransition?: "none" | "fade" | "slide" | undefined; }>, "hidden" | "animated" | "barStyle"> & Omit<Readonly<{ hidden?: boolean | undefined; animated?: boolean | undefined; barStyle?: "auto" | ... 3 more ... | undefined; }>, never>>, context: any): StatusBar', gave the following error.
+    Type '{ barStyle: "dark-content"; backgroundColor: "#FFF1F5"; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<StatusBar> & Readonly<Readonly<Omit<Readonly<{ showHideTransition?: "none" | "fade" | "slide" | undefined; }>, "hidden" | ... 1 more ... | "barStyle"> & Omit<...>>>'.
+      Property 'backgroundColor' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<StatusBar> & Readonly<Readonly<Omit<Readonly<{ showHideTransition?: "none" | "fade" | "slide" | undefined; }>, "hidden" | ... 1 more ... | "barStyle"> & Omit<...>>>'.
+src/restaurant/useDiscoveryAddress.ts(54,15): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+error Command failed with exit code 2.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

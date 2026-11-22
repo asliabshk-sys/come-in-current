@@ -1,0 +1,1307 @@
+{
+  "project": "COME-IN",
+  "timestamp_Asia_Kolkata": "2026-11-19T21:25:39.572920+05:30",
+  "repository": "/workspace/come-in-current",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "application_extraction": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+  "source_is_exact_git_HEAD": false,
+  "source_identity_note": "Application extraction is outsideGit and includes inherited uncommitted work;bind evidence to source hashes,not HEAD alone.",
+  "source_sha256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+  "input_reports_read": [
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_EVIDENCE_GAP_CLOSURE_REPORT.md",
+      "sha256": "3d3c47c66f5997d2a90d8e41beee3ebee886f64a894ed60f4d0d2bf3689e6ce1",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_SECURITY_VALIDATION_REPORT.md",
+      "sha256": "f2bac57653f5348adceaa8fa158fef2d7b6c9c3d61ac3e417e27fb682118715c",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_NAVIGATION_AND_API_INVENTORY.md",
+      "sha256": "c3196394b04218f9220e7bbb77b2573736e8b56352b9cafb88eba2a266c8c044",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_PRESERVATION_VERIFICATION.md",
+      "sha256": "5459f05e0daefde654244dc6d59425d0589caad31e8f1217d14f5e84114e1494",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_OWNER_DECISION_READINESS.md",
+      "sha256": "71ca13c7180de6624a5844e483e6cd7966c177c71a5c206977a8656b32dab4c8",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_REVIEW_MANIFEST.json",
+      "sha256": "7fbe1ee4d606157421f7192cc69fc0ee59f8fd9409ac655fe1fd4a6a8308b8af",
+      "read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/ITERATION_CHECKPOINT.md",
+      "sha256": "b402d622c2b33e7f8e7bf676f474a5f7eb544b3e38cd3fcfff6e033bf828a847",
+      "read": true
+    }
+  ],
+  "reused_API_inventory": {
+    "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/complete-api-inventory.json",
+    "sha256": "81f7a3085920943740e2b4698dc8a83d3e75991b656ae30890f3bacfaeed4902",
+    "registration_count": 179,
+    "regenerated": false
+  },
+  "overall_security_validation": "FAIL",
+  "overall_Task1_status": "REVIEW PENDING",
+  "owner_approved": false,
+  "source_or_configuration_changes": 0,
+  "fixes_applied": 0,
+  "Task2_started": false,
+  "security_findings_count": 9,
+  "severity_counts": {
+    "CRITICAL": 0,
+    "HIGH": 1,
+    "MEDIUM": 6,
+    "LOW": 2
+  },
+  "severity_scope": "Identified canonical findings only;no guarantee all vulnerabilities have been discovered. Multiple failing test cases/subissues do not add finding IDs.",
+  "findings": [
+    {
+      "id": "SEC-01",
+      "severity": "HIGH",
+      "disposition": "OPEN — owner authorization/decision required",
+      "validation_status": "FAIL",
+      "symbols": "reset_password/forgot_password/_send_password_reset_email",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 1123
+      },
+      "test_ids_or_scope": "RESET-16,RESET-17",
+      "evidence": "Actual AST-extracted functions with real Motor/Mongo on a unique retained local database:both same-token consumers accepted under a controlled read barrier;injected token-marker write failure left a changed password and unused token,then accepted retry.",
+      "preconditions_and_limits": "An existing account and unused/unexpired valid synthetic token;deliberately forced concurrent read or post-password-write failure. No arbitrary unauthenticated takeover or deployed-account exploit is claimed.",
+      "minimal_proposed_correction": "Atomically claim the active token and update the user in the same existing transaction/session;check matched user count;ensure rollback and safe retry. Keep existing token-expiry/used/hash checks and API behavior. Owner authorization required. RESET-18 missing-user false success and RESET-10 invalid SMTP_PORT cleanup are LOW subissues within this recovery finding,not extra numbered vulnerabilities.",
+      "fix_applied": false
+    },
+    {
+      "id": "SEC-02",
+      "severity": "MEDIUM",
+      "disposition": "OPEN — owner authorization/decision required",
+      "validation_status": "FAIL",
+      "symbols": "create_access_token/get_current_user_optional/reset_password",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 250
+      },
+      "test_ids_or_scope": "RESET-19",
+      "evidence": "Actual local Mongo/JWT execution accepted a pre-reset access JWT after a successful password reset.",
+      "preconditions_and_limits": "Requires possession of a still-valid prior JWT. Current DB user/role lookup,signature/type/expiry and deleted-account checks still apply. The owner must define relevant recovery/logout-all revocation policy.",
+      "minimal_proposed_correction": "After owner policy approval,introduce a server-side session/password version or equivalent cutoff and verify it during authentication;include reset/logout revocation semantics. Do not change the approved session policy implicitly.",
+      "fix_applied": false
+    },
+    {
+      "id": "SEC-03",
+      "severity": "MEDIUM",
+      "disposition": "OPEN — owner authorization/decision required",
+      "validation_status": "BLOCKED",
+      "symbols": "_client_ip/_rate_keys",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 819
+      },
+      "test_ids_or_scope": "RESET-29 observation only",
+      "evidence": "Source and helper observation select the first X-Forwarded-For value without an in-function trusted-proxy boundary.",
+      "preconditions_and_limits": "Actual bypass depends on exposed direct ingress or an unsanitized proxy;production proxy trust/sanitization was not examined. Helper observation is not a deployed bypass proof.",
+      "minimal_proposed_correction": "Obtain authorized ingress evidence;define trusted proxies and use a trustworthy client address at that boundary. No spoofing attack or source correction performed.",
+      "fix_applied": false
+    },
+    {
+      "id": "SEC-04",
+      "severity": "MEDIUM",
+      "disposition": "OPEN — owner authorization/decision required",
+      "validation_status": "FAIL",
+      "symbols": "_check_auth_rate_limit/_record_auth_attempt/_enforce_auth_rate_limit",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 833
+      },
+      "test_ids_or_scope": "RESET-27",
+      "evidence": "Real local Mongo scheduling test starts the subject count at4 for cap5;two concurrent checks accept and final count is6. Sequential cap checks pass.",
+      "preconditions_and_limits": "Both requests read before increments;observed local overshoot is2accepts at the one remaining slot. No load/capacity outage or unlimited-bypass claim.",
+      "minimal_proposed_correction": "Use an atomic limit reservation/counter update consistent with existing window semantics and preserve both subject/IP protections;authorize source change first.",
+      "fix_applied": false
+    },
+    {
+      "id": "SEC-05",
+      "severity": "MEDIUM",
+      "disposition": "OPEN — owner authorization/decision required",
+      "validation_status": "BLOCKED",
+      "symbols": "create_status_check/list_status_checks",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 687
+      },
+      "test_ids_or_scope": "SOURCE pattern;production policy unavailable",
+      "evidence": "Anonymous diagnostic POST inserts a client_name;shared GET feed has a1000limit. No length/auth/rate dependency appears in these route declarations.",
+      "preconditions_and_limits": "Intended audience and effective edge caps are unknown;no diagnostic abuse/load test was run. Public intended policy requires owner decision.",
+      "minimal_proposed_correction": "Owner decides diagnostic exposure;then authorize role/size/retention/rate safeguards appropriate to that policy. Do not silently remove legacy functionality.",
+      "fix_applied": false
+    },
+    {
+      "id": "SEC-06",
+      "severity": "LOW",
+      "disposition": "OPEN — owner authorization/decision required",
+      "validation_status": "FAIL",
+      "symbols": "RegisterIn/ResetPasswordIn/hash_password",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 305
+      },
+      "test_ids_or_scope": "RESET-30",
+      "evidence": "Actual current model+bcrypt4.1.3 check accepts distinct long inputs above72UTF-8bytes that authenticate interchangeably.",
+      "preconditions_and_limits": "Requires an accepted long password;no production credential collision or account takeover was attempted. Existing compatibility concerns require a considered migration/password policy.",
+      "minimal_proposed_correction": "Approve a byte-aware bound or compatible prehash/versioned password approach;retain existing hashes and avoid silently invalidating users. Add boundary/migration checks after authorization.",
+      "fix_applied": false
+    },
+    {
+      "id": "SEC-07",
+      "severity": "LOW",
+      "disposition": "OPEN — owner authorization/decision required",
+      "validation_status": "BLOCKED",
+      "symbols": "create_restaurant_payment_intent/verify_grocery_payment/refund helpers",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 4990
+      },
+      "test_ids_or_scope": "SOURCE pattern;no latency/load exercise",
+      "evidence": "Synchronous requests calls run inside async handlers;provider requests use explicit timeouts.",
+      "preconditions_and_limits": "Provider latency/concurrency/SLO impact was not measured;no event-loop outage is claimed.",
+      "minimal_proposed_correction": "Authorize an existing-architecture compatible async I/O or bounded offload change,then isolated latency/concurrency verification;no new provider calls now.",
+      "fix_applied": false
+    },
+    {
+      "id": "SEC-08",
+      "severity": "MEDIUM",
+      "disposition": "OPEN — owner authorization/decision required",
+      "validation_status": "BLOCKED",
+      "symbols": "razorpay_webhook/event_payload",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 5362
+      },
+      "test_ids_or_scope": "SOURCE pattern;actual ingress size controls unavailable",
+      "evidence": "Configured webhook reads full request.body and computes HMAC before event_payload enforces1MiB. The standalone verified_event helper bounds size first,but this endpoint does not call it.",
+      "preconditions_and_limits": "Missing payment configuration returns503 before buffering. Actual proxy/server body caps are unknown;no oversized request or load test performed.",
+      "minimal_proposed_correction": "Obtain ingress body-limit evidence and authorize bounded transport/application reads before untrusted full allocation/HMAC;preserve raw-body signature verification and retry-safe event handling.",
+      "fix_applied": false
+    },
+    {
+      "id": "SEC-09",
+      "severity": "MEDIUM",
+      "disposition": "OPEN — owner authorization/decision required",
+      "validation_status": "FAIL",
+      "symbols": "admin_update_user_role",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 3877
+      },
+      "test_ids_or_scope": "test_concurrent_cross_demotion_preserves_at_least_one_admin",
+      "evidence": "Actual function body with synthetic in-memory collections and a deterministic count barrier accepts two cross-demotions;remaining_admins=0. Existing own-session demotion rejection passes.",
+      "preconditions_and_limits": "Two already privileged admins and concurrent cross-demotion are prerequisites. This is model-double execution of an observed source race,not a real Mongo race,customer privilege escalation or production lockout.",
+      "minimal_proposed_correction": "Serialize admin-role changes through a shared guard/version CAS within the transaction (or equivalent sound serialization),recount and update under that serialization. Merely putting count+updates of different user documents in separate snapshot transactions may allow write skew. Owner authorization and dedicated real-Mongo verification are required.",
+      "fix_applied": false
+    }
+  ],
+  "areas": [
+    {
+      "id": "AS-01",
+      "area": "Customer accounts",
+      "status": "FAIL",
+      "assertion": "Recovery integrity,JWT recovery revocation and long-password invariants failed;normal invalid/expired/type checks passed.",
+      "finding_ids": [
+        "SEC-01",
+        "SEC-02",
+        "SEC-06"
+      ],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 854
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 889
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 1123
+        }
+      ],
+      "boundary": "Real isolated functions/Mongo plus actual-model/bcrypt unit cases;no customer/production accounts."
+    },
+    {
+      "id": "AS-02",
+      "area": "Seller accounts",
+      "status": "PASS",
+      "assertion": "Both shop and restaurant owner guards reject wrong roles/owners in the12-case isolated guard matrix. Role and owner are separate conditions.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 1211
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 4636
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 2939
+        }
+      ],
+      "boundary": "Selected guard function execution;not all seller HTTP/UI lifecycle branches."
+    },
+    {
+      "id": "AS-03",
+      "area": "Admin permissions",
+      "status": "FAIL",
+      "assertion": "Admin-only dependency rejects3other roles;self-demotion rejection passes,but cross-demotion last-admin invariant fails.",
+      "finding_ids": [
+        "SEC-09"
+      ],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 291
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 3877
+        }
+      ],
+      "boundary": "Actual dependency/helper bodies with synthetic users/doubles;no real administrator operations."
+    },
+    {
+      "id": "AS-04",
+      "area": "Delivery partner permissions",
+      "status": "PASS",
+      "assertion": "Public application projection excludes encrypted/raw PII;decision reason redacts fixture identity/phone shapes. Approval checks and audit writes are source-present.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 6751
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 6740
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 6941
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 6999
+        }
+      ],
+      "boundary": "Selected projection/redaction runtime units plus source review;identity provider and full operational delivery lifecycle remain unverified."
+    },
+    {
+      "id": "AS-05",
+      "area": "API authentication",
+      "status": "FAIL",
+      "assertion": "Wrong signatures,expired/non-access JWT and missing user are rejected;old valid JWT survives password reset.",
+      "finding_ids": [
+        "SEC-02"
+      ],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 250
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 268
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 284
+        }
+      ],
+      "boundary": "Current isolated Mongo/JWT cases;not production token custody or all middleware."
+    },
+    {
+      "id": "AS-06",
+      "area": "API authorization and IDOR boundaries",
+      "status": "PASS",
+      "assertion": "Selected role/owner/tracking helper checks enforce current persisted role and current shop/restaurant ownership;the completed179-route dependency inventory was reused.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 291
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 1211
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 3607
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 4636
+        }
+      ],
+      "boundary": "49passing helper/model cases include14tracking-role/owner combinations;no exhaustive all179endpoint penetration claim."
+    },
+    {
+      "id": "AS-07",
+      "area": "Pricing manipulation",
+      "status": "PASS",
+      "assertion": "Actual ProductIn rejects nonfinite/nonpositive price inputs;Grocery resolves current server product lines and ignores client prices;Restaurant rebuilds totals from menu.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 478
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 3080
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 3236
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 4851
+        }
+      ],
+      "boundary": "Model checks and source trace;source-bound broader local/live regression evidence is separate."
+    },
+    {
+      "id": "AS-08",
+      "area": "Cart manipulation",
+      "status": "PASS",
+      "assertion": "Actual QuoteLineIn rejects invalid quantity bounds;Restaurant cart is keyed by current user and stores validated identifiers/quantity,not trusted prices.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 575
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 4812
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 4831
+        }
+      ],
+      "boundary": "Selected input units plus source inspection;no complete rendered UI/browser cart acceptance."
+    },
+    {
+      "id": "AS-09",
+      "area": "Order manipulation",
+      "status": "PASS",
+      "assertion": "Source checks quote scope,expiry,fulfilment,shop,price/stock snapshot and idempotency;ownership gates protect authenticated details/tracking/cancellation.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 3236
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 3522
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 3634
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 3643
+        }
+      ],
+      "boundary": "Source declarations and completed local/live regression artifacts;not all policy/error branches."
+    },
+    {
+      "id": "AS-10",
+      "area": "Inventory manipulation",
+      "status": "PASS",
+      "assertion": "Conditional stock decrement requires available/current sufficient stock and is passed the checkout transaction session;fail-closed transaction helper is source-present.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 3217
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 3331
+        }
+      ],
+      "boundary": "Source review plus backend-live transaction suite;does not prove production inventory or restore correctness."
+    },
+    {
+      "id": "AS-11",
+      "area": "Payment manipulation",
+      "status": "BLOCKED",
+      "assertion": "Server validates payment/order link,signature,captured status,exact INR amount and consistent local commit. Actual provider credentials/delivery are absent.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 5041
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 5169
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 5362
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 6470
+        }
+      ],
+      "boundary": "Local provider-mocked/transaction tests are separate PASS evidence;genuine Razorpay TEST acceptance remains BLOCKED."
+    },
+    {
+      "id": "AS-12",
+      "area": "Refund manipulation",
+      "status": "BLOCKED",
+      "assertion": "Admin-only eligibility and transactionally claimed request keys avoid blind retries;COD eligibility and provider reconciliation rules are source-present.",
+      "finding_ids": [
+        "SEC-07"
+      ],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 5670
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 6186
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 6254
+        }
+      ],
+      "boundary": "Local mocks/real Mongo are not real provider refund creation/status/settlement evidence."
+    },
+    {
+      "id": "AS-13",
+      "area": "Upload validation",
+      "status": "PASS",
+      "assertion": "Image handler authenticates,reads at most5MiB+1,and requires matching JPEG/PNG/GIF/WebP signature before storage;current offline guard tests are present.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 1142
+        }
+      ],
+      "boundary": "Bounded allocation/signature source+offline tests;not full image decoding,malware scanning or object-store delivery."
+    },
+    {
+      "id": "AS-14",
+      "area": "File access",
+      "status": "BLOCKED",
+      "assertion": "Public serve route rejects .. and requires an active DB file record before using internal storage credentials. Public-image versus private-file policy needs explicit scope.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 1185
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 161
+        }
+      ],
+      "boundary": "No object-store/private-file/provider requests;do not infer an IDOR solely from an intentional public image route."
+    },
+    {
+      "id": "AS-15",
+      "area": "Sensitive customer data",
+      "status": "PASS",
+      "assertion": "Selected doc/public/projection helpers strip known password/actor/encrypted PIIfields;addresses and order reads use current user/owner conditions.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 201
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 215
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 4775
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 6920
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 6927
+        }
+      ],
+      "boundary": "Synthetic redaction/ownership tests plus source;not exhaustive every response or production data-access certification."
+    },
+    {
+      "id": "AS-16",
+      "area": "Logging",
+      "status": "PASS",
+      "assertion": "Isolated SMTP failure cases capture no raw reset token or recipient email;other reviewed handlers generally log exception type or bounded generic payment mismatch.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 1087
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 6888
+        }
+      ],
+      "boundary": "RESET-09proves only selected failure logs;production logs/retention/access and every route error remain unverified."
+    },
+    {
+      "id": "AS-17",
+      "area": "Session management",
+      "status": "FAIL",
+      "assertion": "Current DB roles/deleted-account checks are retained,but relevant pre-reset JWT remains accepted after reset.",
+      "finding_ids": [
+        "SEC-02"
+      ],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 250
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 268
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 1123
+        }
+      ],
+      "boundary": "Dedicated isolated reset/JWT case;owner recovery/logout-all session policy still required."
+    },
+    {
+      "id": "AS-18",
+      "area": "Rate limiting and abuse protection",
+      "status": "FAIL",
+      "assertion": "Sequential limits pass;controlled concurrent subject checks exceed cap. First forwarded header observation does not establish ingress trust.",
+      "finding_ids": [
+        "SEC-03",
+        "SEC-04",
+        "SEC-05"
+      ],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 819
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 833
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 841
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 847
+        }
+      ],
+      "boundary": "Actual local counter-race proof plus source;no abuse/load attack on external services."
+    },
+    {
+      "id": "AS-19",
+      "area": "Fraud prevention",
+      "status": "PASS",
+      "assertion": "Source uses server-derived totals,scoped order idempotency,unique indexes and provider identity/amount reconciliation;referral decisions stay admin protected.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 960
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 1014
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 3236
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 5041
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 6254
+        }
+      ],
+      "boundary": "Bounded source/local regression review;no real fraud/chargeback/provider operational certification."
+    },
+    {
+      "id": "AS-20",
+      "area": "Configuration and secrets",
+      "status": "BLOCKED",
+      "assertion": "CORS production wildcard rejection,JWT startup requirements and explicit Razorpay environment/key-mode guards are source-present;actual deployed bindings and secret custody are not audited.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 5813
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 7030
+        }
+      ],
+      "boundary": "Read templates/source only;no production secrets,credential values,deployments or billing operations."
+    },
+    {
+      "id": "AS-21",
+      "area": "Database access and infrastructure",
+      "status": "BLOCKED",
+      "assertion": "Current loopback rs0 metadata is documented separately;application transactions/indexes are source-present. Actual production users/grants/firewalls/TLS/backup controls remain unavailable.",
+      "finding_ids": [],
+      "references": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 5813
+        },
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+          "line": 5840
+        }
+      ],
+      "boundary": "Read-only local metadata and isolated test DB evidence;no production DB records,modifications or recovery test."
+    }
+  ],
+  "area_count_note": "The user payment/refund area is split into two rows for21review areas;these are audit assertions,not new canonical roadmap tasks.",
+  "fresh_broad_security_tests": {
+    "counts": {
+      "PASS": 49,
+      "FAIL": 1,
+      "ERROR": 0,
+      "SKIPPED": 0
+    },
+    "total": 50,
+    "scope": "Actual selected AST function/model execution,decorators removed to avoid routing registration;in-memory synthetic collections,network denied. No real DB/provider/browser/HTTP account operation.",
+    "runtime_globals_match_source": {
+      "MEASURED_QTY_LIMIT": 100000,
+      "MEASURED_SELL_BY": {
+        "weight": [
+          "g",
+          "kg"
+        ],
+        "volume": [
+          "ml",
+          "L"
+        ]
+      }
+    },
+    "case_results": [
+      {
+        "name": "test_owner_guards_require_current_role_and_ownership[admin-another-user-True-_assert_shop_owner]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_owner_guards_require_current_role_and_ownership[admin-another-user-True-_restaurant_owner]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_owner_guards_require_current_role_and_ownership[shopkeeper-synthetic-owner-True-_assert_shop_owner]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_owner_guards_require_current_role_and_ownership[shopkeeper-synthetic-owner-True-_restaurant_owner]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_owner_guards_require_current_role_and_ownership[shopkeeper-another-user-False-_assert_shop_owner]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_owner_guards_require_current_role_and_ownership[shopkeeper-another-user-False-_restaurant_owner]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_owner_guards_require_current_role_and_ownership[customer-synthetic-owner-False-_assert_shop_owner]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_owner_guards_require_current_role_and_ownership[customer-synthetic-owner-False-_restaurant_owner]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_owner_guards_require_current_role_and_ownership[customer-another-user-False-_assert_shop_owner]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_owner_guards_require_current_role_and_ownership[customer-another-user-False-_restaurant_owner]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_owner_guards_require_current_role_and_ownership[delivery_partner-synthetic-owner-False-_assert_shop_owner]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_owner_guards_require_current_role_and_ownership[delivery_partner-synthetic-owner-False-_restaurant_owner]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_admin_dependency_rejects_other_roles[admin-True]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_admin_dependency_rejects_other_roles[customer-False]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_admin_dependency_rejects_other_roles[shopkeeper-False]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_admin_dependency_rejects_other_roles[delivery_partner-False]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_document_serialization_strips_known_sensitive_fields",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_public_document_strips_default_actor_fields",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_delivery_progress_whitelist_excludes_encrypted_and_raw_pii",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_delivery_decision_reason_redacts_fixture_identity_shapes",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_profile_model_does_not_allow_role_mass_assignment",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_registration_model_does_not_allow_role_mass_assignment",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_product_model_rejects_nonfinite_or_nonpositive_price[nan]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_product_model_rejects_nonfinite_or_nonpositive_price[inf]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_product_model_rejects_nonfinite_or_nonpositive_price[-inf]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_product_model_rejects_nonfinite_or_nonpositive_price[0]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_product_model_rejects_nonfinite_or_nonpositive_price[-1]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_checkout_quantity_model_rejects_invalid_bounds[-1]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_checkout_quantity_model_rejects_invalid_bounds[0]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_checkout_quantity_model_rejects_invalid_bounds[100001]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_checkout_quantity_model_rejects_invalid_bounds[1.5]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_delivery_coordinates_reject_nonfinite_values[nan]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_delivery_coordinates_reject_nonfinite_values[inf]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_delivery_coordinates_reject_nonfinite_values[-inf]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[admin-admin-fixture-someone-else-True-grocery]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[admin-admin-fixture-someone-else-True-restaurant]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[customer-customer-fixture-someone-else-True-grocery]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[customer-customer-fixture-someone-else-True-restaurant]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[customer-stranger-fixture-seller-fixture-False-grocery]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[customer-stranger-fixture-seller-fixture-False-restaurant]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[shopkeeper-seller-fixture-seller-fixture-True-grocery]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[shopkeeper-seller-fixture-seller-fixture-True-restaurant]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[shopkeeper-seller-fixture-new-seller-fixture-False-grocery]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[shopkeeper-seller-fixture-new-seller-fixture-False-restaurant]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[customer-seller-fixture-seller-fixture-False-grocery]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[customer-seller-fixture-seller-fixture-False-restaurant]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[delivery_partner-seller-fixture-seller-fixture-False-grocery]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_tracking_checks_current_owner_role_without_real_records[delivery_partner-seller-fixture-seller-fixture-False-restaurant]",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_concurrent_cross_demotion_preserves_at_least_one_admin",
+        "class": "test_broad_security_isolated",
+        "status": "FAIL",
+        "duration": "0.001"
+      },
+      {
+        "name": "test_admin_cannot_demote_their_own_session",
+        "class": "test_broad_security_isolated",
+        "status": "PASS",
+        "duration": "0.000"
+      }
+    ],
+    "original_invocation_command": "Full original command not persisted in the saved broad-run artifacts;do not invent historical invocation.",
+    "reproduction_command_NOT_EXECUTED_BY_FINALIZER": "PYTHONDONTWRITEBYTECODE=1 /workspace/come-in-tools/py311/bin/python -m pytest -q -n 0 -p no:cacheprovider /workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/test_broad_security_isolated.py --junitxml=/tmp/comein-security-NEW-RUN.xml --basetemp=/tmp/comein-security-NEW-RUN-tmp",
+    "runtime_timestamp_from_saved_XML": "2026-11-19T08:42:36.126238+00:00",
+    "test_file": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/test_broad_security_isolated.py",
+    "test_sha256": "8e02180373829fd4c09e57c3cdd64f9f5483bb86fc186ef15894dc91acdd73ea",
+    "source_segments": [
+      {
+        "symbol": "AdminRoleUpdateIn",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 3866,
+        "end_line": 3867,
+        "source_segment_sha256": "fa24abe447c6ade8cacb34a17382018e16cec22a1823b1db565b680784bb6759"
+      },
+      {
+        "symbol": "CartLine",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 564,
+        "end_line": 572,
+        "source_segment_sha256": "c86f491775cce16979dab62f4a06de55dd239549020c27c525b435a329c9d88a"
+      },
+      {
+        "symbol": "DeliveryLocationUpdateIn",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 610,
+        "end_line": 621,
+        "source_segment_sha256": "11f4eb2b58d58669c474df6d4677d096c2a35695639dcf855b1ae0f1f1aa771a"
+      },
+      {
+        "symbol": "MeasureIn",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 461,
+        "end_line": 475,
+        "source_segment_sha256": "dbfe161bd12334fc43913ecfcb84407c6a4ac2b221ce66ce7e3bbcf1b9c72bbf"
+      },
+      {
+        "symbol": "ProductIn",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 478,
+        "end_line": 558,
+        "source_segment_sha256": "00419722d13af2749aa83ebc4ddf42f7492d164bb5da38d7c51ca7611be96186"
+      },
+      {
+        "symbol": "ProductVariantIn",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 440,
+        "end_line": 453,
+        "source_segment_sha256": "fbcaa899b59b6a56421b51262e4b58e06f8104ef8edf89a3b5283291818cdb32"
+      },
+      {
+        "symbol": "QuoteLineIn",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 575,
+        "end_line": 578,
+        "source_segment_sha256": "c5c022da6324b870ef9f01176ec8a745893831fa62a240ae5018c5e3ece48f01"
+      },
+      {
+        "symbol": "RegisterIn",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 305,
+        "end_line": 310,
+        "source_segment_sha256": "ecc59a76b2f5e4dd8c950231f94d2a1da0b10d0891d85198f820586c98a1744a"
+      },
+      {
+        "symbol": "UpdateProfileIn",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 1063,
+        "end_line": 1065,
+        "source_segment_sha256": "97edba9297492a50402819b8a496e5d013b05bd97fba40f57019a80fb528af3b"
+      },
+      {
+        "symbol": "_assert_shop_owner",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 1211,
+        "end_line": 1218,
+        "source_segment_sha256": "29f3b859343c73fff1ce57613a0ea9b6fd050cf09f86116f5e9a4fae0346cabc"
+      },
+      {
+        "symbol": "_dp_public",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 6751,
+        "end_line": 6765,
+        "source_segment_sha256": "773c6419ea81a347aeebb9f3e9a16984fca3dc5fe564badb5698826a71e83877"
+      },
+      {
+        "symbol": "_dp_safe_reason",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 6740,
+        "end_line": 6744,
+        "source_segment_sha256": "95d5d201e5845ee67109b952ce5964820183c8c4f9039306d3d703c60b8138f3"
+      },
+      {
+        "symbol": "_object_id_or_404",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 4624,
+        "end_line": 4628,
+        "source_segment_sha256": "76594bc127b80ce318eaadffcbdf24bbc70e0006e7d2ff6b7d7bf3e1b5f384a8"
+      },
+      {
+        "symbol": "_restaurant_owner",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 4636,
+        "end_line": 4643,
+        "source_segment_sha256": "4022d2e798fd672ab84cb5459cc27a6654aa6f08eca7b0b165557f44f4a1af9d"
+      },
+      {
+        "symbol": "_tracking_can_read",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 3607,
+        "end_line": 3630,
+        "source_segment_sha256": "d62d3f9e70dffad08751114db4c20679be6ca8629385a336ab0a54fc66a50083"
+      },
+      {
+        "symbol": "admin_update_user_role",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 3877,
+        "end_line": 3890,
+        "source_segment_sha256": "3caa9567e30ad31b0060c122e4f374f87137cf2251ade44bcae6248b60e7f025"
+      },
+      {
+        "symbol": "doc_out",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 201,
+        "end_line": 212,
+        "source_segment_sha256": "a3bb4d48e356bce11a0f24ba3aded2faffdfa9aeee3752149b9a42e8aa7a6a60"
+      },
+      {
+        "symbol": "public_doc",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 215,
+        "end_line": 221,
+        "source_segment_sha256": "eefa9aa00057b119c9e94544dac63be383780b8d4e498dcaed5dc4de3a024ea6"
+      },
+      {
+        "symbol": "require_role",
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 291,
+        "end_line": 297,
+        "source_segment_sha256": "68a935c9c4b97794b930b3417ef4c99efe17edbb83cacf731ae3a065bbcbe765"
+      }
+    ],
+    "rerun_by_finalizer": false,
+    "first_attempt_retained": {
+      "counts": {
+        "PASS": 48,
+        "FAIL": 2,
+        "ERROR": 0,
+        "SKIPPED": 0
+      },
+      "fixture_error": "RegisterIn fixture used reserved example.test email;changed to IANA example.com for valid EmailStr fixture. Production source and assertions unchanged;one source invariant failure remains.",
+      "test_before": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated-harness-v1.py",
+      "log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated.log",
+      "xml": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated.xml"
+    }
+  },
+  "dedicated_reset_tests": {
+    "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-results-v2.json",
+    "counts": {
+      "PASS": 23,
+      "FAIL": 7,
+      "ERROR": 0,
+      "SKIPPED": 0
+    },
+    "scope": "Separate30cases;not included again in50broad cases. Real loopbackMongo/synthetic fixtures and controlled scheduling/faults;source unchanged.",
+    "failing_case_to_finding": {
+      "RESET-10": "SEC-01 LOW configuration/cleanup subissue",
+      "RESET-16": "SEC-01 HIGH",
+      "RESET-17": "SEC-01 HIGH",
+      "RESET-18": "SEC-01 LOW missing-account false-success subissue",
+      "RESET-19": "SEC-02 MEDIUM;owner revocation policy required",
+      "RESET-27": "SEC-04 MEDIUM",
+      "RESET-30": "SEC-06 LOW"
+    }
+  },
+  "evidence_hashes": [
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/test_broad_security_isolated.py",
+      "sha256": "8e02180373829fd4c09e57c3cdd64f9f5483bb86fc186ef15894dc91acdd73ea"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated-v2.xml",
+      "sha256": "ff5130c54c07fc2b298ecdfb693beb97b7e7df3120efa8460bf6bad1e6ed270f"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated-v2.log",
+      "sha256": "9a73111a7fb67d80746cc04dba45b0a9bbff433391a4d956bcaa34e8431b045e"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated-harness-v1.py",
+      "sha256": "03e127471f17c6eba66107af552b07f77536c762ae3775933d06639e11ef092d"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated.xml",
+      "sha256": "0d07523e8b2d7a0213fc1d6a551891fa1b1e36357ea16bf75dedb530539d20ef"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated.log",
+      "sha256": "3924d1d180d1f7fdc8360632db983660d4a8ab3e59ebf249372a8f6531774f6d"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-results-v2.json",
+      "sha256": "be5a75734eba51bda75879a956001b6abd7fcd740550b35ffa7b9b1cc1e9da1b"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-junit-v2.xml",
+      "sha256": "40c79ad03d4be8a8abaf22d1fa5bb8b438effae87329af2393cee358791245cd"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-run-v2.log",
+      "sha256": "a6e9b740f5691b501df7a9680780e0edec7852159773fd1491fd441793d29a46"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduction.json",
+      "sha256": "997611121fc9dcf9c80d7f4d4d86c902ee53863a113681acb169a54895449667"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/reproduce-broad-security.py",
+      "sha256": "932c2ddef544c96c2c2161d52f5b5b4b417c5ab86f7d27543b3356cf322cd0d9"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.xml",
+      "sha256": "3b89fca9bae7286d852d31e788a497e6031d2a45573d6900c815123597435424"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.log",
+      "sha256": "50d5a79eb05f35cf8ca056c8d468f9a0fdc11647873f80f9b20f49bbd4340abe"
+    }
+  ],
+  "safety": {
+    "application_source_modified": 0,
+    "configuration_modified": 0,
+    "new_tests_executed_by_finalizer": 0,
+    "DB_queries_by_finalizer": 0,
+    "provider_calls_by_finalizer": 0,
+    "production_or_customer_data_accessed": false,
+    "packages_installed": 0,
+    "real_credentials_used": false
+  },
+  "next_action": "Owner reviews findings and authorizes a separate minimal-correction scope,especially SEC-01 transaction safety and SEC-09 serialized admin changes. Do not silently fix,approve/closeTask1 or startTask2.",
+  "current_independent_reproduction": {
+    "execution_receipt": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduction.json",
+    "execution_receipt_sha256": "997611121fc9dcf9c80d7f4d4d86c902ee53863a113681acb169a54895449667",
+    "runner": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/reproduce-broad-security.py",
+    "runner_sha256": "932c2ddef544c96c2c2161d52f5b5b4b417c5ab86f7d27543b3356cf322cd0d9",
+    "started_UTC": "2026-11-19T15:54:41.894482+00:00",
+    "finished_UTC": "2026-11-19T15:54:42.949221+00:00",
+    "command": [
+      "/workspace/come-in-tools/py311/bin/python",
+      "-m",
+      "pytest",
+      "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/test_broad_security_isolated.py",
+      "-c",
+      "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/pytest.ini",
+      "-n",
+      "0",
+      "-p",
+      "no:cacheprovider",
+      "-q",
+      "--junitxml=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.xml",
+      "--basetemp=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduction-tmp"
+    ],
+    "cwd": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530",
+    "exit_code": 1,
+    "counts": {
+      "PASS": 49,
+      "FAIL": 1,
+      "ERROR": 0,
+      "SKIPPED": 0
+    },
+    "source_sha256_before": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+    "source_sha256_after": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+    "test_sha256": "8e02180373829fd4c09e57c3cdd64f9f5483bb86fc186ef15894dc91acdd73ea",
+    "JUnit": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.xml",
+    "JUnit_sha256": "3b89fca9bae7286d852d31e788a497e6031d2a45573d6900c815123597435424",
+    "log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.log",
+    "log_sha256": "50d5a79eb05f35cf8ca056c8d468f9a0fdc11647873f80f9b20f49bbd4340abe",
+    "scope": "Actual AST-extracted models/helpers with in-memory synthetic collection doubles. Autouse fixture denies all socket connections;no server import or DB/provider calls.",
+    "executed_by": "root validation workflow,not security finalizer",
+    "counting_policy": "Use one canonical50-case outcome49PASS1FAIL0ERROR0SKIP;do not aggregate repeated execution with the saved v2 or first attempt.",
+    "historical_limit": "Original v2 shell invocation remains unrecorded. This new exact source/test/command binding proves current independent reproduction and does not authenticate or backdate the older run."
+  }
+}

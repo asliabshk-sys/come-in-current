@@ -1,0 +1,25 @@
+{
+  "baseline_entries": 8807,
+  "missing": [],
+  "unauthorized_hash_mismatches": [],
+  "intentional_changes": [
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.env.example",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/backend_test.py",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/test_mongo_portability_tool.py",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/checkout.tsx",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/services.tsx",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/useDiscoveryAddress.ts"
+  ],
+  "regenerated_web_export_paths": [
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/dist/index.html",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/dist/_expo/static/js/web/[id]-e2b7bcab4b0f18b635ab8f31aba08702.js",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/dist/_expo/static/js/web/checkout-59440e5caf58bb3897cb14b1b8371db7.js",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/dist/_expo/static/js/web/products-2a9c863ec355c618001e9ee4228390bb.js",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/dist/_expo/static/js/web/services-2a74947bc1db211acff3a5f7a6be4d4e.js",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/dist/_expo/static/js/web/__common-8399d7de68c4d22553e358033227fa61.js",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/dist/_expo/static/js/web/referral-55d3672f058a1e672bb19f796c08f4d9.js",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/dist/_expo/static/js/web/entry-b2a1dd595466fba8d28eb7c867a7a4a5.js",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/dist/_expo/static/js/web/checkout-41897b33e3294c051843eec06bf52079.js"
+  ]
+}

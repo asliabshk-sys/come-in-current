@@ -1,0 +1,44 @@
+[
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 26,
+    "method": "GET",
+    "expression": "`/admin/earnings${suffix}`",
+    "classification": "REVIEW REQUIRED lexical mismatch;dynamic/query expression may prevent automatic match"
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 26,
+    "method": "GET",
+    "expression": "`/admin/earnings/transactions${txSuffix}`",
+    "classification": "REVIEW REQUIRED lexical mismatch;dynamic/query expression may prevent automatic match"
+  },
+  {
+    "file": "app/admin-earnings.tsx",
+    "line": 26,
+    "method": "GET",
+    "expression": "`/admin/earnings/ledger${suffix}`",
+    "classification": "REVIEW REQUIRED lexical mismatch;dynamic/query expression may prevent automatic match"
+  },
+  {
+    "file": "app/seller-earnings.tsx",
+    "line": 15,
+    "method": "GET",
+    "expression": "`/earnings/mine${suffix}`",
+    "classification": "REVIEW REQUIRED lexical mismatch;dynamic/query expression may prevent automatic match"
+  },
+  {
+    "file": "src/restaurant/api.ts",
+    "line": 5,
+    "method": "GET",
+    "expression": "`/restaurants${query?`?${query}`:''}`",
+    "classification": "REVIEW REQUIRED lexical mismatch;dynamic/query expression may prevent automatic match"
+  },
+  {
+    "file": "src/restaurant/api.ts",
+    "line": 7,
+    "method": "GET",
+    "expression": "`/restaurants/${encodeURIComponent(id)}/menu${q?`?q=${encodeURIComponent(q)}`:''}`",
+    "classification": "REVIEW REQUIRED lexical mismatch;dynamic/query expression may prevent automatic match"
+  }
+]

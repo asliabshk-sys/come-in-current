@@ -1,0 +1,1406 @@
+{
+  "task": "Read-only navigation documentation gap closure",
+  "identity": {
+    "repository": "/workspace/come-in-current",
+    "branch": "work",
+    "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a"
+  },
+  "created_at_utc": "2026-11-19T08:16:05.194Z",
+  "allowed_output": "navigation-closure.json only in named new iteration folder",
+  "input_reports_fully_read": [
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_MASTER_AUDIT_REPORT.md",
+      "bytes": 17889,
+      "sha256": "11f6a8fc518bf7f9f744a0a25f43c6ffc5137581bda879ed9c51d7abb3943bae",
+      "full_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_SCREEN_AND_ROUTE_INVENTORY.md",
+      "bytes": 215922,
+      "sha256": "a1fcf0bfbf7b726804c6d1f9ecb3afa4323c098f175e24da27f95f330f112eab",
+      "full_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_API_AND_DATABASE_INVENTORY.md",
+      "bytes": 91842,
+      "sha256": "dd011902bca281fcb9e3df991f4720e1a98d007f7fbe6ab23719a848e06ffef5",
+      "full_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_SECURITY_FINDINGS.md",
+      "bytes": 13804,
+      "sha256": "a51fcc660ab0534e5fe7a9e6e1c14ebfa66c9f510e7234482cbb2bd2e016be1c",
+      "full_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_GAP_AND_BLOCKER_REGISTER.md",
+      "bytes": 7061,
+      "sha256": "2542d2e4d4781281fa2526a4929459ce42a42c0fc77595e5462b66839e6b3568",
+      "full_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_FINAL_CHECKLIST.md",
+      "bytes": 7504,
+      "sha256": "9d664cb326cdff27e9905b5732e199b488674554ef8e846736fd61ad44f39e5c",
+      "full_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_EVIDENCE_MANIFEST.json",
+      "bytes": 42126,
+      "sha256": "292d73a3ff2e33ecdac587bb0ed4b58041e2fde89e72475d7186b5875f9925c0",
+      "full_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/OWNER_REVIEW_MASTER_REPORT.md",
+      "bytes": 8797,
+      "sha256": "d0d7d3c41d2498cdb0c57c448d1eb3673f1682b7c1e3d9adec5ed376a81feb2d",
+      "full_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/REPORT_BY_REPORT_REVIEW.md",
+      "bytes": 33926,
+      "sha256": "d9075ef0741db189a0d6ab31557deb68e3431a43e1206e3f2b2658efea95a0b5",
+      "full_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/SECURITY_FINDINGS_REVIEW.md",
+      "bytes": 11874,
+      "sha256": "621b3e64c4ef3a8366635fb2bffb288359000d817775975c86f9ca6c2e4ed645",
+      "full_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/EVIDENCE_GAP_REGISTER.md",
+      "bytes": 5115,
+      "sha256": "35ae09cb3976f790af75073b84206bed80c9b5e03a9c6a54909e668ca3fbe245",
+      "full_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/OWNER_APPROVAL_CHECKLIST.md",
+      "bytes": 3022,
+      "sha256": "37f6ef06e03d4f94cf5034ae66443325e6786480c5f2103fd06764d9e22b94a5",
+      "full_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/REVIEW_EVIDENCE_MANIFEST.json",
+      "bytes": 36072,
+      "sha256": "ac6f840e0ab60072429134f2d31996924580b9de212f96e9f9e9389ea2aac53a",
+      "full_read": true
+    }
+  ],
+  "methods": "Independent TypeScript AST read/parse only;not original extractor rerun,application test or app import. No browser/API/network/DB/install/config/source action.",
+  "counts": {
+    "recorded_selected_old_targets": 108,
+    "unconditional_literal_argument_calls": 107,
+    "conditional_argument_calls": 3,
+    "literal_leaf_occurrences": 113,
+    "omitted_literal_leaves": 5,
+    "dynamic_nonback_argument_calls": 14,
+    "back_calls": 30,
+    "href_attributes": 5,
+    "source_parser_diagnostics": 0
+  },
+  "claim_status_vocabulary": [
+    "VERIFIED",
+    "PARTIALLY VERIFIED",
+    "UNVERIFIED",
+    "CONTRADICTED",
+    "BLOCKED"
+  ],
+  "summary_claims": [
+    {
+      "claim_id": "NAV-COUNT",
+      "status": "VERIFIED",
+      "statement": "113 literal leaf occurrences =107unconditional literal/pathname-argument calls plus6leaves of3two-branch conditional calls. Saved108candidate set includes107unconditional occurrences and the Restaurant branch at orders.tsx193;it omits both Home102 branches,both notifications42 branches,and the orders193 Grocery branch. Counts are occurrences,not unique URLs,rendered buttons or successful journeys."
+    },
+    {
+      "claim_id": "NAV-R01",
+      "status": "VERIFIED",
+      "closure_state": "CLOSED documentation only",
+      "statement": "All5omitted branches now mapped with exact lexical/argument predicates,pathnames/params and existing target source files. No missing destination file found among them;runtime acceptance remains open."
+    },
+    {
+      "claim_id": "NAV-R02",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "PARTIAL;auth next remains OPEN",
+      "statement": "All5hrefattributes and14dynamicnonbackarguments classified. Static route-pattern existence is established for12entity-template calls and finite RestaurantNav list;actual dynamic values/runtime not verified. auth next has no bounded destination mapping established here."
+    },
+    {
+      "claim_id": "NAV-SPECIAL",
+      "status": "VERIFIED",
+      "statement": "_layout/+html/+not-found entries are framework layout/document/fallback files;their fabricated publicPath labels are not ordinary navigable-page proof. This addendum changes no original inventory or routes."
+    },
+    {
+      "claim_id": "NAV-RUNTIME",
+      "status": "UNVERIFIED",
+      "statement": "No current handler/navigation/permission/UI/device/provider acceptance was exercised;this is documentation closure only."
+    }
+  ],
+  "omitted_branches": [
+    {
+      "claim_id": "NAV-OMITTED-1",
+      "status": "VERIFIED",
+      "closure_state": "CLOSED documentation only",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx",
+        "line": 102,
+        "method": "router.push",
+        "full_call": "router.push(user ? \"/notifications\" : \"/orders\")"
+      },
+      "all_lexical_ancestor_conditions": [],
+      "argument_branch_conditions": [
+        {
+          "condition": "user",
+          "branch": "truthy",
+          "line": 102
+        }
+      ],
+      "effective_static_predicate": "(user)",
+      "destination": "/notifications",
+      "pathname_object": null,
+      "pathname_object_expression": null,
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/notifications.tsx",
+          "exists": true,
+          "entry_line": 17,
+          "default_component": "NotificationsScreen",
+          "sha256": "f5068e725296b8ed20d20bf334d18872f5d97b5039956eddaaaa1af99f281b73"
+        }
+      ],
+      "recorded_in_old_108": false,
+      "scope": "Static source mapping verified;no handler invoked,ID resolved,API/permission checked or runtime navigation performed.",
+      "interaction_context": {
+        "component": "HomeScreen",
+        "handler": "header-notifications Pressable onPress",
+        "callsite": {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx",
+          "line": 102
+        },
+        "user_origin": {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx",
+          "line": 47,
+          "expression": "const { user } = useAuth()"
+        },
+        "runtime_note": "Truthiness-based branch mapping only;user/session runtime not exercised."
+      }
+    },
+    {
+      "claim_id": "NAV-OMITTED-2",
+      "status": "VERIFIED",
+      "closure_state": "CLOSED documentation only",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx",
+        "line": 102,
+        "method": "router.push",
+        "full_call": "router.push(user ? \"/notifications\" : \"/orders\")"
+      },
+      "all_lexical_ancestor_conditions": [],
+      "argument_branch_conditions": [
+        {
+          "condition": "user",
+          "branch": "falsy",
+          "line": 102
+        }
+      ],
+      "effective_static_predicate": "NOT(user)",
+      "destination": "/orders",
+      "pathname_object": null,
+      "pathname_object_expression": null,
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/orders.tsx",
+          "exists": true,
+          "entry_line": 17,
+          "default_component": "MyOrdersScreen",
+          "sha256": "89e29f44f3a25fafa926c1bf3e063b48c2227e9fcbe5662419b25285d16cb396"
+        }
+      ],
+      "recorded_in_old_108": false,
+      "scope": "Static source mapping verified;no handler invoked,ID resolved,API/permission checked or runtime navigation performed.",
+      "interaction_context": {
+        "component": "HomeScreen",
+        "handler": "header-notifications Pressable onPress",
+        "callsite": {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx",
+          "line": 102
+        },
+        "user_origin": {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx",
+          "line": 47,
+          "expression": "const { user } = useAuth()"
+        },
+        "runtime_note": "Truthiness-based branch mapping only;user/session runtime not exercised."
+      }
+    },
+    {
+      "claim_id": "NAV-OMITTED-3",
+      "status": "VERIFIED",
+      "closure_state": "CLOSED documentation only",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/notifications.tsx",
+        "line": 42,
+        "method": "router.push",
+        "full_call": "router.push((n.data.order_kind === \"restaurant\" ? \"/restaurant/dashboard\" : \"/seller/orders\") as never)"
+      },
+      "all_lexical_ancestor_conditions": [
+        {
+          "kind": "if",
+          "condition": "n.data?.seller",
+          "branch": "then/truthy",
+          "line": 42
+        }
+      ],
+      "argument_branch_conditions": [
+        {
+          "condition": "n.data.order_kind === \"restaurant\"",
+          "branch": "truthy",
+          "line": 42
+        }
+      ],
+      "effective_static_predicate": "(n.data?.seller) AND (n.data.order_kind === \"restaurant\")",
+      "destination": "/restaurant/dashboard",
+      "pathname_object": null,
+      "pathname_object_expression": null,
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/dashboard.tsx",
+          "exists": true,
+          "entry_line": 10,
+          "default_component": "RestaurantDashboard",
+          "sha256": "9961ef968bbc01fb2403452113beca551c9ae3742dc10f3d12c16fe810362a9b"
+        }
+      ],
+      "recorded_in_old_108": false,
+      "scope": "Static source mapping verified;no handler invoked,ID resolved,API/permission checked or runtime navigation performed.",
+      "interaction_context": {
+        "component": "NotificationsScreen",
+        "handler": "open(n)",
+        "callsite": {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/notifications.tsx",
+          "line": 61,
+          "expression": "onPress={() => void open(n)}"
+        },
+        "pre_navigation_effects": {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/notifications.tsx",
+          "line": 41,
+          "condition": "!n.read",
+          "effects": "api.post(`/notifications/${n.id}/read`, {}) plus local setItems;no await before navigation;none executed during this inspection"
+        },
+        "runtime_auth_note": "load() returns when !user at line28;items.map() itself is not gated on user. Do not add an unsupported user predicate to the navigation claim."
+      }
+    },
+    {
+      "claim_id": "NAV-OMITTED-4",
+      "status": "VERIFIED",
+      "closure_state": "CLOSED documentation only",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/notifications.tsx",
+        "line": 42,
+        "method": "router.push",
+        "full_call": "router.push((n.data.order_kind === \"restaurant\" ? \"/restaurant/dashboard\" : \"/seller/orders\") as never)"
+      },
+      "all_lexical_ancestor_conditions": [
+        {
+          "kind": "if",
+          "condition": "n.data?.seller",
+          "branch": "then/truthy",
+          "line": 42
+        }
+      ],
+      "argument_branch_conditions": [
+        {
+          "condition": "n.data.order_kind === \"restaurant\"",
+          "branch": "falsy",
+          "line": 42
+        }
+      ],
+      "effective_static_predicate": "(n.data?.seller) AND NOT(n.data.order_kind === \"restaurant\")",
+      "destination": "/seller/orders",
+      "pathname_object": null,
+      "pathname_object_expression": null,
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/orders.tsx",
+          "exists": true,
+          "entry_line": 30,
+          "default_component": "SellerOrdersScreen",
+          "sha256": "2b6b13ccd18f50fbb949ff6063fd6a650aa191bfead27799b033875318ae3884"
+        }
+      ],
+      "recorded_in_old_108": false,
+      "scope": "Static source mapping verified;no handler invoked,ID resolved,API/permission checked or runtime navigation performed.",
+      "interaction_context": {
+        "component": "NotificationsScreen",
+        "handler": "open(n)",
+        "callsite": {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/notifications.tsx",
+          "line": 61,
+          "expression": "onPress={() => void open(n)}"
+        },
+        "pre_navigation_effects": {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/notifications.tsx",
+          "line": 41,
+          "condition": "!n.read",
+          "effects": "api.post(`/notifications/${n.id}/read`, {}) plus local setItems;no await before navigation;none executed during this inspection"
+        },
+        "runtime_auth_note": "load() returns when !user at line28;items.map() itself is not gated on user. Do not add an unsupported user predicate to the navigation claim."
+      }
+    },
+    {
+      "claim_id": "NAV-OMITTED-5",
+      "status": "VERIFIED",
+      "closure_state": "CLOSED documentation only",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/orders.tsx",
+        "line": 193,
+        "method": "router.push",
+        "full_call": "router.push(item.kind === \"restaurant\" ? { pathname: \"/restaurant/orders/[id]\", params: { id: item.id } } : { pathname: \"/order-tracking\", params: { id: item.id, kind: \"grocery\" } })"
+      },
+      "all_lexical_ancestor_conditions": [],
+      "argument_branch_conditions": [
+        {
+          "condition": "item.kind === \"restaurant\"",
+          "branch": "falsy",
+          "line": 193
+        }
+      ],
+      "effective_static_predicate": "NOT(item.kind === \"restaurant\")",
+      "destination": "/order-tracking",
+      "pathname_object": {
+        "pathname": "\"/order-tracking\"",
+        "params": "{ id: item.id, kind: \"grocery\" }"
+      },
+      "pathname_object_expression": "{ pathname: \"/order-tracking\", params: { id: item.id, kind: \"grocery\" } }",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/order-tracking.tsx",
+          "exists": true,
+          "entry_line": 13,
+          "default_component": "OrderTrackingScreen",
+          "sha256": "dd7548a11c6fbb66823b3f52952bd4521a3ccb6b2c53ad45e7f0cd69548c4dcd"
+        }
+      ],
+      "recorded_in_old_108": false,
+      "scope": "Static source mapping verified;no handler invoked,ID resolved,API/permission checked or runtime navigation performed.",
+      "interaction_context": {
+        "component": "MyOrdersScreen",
+        "handler": "FlatList renderItem Pressable onPress",
+        "callsite": {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/orders.tsx",
+          "line": 193
+        },
+        "data_mapping": "item from orders data;when item.kind !== \"restaurant\",pathname=/order-tracking,params={id:item.id,kind:\"grocery\"}. Existing true branch maps pathname=/restaurant/orders/[id],params={id:item.id};true branch was already in the108set.",
+        "runtime_note": "No item.id or ownership/runtime validation performed."
+      }
+    }
+  ],
+  "href_attributes": [
+    {
+      "claim_id": "NAV-HREF-1",
+      "status": "VERIFIED",
+      "closure_state": "CLOSED static target mapping",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/+not-found.tsx",
+        "line": 21,
+        "tag": "Link",
+        "href_expression": "\"/(tabs)\""
+      },
+      "all_lexical_ancestor_conditions": [],
+      "target_or_base": "/(tabs)",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx",
+          "exists": true,
+          "entry_line": 39,
+          "default_component": "HomeScreen",
+          "sha256": "62682994c1c885b0334d363cff1060f5a78b61352b3173f8bc222a2bd5919657"
+        }
+      ],
+      "dynamic_query_mapping": null,
+      "scope": "Source mapping only;Redirect/Link not executed and runtime route resolution/parameters not verified."
+    },
+    {
+      "claim_id": "NAV-HREF-2",
+      "status": "VERIFIED",
+      "closure_state": "CLOSED static target mapping",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/index.tsx",
+        "line": 4,
+        "tag": "Redirect",
+        "href_expression": "\"/(tabs)\""
+      },
+      "all_lexical_ancestor_conditions": [],
+      "target_or_base": "/(tabs)",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx",
+          "exists": true,
+          "entry_line": 39,
+          "default_component": "HomeScreen",
+          "sha256": "62682994c1c885b0334d363cff1060f5a78b61352b3173f8bc222a2bd5919657"
+        }
+      ],
+      "dynamic_query_mapping": null,
+      "scope": "Source mapping only;Redirect/Link not executed and runtime route resolution/parameters not verified."
+    },
+    {
+      "claim_id": "NAV-HREF-3",
+      "status": "VERIFIED",
+      "closure_state": "CLOSED static target mapping",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/account.tsx",
+        "line": 10,
+        "tag": "Redirect",
+        "href_expression": "\"/(tabs)/account\""
+      },
+      "all_lexical_ancestor_conditions": [],
+      "target_or_base": "/(tabs)/account",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/account.tsx",
+          "exists": true,
+          "entry_line": 23,
+          "default_component": "AccountScreen",
+          "sha256": "7566864cafb5516b0767094c5199ca449865987e8dd4f82b6416fc157904a59e"
+        }
+      ],
+      "dynamic_query_mapping": null,
+      "scope": "Source mapping only;Redirect/Link not executed and runtime route resolution/parameters not verified."
+    },
+    {
+      "claim_id": "NAV-HREF-4",
+      "status": "VERIFIED",
+      "closure_state": "CLOSED static target mapping",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/addresses.tsx",
+        "line": 3,
+        "tag": "Redirect",
+        "href_expression": "\"/addresses\""
+      },
+      "all_lexical_ancestor_conditions": [],
+      "target_or_base": "/addresses",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/addresses.tsx",
+          "exists": true,
+          "entry_line": 8,
+          "default_component": "SharedAddresses",
+          "sha256": "b21314d98938794b5d9c1b47b6ce56130a7a9672e1a75170cade9d6261e3f3c9"
+        }
+      ],
+      "dynamic_query_mapping": null,
+      "scope": "Source mapping only;Redirect/Link not executed and runtime route resolution/parameters not verified."
+    },
+    {
+      "claim_id": "NAV-HREF-5",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN dynamic query/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/support.tsx",
+        "line": 6,
+        "tag": "Redirect",
+        "href_expression": "{`/chand?openHelp=1${suffix}` as never}"
+      },
+      "all_lexical_ancestor_conditions": [],
+      "target_or_base": "/chand",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/chand.tsx",
+          "exists": true,
+          "entry_line": 146,
+          "default_component": "ChandScreen",
+          "sha256": "3789bf027ee8ef8e3a0a4fa1a6972219bd019af9b8d06c9ba270412cba980fea"
+        }
+      ],
+      "dynamic_query_mapping": {
+        "source": {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/support.tsx",
+          "line": 5
+        },
+        "when_order_id_truthy": "&order_id=${encodeURIComponent(order_id)}&order_kind=${order_kind === \"grocery\" ? \"grocery\" : \"restaurant\"}",
+        "when_order_id_falsy": "empty suffix",
+        "fixed_query": "openHelp=1",
+        "full_source_line": "  const suffix = order_id ? `&order_id=${encodeURIComponent(order_id)}&order_kind=${order_kind === 'grocery' ? 'grocery' : 'restaurant'}` : '';"
+      },
+      "scope": "Source mapping only;Redirect/Link not executed and runtime route resolution/parameters not verified."
+    }
+  ],
+  "dynamic_arguments": [
+    {
+      "claim_id": "NAV-DYNAMIC-1",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN parameter/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/categories.tsx",
+        "line": 41,
+        "method": "router.push",
+        "argument": "`/category/${item.id}`",
+        "full_call": "router.push(`/category/${item.id}`)"
+      },
+      "all_lexical_ancestor_conditions": [],
+      "classification": "fixed route pattern with dynamic entity identifier",
+      "static_route_pattern": "/category/[slug]",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/category/[slug].tsx",
+          "exists": true,
+          "entry_line": 11,
+          "default_component": "CategoryScreen",
+          "sha256": "6b0172853580f1901421f50565caf377d6e556ba228c7cf4f5b0d1d4acedc1dd"
+        }
+      ],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested."
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-2",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN parameter/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx",
+        "line": 203,
+        "method": "router.push",
+        "argument": "`/category/${item.id}`",
+        "full_call": "router.push(`/category/${item.id}`)"
+      },
+      "all_lexical_ancestor_conditions": [],
+      "classification": "fixed route pattern with dynamic entity identifier",
+      "static_route_pattern": "/category/[slug]",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/category/[slug].tsx",
+          "exists": true,
+          "entry_line": 11,
+          "default_component": "CategoryScreen",
+          "sha256": "6b0172853580f1901421f50565caf377d6e556ba228c7cf4f5b0d1d4acedc1dd"
+        }
+      ],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested."
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-3",
+      "status": "UNVERIFIED",
+      "closure_state": "OPEN owner/security decision required",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/auth.tsx",
+        "line": 64,
+        "method": "router.replace",
+        "argument": "next as any",
+        "full_call": "router.replace(next as any)"
+      },
+      "all_lexical_ancestor_conditions": [
+        {
+          "kind": "if",
+          "condition": "next && typeof next === \"string\"",
+          "branch": "then/truthy",
+          "line": 64
+        }
+      ],
+      "classification": "unbounded return-target parameter",
+      "static_route_pattern": null,
+      "target_file_candidates": [],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested.",
+      "open_question": "next is a route parameter passed through as any after successful authentication;no in-source route allowlist is checked at the navigation call. Whether external/malformed/unauthorized target navigation is possible is UNVERIFIED,not an exploit finding.",
+      "parameter_origin": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/auth.tsx",
+        "line": 24,
+        "description": "useLocalSearchParams next parameter;see actual source declaration"
+      }
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-4",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN parameter/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/category/[slug].tsx",
+        "line": 48,
+        "method": "router.replace",
+        "argument": "`/category/${item.id}`",
+        "full_call": "router.replace(`/category/${item.id}`)"
+      },
+      "all_lexical_ancestor_conditions": [],
+      "classification": "fixed route pattern with dynamic entity identifier",
+      "static_route_pattern": "/category/[slug]",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/category/[slug].tsx",
+          "exists": true,
+          "entry_line": 11,
+          "default_component": "CategoryScreen",
+          "sha256": "6b0172853580f1901421f50565caf377d6e556ba228c7cf4f5b0d1d4acedc1dd"
+        }
+      ],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested."
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-5",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN parameter/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/chand.tsx",
+        "line": 399,
+        "method": "router.push",
+        "argument": "`/product/${product.id}`",
+        "full_call": "router.push(`/product/${product.id}`)"
+      },
+      "all_lexical_ancestor_conditions": [
+        {
+          "kind": "if",
+          "condition": "product.variants?.length || isMeasured(product)",
+          "branch": "then/truthy",
+          "line": 398
+        }
+      ],
+      "classification": "fixed route pattern with dynamic entity identifier",
+      "static_route_pattern": "/product/[id]",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx",
+          "exists": true,
+          "entry_line": 19,
+          "default_component": "ProductDetailsScreen",
+          "sha256": "b2ffbb560288b209ad55c0329040f39cd4a9b89d2626ee7fd357efc202aa7409"
+        }
+      ],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested."
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-6",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN parameter/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/notifications.tsx",
+        "line": 43,
+        "method": "router.push",
+        "argument": "`/product/${n.data.product_id}`",
+        "full_call": "router.push(`/product/${n.data.product_id}`)"
+      },
+      "all_lexical_ancestor_conditions": [
+        {
+          "kind": "if",
+          "condition": "n.data?.seller",
+          "branch": "else/falsy",
+          "line": 42
+        },
+        {
+          "kind": "if",
+          "condition": "n.data?.product_id",
+          "branch": "then/truthy",
+          "line": 43
+        }
+      ],
+      "classification": "fixed route pattern with dynamic entity identifier",
+      "static_route_pattern": "/product/[id]",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx",
+          "exists": true,
+          "entry_line": 19,
+          "default_component": "ProductDetailsScreen",
+          "sha256": "b2ffbb560288b209ad55c0329040f39cd4a9b89d2626ee7fd357efc202aa7409"
+        }
+      ],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested."
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-7",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN parameter/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx",
+        "line": 235,
+        "method": "router.push",
+        "argument": "`/product/${listing.id}`",
+        "full_call": "router.push(`/product/${listing.id}`)"
+      },
+      "all_lexical_ancestor_conditions": [
+        {
+          "kind": "short-circuit-AND",
+          "condition": "product.source === \"catalog\"",
+          "branch": "truthy required",
+          "line": 229
+        },
+        {
+          "kind": "conditional-expression",
+          "condition": "matchingLiveListings.length === 0",
+          "branch": "falsy",
+          "line": 232
+        }
+      ],
+      "classification": "fixed route pattern with dynamic entity identifier",
+      "static_route_pattern": "/product/[id]",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx",
+          "exists": true,
+          "entry_line": 19,
+          "default_component": "ProductDetailsScreen",
+          "sha256": "b2ffbb560288b209ad55c0329040f39cd4a9b89d2626ee7fd357efc202aa7409"
+        }
+      ],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested."
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-8",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN parameter/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx",
+        "line": 264,
+        "method": "router.push",
+        "argument": "`/product/${r.id}`",
+        "full_call": "router.push(`/product/${r.id}`)"
+      },
+      "all_lexical_ancestor_conditions": [
+        {
+          "kind": "short-circuit-AND",
+          "condition": "related.length > 0",
+          "branch": "truthy required",
+          "line": 252
+        }
+      ],
+      "classification": "fixed route pattern with dynamic entity identifier",
+      "static_route_pattern": "/product/[id]",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx",
+          "exists": true,
+          "entry_line": 19,
+          "default_component": "ProductDetailsScreen",
+          "sha256": "b2ffbb560288b209ad55c0329040f39cd4a9b89d2626ee7fd357efc202aa7409"
+        }
+      ],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested."
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-9",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN parameter/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/shops.tsx",
+        "line": 192,
+        "method": "router.push",
+        "argument": "`/shop/${item.id}`",
+        "full_call": "router.push(`/shop/${item.id}`)"
+      },
+      "all_lexical_ancestor_conditions": [],
+      "classification": "fixed route pattern with dynamic entity identifier",
+      "static_route_pattern": "/shop/[id]",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/shop/[id].tsx",
+          "exists": true,
+          "entry_line": 16,
+          "default_component": "ShopDetailsScreen",
+          "sha256": "0112e5c6ba65dbd024800e052322737768eb73ea21be9a6221cb35ff30293cf2"
+        }
+      ],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested."
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-10",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN parameter/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/ProductCard.tsx",
+        "line": 34,
+        "method": "router.push",
+        "argument": "`/product/${product.id}`",
+        "full_call": "router.push(`/product/${product.id}`)"
+      },
+      "all_lexical_ancestor_conditions": [
+        {
+          "kind": "if",
+          "condition": "product.source !== \"live\" || hasVariants || measured",
+          "branch": "then/truthy",
+          "line": 34
+        }
+      ],
+      "classification": "fixed route pattern with dynamic entity identifier",
+      "static_route_pattern": "/product/[id]",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx",
+          "exists": true,
+          "entry_line": 19,
+          "default_component": "ProductDetailsScreen",
+          "sha256": "b2ffbb560288b209ad55c0329040f39cd4a9b89d2626ee7fd357efc202aa7409"
+        }
+      ],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested."
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-11",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN parameter/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/ProductCard.tsx",
+        "line": 46,
+        "method": "router.push",
+        "argument": "`/product/${product.id}`",
+        "full_call": "router.push(`/product/${product.id}`)"
+      },
+      "all_lexical_ancestor_conditions": [],
+      "classification": "fixed route pattern with dynamic entity identifier",
+      "static_route_pattern": "/product/[id]",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx",
+          "exists": true,
+          "entry_line": 19,
+          "default_component": "ProductDetailsScreen",
+          "sha256": "b2ffbb560288b209ad55c0329040f39cd4a9b89d2626ee7fd357efc202aa7409"
+        }
+      ],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested."
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-12",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN parameter/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/ProductCard.tsx",
+        "line": 79,
+        "method": "router.push",
+        "argument": "`/product/${product.id}`",
+        "full_call": "router.push(`/product/${product.id}`)"
+      },
+      "all_lexical_ancestor_conditions": [
+        {
+          "kind": "conditional-expression",
+          "condition": "product.source !== \"live\"",
+          "branch": "falsy",
+          "line": 73
+        },
+        {
+          "kind": "conditional-expression",
+          "condition": "hasVariants",
+          "branch": "truthy",
+          "line": 75
+        }
+      ],
+      "classification": "fixed route pattern with dynamic entity identifier",
+      "static_route_pattern": "/product/[id]",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx",
+          "exists": true,
+          "entry_line": 19,
+          "default_component": "ProductDetailsScreen",
+          "sha256": "b2ffbb560288b209ad55c0329040f39cd4a9b89d2626ee7fd357efc202aa7409"
+        }
+      ],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested."
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-13",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "OPEN parameter/runtime evidence",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantCard.tsx",
+        "line": 6,
+        "method": "router.push",
+        "argument": "`/restaurant/${restaurant.id}` as never",
+        "full_call": "router.push(`/restaurant/${restaurant.id}` as never)"
+      },
+      "all_lexical_ancestor_conditions": [],
+      "classification": "fixed route pattern with dynamic entity identifier",
+      "static_route_pattern": "/restaurant/[id]",
+      "target_file_candidates": [
+        {
+          "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/[id].tsx",
+          "exists": true,
+          "entry_line": 10,
+          "default_component": "RestaurantDetails",
+          "sha256": "a8b650fb8d27cc03a6a3faa5ffb6864e7ca5785877fdd72bbb7d5eda972e2fea"
+        }
+      ],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested."
+    },
+    {
+      "claim_id": "NAV-DYNAMIC-14",
+      "status": "PARTIALLY VERIFIED",
+      "closure_state": "CLOSED finite target definitions;OPEN runtime behavior",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantNav.tsx",
+        "line": 6,
+        "method": "router.push",
+        "argument": "route as never",
+        "full_call": "router.push(route as never)"
+      },
+      "all_lexical_ancestor_conditions": [],
+      "classification": "data-driven finite local route list",
+      "static_route_pattern": null,
+      "target_file_candidates": [],
+      "limits": "Parameter validity,entity existence,permissions,encoding,framework URL behavior and actual navigation are not tested.",
+      "finite_targets": [
+        {
+          "target": "/restaurant",
+          "candidates": [
+            {
+              "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/index.tsx",
+              "exists": true,
+              "entry_line": 11,
+              "default_component": "RestaurantHomeScreen",
+              "sha256": "c4b34423e7250b9354621d49379c3532db35d4b4385d8b07f17f4faebf83edcf"
+            }
+          ]
+        },
+        {
+          "target": "/restaurant/categories",
+          "candidates": [
+            {
+              "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/categories.tsx",
+              "exists": true,
+              "entry_line": 10,
+              "default_component": "RestaurantCategories",
+              "sha256": "55667009218c11ffa50f8fb1db1fb2f9bb16569d6cc27fd61255f2eb62ae35e4"
+            }
+          ]
+        },
+        {
+          "target": "/restaurant/search",
+          "candidates": [
+            {
+              "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/search.tsx",
+              "exists": true,
+              "entry_line": 11,
+              "default_component": "RestaurantSearch",
+              "sha256": "67f2e1da417ec010c6c61d4a573cc29945ca33db3f23e5028c5db9e78b237b4c"
+            }
+          ]
+        },
+        {
+          "target": "/restaurant/cart",
+          "candidates": [
+            {
+              "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/cart.tsx",
+              "exists": true,
+              "entry_line": 7,
+              "default_component": "RestaurantCart",
+              "sha256": "f1e382c7a5e31798f9a6306da88cc2b700436178642d982d426854baa2718834"
+            }
+          ]
+        },
+        {
+          "target": "/restaurant/orders",
+          "candidates": [
+            {
+              "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/orders/index.tsx",
+              "exists": true,
+              "entry_line": 24,
+              "default_component": "RestaurantOrdersScreen",
+              "sha256": "979d6cdc3ee7b3644b22c353399a4ecdc37862766ad31ef5b5dffd06295c514d"
+            }
+          ]
+        },
+        {
+          "target": "/restaurant/account",
+          "candidates": [
+            {
+              "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/account.tsx",
+              "exists": true,
+              "entry_line": 9,
+              "default_component": "RestaurantAccount",
+              "sha256": "1199797d551cf07872327827241acfc3e0caeda2c0409640a23c0f0e096924ed"
+            }
+          ]
+        }
+      ],
+      "route_list_source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantNav.tsx",
+        "line": 5
+      }
+    }
+  ],
+  "input_sources": [
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/_layout.tsx",
+      "sha256": "a3482d454745d4335d3aa1eee4d4b53ebb0cc55c26a240e37fdc0c259105cd73"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/account.tsx",
+      "sha256": "7566864cafb5516b0767094c5199ca449865987e8dd4f82b6416fc157904a59e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/cart.tsx",
+      "sha256": "46a7fb33cd58c41fd458223f5f1e9d5764c8659cb4aff861617450bcee0f209d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/categories.tsx",
+      "sha256": "be13823e513d9ab22d22ba8a8cb2dd45e2f06e2c2d9a911f173178b1a62b265d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx",
+      "sha256": "62682994c1c885b0334d363cff1060f5a78b61352b3173f8bc222a2bd5919657"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/search.tsx",
+      "sha256": "49d729c2a04ee184a8df3715571b8cc88180701ddf6b904003b531ef73d62f99"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/+html.tsx",
+      "sha256": "5d7c888914b4fe9d302967bb867059b98f7f457a3891ce011e6e4a9849c9a792"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/+not-found.tsx",
+      "sha256": "98df243531bcd19fca8dfe9499a99836993da1855de9c185410937d41a200e74"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/_layout.tsx",
+      "sha256": "a384996331e509b25de63de87e68eb08595532b82e99e116179a479527df3c05"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/addresses.tsx",
+      "sha256": "b21314d98938794b5d9c1b47b6ce56130a7a9672e1a75170cade9d6261e3f3c9"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/admin-delivery-partners.tsx",
+      "sha256": "e0da25fc52b9adf3172492b7d874959315e50961140bf3921fab452e454bd07e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/admin-earnings.tsx",
+      "sha256": "6e0b68c48576a38fd1c87e720a531bd6aff3834434f4af4d474045c962a98c66"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/admin.tsx",
+      "sha256": "0f281894c0b9168556d31cc44b0203d714cebc43c31381718ff35bb6b0cb7021"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/auth.tsx",
+      "sha256": "659f752a8f5cfda19a3667a1cb547542102f2bfd34f70e94a78438c3d06d4fbb"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/become-seller.tsx",
+      "sha256": "c0b688b9c98880dea5d315f29ee7af17e70d891c4624989f63c4a28df36d6afd"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/category/[slug].tsx",
+      "sha256": "6b0172853580f1901421f50565caf377d6e556ba228c7cf4f5b0d1d4acedc1dd"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/chand.tsx",
+      "sha256": "3789bf027ee8ef8e3a0a4fa1a6972219bd019af9b8d06c9ba270412cba980fea"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/checkout.tsx",
+      "sha256": "bb20b859e7b917cafbededaa16594407b2eab02400ccd1e7d94e5ac6dc2d81b0"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/delivery-address.tsx",
+      "sha256": "702268be825f74a9bea47e9a8445dd81460d346f1c6f59666d038f2510911f53"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/delivery-partner.tsx",
+      "sha256": "095e7aa47fe97d607a80570af7652c025de1cfd273c27a8e5240d73b31ff1993"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/index.tsx",
+      "sha256": "bdcaf585d82447d77ae63599499e5f0b8a67af2577e6b69a8c65138bf3015fca"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/language.tsx",
+      "sha256": "a1df71f3108c83cb1570883b2ccc7e7d5e2395a9b7019cb6b4d7ac9d5a81756c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/notifications.tsx",
+      "sha256": "f5068e725296b8ed20d20bf334d18872f5d97b5039956eddaaaa1af99f281b73"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/order-tracking.tsx",
+      "sha256": "dd7548a11c6fbb66823b3f52952bd4521a3ccb6b2c53ad45e7f0cd69548c4dcd"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/orders.tsx",
+      "sha256": "89e29f44f3a25fafa926c1bf3e063b48c2227e9fcbe5662419b25285d16cb396"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/password-reset.tsx",
+      "sha256": "d2bb6580b8bf48b7ec8ad25f1151b01683fa6aecf53ae7159845d0f2ac163a39"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/payment-methods.tsx",
+      "sha256": "9944a34fc268ec4e0b26e468eaf15f9d69127f15412c02d29175e0a28ef35aeb"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx",
+      "sha256": "b2ffbb560288b209ad55c0329040f39cd4a9b89d2626ee7fd357efc202aa7409"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/referral-dashboard.tsx",
+      "sha256": "afc7b243babe250a9ab830e5e6ccf16ed954ce584d7232f1f846523d78be8581"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/referral.tsx",
+      "sha256": "428254c165b7df98b374b22f1945d71aa78e2c99d81416cb7c926860ad4c7dd8"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/request.tsx",
+      "sha256": "3e5b3cc97901b0f12dc86cac60852d196b027b0a2dd6d509354ecc1e4562126f"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/[id].tsx",
+      "sha256": "a8b650fb8d27cc03a6a3faa5ffb6864e7ca5785877fdd72bbb7d5eda972e2fea"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/account.tsx",
+      "sha256": "1199797d551cf07872327827241acfc3e0caeda2c0409640a23c0f0e096924ed"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/addresses.tsx",
+      "sha256": "e58cf69394368886cef5204ada9f4a8d57ea56afa1eab38037f3ef0a8c8a3b7d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/cart.tsx",
+      "sha256": "f1e382c7a5e31798f9a6306da88cc2b700436178642d982d426854baa2718834"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/categories.tsx",
+      "sha256": "55667009218c11ffa50f8fb1db1fb2f9bb16569d6cc27fd61255f2eb62ae35e4"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/checkout.tsx",
+      "sha256": "47e4a7f154b2a7606576f4d2a609a17c24d1c35b1a492caf5920e9408e9207f7"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/dashboard.tsx",
+      "sha256": "9961ef968bbc01fb2403452113beca551c9ae3742dc10f3d12c16fe810362a9b"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/index.tsx",
+      "sha256": "c4b34423e7250b9354621d49379c3532db35d4b4385d8b07f17f4faebf83edcf"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/menu.tsx",
+      "sha256": "2b99545e869a5d51a6bd5b981a46edf3e11c34e981b520a98e7b6597d9e849cc"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/order-confirmation.tsx",
+      "sha256": "0998f7cd47587875248e583bd78946e174f8d698b0ef6d9e65ff42765cec7033"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/orders/[id].tsx",
+      "sha256": "4fd236838a478f6cf331b181e396a95883973f606cc922753b00cf0b2aa103c3"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/orders/index.tsx",
+      "sha256": "979d6cdc3ee7b3644b22c353399a4ecdc37862766ad31ef5b5dffd06295c514d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/search.tsx",
+      "sha256": "67f2e1da417ec010c6c61d4a573cc29945ca33db3f23e5028c5db9e78b237b4c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/support.tsx",
+      "sha256": "048dae6a532e82a548a67881e2e6ff16b0e69fad8b69841f864173f44f084e90"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/retail-prices.tsx",
+      "sha256": "27751094cfc92471666f15923ce6539425d24ce300c1649e8ddaa8b63fdb5202"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/orders.tsx",
+      "sha256": "2b6b13ccd18f50fbb949ff6063fd6a650aa191bfead27799b033875318ae3884"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/products.tsx",
+      "sha256": "4e1e8ab6f7e878c22ea408a79432f6572110cbcb12e6c901f36a48f2d717ebc7"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/support.tsx",
+      "sha256": "da3c4741142206a7d5d6dcf311be25c865615c69050317ce4d6620c58dc67a0e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller-earnings.tsx",
+      "sha256": "94cbda2608a6e90fe69532f3672d7a4e814410f94300fc6e1de5bd8bb7bca7b1"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/services.tsx",
+      "sha256": "69fc7fe5dc8e39ab210d42db6820195340b5df5fb2f4d38f812e3f52242d2d7d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/shop/[id].tsx",
+      "sha256": "0112e5c6ba65dbd024800e052322737768eb73ea21be9a6221cb35ff30293cf2"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/shops.tsx",
+      "sha256": "70bbb00b155166bae4dd23ea4571f56d786bdb9ff2b237f4b43612c396372984"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/AnnouncementBanner.tsx",
+      "sha256": "cc4efbdfd040566135e41af3cd89d363c3ef65c72a5bcef3d473ae648d3b9b83"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/BrandLogo.tsx",
+      "sha256": "710524d8890642d7c3306a4be335afe665214eda9024f1ef51f48d6435d9c98f"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/GroceryOnlinePayment.tsx",
+      "sha256": "14b53a2152e7092ef97207c4b1f03e658216d1cbfdfd6192dc46b73d97ee9be5"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/MeasuredQuantityPicker.tsx",
+      "sha256": "99d807f0e3c9c622ce7d4c11b5c3853b553454cf58e7c6cbb528139079a55264"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/ProductCard.tsx",
+      "sha256": "cb05ca1e015def539adb0dffc817559de548a8bb3f8b61e1190a1b170c51849f"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/QuantityStepper.tsx",
+      "sha256": "0a1668f664280f964e0494cf79de098ac440287f4a3b773f67397d3dd5e4dd1e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/RestockAlertButton.tsx",
+      "sha256": "438ca9d97b19959f7e7344590228e159fddc8fd010fa7a79e2aa72d097bb204a"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/SellerMeasuredFields.tsx",
+      "sha256": "50dd60c689b73735a0fb0f2e4fcfa5f048099bf1e90f948e90ec33639aa39d48"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/error-boundary.tsx",
+      "sha256": "5fef573fc6c628acc2350d9147597cd1b6ff831cbcffc177ebb2d17b1c5165cd"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/data/catalog-reference.ts",
+      "sha256": "5b71f901a61aeaa45619df746fa10a258fb902743f8e487cd24eef6389c4796d"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/data/catalog.ts",
+      "sha256": "37c0cc02355d1d8cecc0d3a40967875b420d9e6225e7debb6963347dec2cc2c2"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/data/shops.ts",
+      "sha256": "26e98e9d7a8942d54e53e612d3930089d39544340231cbd5124f8100814dab4c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/data/useCatalogProducts.ts",
+      "sha256": "9b48c9c43496ee56f174ccdc3c6a0c9f50da340b91d380717e8730fc42396b19"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/i18n/index.tsx",
+      "sha256": "c84e0341a6ba928e280c10a8e6f7f1f5f0dbc3d2be4fe7efe59cdd825ced060a"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/i18n/translations.ts",
+      "sha256": "6afbf0cf3fbcadae914503569f1623d73ef174e3d9119a43034a50364008dc68"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/api.ts",
+      "sha256": "5eb84c952369340f047e44b38a5bc3b90068802530daa6d772ff456297b28a0c"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/chand-party-planner.ts",
+      "sha256": "00fec9786c749ed02ed126d7f54026ee8c81218811f3c76192a6b0de5fe08285"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/measure.ts",
+      "sha256": "7c7152b0fd246c6498a7feffa17a7e1da4cb4166a253962e2f05ae383c4ef626"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/razorpay-checkout.native.ts",
+      "sha256": "69575525f94fd2041e3bc2f4446ab26f3eec14b6685b7f4115678071592027e7"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/razorpay-checkout.ts",
+      "sha256": "ffd002ad2c172c6b416b98ed01fc3248c6f40f5dd2ee9129862397f2506fe880"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/razorpay.ts",
+      "sha256": "e0e41ac6ab6087fcdb05d782e91eb91103db4c9ef18914991d173f0112e97aa9"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/react-native-razorpay.d.ts",
+      "sha256": "a5e3bc9b967a07dae0587a1f4f92e5cee4a06aed0bc4935eec822b533f8f7103"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/navigation.ts",
+      "sha256": "60b3fc096cd315ef09fe5f9362187de6c64114ccabc21f9e985e9fcbcf00075a"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/query-client.ts",
+      "sha256": "5add7aa5aaa5794543b70fe1e5851ababe9918daf343a3e40953343abad55379"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantCard.tsx",
+      "sha256": "f0fe2acd67c2879fdb6e1d5f453c7a0609aa7781de4c783c3db2e68a8b606e88"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantModeShell.tsx",
+      "sha256": "ff0f404d7b9955ecc03fcac6057f9629c3fa42318b258b9bbb48f7aff5c37ae2"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantNav.tsx",
+      "sha256": "8c35e6151a212b0a157d378528664b8016aedb1b1cddb2927f9169d8262fef46"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantPage.tsx",
+      "sha256": "5fa41449d6d19f86db7119eb1711b6837417c6ec41a01a39cc5ae51e433421fe"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/api.ts",
+      "sha256": "a3c17abe3e494a18e6669a8b6e267a37f8c84b62f99bc70112a9fa5eceb62d9a"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/cart.ts",
+      "sha256": "609a594ed03fce9f0e80e10c46e1a386aef41c07876bba46ef9815b53625279e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/data.ts",
+      "sha256": "558b18ed31b0b213c4572b9bca04360f4f28e181f6023e6082daf38d215166d0"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/theme.ts",
+      "sha256": "2123bebc3fe3cc87e15012dce2a5da2f0084e2ff8ca9320d9f5f15588d71700e"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/useDiscoveryAddress.ts",
+      "sha256": "2cb454769b2d66f329c2e4874716808a7ebb831d9d3b52e916d6a867ae13713f"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/store/auth.tsx",
+      "sha256": "d5931dfe1e81234b34a280c2ed3726fbb949cae315bdf8aaf6e2fd687ea1b8b8"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/store/cart.tsx",
+      "sha256": "a3361399507f3b609301ffe083da5ec8cbcd473de4389d4fa8a22170d90c6c35"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/store/location.tsx",
+      "sha256": "19904dbbf8f58ef0bbafddc6ef094ea74f72727187d120bc8cb5a49626b4e9be"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/theme.ts",
+      "sha256": "2d2375508d53cf2e10c8824652328330a4359cc900072bef5c14b25fe3629067"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/alert.ts",
+      "sha256": "b84943bcc5e6194dd2e316d812f3a0bf880f79b5d921d95d3f4eff418fd5ee17"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/storage/index.ts",
+      "sha256": "99a605a86752495ea234e3724e1bb80198663860d9e988ffc2bd2a2ed4e783e1"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/storage/index.web.ts",
+      "sha256": "20cc49ebd12eb74e4b906ac9daf92ed862330e70c663eed53bfb38e324e92d37"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/storage/storage-base.ts",
+      "sha256": "dd3aee0836f120049f403bca2c99398f945a557d88f64566e11fb805973c4559"
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/upload.ts",
+      "sha256": "4cb8f97a9ba38bd14e1b87080958aa5b4ead09a8ad011bf940efd06af852c59f"
+    }
+  ],
+  "original_files_modified": false,
+  "source_modified": false,
+  "application_tests_run": 0,
+  "browser_actions": 0,
+  "API_calls": 0,
+  "DB_queries_or_writes": 0,
+  "network_calls": 0,
+  "next_action": "Owner/parent review documentation closure;leave auth next/dynamic runtime and approval/security decisions OPEN. No Task2 or fixes.",
+  "source_verification_note": "All five omitted destinations exist;default exported component lines and SHA256 are recorded. Special framework files are not ordinary routable-page targets. Closure applies to documentation/source mapping only;auth next and dynamic/runtime acceptance remain OPEN."
+}

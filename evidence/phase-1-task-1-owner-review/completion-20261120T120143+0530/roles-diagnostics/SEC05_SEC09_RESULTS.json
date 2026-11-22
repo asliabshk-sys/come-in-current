@@ -1,0 +1,195 @@
+{
+  "project": "COME-IN",
+  "timestamp_Asia_Kolkata": "2026-11-20T12:11:24.328512+05:30",
+  "scope": "Isolated candidate SEC05/SEC09 only;root owns production merge/final regression",
+  "source_before_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "candidate_SHA256": "f054bfb4a25004ac334514ef6c67fa47cd800715a2df0919dc6c85c9e1b3fbcf",
+  "runner_SHA256": "a64b60a947f0edb8c5208e8924f9652bf32d7c4da1f31fad1e0521ebac9f1186",
+  "changed_source_nodes": [
+    "StatusCheckCreate",
+    "create_status_check",
+    "list_status_checks",
+    "admin_update_user_role"
+  ],
+  "production_source_edited_by_this_agent": false,
+  "candidate_status": "PASS",
+  "before_counts": {
+    "PASS": 10,
+    "FAIL": 17,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "candidate_after_counts": {
+    "PASS": 27,
+    "FAIL": 0,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "findings": [
+    {
+      "id": "SEC-05",
+      "severity": "MEDIUM",
+      "classification": "Confirmed source/runtime authorization and validation defect",
+      "candidate_status": "PASS",
+      "change": "Admin-only existing status POST/GET;request client_name1..256;public health and historical response records unchanged.",
+      "test_ids": [
+        "D01",
+        "D02",
+        "D03",
+        "D04",
+        "D05",
+        "D06",
+        "D07",
+        "D08",
+        "D09",
+        "D10",
+        "D11",
+        "D12",
+        "D13",
+        "D14",
+        "D15"
+      ]
+    },
+    {
+      "id": "SEC-09",
+      "severity": "MEDIUM",
+      "classification": "Confirmed controlled real-Mongo concurrent last-admin invariant failure before fix",
+      "candidate_status": "PASS",
+      "change": "One security_locks shared guard write inside existing transaction before fresh actor/target/count/update;all user operations same session.",
+      "test_ids": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06",
+        "R07",
+        "R08",
+        "R09",
+        "R10",
+        "R11",
+        "R12"
+      ]
+    }
+  ],
+  "schema_delta": "Dedicated security_locks control document with _id/admin-role-mutations and version integer;implicit _id index only,no migration/user deletion.",
+  "no_destructive_migration": true,
+  "global_failpoints": 0,
+  "DB_drops": 0,
+  "actual_provider_calls": 0,
+  "test_databases_retained": [
+    "comein_roles_before_8bed1548faeb_1",
+    "comein_roles_before_8bed1548faeb_2",
+    "comein_roles_before_8bed1548faeb_3",
+    "comein_roles_before_8bed1548faeb_4",
+    "comein_roles_before_8bed1548faeb_5",
+    "comein_roles_before_8bed1548faeb_6",
+    "comein_roles_before_8bed1548faeb_7",
+    "comein_roles_before_8bed1548faeb_8",
+    "comein_roles_before_8bed1548faeb_9",
+    "comein_roles_before_8bed1548faeb_10",
+    "comein_roles_before_8bed1548faeb_11",
+    "comein_roles_before_8bed1548faeb_12",
+    "comein_roles_before_8bed1548faeb_13",
+    "comein_roles_before_8bed1548faeb_14",
+    "comein_roles_before_8bed1548faeb_15",
+    "comein_roles_before_8bed1548faeb_16",
+    "comein_roles_before_8bed1548faeb_17",
+    "comein_roles_before_8bed1548faeb_18",
+    "comein_roles_before_8bed1548faeb_19",
+    "comein_roles_before_8bed1548faeb_20",
+    "comein_roles_before_8bed1548faeb_21",
+    "comein_roles_before_8bed1548faeb_22",
+    "comein_roles_before_8bed1548faeb_23",
+    "comein_roles_before_8bed1548faeb_24",
+    "comein_roles_before_8bed1548faeb_25",
+    "comein_roles_before_8bed1548faeb_26",
+    "comein_roles_before_8bed1548faeb_27",
+    "comein_roles_after_2e358861877d_1",
+    "comein_roles_after_2e358861877d_2",
+    "comein_roles_after_2e358861877d_3",
+    "comein_roles_after_2e358861877d_4",
+    "comein_roles_after_2e358861877d_5",
+    "comein_roles_after_2e358861877d_6",
+    "comein_roles_after_2e358861877d_7",
+    "comein_roles_after_2e358861877d_8",
+    "comein_roles_after_2e358861877d_9",
+    "comein_roles_after_2e358861877d_10",
+    "comein_roles_after_2e358861877d_11",
+    "comein_roles_after_2e358861877d_12",
+    "comein_roles_after_2e358861877d_13",
+    "comein_roles_after_2e358861877d_14",
+    "comein_roles_after_2e358861877d_15",
+    "comein_roles_after_2e358861877d_16",
+    "comein_roles_after_2e358861877d_17",
+    "comein_roles_after_2e358861877d_18",
+    "comein_roles_after_2e358861877d_19",
+    "comein_roles_after_2e358861877d_20",
+    "comein_roles_after_2e358861877d_21",
+    "comein_roles_after_2e358861877d_22",
+    "comein_roles_after_2e358861877d_23",
+    "comein_roles_after_2e358861877d_24",
+    "comein_roles_after_2e358861877d_25",
+    "comein_roles_after_2e358861877d_26",
+    "comein_roles_after_2e358861877d_27"
+  ],
+  "concurrency_observations": {
+    "R06": {
+      "actors": 2,
+      "successes": 1,
+      "rejected_statuses": [
+        403
+      ],
+      "remaining_admins": 1,
+      "nontransactional_count_barrier_reads": 0,
+      "session_bound_count_reads": 1,
+      "guard_preexisting": false
+    },
+    "R07": {
+      "actors": 2,
+      "successes": 1,
+      "rejected_statuses": [
+        403
+      ],
+      "remaining_admins": 1,
+      "nontransactional_count_barrier_reads": 0,
+      "session_bound_count_reads": 1,
+      "guard_preexisting": true
+    },
+    "R08": {
+      "actors": 4,
+      "successes": 3,
+      "rejected_statuses": [
+        403
+      ],
+      "remaining_admins": 1,
+      "nontransactional_count_barrier_reads": 0,
+      "session_bound_count_reads": 3,
+      "guard_preexisting": false
+    },
+    "R09": {
+      "actors": 4,
+      "successes": 2,
+      "rejected_statuses": [
+        403,
+        403
+      ],
+      "remaining_admins": 2,
+      "nontransactional_count_barrier_reads": 0,
+      "session_bound_count_reads": 2,
+      "guard_preexisting": true
+    },
+    "R10": {
+      "error_type": "RuntimeError",
+      "role_after": "customer",
+      "guard_version": 0
+    }
+  },
+  "limits": [
+    "Actual source models/handlers/role dependency are executed;ASGI authentication is a synthetic fixture identity dependency,not JWT validation.",
+    "Role state/concurrency and transaction rollback use real Motor/MongoDB;only the old nontransactional count reads are barrier-synchronized;session reads cannot barrier without deadlock.",
+    "Only unique local fixture databases written,retained,no drops/migrations/provider/native/production calls."
+  ],
+  "source_reference_note": "Line references in before/candidate receipts identify exact captured source state,not a claim root production merge already occurred.",
+  "next_action": "Parent sequentially merges these four AST-node changes and runs final actual-source regression. Do not startTask2/provider/native work."
+}

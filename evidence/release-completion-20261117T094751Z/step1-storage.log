@@ -1,0 +1,1 @@
+{"ok": true, "checks": {"validator_install": {"collection": "catalogue_import_audit", "created": false}, "invalid_document_rejected": true, "second_write_failure_rolls_back_first": true, "unique_index_enforced": true, "index_duplicate_preflight": true, "validator_restored": true}, "restored_collections": 51}

@@ -1,0 +1,38 @@
+{
+  "started_UTC": "2026-11-19T15:54:41.894482+00:00",
+  "finished_UTC": "2026-11-19T15:54:42.949221+00:00",
+  "command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-m",
+    "pytest",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/test_broad_security_isolated.py",
+    "-c",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/pytest.ini",
+    "-n",
+    "0",
+    "-p",
+    "no:cacheprovider",
+    "-q",
+    "--junitxml=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.xml",
+    "--basetemp=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduction-tmp"
+  ],
+  "cwd": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530",
+  "exit_code": 1,
+  "counts": {
+    "PASS": 49,
+    "FAIL": 1,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "source_path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+  "source_sha256_before": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+  "source_sha256_after": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+  "test_path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/test_broad_security_isolated.py",
+  "test_sha256": "8e02180373829fd4c09e57c3cdd64f9f5483bb86fc186ef15894dc91acdd73ea",
+  "reason_for_reproduction": "Saved v2 outcomes existed,but the exact original shell command was not persisted. Independent unchanged-source reproduction binds the current command/source/environment without inventing past provenance.",
+  "scope": "Actual AST-extracted models/helpers with in-memory synthetic collection doubles. Autouse fixture denies all socket connections;no server import or DB/provider calls.",
+  "original_attempts_retained": true,
+  "source_modified": false,
+  "failure_is_NOT_suppressed": true,
+  "new_provenance_cannot_authenticate_old_run": true
+}

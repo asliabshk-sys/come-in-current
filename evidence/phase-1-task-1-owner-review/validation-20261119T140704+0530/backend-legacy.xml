@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="3" failures="2" skipped="1" tests="23" time="1.946" timestamp="2026-11-19T15:50:58.803398+00:00" hostname="b06f778daec6"><testcase classname="" name="test_health" time="0.003" /><testcase classname="" name="test_register_login_me" time="0.836"><failure message="assert 409 == 400&#10; +  where 409 = &lt;Response [409]&gt;.status_code">s = &lt;requests.sessions.Session object at 0x7f51debdb550&gt;
+
+    def test_register_login_me(s):
+        email = f"TEST_u_{uuid.uuid4().hex[:8]}@test.com".lower()
+        r = s.post(f"{API}/auth/register", json={"name": "U", "email": email, "password": "[REDACTED_SYNTHETIC_FIXTURE]"})
+        assert r.status_code == 200
+        tok = r.json()["token"]
+        assert r.json()["user"]["role"] == "customer"
+    
+        # login
+        r2 = s.post(f"{API}/auth/login", json={"email": email, "password": "[REDACTED_SYNTHETIC_FIXTURE]"})
+        assert r2.status_code == 200
+        # me
+        me = s.get(f"{API}/auth/me", headers=h(tok))
+        assert me.status_code == 200
+        assert me.json()["email"] == email
+        # bad login
+        bad = s.post(f"{API}/auth/login", json={"email": email, "password": "wrong"})
+        assert bad.status_code == 401
+        # duplicate registration
+        dup = s.post(f"{API}/auth/register", json={"name": "U", "email": email, "password": "[REDACTED_SYNTHETIC_FIXTURE]"})
+&gt;       assert dup.status_code == 400
+E       assert 409 == 400
+E        +  where 409 = &lt;Response [409]&gt;.status_code
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/legacy-tests/backend_test.py:80: AssertionError</failure></testcase><testcase classname="" name="test_me_unauth" time="0.002" /><testcase classname="" name="test_shop_mine" time="0.296" /><testcase classname="" name="test_duplicate_shop_rejected" time="0.003" /><testcase classname="" name="test_availability_blocked_until_approved" time="0.003" /><testcase classname="" name="test_public_list_hides_pending" time="0.003" /><testcase classname="" name="test_public_shop_detail_hidden_until_approved" time="0.002" /><testcase classname="" name="test_admin_approves_shop" time="0.280" /><testcase classname="" name="test_non_admin_cannot_approve" time="0.003" /><testcase classname="" name="test_availability_after_approval" time="0.009" /><testcase classname="" name="test_product_crud" time="0.003"><error message="failed on setup with &quot;AssertionError: {&quot;detail&quot;:[{&quot;type&quot;:&quot;missing&quot;,&quot;loc&quot;:[&quot;body&quot;,&quot;description&quot;],&quot;msg&quot;:&quot;Field required&quot;,&quot;input&quot;:{&quot;name&quot;:&quot;TEST Product&quot;,&quot;price&quot;:50.0,&quot;stock&quot;:10,&quot;category_id&quot;:&quot;grocery&quot;},&quot;url&quot;:&quot;https://errors.pydantic.dev/2.14/v/missing&quot;}]}&#10;assert 422 == 200&#10; +  where 422 = &lt;Response [422]&gt;.status_code&quot;">s = &lt;requests.sessions.Session object at 0x7f51debdb550&gt;
+shop_owner = {'token': '[REDACTED_SYNTHETIC_JWT]', 'user': {'name': 'Owner', 'email': 'test_shop_a6347d12@test.com', 'phone': '', 'role': 'customer', ...}}
+created_shop = {'name': 'TEST Shop d9cf', 'tagline': '', 'description': '', 'owner_name': '', ...}
+
+    @pytest.fixture(scope="session")
+    def created_product(s, shop_owner, created_shop):
+        body = {"name": "TEST Product", "price": 50.0, "stock": 10, "category_id": "grocery"}
+        r = s.post(f"{API}/shops/{created_shop['id']}/products", json=body, headers=h(shop_owner["token"]))
+&gt;       assert r.status_code == 200, r.text
+E       AssertionError: {"detail":[{"type":"missing","loc":["body","description"],"msg":"Field required","input":{"name":"TEST Product","price":50.0,"stock":10,"category_id":"grocery"},"url":"https://errors.pydantic.dev/2.14/v/missing"}]}
+E       assert 422 == 200
+E        +  where 422 = &lt;Response [422]&gt;.status_code
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/legacy-tests/backend_test.py:197: AssertionError</error></testcase><testcase classname="" name="test_product_validation" time="0.006" /><testcase classname="" name="test_product_delete" time="0.003"><failure message="KeyError: 'id'">s = &lt;requests.sessions.Session object at 0x7f51debdb550&gt;
+shop_owner = {'token': '[REDACTED_SYNTHETIC_JWT]', 'user': {'name': 'Owner', 'email': 'test_shop_a6347d12@test.com', 'phone': '', 'role': 'customer', ...}}
+created_shop = {'name': 'TEST Shop d9cf', 'tagline': '', 'description': '', 'owner_name': '', ...}
+
+    def test_product_delete(s, shop_owner, created_shop):
+        r = s.post(f"{API}/shops/{created_shop['id']}/products",
+                   json={"name": "TEST Del", "price": 1, "stock": 1}, headers=h(shop_owner["token"]))
+&gt;       pid = r.json()["id"]
+              ^^^^^^^^^^^^^^
+E       KeyError: 'id'
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/legacy-tests/backend_test.py:229: KeyError</failure></testcase><testcase classname="" name="test_order_create_guest" time="0.000"><error message="failed on setup with &quot;AssertionError: {&quot;detail&quot;:[{&quot;type&quot;:&quot;missing&quot;,&quot;loc&quot;:[&quot;body&quot;,&quot;description&quot;],&quot;msg&quot;:&quot;Field required&quot;,&quot;input&quot;:{&quot;name&quot;:&quot;TEST Product&quot;,&quot;price&quot;:50.0,&quot;stock&quot;:10,&quot;category_id&quot;:&quot;grocery&quot;},&quot;url&quot;:&quot;https://errors.pydantic.dev/2.14/v/missing&quot;}]}&#10;assert 422 == 200&#10; +  where 422 = &lt;Response [422]&gt;.status_code&quot;">s = &lt;requests.sessions.Session object at 0x7f51debdb550&gt;
+shop_owner = {'token': '[REDACTED_SYNTHETIC_JWT]', 'user': {'name': 'Owner', 'email': 'test_shop_a6347d12@test.com', 'phone': '', 'role': 'customer', ...}}
+created_shop = {'name': 'TEST Shop d9cf', 'tagline': '', 'description': '', 'owner_name': '', ...}
+
+    @pytest.fixture(scope="session")
+    def created_product(s, shop_owner, created_shop):
+        body = {"name": "TEST Product", "price": 50.0, "stock": 10, "category_id": "grocery"}
+        r = s.post(f"{API}/shops/{created_shop['id']}/products", json=body, headers=h(shop_owner["token"]))
+&gt;       assert r.status_code == 200, r.text
+E       AssertionError: {"detail":[{"type":"missing","loc":["body","description"],"msg":"Field required","input":{"name":"TEST Product","price":50.0,"stock":10,"category_id":"grocery"},"url":"https://errors.pydantic.dev/2.14/v/missing"}]}
+E       assert 422 == 200
+E        +  where 422 = &lt;Response [422]&gt;.status_code
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/legacy-tests/backend_test.py:197: AssertionError</error></testcase><testcase classname="" name="test_order_customer_and_seller_views" time="0.279"><error message="failed on setup with &quot;AssertionError: {&quot;detail&quot;:[{&quot;type&quot;:&quot;missing&quot;,&quot;loc&quot;:[&quot;body&quot;,&quot;description&quot;],&quot;msg&quot;:&quot;Field required&quot;,&quot;input&quot;:{&quot;name&quot;:&quot;TEST Product&quot;,&quot;price&quot;:50.0,&quot;stock&quot;:10,&quot;category_id&quot;:&quot;grocery&quot;},&quot;url&quot;:&quot;https://errors.pydantic.dev/2.14/v/missing&quot;}]}&#10;assert 422 == 200&#10; +  where 422 = &lt;Response [422]&gt;.status_code&quot;">s = &lt;requests.sessions.Session object at 0x7f51debdb550&gt;
+shop_owner = {'token': '[REDACTED_SYNTHETIC_JWT]', 'user': {'name': 'Owner', 'email': 'test_shop_a6347d12@test.com', 'phone': '', 'role': 'customer', ...}}
+created_shop = {'name': 'TEST Shop d9cf', 'tagline': '', 'description': '', 'owner_name': '', ...}
+
+    @pytest.fixture(scope="session")
+    def created_product(s, shop_owner, created_shop):
+        body = {"name": "TEST Product", "price": 50.0, "stock": 10, "category_id": "grocery"}
+        r = s.post(f"{API}/shops/{created_shop['id']}/products", json=body, headers=h(shop_owner["token"]))
+&gt;       assert r.status_code == 200, r.text
+E       AssertionError: {"detail":[{"type":"missing","loc":["body","description"],"msg":"Field required","input":{"name":"TEST Product","price":50.0,"stock":10,"category_id":"grocery"},"url":"https://errors.pydantic.dev/2.14/v/missing"}]}
+E       assert 422 == 200
+E        +  where 422 = &lt;Response [422]&gt;.status_code
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/legacy-tests/backend_test.py:197: AssertionError</error></testcase><testcase classname="" name="test_order_empty_items_rejected" time="0.002" /><testcase classname="" name="test_request_anything" time="0.012" /><testcase classname="" name="test_agent_assist" time="0.014" /><testcase classname="" name="test_admin_orders" time="0.003" /><testcase classname="" name="test_admin_endpoints_require_admin" time="0.010" /><testcase classname="" name="test_image_upload" time="0.007"><skipped type="pytest.skip" message="Object storage unavailable">/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/legacy-tests/backend_test.py:333: Object storage unavailable</skipped></testcase><testcase classname="" name="test_image_upload_unauth" time="0.002" /></testsuite></testsuites>

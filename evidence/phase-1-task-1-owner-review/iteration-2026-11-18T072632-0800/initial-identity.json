@@ -1,0 +1,19 @@
+{
+  "cwd": "/workspace",
+  "repo": "/workspace/come-in-current",
+  "app": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "prior_protected_baseline_count": 8476,
+  "prior_baseline_mismatches": [],
+  "current_covered_files": 8504,
+  "excluded": [
+    ".git internals",
+    "node_modules",
+    "Python caches",
+    ".expo",
+    "uploads",
+    "actual secret .env files"
+  ],
+  "timestamp": "2026-11-18T07:26:32.986604-08:00"
+}

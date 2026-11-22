@@ -1,0 +1,237 @@
+{
+  "project": "COME-IN",
+  "created_Asia_Kolkata": "2026-11-19T14:01:27.275519+05:30",
+  "repository": "/workspace/come-in-current",
+  "application_extraction": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+  "branch": "work",
+  "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "scope": "New final owner-review iteration;source-only and documentary verification,not owner approval or runtime release acceptance.",
+  "required_final_Markdown_reports": [
+    "FINAL_EVIDENCE_GAP_CLOSURE_REPORT.md",
+    "FINAL_SECURITY_VALIDATION_REPORT.md",
+    "FINAL_NAVIGATION_AND_API_INVENTORY.md",
+    "FINAL_PRESERVATION_VERIFICATION.md",
+    "FINAL_OWNER_DECISION_READINESS.md"
+  ],
+  "input13_original_reports": [
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_MASTER_AUDIT_REPORT.md",
+      "bytes": 17889,
+      "sha256": "11f6a8fc518bf7f9f744a0a25f43c6ffc5137581bda879ed9c51d7abb3943bae"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_SCREEN_AND_ROUTE_INVENTORY.md",
+      "bytes": 215922,
+      "sha256": "a1fcf0bfbf7b726804c6d1f9ecb3afa4323c098f175e24da27f95f330f112eab"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_API_AND_DATABASE_INVENTORY.md",
+      "bytes": 91842,
+      "sha256": "dd011902bca281fcb9e3df991f4720e1a98d007f7fbe6ab23719a848e06ffef5"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_SECURITY_FINDINGS.md",
+      "bytes": 13804,
+      "sha256": "a51fcc660ab0534e5fe7a9e6e1c14ebfa66c9f510e7234482cbb2bd2e016be1c"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_GAP_AND_BLOCKER_REGISTER.md",
+      "bytes": 7061,
+      "sha256": "2542d2e4d4781281fa2526a4929459ce42a42c0fc77595e5462b66839e6b3568"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_FINAL_CHECKLIST.md",
+      "bytes": 7504,
+      "sha256": "9d664cb326cdff27e9905b5732e199b488674554ef8e846736fd61ad44f39e5c"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-audit/PHASE_1_TASK_1_EVIDENCE_MANIFEST.json",
+      "bytes": 42126,
+      "sha256": "292d73a3ff2e33ecdac587bb0ed4b58041e2fde89e72475d7186b5875f9925c0"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/OWNER_REVIEW_MASTER_REPORT.md",
+      "bytes": 8797,
+      "sha256": "d0d7d3c41d2498cdb0c57c448d1eb3673f1682b7c1e3d9adec5ed376a81feb2d"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/REPORT_BY_REPORT_REVIEW.md",
+      "bytes": 33926,
+      "sha256": "d9075ef0741db189a0d6ab31557deb68e3431a43e1206e3f2b2658efea95a0b5"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/SECURITY_FINDINGS_REVIEW.md",
+      "bytes": 11874,
+      "sha256": "621b3e64c4ef3a8366635fb2bffb288359000d817775975c86f9ca6c2e4ed645"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/EVIDENCE_GAP_REGISTER.md",
+      "bytes": 5115,
+      "sha256": "35ae09cb3976f790af75073b84206bed80c9b5e03a9c6a54909e668ca3fbe245"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/OWNER_APPROVAL_CHECKLIST.md",
+      "bytes": 3022,
+      "sha256": "37f6ef06e03d4f94cf5034ae66443325e6786480c5f2103fd06764d9e22b94a5"
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/REVIEW_EVIDENCE_MANIFEST.json",
+      "bytes": 36072,
+      "sha256": "ac6f840e0ab60072429134f2d31996924580b9de212f96e9f9e9389ea2aac53a"
+    }
+  ],
+  "files": [
+    {
+      "relative_path": "FINAL_EVIDENCE_GAP_CLOSURE_REPORT.md",
+      "bytes": 67826,
+      "sha256": "3d3c47c66f5997d2a90d8e41beee3ebee886f64a894ed60f4d0d2bf3689e6ce1"
+    },
+    {
+      "relative_path": "FINAL_NAVIGATION_AND_API_INVENTORY.md",
+      "bytes": 333626,
+      "sha256": "c3196394b04218f9220e7bbb77b2573736e8b56352b9cafb88eba2a266c8c044"
+    },
+    {
+      "relative_path": "FINAL_OWNER_DECISION_READINESS.md",
+      "bytes": 7727,
+      "sha256": "71ca13c7180de6624a5844e483e6cd7966c177c71a5c206977a8656b32dab4c8"
+    },
+    {
+      "relative_path": "FINAL_PRESERVATION_VERIFICATION.md",
+      "bytes": 7368,
+      "sha256": "5459f05e0daefde654244dc6d59425d0589caad31e8f1217d14f5e84114e1494"
+    },
+    {
+      "relative_path": "FINAL_SECURITY_VALIDATION_REPORT.md",
+      "bytes": 24904,
+      "sha256": "f2bac57653f5348adceaa8fa158fef2d7b6c9c3d61ac3e417e27fb682118715c"
+    },
+    {
+      "relative_path": "ITERATION_CHECKPOINT.md",
+      "bytes": 6941,
+      "sha256": "b402d622c2b33e7f8e7bf676f474a5f7eb544b3e38cd3fcfff6e033bf828a847"
+    },
+    {
+      "relative_path": "augment-api-effects.py",
+      "bytes": 3716,
+      "sha256": "9840d3f9a83f2683f72f1747c77b156b9298aec2a4d6bafbbb91591cc2848fb1"
+    },
+    {
+      "relative_path": "compile-final-review.py",
+      "bytes": 43194,
+      "sha256": "9abde0d3815f9cd1ab24ce4c1a994831afe0fa94fb6359726d995d5ce0a8d7f8"
+    },
+    {
+      "relative_path": "complete-api-inventory.json",
+      "bytes": 804105,
+      "sha256": "81f7a3085920943740e2b4698dc8a83d3e75991b656ae30890f3bacfaeed4902"
+    },
+    {
+      "relative_path": "extract-complete-api.py",
+      "bytes": 6328,
+      "sha256": "0e5e941a444177b2f42c7570c48786f4eb6e41c00b98198b6f46ee89a94408d2"
+    },
+    {
+      "relative_path": "final-claim-ledger.json",
+      "bytes": 94494,
+      "sha256": "cbeb68dafac0b01c5b1f99a06c3887ff2e0738bc999ad371d2fc6869bc52492e"
+    },
+    {
+      "relative_path": "final-gap-ledger.json",
+      "bytes": 22045,
+      "sha256": "84bad864181df3667b809b83235e08170b8f03b1f78a55fff73c739e3037a62c"
+    },
+    {
+      "relative_path": "get-side-effect-inventory.json",
+      "bytes": 37882,
+      "sha256": "91a00b77bd88db596cfd0ca2b73784ad1015bd2c85b3dcc6c6b8c77dd4a5e723"
+    },
+    {
+      "relative_path": "git-diff-after.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative_path": "git-diff-cached-after.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relative_path": "git-status-after.txt",
+      "bytes": 25186,
+      "sha256": "080046d58e9fb57d99ea7e87737338b641084deb75653acb90f8c9bb6af838ed"
+    },
+    {
+      "relative_path": "git-status-before.txt",
+      "bytes": 22483,
+      "sha256": "c5ca7728cb4104989ed7d31994a20309d4287dabe3cbfd72ebfe6555e2a22cf6"
+    },
+    {
+      "relative_path": "git-status-resume-20261119.txt",
+      "bytes": 22675,
+      "sha256": "0e8ce2afa7b64b2628ba352ed1a6043bd00112023ca4868000d72eaecd64cc53"
+    },
+    {
+      "relative_path": "initial-identity.json",
+      "bytes": 518,
+      "sha256": "ce6f503eaa446d4ddb89a4e386428d26c4d1709b21e9652942c563148c1b1c52"
+    },
+    {
+      "relative_path": "navigation-closure.json",
+      "bytes": 63567,
+      "sha256": "60a28ab1fff33b089c8a122d80d49c1bd6c01bb7b28a852d4e045e343420d172"
+    },
+    {
+      "relative_path": "polish-review-prose.py",
+      "bytes": 4681,
+      "sha256": "aafcf27dcd9e5d1f002c5944d74a3790549ac27b13a3d1afff6ca172f537790e"
+    },
+    {
+      "relative_path": "preservation-baseline.json",
+      "bytes": 1960069,
+      "sha256": "9206bddcab7cd4e7d1db81be7dde213eb87fb5e1f2e2e23fb2bd86be50cb5a53"
+    },
+    {
+      "relative_path": "provenance-gap-dispositions.json",
+      "bytes": 39433,
+      "sha256": "183ef5b8a2b9af35b3f318363e8e80603326aab383b5e6991c171324eb609c5a"
+    },
+    {
+      "relative_path": "reference-index.json",
+      "bytes": 215161,
+      "sha256": "cabf1c0c5b4f3b669f23baba81178d19109a92501c50342c3f0d8df2d6af8a13"
+    },
+    {
+      "relative_path": "reset-flow-validation.json",
+      "bytes": 30142,
+      "sha256": "16fa710c637658f547c238baa60bd1a1761c711f0b717bea88baeb919c166ff3"
+    },
+    {
+      "relative_path": "verification-results.json",
+      "bytes": 2114,
+      "sha256": "6fa44f4d0656bb41fe715dbcbdaeb880b06990d647190e9f371bc21bd6f9f208"
+    },
+    {
+      "relative_path": "verify-final-review.py",
+      "bytes": 13820,
+      "sha256": "996a78866a9fe7a2126aa9b467b44d0d334247f88e0aeaad5a73ab9fd8368f44"
+    }
+  ],
+  "self_hash_policy": "This manifest and its sidecar are excluded from files to avoid recursive hashes. The standalone sidecar records this manifest SHA-256.",
+  "verification_artifact": "verification-results.json",
+  "source_declarations": {
+    "APIs": 179,
+    "models": 60,
+    "parameters": 387,
+    "defaulted_parameters": 216,
+    "endpoints_with_Query": 19,
+    "Query_parameters": 27,
+    "explicit_response_model_endpoints": 4,
+    "duplicate_method_paths": [],
+    "source_sha256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db"
+  },
+  "application_tests_run": 0,
+  "HIGH_SEC01": "OPEN / VALIDATION BLOCKED",
+  "Task1_status": "REVIEW PENDING;not approved or closed",
+  "Task2_started": false
+}

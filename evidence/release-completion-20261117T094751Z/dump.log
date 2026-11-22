@@ -1,0 +1,102 @@
+2026-11-17T09:48:19.235+0000	writing `comein_disposable_test_release_20261117t094751z.users` to `archive on stdout`
+2026-11-17T09:48:19.236+0000	writing `comein_disposable_test_release_20261117t094751z.catalogue_import_audit` to `archive on stdout`
+2026-11-17T09:48:19.236+0000	writing `comein_disposable_test_release_20261117t094751z.referral_ledger` to `archive on stdout`
+2026-11-17T09:48:19.236+0000	writing `comein_disposable_test_release_20261117t094751z.restaurant_support` to `archive on stdout`
+2026-11-17T09:48:19.240+0000	done dumping `comein_disposable_test_release_20261117t094751z.users` (1 document)
+2026-11-17T09:48:19.240+0000	writing `comein_disposable_test_release_20261117t094751z.notifications` to `archive on stdout`
+2026-11-17T09:48:19.241+0000	done dumping `comein_disposable_test_release_20261117t094751z.referral_ledger` (0 documents)
+2026-11-17T09:48:19.241+0000	writing `comein_disposable_test_release_20261117t094751z.settlement_requests` to `archive on stdout`
+2026-11-17T09:48:19.242+0000	done dumping `comein_disposable_test_release_20261117t094751z.restaurant_support` (0 documents)
+2026-11-17T09:48:19.242+0000	writing `comein_disposable_test_release_20261117t094751z.password_resets` to `archive on stdout`
+2026-11-17T09:48:19.242+0000	done dumping `comein_disposable_test_release_20261117t094751z.catalogue_import_audit` (1 document)
+2026-11-17T09:48:19.242+0000	writing `comein_disposable_test_release_20261117t094751z.files` to `archive on stdout`
+2026-11-17T09:48:19.243+0000	done dumping `comein_disposable_test_release_20261117t094751z.notifications` (0 documents)
+2026-11-17T09:48:19.243+0000	writing `comein_disposable_test_release_20261117t094751z.restaurant_orders` to `archive on stdout`
+2026-11-17T09:48:19.318+0000	done dumping `comein_disposable_test_release_20261117t094751z.password_resets` (0 documents)
+2026-11-17T09:48:19.318+0000	writing `comein_disposable_test_release_20261117t094751z.restaurant_carts` to `archive on stdout`
+2026-11-17T09:48:19.374+0000	done dumping `comein_disposable_test_release_20261117t094751z.restaurant_orders` (0 documents)
+2026-11-17T09:48:19.374+0000	writing `comein_disposable_test_release_20261117t094751z.service_providers` to `archive on stdout`
+2026-11-17T09:48:19.378+0000	done dumping `comein_disposable_test_release_20261117t094751z.files` (0 documents)
+2026-11-17T09:48:19.378+0000	writing `comein_disposable_test_release_20261117t094751z.retail_price_price_audit` to `archive on stdout`
+2026-11-17T09:48:19.380+0000	done dumping `comein_disposable_test_release_20261117t094751z.settlement_requests` (0 documents)
+2026-11-17T09:48:19.380+0000	writing `comein_disposable_test_release_20261117t094751z.restaurants` to `archive on stdout`
+2026-11-17T09:48:19.389+0000	done dumping `comein_disposable_test_release_20261117t094751z.retail_price_price_audit` (0 documents)
+2026-11-17T09:48:19.389+0000	writing `comein_disposable_test_release_20261117t094751z.payout_bank_accounts` to `archive on stdout`
+2026-11-17T09:48:19.389+0000	done dumping `comein_disposable_test_release_20261117t094751z.restaurants` (0 documents)
+2026-11-17T09:48:19.389+0000	writing `comein_disposable_test_release_20261117t094751z.restaurant_menu` to `archive on stdout`
+2026-11-17T09:48:19.390+0000	done dumping `comein_disposable_test_release_20261117t094751z.restaurant_carts` (0 documents)
+2026-11-17T09:48:19.390+0000	writing `comein_disposable_test_release_20261117t094751z.service_appointments` to `archive on stdout`
+2026-11-17T09:48:19.396+0000	done dumping `comein_disposable_test_release_20261117t094751z.payout_bank_accounts` (0 documents)
+2026-11-17T09:48:19.396+0000	writing `comein_disposable_test_release_20261117t094751z.agent_assist` to `archive on stdout`
+2026-11-17T09:48:19.398+0000	done dumping `comein_disposable_test_release_20261117t094751z.restaurant_menu` (0 documents)
+2026-11-17T09:48:19.398+0000	writing `comein_disposable_test_release_20261117t094751z.referral_audit` to `archive on stdout`
+2026-11-17T09:48:19.402+0000	done dumping `comein_disposable_test_release_20261117t094751z.service_appointments` (0 documents)
+2026-11-17T09:48:19.402+0000	writing `comein_disposable_test_release_20261117t094751z.restaurant_payment_events` to `archive on stdout`
+2026-11-17T09:48:19.408+0000	done dumping `comein_disposable_test_release_20261117t094751z.agent_assist` (0 documents)
+2026-11-17T09:48:19.409+0000	writing `comein_disposable_test_release_20261117t094751z.master_products` to `archive on stdout`
+2026-11-17T09:48:19.409+0000	done dumping `comein_disposable_test_release_20261117t094751z.restaurant_payment_events` (0 documents)
+2026-11-17T09:48:19.409+0000	writing `comein_disposable_test_release_20261117t094751z.products` to `archive on stdout`
+2026-11-17T09:48:19.412+0000	done dumping `comein_disposable_test_release_20261117t094751z.master_products` (0 documents)
+2026-11-17T09:48:19.412+0000	writing `comein_disposable_test_release_20261117t094751z.catalog_import_history` to `archive on stdout`
+2026-11-17T09:48:19.415+0000	done dumping `comein_disposable_test_release_20261117t094751z.referral_audit` (0 documents)
+2026-11-17T09:48:19.415+0000	writing `comein_disposable_test_release_20261117t094751z.restock_alerts` to `archive on stdout`
+2026-11-17T09:48:19.437+0000	done dumping `comein_disposable_test_release_20261117t094751z.restock_alerts` (0 documents)
+2026-11-17T09:48:19.437+0000	writing `comein_disposable_test_release_20261117t094751z.home_service_settings` to `archive on stdout`
+2026-11-17T09:48:19.440+0000	done dumping `comein_disposable_test_release_20261117t094751z.home_service_settings` (0 documents)
+2026-11-17T09:48:19.440+0000	writing `comein_disposable_test_release_20261117t094751z.home_service_slot_reservations` to `archive on stdout`
+2026-11-17T09:48:19.458+0000	done dumping `comein_disposable_test_release_20261117t094751z.home_service_slot_reservations` (0 documents)
+2026-11-17T09:48:19.458+0000	writing `comein_disposable_test_release_20261117t094751z.restaurant_reviews` to `archive on stdout`
+2026-11-17T09:48:19.461+0000	done dumping `comein_disposable_test_release_20261117t094751z.restaurant_reviews` (0 documents)
+2026-11-17T09:48:19.461+0000	writing `comein_disposable_test_release_20261117t094751z.referrals` to `archive on stdout`
+2026-11-17T09:48:19.462+0000	done dumping `comein_disposable_test_release_20261117t094751z.service_providers` (0 documents)
+2026-11-17T09:48:19.462+0000	writing `comein_disposable_test_release_20261117t094751z.financial_audit` to `archive on stdout`
+2026-11-17T09:48:19.485+0000	done dumping `comein_disposable_test_release_20261117t094751z.financial_audit` (0 documents)
+2026-11-17T09:48:19.485+0000	writing `comein_disposable_test_release_20261117t094751z.delivery_partner_audit` to `archive on stdout`
+2026-11-17T09:48:19.488+0000	done dumping `comein_disposable_test_release_20261117t094751z.products` (0 documents)
+2026-11-17T09:48:19.488+0000	writing `comein_disposable_test_release_20261117t094751z.grocery_quotes` to `archive on stdout`
+2026-11-17T09:48:19.488+0000	done dumping `comein_disposable_test_release_20261117t094751z.referrals` (0 documents)
+2026-11-17T09:48:19.488+0000	writing `comein_disposable_test_release_20261117t094751z.catalog_price_audit` to `archive on stdout`
+2026-11-17T09:48:19.493+0000	done dumping `comein_disposable_test_release_20261117t094751z.catalog_price_audit` (0 documents)
+2026-11-17T09:48:19.493+0000	writing `comein_disposable_test_release_20261117t094751z.orders` to `archive on stdout`
+2026-11-17T09:48:19.494+0000	done dumping `comein_disposable_test_release_20261117t094751z.delivery_partner_audit` (0 documents)
+2026-11-17T09:48:19.494+0000	writing `comein_disposable_test_release_20261117t094751z.retail_price_offers` to `archive on stdout`
+2026-11-17T09:48:19.494+0000	done dumping `comein_disposable_test_release_20261117t094751z.grocery_quotes` (0 documents)
+2026-11-17T09:48:19.494+0000	writing `comein_disposable_test_release_20261117t094751z.retail_price_import_history` to `archive on stdout`
+2026-11-17T09:48:19.498+0000	done dumping `comein_disposable_test_release_20261117t094751z.catalog_import_history` (0 documents)
+2026-11-17T09:48:19.498+0000	writing `comein_disposable_test_release_20261117t094751z.financial_ledger` to `archive on stdout`
+2026-11-17T09:48:19.499+0000	done dumping `comein_disposable_test_release_20261117t094751z.retail_price_import_history` (0 documents)
+2026-11-17T09:48:19.500+0000	writing `comein_disposable_test_release_20261117t094751z.catalogue_import_jobs` to `archive on stdout`
+2026-11-17T09:48:19.501+0000	done dumping `comein_disposable_test_release_20261117t094751z.financial_ledger` (0 documents)
+2026-11-17T09:48:19.501+0000	writing `comein_disposable_test_release_20261117t094751z.restaurant_payments` to `archive on stdout`
+2026-11-17T09:48:19.508+0000	done dumping `comein_disposable_test_release_20261117t094751z.retail_price_offers` (0 documents)
+2026-11-17T09:48:19.508+0000	writing `comein_disposable_test_release_20261117t094751z.delivery_partner_applications` to `archive on stdout`
+2026-11-17T09:48:19.509+0000	done dumping `comein_disposable_test_release_20261117t094751z.catalogue_import_jobs` (0 documents)
+2026-11-17T09:48:19.509+0000	writing `comein_disposable_test_release_20261117t094751z.referral_link_events` to `archive on stdout`
+2026-11-17T09:48:19.510+0000	done dumping `comein_disposable_test_release_20261117t094751z.orders` (0 documents)
+2026-11-17T09:48:19.510+0000	writing `comein_disposable_test_release_20261117t094751z.referral_rewards` to `archive on stdout`
+2026-11-17T09:48:19.513+0000	done dumping `comein_disposable_test_release_20261117t094751z.restaurant_payments` (0 documents)
+2026-11-17T09:48:19.513+0000	writing `comein_disposable_test_release_20261117t094751z.settlement_order_allocations` to `archive on stdout`
+2026-11-17T09:48:19.518+0000	done dumping `comein_disposable_test_release_20261117t094751z.referral_rewards` (0 documents)
+2026-11-17T09:48:19.518+0000	writing `comein_disposable_test_release_20261117t094751z.addresses` to `archive on stdout`
+2026-11-17T09:48:19.518+0000	done dumping `comein_disposable_test_release_20261117t094751z.referral_link_events` (0 documents)
+2026-11-17T09:48:19.518+0000	writing `comein_disposable_test_release_20261117t094751z.shops` to `archive on stdout`
+2026-11-17T09:48:19.521+0000	done dumping `comein_disposable_test_release_20261117t094751z.delivery_partner_applications` (0 documents)
+2026-11-17T09:48:19.521+0000	writing `comein_disposable_test_release_20261117t094751z.request_anything` to `archive on stdout`
+2026-11-17T09:48:19.523+0000	done dumping `comein_disposable_test_release_20261117t094751z.addresses` (0 documents)
+2026-11-17T09:48:19.523+0000	writing `comein_disposable_test_release_20261117t094751z.assistant_rate_limits` to `archive on stdout`
+2026-11-17T09:48:19.524+0000	done dumping `comein_disposable_test_release_20261117t094751z.settlement_order_allocations` (0 documents)
+2026-11-17T09:48:19.524+0000	writing `comein_disposable_test_release_20261117t094751z.announcements` to `archive on stdout`
+2026-11-17T09:48:19.529+0000	done dumping `comein_disposable_test_release_20261117t094751z.announcements` (0 documents)
+2026-11-17T09:48:19.529+0000	writing `comein_disposable_test_release_20261117t094751z.delivery_partner_referrals` to `archive on stdout`
+2026-11-17T09:48:19.531+0000	done dumping `comein_disposable_test_release_20261117t094751z.request_anything` (0 documents)
+2026-11-17T09:48:19.531+0000	writing `comein_disposable_test_release_20261117t094751z.chand_feedback` to `archive on stdout`
+2026-11-17T09:48:19.531+0000	done dumping `comein_disposable_test_release_20261117t094751z.assistant_rate_limits` (0 documents)
+2026-11-17T09:48:19.532+0000	writing `comein_disposable_test_release_20261117t094751z.status_checks` to `archive on stdout`
+2026-11-17T09:48:19.534+0000	done dumping `comein_disposable_test_release_20261117t094751z.delivery_partner_referrals` (0 documents)
+2026-11-17T09:48:19.534+0000	writing `comein_disposable_test_release_20261117t094751z.grocery_payments` to `archive on stdout`
+2026-11-17T09:48:19.538+0000	done dumping `comein_disposable_test_release_20261117t094751z.chand_feedback` (0 documents)
+2026-11-17T09:48:19.538+0000	writing `comein_disposable_test_release_20261117t094751z.auth_rate_limits` to `archive on stdout`
+2026-11-17T09:48:19.539+0000	done dumping `comein_disposable_test_release_20261117t094751z.shops` (0 documents)
+2026-11-17T09:48:19.540+0000	done dumping `comein_disposable_test_release_20261117t094751z.status_checks` (0 documents)
+2026-11-17T09:48:19.540+0000	done dumping `comein_disposable_test_release_20261117t094751z.grocery_payments` (0 documents)
+2026-11-17T09:48:19.543+0000	done dumping `comein_disposable_test_release_20261117t094751z.auth_rate_limits` (0 documents)

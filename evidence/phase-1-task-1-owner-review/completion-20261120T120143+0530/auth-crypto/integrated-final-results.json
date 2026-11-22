@@ -1,0 +1,334 @@
+{
+  "stage": "integrated-final",
+  "source": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+  "source_SHA256": "b2274f00cd35c2f92f6e385fceeb025a3f66761cc0cef10741f8477a6f020f84",
+  "source_SHA256_after": "b2274f00cd35c2f92f6e385fceeb025a3f66761cc0cef10741f8477a6f020f84",
+  "runner_SHA256": "216aa94f7efa3148bff787909b168f4c37498ebef4783bf50d8f6f2230ce307a",
+  "source_symbols": [
+    {
+      "symbol": "now_utc",
+      "line": 186,
+      "end_line": 187
+    },
+    {
+      "symbol": "doc_out",
+      "line": 202,
+      "end_line": 214
+    },
+    {
+      "symbol": "BCRYPT_ROUNDS",
+      "line": 230,
+      "end_line": 230
+    },
+    {
+      "symbol": "JWT_ALG",
+      "line": 231,
+      "end_line": 231
+    },
+    {
+      "symbol": "ACCESS_TTL_MIN",
+      "line": 232,
+      "end_line": 232
+    },
+    {
+      "symbol": "hash_password",
+      "line": 235,
+      "end_line": 242
+    },
+    {
+      "symbol": "verify_password",
+      "line": 245,
+      "end_line": 259
+    },
+    {
+      "symbol": "_jwt_secret",
+      "line": 262,
+      "end_line": 263
+    },
+    {
+      "symbol": "create_access_token",
+      "line": 266,
+      "end_line": 275
+    },
+    {
+      "symbol": "get_bearer_token",
+      "line": 278,
+      "end_line": 282
+    },
+    {
+      "symbol": "get_current_user_optional",
+      "line": 285,
+      "end_line": 300
+    },
+    {
+      "symbol": "get_current_user",
+      "line": 303,
+      "end_line": 307
+    },
+    {
+      "symbol": "LoginIn",
+      "line": 332,
+      "end_line": 334
+    },
+    {
+      "symbol": "login",
+      "line": 985,
+      "end_line": 995
+    },
+    {
+      "symbol": "ForgotPasswordIn",
+      "line": 1178,
+      "end_line": 1179
+    },
+    {
+      "symbol": "ResetPasswordIn",
+      "line": 1181,
+      "end_line": 1183
+    },
+    {
+      "symbol": "_send_password_reset_email",
+      "line": 1185,
+      "end_line": 1205
+    },
+    {
+      "symbol": "forgot_password",
+      "line": 1208,
+      "end_line": 1221
+    },
+    {
+      "symbol": "reset_password",
+      "line": 1224,
+      "end_line": 1250
+    },
+    {
+      "symbol": "_object_id_or_404",
+      "line": 4776,
+      "end_line": 4780
+    }
+  ],
+  "started_UTC": "2026-11-20T13:00:38.403184+00:00",
+  "finished_UTC": "2026-11-20T13:00:52.428687+00:00",
+  "database": "comein_auth_crypto_integrated-final_20261120t130038z_00bcca9d",
+  "database_retained": true,
+  "replica_set": "rs0",
+  "counts": {
+    "PASS": 25,
+    "FAIL": 0,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "cases": [
+    {
+      "id": "AUTH-01",
+      "invariant": "Legacy JWT without pwdv remains valid for unchanged legacy account",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "AUTH-02",
+      "invariant": "New token preserves seven-day expiry and role-authoritative authentication",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "AUTH-03",
+      "invariant": "Successful password reset revokes a previously issued access token",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "old_token_accepted_after_reset": false
+      }
+    },
+    {
+      "id": "AUTH-04",
+      "invariant": "Login after reset mints the current version and remains usable",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "AUTH-05",
+      "invariant": "Other accounts active sessions are preserved after a reset",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "AUTH-06",
+      "invariant": "Password version increments only on the reset account",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "version_after_reset": 1
+      }
+    },
+    {
+      "id": "AUTH-07",
+      "invariant": "Aborted password update rolls back password version and token claim",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "AUTH-08",
+      "invariant": "Missing-version JWT cannot access an account with a later password version",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "AUTH-09",
+      "invariant": "A token version different from the persisted account version is rejected",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "AUTH-10",
+      "invariant": "Malformed signed token-version metadata fails closed",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "AUTH-11",
+      "invariant": "Expired and invalid-signature tokens remain rejected",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "AUTH-12",
+      "invariant": "Password version and hash are not exposed by doc_out",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "HASH-01",
+      "invariant": "Existing short raw-bcrypt hashes remain compatible",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "HASH-02",
+      "invariant": "Legacy72-byte password stays valid but appended suffix aliases are rejected",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "HASH-03",
+      "invariant": "Distinct accepted long ASCII passwords do not authenticate interchangeably",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "HASH-04",
+      "invariant": "Distinct long UTF8 passwords do not authenticate interchangeably",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "HASH-05",
+      "invariant": "Short new passwords retain bcrypt12 format and randomized salt",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "HASH-06",
+      "invariant": "Tagged full-input hashes use bcrypt12 and verify only the full password",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "HASH-07",
+      "invariant": "Malformed stored hashes fail verification safely",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "HASH-08",
+      "invariant": "Accepted128character Unicode password is supported without truncation",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "SMTP-01",
+      "invariant": "Missing SMTP configuration returns generic response and removes undelivered token",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "SMTP-02",
+      "invariant": "Malformed SMTP_PORT is safely handled and leaves no active token",
+      "status": "PASS",
+      "failure": null,
+      "observations": {
+        "configuration_exception_escaped": false,
+        "active_undelivered_tokens": 0
+      }
+    },
+    {
+      "id": "SMTP-03",
+      "invariant": "Out-of-range SMTP port leaves no active token",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "SMTP-04",
+      "invariant": "Transport failure cleanup reveals no token or SMTP credentials",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    },
+    {
+      "id": "SMTP-05",
+      "invariant": "Configured synthetic SMTP transport retains only a token digest",
+      "status": "PASS",
+      "failure": null,
+      "observations": {}
+    }
+  ],
+  "python": "3.11.18 (main, Oct 26 2026, 14:05:07) [Clang 23.1.3 ]",
+  "executable": "/workspace/come-in-tools/py311/bin/python",
+  "versions": {
+    "motor": "3.7.1",
+    "pymongo": "4.18.2",
+    "bcrypt": "4.1.3",
+    "PyJWT": "2.15.1",
+    "pydantic": "2.14.3"
+  },
+  "command": [
+    "/workspace/come-in-tools/py311/bin/python",
+    "-B",
+    "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/auth-crypto/test_auth_crypto_candidate_v2.py",
+    "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+    "integrated-final"
+  ],
+  "safety": {
+    "production_access": false,
+    "provider_calls": 0,
+    "SMTP_transport_stubbed": true,
+    "DB_drops": 0,
+    "global_failpoints": 0,
+    "source_modified": false,
+    "actual_credentials_read_or_written": false
+  },
+  "limitations": [
+    "Actual AST-extracted function/model bodies and real Mongo transactions;not full HTTP/startup/middleware.",
+    "Auth throttle stubs isolate SEC02/06;separate rate workstream validates limits.",
+    "SMTP transport is in-memory;actualSMTPdelivery/certificates/configurationremainexternal."
+  ]
+}

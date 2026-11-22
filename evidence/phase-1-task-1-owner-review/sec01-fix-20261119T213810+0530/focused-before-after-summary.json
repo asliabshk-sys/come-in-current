@@ -1,0 +1,50 @@
+{
+  "project": "COME-IN",
+  "timestamp_UTC": "2026-11-19T16:16:40.606836+00:00",
+  "source_before": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/sec01-fix-20261119T213810+0530/before/backend/server.py",
+  "source_after": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+  "before_source_SHA256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+  "after_source_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "transaction_helper_SHA256_unchanged": "b22cfd46e59d405cdaabf7585f6ec0a68a298cae718c8aea70f369bbfa06ba30",
+  "runner_SHA256_identical_before_after": "71d15423b6bf06ce679af2b02456f53233a67ec324f655246855cf6775b70a85",
+  "counts": {
+    "before": {
+      "PASS": 10,
+      "FAIL": 10,
+      "ERROR": 0,
+      "SKIPPED": 0
+    },
+    "after": {
+      "PASS": 20,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIPPED": 0
+    }
+  },
+  "before_exit_code": 1,
+  "after_exit_code": 0,
+  "concurrency_status": "PASS",
+  "focused_regression_status": "PASS",
+  "baseline_failure_ids": [
+    "SEC01-06",
+    "SEC01-07",
+    "SEC01-08",
+    "SEC01-10",
+    "SEC01-11",
+    "SEC01-12",
+    "SEC01-14",
+    "SEC01-15",
+    "SEC01-16",
+    "SEC01-18"
+  ],
+  "retained_databases": [
+    "comein_sec01_focused_before_20261119t161424z_f23513f3",
+    "comein_sec01_focused_after_20261119t161450z_ed7b5aed"
+  ],
+  "case_ids_unchanged": true,
+  "source_edits_by_this_agent": 0,
+  "global_failpoints": 0,
+  "production_or_external_operations": 0,
+  "test_operations_running_or_interrupted": false,
+  "next_action": "Parent includes these source-bound results in SEC-01 final owner-review package;no further test repetition necessary."
+}

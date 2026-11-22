@@ -1,0 +1,3462 @@
+{
+  "project": "COME-IN",
+  "timestamp_Asia_Calcutta": "2026-11-19T21:26:15.742641+05:30",
+  "final_owner_decision": "REVIEW PENDING",
+  "source_identity": {
+    "repo": "/workspace/come-in-current",
+    "branch": "work",
+    "HEAD": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+    "actual_app": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115",
+    "source_identity_warning": "Git HEAD identifies the ZIP repository checkout, not the uncommitted extracted application outside Git. Fresh per-file hashes and execution receipts bind current validation; they do not authenticate historical runs.",
+    "current_preservation_baseline": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/preservation-baseline.json",
+    "protected_paths": 8533,
+    "app_captured_files": 8128,
+    "captured_app_map_canonical_sha256": "0a5b35edec8b855ab065e045cda15d3dcd43ccdf098c05a522025e1606bd31d8",
+    "fingerprint_method": "sha256(json.dumps(app-relative path->capturedSHA map,sort_keys=True,separators=(comma,colon)));currentcapture only,not historicalrunbinding."
+  },
+  "historical_artifacts": [
+    {
+      "id": 1,
+      "path": "/workspace/come-in-current/evidence/session-20261117/frontend-group-regression.xml",
+      "sha256_current": "3659aa064aa2e98d1a07292206f42b058ecb32f86d332124428f85a09e6f60a1",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "63",
+          "time": "3.078",
+          "timestamp": "2026-11-17T08:49:58.304638+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 63,
+      "passed": 63,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_chand_feedback_contract",
+        "test_chand_media_contract",
+        "test_chand_shopping_integration_contract",
+        "test_delivery_tracking_contract",
+        "test_grocery_checkout_security_contract",
+        "test_master_catalog_seller_ui_contract",
+        "test_task12_customer_support_contract"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/session-20261117/frontend-group-regression.log",
+      "log_bytes": 142,
+      "log_sha256_current": "42589bdf8f01eb5b98dc44eb445a763e443df6573d111c26755e21bed8dc18c7",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 2,
+      "path": "/workspace/come-in-current/evidence/session-20261117/transaction-regression.xml",
+      "sha256_current": "fc702faeca5972e27918f5226b879a79fce6983db6c5f24f764f1541f6493826",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "1",
+          "skipped": "0",
+          "tests": "52",
+          "time": "3.733",
+          "timestamp": "2026-11-17T08:44:44.935425+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 52,
+      "passed": 51,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [
+        "tests.test_transaction_commit_retry::test_unknown_commit_retry_stops_at_transaction_budget"
+      ],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_catalogue_transaction_apply_offline",
+        "test_grocery_capture_transaction_offline",
+        "test_mongo_transactions",
+        "test_restaurant_capture_transaction_offline",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_step1_final_delivery_partner_transactions_offline",
+        "test_step1_final_refund_admin_offline",
+        "test_transaction_commit_retry"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/session-20261117/transaction-regression.log",
+      "log_bytes": 5781,
+      "log_sha256_current": "e5f594d50c202c874e03ead95416469e7dd59fc47f5704fb6be7c4cdbe4d8d78",
+      "log_fully_read": true,
+      "environment_facts_in_log": [
+        "Python 3.11.18 /workspace/come-in-tools/py311/bin/python",
+        "[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python"
+      ],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 3,
+      "path": "/workspace/come-in-current/evidence/session-20261117/release-offline.xml",
+      "sha256_current": "140a797f97882168ba3f7e72a785510634f148013bd2ad16539a75561f2263d7",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "5",
+          "skipped": "4",
+          "tests": "505",
+          "time": "34.803",
+          "timestamp": "2026-11-17T09:00:25.345305+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 505,
+      "passed": 496,
+      "failures": 5,
+      "errors": 0,
+      "skipped": 4,
+      "failed_cases": [
+        "tests.test_frontend_contracts::test_auth_persistence_failure_is_not_silently_accepted",
+        "tests.test_frontend_contracts::test_shopping_home_theme_contract_and_separate_mode_routes",
+        "tests.test_frontend_contracts::test_bakery_has_no_fabricated_sample_inventory_and_voice_is_honest",
+        "tests.test_shared_system_integration_contract::test_shared_logout_clears_the_same_token_and_existing_roles_remain_authoritative",
+        "tests.test_universal_catalogue_import_engine::test_csv_formula_like_cells_are_preserved_as_untrusted_source_text"
+      ],
+      "error_cases": [],
+      "skip_details": [
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_pdf_text_adapter_preserves_page_provenance",
+          "reason": "could not import 'pypdf': No module named 'pypdf'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_xlsx_processes_multiple_sheets_when_openpyxl_available",
+          "reason": "could not import 'openpyxl': No module named 'openpyxl'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_image_ocr_extracts_visible_text_without_promoting_fields",
+          "reason": "could not import 'PIL': No module named 'PIL'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_scanned_pdf_uses_optional_ocr_without_promoting_product_fields",
+          "reason": "could not import 'fitz': No module named 'fitz'"
+        }
+      ],
+      "modules": [
+        "test_assistant_context_contract",
+        "test_catalog_import_security_contract",
+        "test_catalog_reference_minimum",
+        "test_catalogue_chand_adapter",
+        "test_catalogue_import_job_api_contract",
+        "test_catalogue_import_workflow_contract",
+        "test_catalogue_transaction_apply_offline",
+        "test_catalogue_validator_migration",
+        "test_chand_demo_contract",
+        "test_chand_feedback_contract",
+        "test_chand_localization_contract",
+        "test_chand_media_contract",
+        "test_chand_ollama_provider_contract",
+        "test_chand_shopping_integration_contract",
+        "test_delivery_partner_onboarding_contract",
+        "test_delivery_tracking_contract",
+        "test_directory_only_category_contract",
+        "test_financial_rules",
+        "test_financial_security_contract",
+        "test_frontend_contracts",
+        "test_functional_blockers_regression",
+        "test_grocery_capture_transaction_offline",
+        "test_grocery_checkout_security_contract",
+        "test_grocery_pay_at_shop_status_contract",
+        "test_home_services_remaining_contract",
+        "test_master_catalog_api_contract",
+        "test_master_catalog_seller_ui_contract",
+        "test_mongo_backup_safety_offline",
+        "test_mongo_config",
+        "test_mongo_portability_tool",
+        "test_mongo_transactions",
+        "test_online_shop_product_listing_contract",
+        "test_p0_payment_checkout_completion",
+        "test_p0_restaurant_delivery_panel",
+        "test_provider_adapter_contracts",
+        "test_referral_implementation_contract",
+        "test_referral_rules",
+        "test_restaurant_api_contract",
+        "test_restaurant_capture_transaction_offline",
+        "test_restaurant_pricing",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_restaurant_serviceability",
+        "test_role_security_retail_import_contract",
+        "test_shared_system_integration_contract",
+        "test_shop_registration_browse_entrypoints",
+        "test_shopping_cart_variants_contract",
+        "test_shopping_catalog_contract",
+        "test_shopping_rewards_redemption_contract",
+        "test_standard_ui_image_shop_cta_contract",
+        "test_step1_final_delivery_partner_transactions_offline",
+        "test_step1_final_refund_admin_offline",
+        "test_step1_final_restore_index_profile_offline",
+        "test_targeted_tasks_9_12_15_18_21",
+        "test_task10_payment_refund_notification_contract",
+        "test_task11_grocery_refund_status_contract",
+        "test_task11_live_order_tracking_contract",
+        "test_task12_customer_support_contract",
+        "test_task13_seller_support_status_contract",
+        "test_task14_seller_support_ui_contract",
+        "test_task16_production_cors_contract",
+        "test_task17_grocery_payment_gate_contract",
+        "test_task18_refund_safety_iteration3",
+        "test_task19_seller_admin_workflows_contract",
+        "test_task20_product_catalog_variants_stock_contract",
+        "test_task21_customer_shopping_workflow_contract",
+        "test_task22_checkout_audit_contract",
+        "test_task23_order_tracking_authorization_contract",
+        "test_task24_repeat_order_contract",
+        "test_task5_customer_measured_shopping_contract",
+        "test_task5_measured_import_contract",
+        "test_task5_task7_ui_implementation_contract",
+        "test_task9_order_actions_contract",
+        "test_transaction_commit_retry",
+        "test_universal_catalogue_import_engine"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/session-20261117/release-offline.log",
+      "log_bytes": 6664,
+      "log_sha256_current": "5609bb48056dfe58364e5d55e8b70e06c36bd03c33a31c99f746ab19f343dbc3",
+      "log_fully_read": true,
+      "environment_facts_in_log": [
+        "Python 3.11.18 /workspace/come-in-tools/py311/bin/python",
+        "[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python",
+        "[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python"
+      ],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 4,
+      "path": "/workspace/come-in-current/evidence/session-20261117/frontend-effects-regression.xml",
+      "sha256_current": "03c233bdd178dbfdbd31584e5085e08b63510cc74e9b87f63cc6ab00566767c4",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "107",
+          "time": "5.637",
+          "timestamp": "2026-11-17T08:58:28.605813+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 107,
+      "passed": 107,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_chand_feedback_contract",
+        "test_chand_media_contract",
+        "test_chand_shopping_integration_contract",
+        "test_delivery_partner_onboarding_contract",
+        "test_delivery_tracking_contract",
+        "test_grocery_checkout_security_contract",
+        "test_master_catalog_seller_ui_contract",
+        "test_referral_implementation_contract",
+        "test_restaurant_api_contract",
+        "test_shopping_cart_variants_contract",
+        "test_task12_customer_support_contract",
+        "test_task5_customer_measured_shopping_contract"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/session-20261117/frontend-effects-regression.log",
+      "log_bytes": 223,
+      "log_sha256_current": "93bbe45923664ebe7df2d162ba804f824d6da48e7db4a8a1814e2b3f847c9856",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 5,
+      "path": "/workspace/come-in-current/evidence/session-20261117/seller-support-contract-final.xml",
+      "sha256_current": "5d5ad560bfb6792ca63411d014f015913baaf2f7a353e591d58db345bf896784",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "5",
+          "time": "0.494",
+          "timestamp": "2026-11-17T09:05:04.600192+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 5,
+      "passed": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_task14_seller_support_ui_contract"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/session-20261117/seller-support-contract-final.log",
+      "log_bytes": 141,
+      "log_sha256_current": "0da81eb5221a91ae10b1d11c39b5ab799c36f4233370b45cdb1a79aacb339a21",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 6,
+      "path": "/workspace/come-in-current/evidence/session-20261117/state-group-regression.xml",
+      "sha256_current": "6853f233f83b16626f3c71bc607c0279d878c195776daf6864d1376862ff233e",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "45",
+          "time": "1.866",
+          "timestamp": "2026-11-17T08:53:01.253335+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 45,
+      "passed": 45,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_chand_shopping_integration_contract",
+        "test_grocery_checkout_security_contract",
+        "test_shopping_cart_variants_contract",
+        "test_task5_customer_measured_shopping_contract"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/session-20261117/state-group-regression.log",
+      "log_bytes": 142,
+      "log_sha256_current": "1d3b6ccf644af6a8e53e58a5b63fac1be71f00f2f8ca0a4ab2bb9ebb51105ada",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 7,
+      "path": "/workspace/come-in-current/evidence/session-20261117/live-after-fix.xml",
+      "sha256_current": "f367042785cb34f972c0ac2b36b5b4c924dcb87ac6b4e6b310ce2afb895fd32b",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "70",
+          "time": "9.642",
+          "timestamp": "2026-11-17T08:46:06.225606+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 70,
+      "passed": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_batch_5task_runtime",
+        "test_iter_notifications_admin_measured",
+        "test_preview_runtime_e2e",
+        "test_task5_live_mongo_transactions"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/session-20261117/live-after-fix.log",
+      "log_bytes": 99,
+      "log_sha256_current": "e772c9ca02d2503df2ef6a0c76be97a17e8eb8fb603b5936a76d3bac9734dfd4",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 8,
+      "path": "/workspace/come-in-current/evidence/session-20261117/release-offline-final.xml",
+      "sha256_current": "cee43f2fd0e14447f9959dbe0ea449a373dc67c8dea4c8cef2bd3bd6175e3e9e",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "4",
+          "skipped": "4",
+          "tests": "505",
+          "time": "45.930",
+          "timestamp": "2026-11-17T09:03:00.046180+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 505,
+      "passed": 497,
+      "failures": 4,
+      "errors": 0,
+      "skipped": 4,
+      "failed_cases": [
+        "tests.test_frontend_contracts::test_shopping_home_theme_contract_and_separate_mode_routes",
+        "tests.test_frontend_contracts::test_bakery_has_no_fabricated_sample_inventory_and_voice_is_honest",
+        "tests.test_universal_catalogue_import_engine::test_csv_formula_like_cells_are_preserved_as_untrusted_source_text",
+        "tests.test_task14_seller_support_ui_contract::test_seller_account_navigation_exposes_support_for_shopkeeper_and_restaurant_roles"
+      ],
+      "error_cases": [],
+      "skip_details": [
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_pdf_text_adapter_preserves_page_provenance",
+          "reason": "could not import 'pypdf': No module named 'pypdf'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_xlsx_processes_multiple_sheets_when_openpyxl_available",
+          "reason": "could not import 'openpyxl': No module named 'openpyxl'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_image_ocr_extracts_visible_text_without_promoting_fields",
+          "reason": "could not import 'PIL': No module named 'PIL'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_scanned_pdf_uses_optional_ocr_without_promoting_product_fields",
+          "reason": "could not import 'fitz': No module named 'fitz'"
+        }
+      ],
+      "modules": [
+        "test_assistant_context_contract",
+        "test_catalog_import_security_contract",
+        "test_catalog_reference_minimum",
+        "test_catalogue_chand_adapter",
+        "test_catalogue_import_job_api_contract",
+        "test_catalogue_import_workflow_contract",
+        "test_catalogue_transaction_apply_offline",
+        "test_catalogue_validator_migration",
+        "test_chand_demo_contract",
+        "test_chand_feedback_contract",
+        "test_chand_localization_contract",
+        "test_chand_media_contract",
+        "test_chand_ollama_provider_contract",
+        "test_chand_shopping_integration_contract",
+        "test_delivery_partner_onboarding_contract",
+        "test_delivery_tracking_contract",
+        "test_directory_only_category_contract",
+        "test_financial_rules",
+        "test_financial_security_contract",
+        "test_frontend_contracts",
+        "test_functional_blockers_regression",
+        "test_grocery_capture_transaction_offline",
+        "test_grocery_checkout_security_contract",
+        "test_grocery_pay_at_shop_status_contract",
+        "test_home_services_remaining_contract",
+        "test_master_catalog_api_contract",
+        "test_master_catalog_seller_ui_contract",
+        "test_mongo_backup_safety_offline",
+        "test_mongo_config",
+        "test_mongo_portability_tool",
+        "test_mongo_transactions",
+        "test_online_shop_product_listing_contract",
+        "test_p0_payment_checkout_completion",
+        "test_p0_restaurant_delivery_panel",
+        "test_provider_adapter_contracts",
+        "test_referral_implementation_contract",
+        "test_referral_rules",
+        "test_restaurant_api_contract",
+        "test_restaurant_capture_transaction_offline",
+        "test_restaurant_pricing",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_restaurant_serviceability",
+        "test_role_security_retail_import_contract",
+        "test_shared_system_integration_contract",
+        "test_shop_registration_browse_entrypoints",
+        "test_shopping_cart_variants_contract",
+        "test_shopping_catalog_contract",
+        "test_shopping_rewards_redemption_contract",
+        "test_standard_ui_image_shop_cta_contract",
+        "test_step1_final_delivery_partner_transactions_offline",
+        "test_step1_final_refund_admin_offline",
+        "test_step1_final_restore_index_profile_offline",
+        "test_targeted_tasks_9_12_15_18_21",
+        "test_task10_payment_refund_notification_contract",
+        "test_task11_grocery_refund_status_contract",
+        "test_task11_live_order_tracking_contract",
+        "test_task12_customer_support_contract",
+        "test_task13_seller_support_status_contract",
+        "test_task14_seller_support_ui_contract",
+        "test_task16_production_cors_contract",
+        "test_task17_grocery_payment_gate_contract",
+        "test_task18_refund_safety_iteration3",
+        "test_task19_seller_admin_workflows_contract",
+        "test_task20_product_catalog_variants_stock_contract",
+        "test_task21_customer_shopping_workflow_contract",
+        "test_task22_checkout_audit_contract",
+        "test_task23_order_tracking_authorization_contract",
+        "test_task24_repeat_order_contract",
+        "test_task5_customer_measured_shopping_contract",
+        "test_task5_measured_import_contract",
+        "test_task5_task7_ui_implementation_contract",
+        "test_task9_order_actions_contract",
+        "test_transaction_commit_retry",
+        "test_universal_catalogue_import_engine"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/session-20261117/release-offline-final.log",
+      "log_bytes": 5650,
+      "log_sha256_current": "b2b4dd07cb37ae17ac1a40158420e506db936882b396f1be46bc525766bcf1cb",
+      "log_fully_read": true,
+      "environment_facts_in_log": [
+        "Python 3.11.18 /workspace/come-in-tools/py311/bin/python",
+        "[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python",
+        "[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python"
+      ],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 9,
+      "path": "/workspace/come-in-current/evidence/session-20261117/transaction-regression-v2.xml",
+      "sha256_current": "5454680de27a9b8cec742eb473722a9571a085b38c9cab80ed3e51140769e4bc",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "52",
+          "time": "5.120",
+          "timestamp": "2026-11-17T08:45:09.556386+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 52,
+      "passed": 52,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_catalogue_transaction_apply_offline",
+        "test_grocery_capture_transaction_offline",
+        "test_mongo_transactions",
+        "test_restaurant_capture_transaction_offline",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_step1_final_delivery_partner_transactions_offline",
+        "test_step1_final_refund_admin_offline",
+        "test_transaction_commit_retry"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/session-20261117/transaction-regression-v2.log",
+      "log_bytes": 665,
+      "log_sha256_current": "475e6c08e4d48b5ff44d1a367ee943497153dead960c5995c2ec395ac2423efc",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 10,
+      "path": "/workspace/come-in-current/evidence/session-20261117/remaining-runtime.xml",
+      "sha256_current": "87eca641c9ce12708b55b296149b53ca6fc0c8669537bc9d36eda90dc85b634d",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "61",
+          "time": "5.592",
+          "timestamp": "2026-11-17T08:34:11.054102+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 61,
+      "passed": 61,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_batch_5task_runtime",
+        "test_iter_notifications_admin_measured",
+        "test_preview_runtime_e2e"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/session-20261117/remaining-runtime.log",
+      "log_bytes": 99,
+      "log_sha256_current": "f621fae538be45e680631ebeeff68dd3b63860b5d2c204f2e6a68b993a9de097",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 11,
+      "path": "/workspace/come-in-current/evidence/session-20261117/auth-contract-correction.xml",
+      "sha256_current": "eb82a0acb4848c58d600c6dd6b04e03cd8db96145bec7c0ab2970ab30a4de46b",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "9",
+          "time": "1.880",
+          "timestamp": "2026-11-17T09:01:56.741822+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 9,
+      "passed": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_frontend_contracts",
+        "test_shared_system_integration_contract",
+        "test_task12_customer_support_contract"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/session-20261117/auth-contract-correction.log",
+      "log_bytes": 141,
+      "log_sha256_current": "4e9d76a81cd5571a0842be3d94b51347cd364d2245a9980dbb5ad399d19ac81c",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 12,
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step3-tests.xml",
+      "sha256_current": "d5f646a021c24df23a76b964473d26476a3f247f7017f324b17b6cccd140191d",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "30",
+          "time": "2.439",
+          "timestamp": "2026-11-17T09:54:32.373710+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 30,
+      "passed": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_functional_blockers_regression",
+        "test_payment_environment_boundary",
+        "test_task17_grocery_payment_gate_contract"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step3-tests.log",
+      "log_bytes": 596,
+      "log_sha256_current": "47ad9afc7dff678e6e71b1aec3da3746c38d5be5584e96d326b41043f386f061",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 13,
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step9-payment-v2.xml",
+      "sha256_current": "7b2362e8287b6f8a620bc11ed67c05cceec4c88619a9a7e1e6575c6cb0be374d",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "78",
+          "time": "7.495",
+          "timestamp": "2026-11-17T10:20:57.816035+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 78,
+      "passed": 78,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_grocery_refund_eligibility",
+        "test_grocery_refund_local_integration",
+        "test_payment_environment_boundary",
+        "test_payment_webhook_local_integration",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_step1_final_refund_admin_offline",
+        "test_task18_refund_safety_iteration3",
+        "test_webhook_envelope_security"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step9-payment-v2.log",
+      "log_bytes": 2816,
+      "log_sha256_current": "5df416f5b28e0f894230c771c6d42922b2ab155dbc4752f32f9cc6f7ada4ab73",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 14,
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step5-tests.xml",
+      "sha256_current": "75158bad5f8ba207355d9f58a6c31aa4946cb4a3f1cf1ec3f5c4406bf5eb6303",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "0",
+          "time": "0.008",
+          "timestamp": "2026-11-17T10:10:34.571365+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 0,
+      "passed": 0,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [],
+      "log_path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step5-tests.log",
+      "log_bytes": 87,
+      "log_sha256_current": "e82b4de6dc240b308d9ec7293368fa30c6e11e9752f8d2c84471817f99be020f",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "ZERO TESTS;NOT A PASS RUN"
+    },
+    {
+      "id": 15,
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-tests-v2.xml",
+      "sha256_current": "02102ae671b9463770780a6b7391f8065742bd2e656a2d5b1f5619e07b6dabda",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "48",
+          "time": "8.761",
+          "timestamp": "2026-11-17T10:00:06.714995+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 48,
+      "passed": 48,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_payment_webhook_local_integration",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_shared_system_integration_contract",
+        "test_task10_payment_refund_notification_contract",
+        "test_webhook_envelope_security"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-tests-v2.log",
+      "log_bytes": 2607,
+      "log_sha256_current": "a36246a65174bf43f875e189bcd119ca35ba3edb00f246e632d717c1af55eaf8",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 16,
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step1-live.xml",
+      "sha256_current": "cdf984b0b591dda55a6b2ea3845e6843131090e574b59e320495801cd2b27286",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "70",
+          "time": "9.479",
+          "timestamp": "2026-11-17T09:48:07.463618+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 70,
+      "passed": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_batch_5task_runtime",
+        "test_iter_notifications_admin_measured",
+        "test_preview_runtime_e2e",
+        "test_task5_live_mongo_transactions"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step1-live.log",
+      "log_bytes": 99,
+      "log_sha256_current": "6a4e5321d0918790a4bdb97138ca9e0321d8277eb1450f7250e94f0700f05ec2",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "Recorded candidate runner:step1-live-runner.py launches python -m pytest -n0 -q with4explicit live modules andthis JUnit destination;no contemporaneous process/source/environment receipt.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step1-live-runner.py"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 17,
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step9-payment.xml",
+      "sha256_current": "27c7ab90c8daaf1d5f2f553beb841032fe448f35e0c6761bedad169dc948079d",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "2",
+          "skipped": "0",
+          "tests": "78",
+          "time": "4.447",
+          "timestamp": "2026-11-17T10:20:33.399228+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 78,
+      "passed": 76,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [
+        "tests.test_payment_webhook_local_integration::test_local_signed_webhook_http_and_transaction_scenarios",
+        "tests.test_grocery_refund_local_integration::test_local_grocery_refund_authorization_accounting_and_retry"
+      ],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_grocery_refund_eligibility",
+        "test_grocery_refund_local_integration",
+        "test_payment_environment_boundary",
+        "test_payment_webhook_local_integration",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_step1_final_refund_admin_offline",
+        "test_task18_refund_safety_iteration3",
+        "test_webhook_envelope_security"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step9-payment.log",
+      "log_bytes": 4852,
+      "log_sha256_current": "c01161c6d70721112d7017861a20b1ef72a6a930c7f9c74fef2fd227dd67e828",
+      "log_fully_read": true,
+      "environment_facts_in_log": [
+        "Python 3.11.18 /workspace/come-in-tools/py311/bin/python",
+        "[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python"
+      ],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 18,
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step5-tests-v2.xml",
+      "sha256_current": "575c2e1211728fea32e78a300ef4319bb9f405aceabde7ce78bbfdd79f3a760a",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "50",
+          "time": "7.727",
+          "timestamp": "2026-11-17T10:10:53.981523+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 50,
+      "passed": 50,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_grocery_refund_eligibility",
+        "test_grocery_refund_local_integration",
+        "test_payment_webhook_local_integration",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_step1_final_refund_admin_offline",
+        "test_task11_grocery_refund_status_contract",
+        "test_task18_refund_safety_iteration3"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step5-tests-v2.log",
+      "log_bytes": 2625,
+      "log_sha256_current": "9e6cdbfc066cc7f6d053ef1706d8cd1c0e347a498a41d1396d8612d2bfb09096",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 19,
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-final.xml",
+      "sha256_current": "dbe8429e0f760e2489571c75783cad952204d5805ae1547efc0b52778e66483c",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "62",
+          "time": "5.565",
+          "timestamp": "2026-11-17T10:03:25.232767+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 62,
+      "passed": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_payment_environment_boundary",
+        "test_payment_webhook_local_integration",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_shared_system_integration_contract",
+        "test_task10_payment_refund_notification_contract",
+        "test_webhook_envelope_security"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-final.log",
+      "log_bytes": 2607,
+      "log_sha256_current": "d3f533dc7c4ab388674d8739ef295628da6cc85d3925dc01f397f9afb6839e72",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 20,
+      "path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-tests.xml",
+      "sha256_current": "4129c08d91e2176bc01a7a7726efa091e39bcaca7bf4b6429c17e29f59d149ee",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "1",
+          "skipped": "0",
+          "tests": "48",
+          "time": "4.625",
+          "timestamp": "2026-11-17T09:59:30.429540+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 48,
+      "passed": 47,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [
+        "tests.test_payment_webhook_local_integration::test_local_signed_webhook_http_and_transaction_scenarios"
+      ],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_payment_webhook_local_integration",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_shared_system_integration_contract",
+        "test_task10_payment_refund_notification_contract",
+        "test_webhook_envelope_security"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-tests.log",
+      "log_bytes": 9825,
+      "log_sha256_current": "078f9596af2a5a3c2e1ac63d3abcaddb56c6bfd0ebd06d359cc9f495be2c454d",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 21,
+      "path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/three-failures-after.xml",
+      "sha256_current": "fb48f614b43fde1d3607ff9b6d8514295d406baf07d2629793918945fbdab880",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "3",
+          "time": "0.077",
+          "timestamp": "2026-11-17T09:15:24.609966+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 3,
+      "passed": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_frontend_contracts",
+        "test_universal_catalogue_import_engine"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/three-failures-after.log",
+      "log_bytes": 98,
+      "log_sha256_current": "f21802e5e24571b06b077e416af1539fdce6ad55b407e03af6af45b03968cb3b",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 22,
+      "path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/csv-focused.xml",
+      "sha256_current": "a3c4031e9235813c72d590a856e2d91d843b838ed4290a64d643544421aa07b9",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "8",
+          "time": "0.068",
+          "timestamp": "2026-11-17T09:14:24.008321+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 8,
+      "passed": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_universal_catalogue_import_engine"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/csv-focused.log",
+      "log_bytes": 113,
+      "log_sha256_current": "7675a80b671dcea752b95232e2c5608b37bcf5a445a4010666219f75dd8a44d7",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 23,
+      "path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/three-failures-before.xml",
+      "sha256_current": "2a7bfbb5abd96645bf505427349d710aca75026dce955f601c56f9453576fc89",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "3",
+          "skipped": "0",
+          "tests": "3",
+          "time": "0.057",
+          "timestamp": "2026-11-17T09:13:46.165158+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 3,
+      "passed": 0,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [
+        "tests.test_universal_catalogue_import_engine::test_csv_formula_like_cells_are_preserved_as_untrusted_source_text",
+        "tests.test_frontend_contracts::test_shopping_home_theme_contract_and_separate_mode_routes",
+        "tests.test_frontend_contracts::test_bakery_has_no_fabricated_sample_inventory_and_voice_is_honest"
+      ],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_frontend_contracts",
+        "test_universal_catalogue_import_engine"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/three-failures-before.log",
+      "log_bytes": 3311,
+      "log_sha256_current": "21a366d80b5de68343c22c344660f3e0105736ce38bb3d809a30e7f7e4b57917",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 24,
+      "path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/relevant-regression.xml",
+      "sha256_current": "b49002aa2c9ee4475c06dd72b6754e39fc01e060e070a65eb77ab4022bf2ab40",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "4",
+          "tests": "96",
+          "time": "3.637",
+          "timestamp": "2026-11-17T09:17:07.795784+00:00",
+          "hostname": "bca3ee959444"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 96,
+      "passed": 92,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 4,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_pdf_text_adapter_preserves_page_provenance",
+          "reason": "could not import 'pypdf': No module named 'pypdf'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_xlsx_processes_multiple_sheets_when_openpyxl_available",
+          "reason": "could not import 'openpyxl': No module named 'openpyxl'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_image_ocr_extracts_visible_text_without_promoting_fields",
+          "reason": "could not import 'PIL': No module named 'PIL'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_scanned_pdf_uses_optional_ocr_without_promoting_product_fields",
+          "reason": "could not import 'fitz': No module named 'fitz'"
+        }
+      ],
+      "modules": [
+        "test_catalog_import_security_contract",
+        "test_catalogue_chand_adapter",
+        "test_catalogue_import_job_api_contract",
+        "test_catalogue_import_workflow_contract",
+        "test_catalogue_transaction_apply_offline",
+        "test_chand_demo_contract",
+        "test_chand_media_contract",
+        "test_chand_shopping_integration_contract",
+        "test_frontend_contracts",
+        "test_universal_catalogue_import_engine"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/relevant-regression.log",
+      "log_bytes": 756,
+      "log_sha256_current": "e135c611b6f63e99a2be20fb60b40f2f7465b7d636027dde2db5ad2abc486c36",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "NOT FOUND:matching log has no recorded exact invocation;testcase module coverage is available but not original command/source/environment attestation.",
+      "command_reference_paths": [],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 25,
+      "path": "/workspace/come-in-current/evidence/external-validation-20261118T133459Z/upload-types-before.xml",
+      "sha256_current": "e880146295adae5e6e24874a64bea1f2ef61aec8e0e4f39d2665381acec271e3",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "8",
+          "skipped": "0",
+          "tests": "8",
+          "time": "1.783",
+          "timestamp": "2026-11-18T13:36:52.433912+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 8,
+      "passed": 0,
+      "failures": 8,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [
+        "tests.test_image_upload_type_boundary::test_declared_image_mime_cannot_store_non_image_bytes[-image/jpeg]",
+        "tests.test_image_upload_type_boundary::test_declared_image_mime_cannot_store_non_image_bytes[-image/png]",
+        "tests.test_image_upload_type_boundary::test_declared_image_mime_cannot_store_non_image_bytes[-image/gif]",
+        "tests.test_image_upload_type_boundary::test_declared_image_mime_cannot_store_non_image_bytes[-image/webp]",
+        "tests.test_image_upload_type_boundary::test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/jpeg]",
+        "tests.test_image_upload_type_boundary::test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/png]",
+        "tests.test_image_upload_type_boundary::test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/gif]",
+        "tests.test_image_upload_type_boundary::test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/webp]"
+      ],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_image_upload_type_boundary"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/external-validation-20261118T133459Z/upload-types-before.log",
+      "log_bytes": 7036,
+      "log_sha256_current": "537d915ab0b2a1fe7cc1502dcc3ca738bdc246738e87c3e59cb08a968fa9af52",
+      "log_fully_read": true,
+      "environment_facts_in_log": [
+        "Python 3.11.18 /workspace/come-in-tools/py311/bin/python",
+        "[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python"
+      ],
+      "available_command_evidence": "Available historical external-validation report records source-test selection for before/after upload checks;not a per-process signed execution/source/environment receipt.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/EXTERNAL_VALIDATION_REPORT.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 26,
+      "path": "/workspace/come-in-current/evidence/external-validation-20261118T133459Z/upload-security-after.xml",
+      "sha256_current": "f171157678f722b030bb12e97612cd29e7a3787b67d6b8dcf1627eda15a02d4c",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "25",
+          "time": "3.071",
+          "timestamp": "2026-11-18T13:37:38.548339+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 25,
+      "passed": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_catalog_import_security_contract",
+        "test_image_upload_type_boundary",
+        "test_upload_allocation_bound"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/external-validation-20261118T133459Z/upload-security-after.log",
+      "log_bytes": 665,
+      "log_sha256_current": "9624060a0c4cb5c0e8f4db5533f697e17afb1782212b3804bd9c8a7044e4db96",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "Available historical external-validation report records source-test selection for before/after upload checks;not a per-process signed execution/source/environment receipt.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/EXTERNAL_VALIDATION_REPORT.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 27,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/security-races-before.xml",
+      "sha256_current": "a5823d72863f9e395701315e26859655a9ca72aa2f8dff95d320d2a1094686f9",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "4",
+          "skipped": "0",
+          "tests": "4",
+          "time": "1.533",
+          "timestamp": "2026-11-18T13:22:31.668987+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 4,
+      "passed": 0,
+      "failures": 4,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [
+        "tests.test_final_payment_transition_races::test_customer_transition_cannot_overwrite_concurrent_final_state[concurrent0-cancel_restaurant_order]",
+        "tests.test_final_payment_transition_races::test_customer_transition_cannot_overwrite_concurrent_final_state[concurrent0-retry_restaurant_payment]",
+        "tests.test_final_payment_transition_races::test_customer_transition_cannot_overwrite_concurrent_final_state[concurrent1-cancel_restaurant_order]",
+        "tests.test_final_payment_transition_races::test_customer_transition_cannot_overwrite_concurrent_final_state[concurrent1-retry_restaurant_payment]"
+      ],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_final_payment_transition_races"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/security-races-before.log",
+      "log_bytes": 9518,
+      "log_sha256_current": "1f9f45cbbb54915671cd45a2eba98204eb142f878c05520e1de02184c2a38e9d",
+      "log_fully_read": true,
+      "environment_facts_in_log": [
+        "Python 3.11.18 /workspace/come-in-tools/py311/bin/python",
+        "[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python"
+      ],
+      "available_command_evidence": "Available command documentation:COMMANDS.md records offline exclusions,local payment opt-in andfocused selectors. It is documentation,not a per-run exact original invocation/env/source receipt for every earlier artifact.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/COMMANDS.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 28,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/backend-final.xml",
+      "sha256_current": "039d4c3f0ddc4a0741ede271ccb71b0a8eb9315b7c13577ad1516b73d0efedbc",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "1",
+          "skipped": "6",
+          "tests": "564",
+          "time": "31.268",
+          "timestamp": "2026-11-18T13:23:45.698295+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 564,
+      "passed": 557,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 6,
+      "failed_cases": [
+        "tests.test_delivery_tracking_contract::test_customer_cancellation_clears_any_stored_restaurant_delivery_location"
+      ],
+      "error_cases": [],
+      "skip_details": [
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_pdf_text_adapter_preserves_page_provenance",
+          "reason": "could not import 'pypdf': No module named 'pypdf'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_xlsx_processes_multiple_sheets_when_openpyxl_available",
+          "reason": "could not import 'openpyxl': No module named 'openpyxl'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_image_ocr_extracts_visible_text_without_promoting_fields",
+          "reason": "could not import 'PIL': No module named 'PIL'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_scanned_pdf_uses_optional_ocr_without_promoting_product_fields",
+          "reason": "could not import 'fitz': No module named 'fitz'"
+        },
+        {
+          "case": "tests.test_grocery_refund_local_integration::test_local_grocery_refund_authorization_accounting_and_retry",
+          "reason": "requires explicit local disposable payment-test opt-in"
+        },
+        {
+          "case": "tests.test_payment_webhook_local_integration::test_local_signed_webhook_http_and_transaction_scenarios",
+          "reason": "requires explicit local disposable payment-test opt-in"
+        }
+      ],
+      "modules": [
+        "test_assistant_context_contract",
+        "test_catalog_import_security_contract",
+        "test_catalog_reference_minimum",
+        "test_catalogue_chand_adapter",
+        "test_catalogue_import_job_api_contract",
+        "test_catalogue_import_workflow_contract",
+        "test_catalogue_transaction_apply_offline",
+        "test_catalogue_validator_migration",
+        "test_chand_demo_contract",
+        "test_chand_feedback_contract",
+        "test_chand_localization_contract",
+        "test_chand_media_contract",
+        "test_chand_ollama_provider_contract",
+        "test_chand_shopping_integration_contract",
+        "test_delivery_partner_onboarding_contract",
+        "test_delivery_tracking_contract",
+        "test_directory_only_category_contract",
+        "test_final_payment_transition_races",
+        "test_financial_rules",
+        "test_financial_security_contract",
+        "test_frontend_contracts",
+        "test_functional_blockers_regression",
+        "test_grocery_capture_transaction_offline",
+        "test_grocery_checkout_security_contract",
+        "test_grocery_pay_at_shop_status_contract",
+        "test_grocery_refund_eligibility",
+        "test_grocery_refund_local_integration",
+        "test_home_services_remaining_contract",
+        "test_master_catalog_api_contract",
+        "test_master_catalog_seller_ui_contract",
+        "test_mongo_backup_safety_offline",
+        "test_mongo_config",
+        "test_mongo_portability_tool",
+        "test_mongo_transactions",
+        "test_online_shop_product_listing_contract",
+        "test_p0_payment_checkout_completion",
+        "test_p0_restaurant_delivery_panel",
+        "test_payment_environment_boundary",
+        "test_payment_webhook_local_integration",
+        "test_provider_adapter_contracts",
+        "test_referral_implementation_contract",
+        "test_referral_rules",
+        "test_restaurant_api_contract",
+        "test_restaurant_capture_transaction_offline",
+        "test_restaurant_pricing",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_restaurant_serviceability",
+        "test_role_security_retail_import_contract",
+        "test_shared_system_integration_contract",
+        "test_shop_registration_browse_entrypoints",
+        "test_shopping_cart_variants_contract",
+        "test_shopping_catalog_contract",
+        "test_shopping_rewards_redemption_contract",
+        "test_standard_ui_image_shop_cta_contract",
+        "test_step1_final_delivery_partner_transactions_offline",
+        "test_step1_final_refund_admin_offline",
+        "test_step1_final_restore_index_profile_offline",
+        "test_targeted_tasks_9_12_15_18_21",
+        "test_task10_payment_refund_notification_contract",
+        "test_task11_grocery_refund_status_contract",
+        "test_task11_live_order_tracking_contract",
+        "test_task12_customer_support_contract",
+        "test_task13_seller_support_status_contract",
+        "test_task14_seller_support_ui_contract",
+        "test_task16_production_cors_contract",
+        "test_task17_grocery_payment_gate_contract",
+        "test_task18_refund_safety_iteration3",
+        "test_task19_seller_admin_workflows_contract",
+        "test_task20_product_catalog_variants_stock_contract",
+        "test_task21_customer_shopping_workflow_contract",
+        "test_task22_checkout_audit_contract",
+        "test_task23_order_tracking_authorization_contract",
+        "test_task24_repeat_order_contract",
+        "test_task5_customer_measured_shopping_contract",
+        "test_task5_measured_import_contract",
+        "test_task5_task7_ui_implementation_contract",
+        "test_task9_order_actions_contract",
+        "test_transaction_commit_retry",
+        "test_universal_catalogue_import_engine",
+        "test_upload_allocation_bound",
+        "test_webhook_envelope_security"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/backend-final.log",
+      "log_bytes": 2223,
+      "log_sha256_current": "f56e61ac93b47f6d658fd5eb7122660325fb1349e359c91657d658f5102618a7",
+      "log_fully_read": true,
+      "environment_facts_in_log": [
+        "Python 3.11.18 /workspace/come-in-tools/py311/bin/python",
+        "[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python"
+      ],
+      "available_command_evidence": "Available command documentation:COMMANDS.md records offline exclusions,local payment opt-in andfocused selectors. It is documentation,not a per-run exact original invocation/env/source receipt for every earlier artifact.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/COMMANDS.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 29,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/payment-local.xml",
+      "sha256_current": "e59c2522b2ffded9573e5b8f288db83154cbe62e5fd2ea197d05d79e1100d4c9",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "78",
+          "time": "8.279",
+          "timestamp": "2026-11-18T13:20:26.013737+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 78,
+      "passed": 78,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_grocery_refund_eligibility",
+        "test_grocery_refund_local_integration",
+        "test_payment_environment_boundary",
+        "test_payment_webhook_local_integration",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_step1_final_refund_admin_offline",
+        "test_task18_refund_safety_iteration3",
+        "test_webhook_envelope_security"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/payment-local.log",
+      "log_bytes": 2816,
+      "log_sha256_current": "59d1ec3d26b337be5eb3cd1529e48208b10aaa079b880e7f574243bde001f8e5",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "Available command documentation:COMMANDS.md records offline exclusions,local payment opt-in andfocused selectors. It is documentation,not a per-run exact original invocation/env/source receipt for every earlier artifact.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/COMMANDS.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 30,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/backend-full.xml",
+      "sha256_current": "0786bac0b221c114389c016b2ba730f114047a39f743d246a620d258deca291b",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "2",
+          "skipped": "6",
+          "tests": "559",
+          "time": "35.620",
+          "timestamp": "2026-11-18T13:18:58.261920+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 559,
+      "passed": 551,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 6,
+      "failed_cases": [
+        "tests.test_shared_system_integration_contract::test_restaurant_payment_ui_does_not_claim_success_or_call_gateway_without_sdk",
+        "tests.test_restaurant_api_contract::test_webhook_event_is_recorded_after_processing_for_retry_safety"
+      ],
+      "error_cases": [],
+      "skip_details": [
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_pdf_text_adapter_preserves_page_provenance",
+          "reason": "could not import 'pypdf': No module named 'pypdf'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_xlsx_processes_multiple_sheets_when_openpyxl_available",
+          "reason": "could not import 'openpyxl': No module named 'openpyxl'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_image_ocr_extracts_visible_text_without_promoting_fields",
+          "reason": "could not import 'PIL': No module named 'PIL'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_scanned_pdf_uses_optional_ocr_without_promoting_product_fields",
+          "reason": "could not import 'fitz': No module named 'fitz'"
+        },
+        {
+          "case": "tests.test_grocery_refund_local_integration::test_local_grocery_refund_authorization_accounting_and_retry",
+          "reason": "requires explicit local disposable payment-test opt-in"
+        },
+        {
+          "case": "tests.test_payment_webhook_local_integration::test_local_signed_webhook_http_and_transaction_scenarios",
+          "reason": "requires explicit local disposable payment-test opt-in"
+        }
+      ],
+      "modules": [
+        "test_assistant_context_contract",
+        "test_catalog_import_security_contract",
+        "test_catalog_reference_minimum",
+        "test_catalogue_chand_adapter",
+        "test_catalogue_import_job_api_contract",
+        "test_catalogue_import_workflow_contract",
+        "test_catalogue_transaction_apply_offline",
+        "test_catalogue_validator_migration",
+        "test_chand_demo_contract",
+        "test_chand_feedback_contract",
+        "test_chand_localization_contract",
+        "test_chand_media_contract",
+        "test_chand_ollama_provider_contract",
+        "test_chand_shopping_integration_contract",
+        "test_delivery_partner_onboarding_contract",
+        "test_delivery_tracking_contract",
+        "test_directory_only_category_contract",
+        "test_financial_rules",
+        "test_financial_security_contract",
+        "test_frontend_contracts",
+        "test_functional_blockers_regression",
+        "test_grocery_capture_transaction_offline",
+        "test_grocery_checkout_security_contract",
+        "test_grocery_pay_at_shop_status_contract",
+        "test_grocery_refund_eligibility",
+        "test_grocery_refund_local_integration",
+        "test_home_services_remaining_contract",
+        "test_master_catalog_api_contract",
+        "test_master_catalog_seller_ui_contract",
+        "test_mongo_backup_safety_offline",
+        "test_mongo_config",
+        "test_mongo_portability_tool",
+        "test_mongo_transactions",
+        "test_online_shop_product_listing_contract",
+        "test_p0_payment_checkout_completion",
+        "test_p0_restaurant_delivery_panel",
+        "test_payment_environment_boundary",
+        "test_payment_webhook_local_integration",
+        "test_provider_adapter_contracts",
+        "test_referral_implementation_contract",
+        "test_referral_rules",
+        "test_restaurant_api_contract",
+        "test_restaurant_capture_transaction_offline",
+        "test_restaurant_pricing",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_restaurant_serviceability",
+        "test_role_security_retail_import_contract",
+        "test_shared_system_integration_contract",
+        "test_shop_registration_browse_entrypoints",
+        "test_shopping_cart_variants_contract",
+        "test_shopping_catalog_contract",
+        "test_shopping_rewards_redemption_contract",
+        "test_standard_ui_image_shop_cta_contract",
+        "test_step1_final_delivery_partner_transactions_offline",
+        "test_step1_final_refund_admin_offline",
+        "test_step1_final_restore_index_profile_offline",
+        "test_targeted_tasks_9_12_15_18_21",
+        "test_task10_payment_refund_notification_contract",
+        "test_task11_grocery_refund_status_contract",
+        "test_task11_live_order_tracking_contract",
+        "test_task12_customer_support_contract",
+        "test_task13_seller_support_status_contract",
+        "test_task14_seller_support_ui_contract",
+        "test_task16_production_cors_contract",
+        "test_task17_grocery_payment_gate_contract",
+        "test_task18_refund_safety_iteration3",
+        "test_task19_seller_admin_workflows_contract",
+        "test_task20_product_catalog_variants_stock_contract",
+        "test_task21_customer_shopping_workflow_contract",
+        "test_task22_checkout_audit_contract",
+        "test_task23_order_tracking_authorization_contract",
+        "test_task24_repeat_order_contract",
+        "test_task5_customer_measured_shopping_contract",
+        "test_task5_measured_import_contract",
+        "test_task5_task7_ui_implementation_contract",
+        "test_task9_order_actions_contract",
+        "test_transaction_commit_retry",
+        "test_universal_catalogue_import_engine",
+        "test_webhook_envelope_security"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/backend-full.log",
+      "log_bytes": 3223,
+      "log_sha256_current": "e663cdc4aa3b94046be3700065fa2da57252e626dd5421304f0ae0a5f9f709ba",
+      "log_fully_read": true,
+      "environment_facts_in_log": [
+        "Python 3.11.18 /workspace/come-in-tools/py311/bin/python",
+        "[gw0] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python"
+      ],
+      "available_command_evidence": "Available command documentation:COMMANDS.md records offline exclusions,local payment opt-in andfocused selectors. It is documentation,not a per-run exact original invocation/env/source receipt for every earlier artifact.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/COMMANDS.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 31,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/contract-focused.xml",
+      "sha256_current": "f1846403e7e88e38f253d9e06f3672e7076e9647ffb06fee2568df9d706b787f",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "24",
+          "time": "2.650",
+          "timestamp": "2026-11-18T13:20:06.480649+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 24,
+      "passed": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_restaurant_api_contract",
+        "test_shared_system_integration_contract"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/contract-focused.log",
+      "log_bytes": 142,
+      "log_sha256_current": "80d00c4a4b99a081a9635b4c60c11a7da6149e29ecd34fd4a25b1d0435a8c932",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "Available command documentation:COMMANDS.md records offline exclusions,local payment opt-in andfocused selectors. It is documentation,not a per-run exact original invocation/env/source receipt for every earlier artifact.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/COMMANDS.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 32,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/backend-final-v2.xml",
+      "sha256_current": "51fb23bdfaf50692e6919c342ad9be0a653b082e986f1ed825deb3706b3a00c2",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "6",
+          "tests": "564",
+          "time": "32.190",
+          "timestamp": "2026-11-18T13:25:23.275822+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 564,
+      "passed": 558,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 6,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_pdf_text_adapter_preserves_page_provenance",
+          "reason": "could not import 'pypdf': No module named 'pypdf'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_xlsx_processes_multiple_sheets_when_openpyxl_available",
+          "reason": "could not import 'openpyxl': No module named 'openpyxl'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_image_ocr_extracts_visible_text_without_promoting_fields",
+          "reason": "could not import 'PIL': No module named 'PIL'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_scanned_pdf_uses_optional_ocr_without_promoting_product_fields",
+          "reason": "could not import 'fitz': No module named 'fitz'"
+        },
+        {
+          "case": "tests.test_grocery_refund_local_integration::test_local_grocery_refund_authorization_accounting_and_retry",
+          "reason": "requires explicit local disposable payment-test opt-in"
+        },
+        {
+          "case": "tests.test_payment_webhook_local_integration::test_local_signed_webhook_http_and_transaction_scenarios",
+          "reason": "requires explicit local disposable payment-test opt-in"
+        }
+      ],
+      "modules": [
+        "test_assistant_context_contract",
+        "test_catalog_import_security_contract",
+        "test_catalog_reference_minimum",
+        "test_catalogue_chand_adapter",
+        "test_catalogue_import_job_api_contract",
+        "test_catalogue_import_workflow_contract",
+        "test_catalogue_transaction_apply_offline",
+        "test_catalogue_validator_migration",
+        "test_chand_demo_contract",
+        "test_chand_feedback_contract",
+        "test_chand_localization_contract",
+        "test_chand_media_contract",
+        "test_chand_ollama_provider_contract",
+        "test_chand_shopping_integration_contract",
+        "test_delivery_partner_onboarding_contract",
+        "test_delivery_tracking_contract",
+        "test_directory_only_category_contract",
+        "test_final_payment_transition_races",
+        "test_financial_rules",
+        "test_financial_security_contract",
+        "test_frontend_contracts",
+        "test_functional_blockers_regression",
+        "test_grocery_capture_transaction_offline",
+        "test_grocery_checkout_security_contract",
+        "test_grocery_pay_at_shop_status_contract",
+        "test_grocery_refund_eligibility",
+        "test_grocery_refund_local_integration",
+        "test_home_services_remaining_contract",
+        "test_master_catalog_api_contract",
+        "test_master_catalog_seller_ui_contract",
+        "test_mongo_backup_safety_offline",
+        "test_mongo_config",
+        "test_mongo_portability_tool",
+        "test_mongo_transactions",
+        "test_online_shop_product_listing_contract",
+        "test_p0_payment_checkout_completion",
+        "test_p0_restaurant_delivery_panel",
+        "test_payment_environment_boundary",
+        "test_payment_webhook_local_integration",
+        "test_provider_adapter_contracts",
+        "test_referral_implementation_contract",
+        "test_referral_rules",
+        "test_restaurant_api_contract",
+        "test_restaurant_capture_transaction_offline",
+        "test_restaurant_pricing",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_restaurant_serviceability",
+        "test_role_security_retail_import_contract",
+        "test_shared_system_integration_contract",
+        "test_shop_registration_browse_entrypoints",
+        "test_shopping_cart_variants_contract",
+        "test_shopping_catalog_contract",
+        "test_shopping_rewards_redemption_contract",
+        "test_standard_ui_image_shop_cta_contract",
+        "test_step1_final_delivery_partner_transactions_offline",
+        "test_step1_final_refund_admin_offline",
+        "test_step1_final_restore_index_profile_offline",
+        "test_targeted_tasks_9_12_15_18_21",
+        "test_task10_payment_refund_notification_contract",
+        "test_task11_grocery_refund_status_contract",
+        "test_task11_live_order_tracking_contract",
+        "test_task12_customer_support_contract",
+        "test_task13_seller_support_status_contract",
+        "test_task14_seller_support_ui_contract",
+        "test_task16_production_cors_contract",
+        "test_task17_grocery_payment_gate_contract",
+        "test_task18_refund_safety_iteration3",
+        "test_task19_seller_admin_workflows_contract",
+        "test_task20_product_catalog_variants_stock_contract",
+        "test_task21_customer_shopping_workflow_contract",
+        "test_task22_checkout_audit_contract",
+        "test_task23_order_tracking_authorization_contract",
+        "test_task24_repeat_order_contract",
+        "test_task5_customer_measured_shopping_contract",
+        "test_task5_measured_import_contract",
+        "test_task5_task7_ui_implementation_contract",
+        "test_task9_order_actions_contract",
+        "test_transaction_commit_retry",
+        "test_universal_catalogue_import_engine",
+        "test_upload_allocation_bound",
+        "test_webhook_envelope_security"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/backend-final-v2.log",
+      "log_bytes": 1238,
+      "log_sha256_current": "025499fd2a593440ed591ac4f2d5aecdf662947490d5e66f7dbe7f04de596c05",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "Available command documentation:COMMANDS.md records offline exclusions,local payment opt-in andfocused selectors. It is documentation,not a per-run exact original invocation/env/source receipt for every earlier artifact.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/COMMANDS.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 33,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/security-races-after.xml",
+      "sha256_current": "737878a8f6e366e435dfa466518b3bf5ae12686c9c87acde03cac02793ecee4d",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "28",
+          "time": "2.685",
+          "timestamp": "2026-11-18T13:23:10.051980+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 28,
+      "passed": 28,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_final_payment_transition_races",
+        "test_restaurant_api_contract",
+        "test_shared_system_integration_contract"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/security-races-after.log",
+      "log_bytes": 665,
+      "log_sha256_current": "f14385b2dfd78e1a1d5689573748f094fa3f238d4276b5338200e3185a380344",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "Available command documentation:COMMANDS.md records offline exclusions,local payment opt-in andfocused selectors. It is documentation,not a per-run exact original invocation/env/source receipt for every earlier artifact.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/COMMANDS.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 34,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/security-final-focused.xml",
+      "sha256_current": "af87bfce8a43298e8bf3406da36a9fd6a5979f2faab33ee59fb5768d8c92e8a4",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "5",
+          "time": "1.123",
+          "timestamp": "2026-11-18T13:23:44.317153+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 5,
+      "passed": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_final_payment_transition_races",
+        "test_upload_allocation_bound"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/security-final-focused.log",
+      "log_bytes": 664,
+      "log_sha256_current": "5862bbff4c5ec7ae428a1cdc5d4368186a7df468d1d45c58398fb67703ac4a8d",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "Available command documentation:COMMANDS.md records offline exclusions,local payment opt-in andfocused selectors. It is documentation,not a per-run exact original invocation/env/source receipt for every earlier artifact.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/COMMANDS.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 35,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/security-tracking-final.xml",
+      "sha256_current": "6f6b90e1e7e92cd62dddf92b35b126b1f8d755a7562c80465f6c947d71f79521",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "17",
+          "time": "1.741",
+          "timestamp": "2026-11-18T13:24:54.575700+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 17,
+      "passed": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_delivery_tracking_contract",
+        "test_final_payment_transition_races",
+        "test_upload_allocation_bound"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/security-tracking-final.log",
+      "log_bytes": 665,
+      "log_sha256_current": "beaf7b0ff225b4f375434a36b672b666465f76639224d764055595ee53d7606d",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "Available command documentation:COMMANDS.md records offline exclusions,local payment opt-in andfocused selectors. It is documentation,not a per-run exact original invocation/env/source receipt for every earlier artifact.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/COMMANDS.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 36,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/live-regression.xml",
+      "sha256_current": "3fcec03b36752f0b7b3b08516a3fc8212f55bbf8fd3684acc21e1ed61f4c37eb",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "70",
+          "time": "9.625",
+          "timestamp": "2026-11-18T13:20:25.773575+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 70,
+      "passed": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_batch_5task_runtime",
+        "test_iter_notifications_admin_measured",
+        "test_preview_runtime_e2e",
+        "test_task5_live_mongo_transactions"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/live-regression.log",
+      "log_bytes": 99,
+      "log_sha256_current": "7d49005c1bc18ed5d373ac4c552ebc429c72de0e821056485791a5fb11225c43",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "Recorded candidate runner launches python -m pytest -n0 -q with4explicit live modules andthis JUnit destination;runtime target/source hash not captured contemporaneously.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/live-runner.py"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 37,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/affected-local-final.xml",
+      "sha256_current": "d918bbb7c34881c510dccc9eab14c22c49d972953133816f1cef2b75a9416616",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "7",
+          "time": "5.576",
+          "timestamp": "2026-11-18T13:25:23.245605+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 7,
+      "passed": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_final_payment_transition_races",
+        "test_grocery_refund_local_integration",
+        "test_payment_webhook_local_integration",
+        "test_upload_allocation_bound"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/affected-local-final.log",
+      "log_bytes": 2735,
+      "log_sha256_current": "9c8fa9e190321dca42feda91d52f5a36d3b27aecbc61e10e25dcaff09f96a194",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "Available command documentation:COMMANDS.md records offline exclusions,local payment opt-in andfocused selectors. It is documentation,not a per-run exact original invocation/env/source receipt for every earlier artifact.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/COMMANDS.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 38,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/live-regression-final.xml",
+      "sha256_current": "ec16a54d1d43efad79c261408ee43a2216a1a92ec3ce0e53d724c2a9c09e990e",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "70",
+          "time": "9.343",
+          "timestamp": "2026-11-18T13:25:37.302305+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 70,
+      "passed": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [],
+      "modules": [
+        "test_batch_5task_runtime",
+        "test_iter_notifications_admin_measured",
+        "test_preview_runtime_e2e",
+        "test_task5_live_mongo_transactions"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/live-regression-final.log",
+      "log_bytes": 99,
+      "log_sha256_current": "795097a869bc6d051b83f7ad14d1ff9ab99573d257c0d444cce96c17373ca702",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "Recorded candidate runner launches python -m pytest -n0 -q with4explicit live modules andthis JUnit destination;runtime target/source hash not captured contemporaneously.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/live-runner-final.py"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    },
+    {
+      "id": 39,
+      "path": "/workspace/come-in-current/evidence/resume-20261118/backend-full-v2.xml",
+      "sha256_current": "d657160d4a8faffa3959e6d3cd4b36c7715b4f0c92b880538a30d719651ae2d6",
+      "suite_attributes": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "6",
+          "tests": "559",
+          "time": "32.255",
+          "timestamp": "2026-11-18T13:20:38.725101+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ],
+      "suite_attributes_match_old_index": true,
+      "total_cases": 559,
+      "passed": 553,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 6,
+      "failed_cases": [],
+      "error_cases": [],
+      "skip_details": [
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_pdf_text_adapter_preserves_page_provenance",
+          "reason": "could not import 'pypdf': No module named 'pypdf'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_xlsx_processes_multiple_sheets_when_openpyxl_available",
+          "reason": "could not import 'openpyxl': No module named 'openpyxl'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_image_ocr_extracts_visible_text_without_promoting_fields",
+          "reason": "could not import 'PIL': No module named 'PIL'"
+        },
+        {
+          "case": "tests.test_universal_catalogue_import_engine::test_scanned_pdf_uses_optional_ocr_without_promoting_product_fields",
+          "reason": "could not import 'fitz': No module named 'fitz'"
+        },
+        {
+          "case": "tests.test_grocery_refund_local_integration::test_local_grocery_refund_authorization_accounting_and_retry",
+          "reason": "requires explicit local disposable payment-test opt-in"
+        },
+        {
+          "case": "tests.test_payment_webhook_local_integration::test_local_signed_webhook_http_and_transaction_scenarios",
+          "reason": "requires explicit local disposable payment-test opt-in"
+        }
+      ],
+      "modules": [
+        "test_assistant_context_contract",
+        "test_catalog_import_security_contract",
+        "test_catalog_reference_minimum",
+        "test_catalogue_chand_adapter",
+        "test_catalogue_import_job_api_contract",
+        "test_catalogue_import_workflow_contract",
+        "test_catalogue_transaction_apply_offline",
+        "test_catalogue_validator_migration",
+        "test_chand_demo_contract",
+        "test_chand_feedback_contract",
+        "test_chand_localization_contract",
+        "test_chand_media_contract",
+        "test_chand_ollama_provider_contract",
+        "test_chand_shopping_integration_contract",
+        "test_delivery_partner_onboarding_contract",
+        "test_delivery_tracking_contract",
+        "test_directory_only_category_contract",
+        "test_financial_rules",
+        "test_financial_security_contract",
+        "test_frontend_contracts",
+        "test_functional_blockers_regression",
+        "test_grocery_capture_transaction_offline",
+        "test_grocery_checkout_security_contract",
+        "test_grocery_pay_at_shop_status_contract",
+        "test_grocery_refund_eligibility",
+        "test_grocery_refund_local_integration",
+        "test_home_services_remaining_contract",
+        "test_master_catalog_api_contract",
+        "test_master_catalog_seller_ui_contract",
+        "test_mongo_backup_safety_offline",
+        "test_mongo_config",
+        "test_mongo_portability_tool",
+        "test_mongo_transactions",
+        "test_online_shop_product_listing_contract",
+        "test_p0_payment_checkout_completion",
+        "test_p0_restaurant_delivery_panel",
+        "test_payment_environment_boundary",
+        "test_payment_webhook_local_integration",
+        "test_provider_adapter_contracts",
+        "test_referral_implementation_contract",
+        "test_referral_rules",
+        "test_restaurant_api_contract",
+        "test_restaurant_capture_transaction_offline",
+        "test_restaurant_pricing",
+        "test_restaurant_refund_webhook_transaction_offline",
+        "test_restaurant_serviceability",
+        "test_role_security_retail_import_contract",
+        "test_shared_system_integration_contract",
+        "test_shop_registration_browse_entrypoints",
+        "test_shopping_cart_variants_contract",
+        "test_shopping_catalog_contract",
+        "test_shopping_rewards_redemption_contract",
+        "test_standard_ui_image_shop_cta_contract",
+        "test_step1_final_delivery_partner_transactions_offline",
+        "test_step1_final_refund_admin_offline",
+        "test_step1_final_restore_index_profile_offline",
+        "test_targeted_tasks_9_12_15_18_21",
+        "test_task10_payment_refund_notification_contract",
+        "test_task11_grocery_refund_status_contract",
+        "test_task11_live_order_tracking_contract",
+        "test_task12_customer_support_contract",
+        "test_task13_seller_support_status_contract",
+        "test_task14_seller_support_ui_contract",
+        "test_task16_production_cors_contract",
+        "test_task17_grocery_payment_gate_contract",
+        "test_task18_refund_safety_iteration3",
+        "test_task19_seller_admin_workflows_contract",
+        "test_task20_product_catalog_variants_stock_contract",
+        "test_task21_customer_shopping_workflow_contract",
+        "test_task22_checkout_audit_contract",
+        "test_task23_order_tracking_authorization_contract",
+        "test_task24_repeat_order_contract",
+        "test_task5_customer_measured_shopping_contract",
+        "test_task5_measured_import_contract",
+        "test_task5_task7_ui_implementation_contract",
+        "test_task9_order_actions_contract",
+        "test_transaction_commit_retry",
+        "test_universal_catalogue_import_engine",
+        "test_webhook_envelope_security"
+      ],
+      "log_path": "/workspace/come-in-current/evidence/resume-20261118/backend-full-v2.log",
+      "log_bytes": 1238,
+      "log_sha256_current": "948d8b74b78b2ef42ac52d862ea2304213588950ad81f7d792245d41bebdeb66",
+      "log_fully_read": true,
+      "environment_facts_in_log": [],
+      "available_command_evidence": "Available command documentation:COMMANDS.md records offline exclusions,local payment opt-in andfocused selectors. It is documentation,not a per-run exact original invocation/env/source receipt for every earlier artifact.",
+      "command_reference_paths": [
+        "/workspace/come-in-current/evidence/resume-20261118/COMMANDS.md"
+      ],
+      "historical_source_binding": "UNVERIFIED:current repo HEAD identifiesuploadedZIP Gitcheckout,not outsideGit extraction used duringthis run. No per-run current app content hash or complete env fingerprint supplied.",
+      "record_status": "HISTORICAL RESULT ARTIFACT;NOT FRESH VALIDATION"
+    }
+  ],
+  "new_validation_results": {
+    "backend_regression": {
+      "status": "FAIL — additional unchanged legacy contracts unsuccessful",
+      "invocation_counts": {
+        "PASS": 663,
+        "FAIL": 5,
+        "SKIPPED": 7
+      },
+      "deduplicated_existing_case_counts": {
+        "PASS": 663,
+        "FAIL": 5,
+        "SKIPPED": 5
+      },
+      "receipt": "backend-regression.json",
+      "scope": "Offline574PASS/6SKIP;local2PASS;live70PASS;additional legacy17PASS/2assertionFAIL/3setupERROR/1SKIP. Two initial opt-in skips passed later. Four optional import/OCR dependencies and object storage remain skipped. Legacy contract/fixture failures are actual unsuccessful tests,not automatically application defects.",
+      "invocation_counts_exact_XML": {
+        "PASS": 663,
+        "FAIL": 2,
+        "ERROR": 3,
+        "SKIPPED": 7
+      },
+      "deduplicated_existing_case_counts_exact_XML": {
+        "PASS": 663,
+        "FAIL": 2,
+        "ERROR": 3,
+        "SKIPPED": 5
+      },
+      "unsuccessful_failure_plus_error": 5
+    },
+    "frontend": {
+      "status": "PASS for six executed checks;warnings retained",
+      "checks": [
+        {
+          "id": "FE-TSC",
+          "exit_code": 0,
+          "result": "PASS"
+        },
+        {
+          "id": "FE-ESLINT",
+          "exit_code": 0,
+          "result": "PASS error gate;warnings remain"
+        },
+        {
+          "id": "FE-PLANNER",
+          "exit_code": 0,
+          "result": "PASS"
+        },
+        {
+          "id": "FE-NATIVE-MOCK",
+          "exit_code": 0,
+          "result": "PASS"
+        },
+        {
+          "id": "FE-CONFIG-GUARD",
+          "exit_code": 0,
+          "result": "PASS"
+        },
+        {
+          "id": "FE-WEB-EXPORT",
+          "exit_code": 0,
+          "result": "PASS"
+        }
+      ],
+      "TypeScript_errors": 0,
+      "ESLint_errors": 0,
+      "ESLint_warnings": 10,
+      "receipt": "frontend-validation.json",
+      "scope": "Semantic/static checks,pure helper/SDK VM mocks,and actual offline web export. No rendered-browser/device/provider acceptance."
+    },
+    "DB_metadata": {
+      "status": "PASS",
+      "timestamp": "2026-11-19T14:10:55.779095+05:30",
+      "counts": {
+        "collections": 52,
+        "indexes": 119,
+        "declared_indexes": 67,
+        "matched_declarations": 67,
+        "nonempty_validators": 0
+      },
+      "MongoDB_version": "7.0.45",
+      "replica_set": "rs0",
+      "isWritablePrimary": true,
+      "receipt": "db-metadata-current.json",
+      "scope": "Current local disposable metadata only;no record reads or data writes. Does not repair old capture provenance or prove production data integrity."
+    },
+    "reset": {
+      "status": "FAIL for seven explicit security invariants",
+      "counts": {
+        "PASS": 23,
+        "FAIL": 7,
+        "ERROR": 0,
+        "SKIPPED": 0
+      },
+      "receipt": "password-reset-results-v2.json",
+      "scope": "Actual AST-extracted unmodified functions/models and real local MongoDB,with controlled scheduling/fault injection and offline SMTP. Not HTTP/middleware/real SMTP or production acceptance. Remediation and owner security disposition remain open.",
+      "canonical_finding_mapping": {
+        "RESET-10": "SEC-01 LOW configuration/cleanup subissue",
+        "RESET-16": "SEC-01 HIGH",
+        "RESET-17": "SEC-01 HIGH",
+        "RESET-18": "SEC-01 LOW missing-account false-success subissue",
+        "RESET-19": "SEC-02 MEDIUM;owner revocation policy required",
+        "RESET-27": "SEC-04 MEDIUM",
+        "RESET-30": "SEC-06 LOW"
+      }
+    },
+    "broad_security": {
+      "status": "FAIL — final independent reproduced last-admin invariant",
+      "counts": {
+        "PASS": 49,
+        "FAIL": 1,
+        "ERROR": 0,
+        "SKIPPED": 0
+      },
+      "receipt": "broad-security-reproduction.json",
+      "scope": "Actual AST-extracted models/helpers with in-memory synthetic collection doubles. Autouse fixture denies all socket connections;no server import or DB/provider calls.",
+      "exact_original_invocation_recorded": false,
+      "provenance_limit": "Earlier v2 exact shell invocation is not recovered;the justified independent final reproduction now records a new exact command,source/test hashes,timestamps,exit1 and unchanged source. Count only the final50-case49PASS1FAIL outcome once. It cannot authenticate the old v2 command.",
+      "junit": "broad-security-reproduced.xml",
+      "final_reproduction_exact_invocation_recorded": true,
+      "command": [
+        "/workspace/come-in-tools/py311/bin/python",
+        "-m",
+        "pytest",
+        "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/test_broad_security_isolated.py",
+        "-c",
+        "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/pytest.ini",
+        "-n",
+        "0",
+        "-p",
+        "no:cacheprovider",
+        "-q",
+        "--junitxml=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.xml",
+        "--basetemp=/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduction-tmp"
+      ]
+    },
+    "native_provider_production": {
+      "native_status": "BLOCKED",
+      "provider_status": "BLOCKED",
+      "actual_native_builds": 0,
+      "device_tests": 0,
+      "actual_provider_calls": 0,
+      "receipt": "native-provider-validation.json",
+      "scope": "Android/iOS autolinking metadata passed. Native compilation/device/provider TEST delivery/settlement and production infrastructure remain separately blocked."
+    },
+    "legacy_backend": {
+      "status": "FAIL",
+      "counts_exact_XML": {
+        "PASS": 17,
+        "FAIL": 2,
+        "ERROR": 3,
+        "SKIPPED": 1
+      },
+      "cases": 23,
+      "exit_code": 1,
+      "started_UTC": "2026-11-19T15:50:56.838579+00:00",
+      "finished_UTC": "2026-11-19T15:51:01.231148+00:00",
+      "receipt": "backend-legacy-result.json",
+      "byte_identical_test_copy": true,
+      "scope": "Actual isolated HTTP+real MongoDB;source unchanged,dotenv disabled,no external provider calls. Duplicate registration409vslegacy400;missing requiredProductIn.description causes three setuperrors;deletefixture assumesid after invalidcreation. Guest/customerorder calls not reached. Storage503 causesone skip. No assertions changed."
+    }
+  },
+  "actions": [
+    {
+      "id": "R01",
+      "description": "Five omitted conditional leaves and their destination files are source-mapped.",
+      "severity_or_priority": "LOW",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Owner review of bounded inventory;approve a complete isolated navigation/state matrix only if required.",
+      "validation_method": "Source/report review reused;no inventory regeneration. Fresh helper/build checks do not render each destination.",
+      "documentation_disposition": "Bounded source inventory documentation CLOSED:113 literal leaves comprise107 unconditional occurrences and six leaves of three ternaries;old108 included only one of those six.",
+      "final_disposition": "CLOSED for the specified source-inventory correction;underlying handler,screen,permission and navigation runtime acceptance remains OPEN.",
+      "evidence_references": [
+        "../iteration-2026-11-18T072632-0800/navigation-closure.json",
+        "frontend-validation.json"
+      ],
+      "responsible_party": "Owner/reviewer",
+      "previous_classification": "VERIFIED",
+      "minimal_next_action": "Owner review of bounded inventory;approve a complete isolated navigation/state matrix only if required.",
+      "claim_classification": "VERIFIED",
+      "status": "PASS",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R02",
+      "description": "Href and dynamic navigation coverage,including auth return targets.",
+      "severity_or_priority": "MEDIUM",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Owner defines allowed-return destinations;subsequent authorized scoped runtime validation.",
+      "validation_method": "Reused branch/context addendum;fresh helper/build checks do not exercise dynamic return paths.",
+      "documentation_disposition": "Five href attributes and14 dynamic arguments have source dispositions;auth next remains unbounded in this inspection.",
+      "final_disposition": "OPEN:allowed-return policy,encoding/permissions and actual navigation results remain unverified. No exploit is inferred.",
+      "evidence_references": [
+        "../iteration-2026-11-18T072632-0800/navigation-closure.json"
+      ],
+      "responsible_party": "Owner/reviewer",
+      "previous_classification": "PARTIALLY VERIFIED",
+      "minimal_next_action": "Owner defines allowed-return destinations;subsequent authorized scoped runtime validation.",
+      "claim_classification": "PARTIALLY VERIFIED",
+      "status": "BLOCKED",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R03",
+      "description": "Special-file public URL qualification.",
+      "severity_or_priority": "LOW",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Owner accepts the qualified inventory.",
+      "validation_method": "Reused source/router addendum;no route changes.",
+      "documentation_disposition": "CLOSED documentary distinction:layout,document and fallback files are not ordinary public URL proof. Original fields remain unchanged.",
+      "final_disposition": "CLOSED for documentation;router/rendered URL acceptance remains separately OPEN.",
+      "evidence_references": [
+        "../iteration-2026-11-18T072632-0800/navigation-closure.json"
+      ],
+      "responsible_party": "Owner/reviewer",
+      "previous_classification": "VERIFIED",
+      "minimal_next_action": "Owner accepts the qualified inventory.",
+      "claim_classification": "VERIFIED",
+      "status": "PASS",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R04",
+      "description": "All179 explicit API signature/default/constraint declarations are inventoried.",
+      "severity_or_priority": "MEDIUM",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Owner scopes additional contract acceptance against actual endpoints;retain current regression receipts.",
+      "validation_method": "Reused complete source metadata;fresh70 HTTP cases and2 ASGI cases validate only their selected endpoints/branches.",
+      "documentation_disposition": "CLOSED bounded source metadata:387 parameters,216 defaults,27 Query parameters across19 endpoints and60 model declarations;179 method/path/function triples match.",
+      "final_disposition": "CLOSED for static inventory;not all generated contracts,helper errors,dependencies,response serialization or179 endpoint behaviors have runtime coverage.",
+      "evidence_references": [
+        "../iteration-2026-11-18T072632-0800/complete-api-inventory.json",
+        "backend-regression.json"
+      ],
+      "responsible_party": "Owner/reviewer",
+      "previous_classification": "VERIFIED",
+      "minimal_next_action": "Owner scopes additional contract acceptance against actual endpoints;retain current regression receipts.",
+      "claim_classification": "VERIFIED",
+      "status": "PASS",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R05",
+      "description": "The original SEC-01 related-test pointer supports password-reset coverage.",
+      "severity_or_priority": "HIGH evidence relevance",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Use new actual evidence;obtain separate source-fix authorization and targeted atomicity/rollback acceptance.",
+      "validation_method": "Original referenced files reviewed;new30-case real-local-Mongo function validation now supplies fresh evidence without validating the wrong historical citation.",
+      "documentation_disposition": "Additive citation correction CLOSED:original functional-blocker pointer has no reset assertions;restaurant lines33–34 establish only route presence. Original report is preserved.",
+      "final_disposition": "Original claim remains CONTRADICTED;new evidence records23PASS/7FAIL. Atomic single-use and partial-write failures remain unresolved,HIGH reset finding OPEN.",
+      "evidence_references": [
+        "password-reset-results-v2.json",
+        "password-reset-junit-v2.xml"
+      ],
+      "responsible_party": "Owner/reviewer",
+      "previous_classification": "CONTRADICTED",
+      "minimal_next_action": "Use new actual evidence;obtain separate source-fix authorization and targeted atomicity/rollback acceptance.",
+      "claim_classification": "CONTRADICTED",
+      "status": "FAIL",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R06",
+      "description": "GET endpoint probe safety is fully established.",
+      "severity_or_priority": "MEDIUM",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Review each proposed probe and isolation boundary before future execution.",
+      "validation_method": "Reused transitive source safety inventory. Fresh isolated tests may write only their new synthetic DB;they do not certify every GET as pure.",
+      "documentation_disposition": "81 GET handlers and three potential local/transitive write paths documented,including admin detail access-audit.",
+      "final_disposition": "OPEN:unrecognized helpers,aliases,telemetry and external side effects are not exhaustively resolved. No blanket safe-GET assertion.",
+      "evidence_references": [
+        "../iteration-2026-11-18T072632-0800/get-side-effect-inventory.json",
+        "backend-local-result.json"
+      ],
+      "responsible_party": "Owner/reviewer",
+      "previous_classification": "PARTIALLY VERIFIED",
+      "minimal_next_action": "Review each proposed probe and isolation boundary before future execution.",
+      "claim_classification": "PARTIALLY VERIFIED",
+      "status": "BLOCKED",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R07",
+      "description": "Preservation baseline scope is stated exactly.",
+      "severity_or_priority": "MEDIUM evidence integrity",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Retain captures and exact exclusions;owner decides whether trusted historical custody evidence is required.",
+      "validation_method": "Current8533-path baseline plus fresh backend/frontend per-file before/after receipts;parent final preservation verification is separate.",
+      "documentation_disposition": "CLOSED clarification:old8150=8128app+20root+2patch;no root/evidence coverage.8476 adds326 evidence paths;8504 adds28 prior review files;current8533 adds29 subsequent files. Every baseline has its own exclusions/time.",
+      "final_disposition": "Bounded current preservation can be verified;excluded-file past integrity and unlimited runtime/environment preservation remain OPEN. Current hashes are never backdated.",
+      "evidence_references": [
+        "preservation-baseline.json",
+        "backend-regression.json",
+        "frontend-validation.json"
+      ],
+      "responsible_party": "Owner/reviewer",
+      "previous_classification": "VERIFIED",
+      "minimal_next_action": "Retain captures and exact exclusions;owner decides whether trusted historical custody evidence is required.",
+      "claim_classification": "VERIFIED",
+      "status": "PASS",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R08",
+      "description": "Historical test execution/source/environment identity is authenticated.",
+      "severity_or_priority": "HIGH acceptance provenance",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Custodian supplies trusted contemporaneous run receipts;otherwise retain historical status and use fresh scoped evidence for current decisions.",
+      "validation_method": "Current XML/log parsing and SHA256 comparison;fresh source-bound validation is separate. None of39matching logs contains the exact historical invocation.",
+      "documentation_disposition": "CLOSED inventory clarification:all39 XMLs and39 matching logs read;stored counts/timestamps and current hashes recorded.10 failure-bearing artifacts and one zero-case artifact remain explicit.",
+      "final_disposition": "OPEN historical provenance. Current validation now includes real unsuccessful legacy cases as well as new security failures. Fresh receipts establish only present selected evidence;they cannot authenticate old source/command/environment/custody.",
+      "evidence_references": [
+        "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+        "backend-regression.json"
+      ],
+      "responsible_party": "Developer/QA/evidence custodian and owner",
+      "previous_classification": "UNVERIFIED",
+      "minimal_next_action": "Custodian supplies trusted contemporaneous run receipts;otherwise retain historical status and use fresh scoped evidence for current decisions.",
+      "claim_classification": "UNVERIFIED",
+      "status": "BLOCKED",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R09",
+      "description": "Historical and current DB metadata capture provenance.",
+      "severity_or_priority": "MEDIUM capture provenance",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Preserve current receipt;obtain trusted historical capture logs if historical timing matters.",
+      "validation_method": "Fresh read-only hello/buildInfo/listCollections/listIndexes at14:10:55IST against loopback rs0 disposable DB,recorded by root;this workstream reads receipt only.",
+      "documentation_disposition": "Historical omission documented:old snapshot lacks capturetime/rawhello/rawvalidatoroptions. Fresh metadata now records time,target,raw relevant hello/options,67 strict matches.",
+      "final_disposition": "CLOSED current bounded metadata capture;historical exact capturetime/custody and production/current user-data integrity remain OPEN.",
+      "evidence_references": [
+        "db-metadata-current.json",
+        "db-metadata-check.py"
+      ],
+      "responsible_party": "DB/evidence custodian and owner",
+      "previous_classification": "PARTIALLY VERIFIED",
+      "minimal_next_action": "Preserve current receipt;obtain trusted historical capture logs if historical timing matters.",
+      "claim_classification": "PARTIALLY VERIFIED",
+      "status": "PASS",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R10",
+      "description": "Collection-validator absence has a correctly bounded scope.",
+      "severity_or_priority": "MEDIUM scope",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Owner accepts bounded claim;production custodian provides separately authorized metadata if needed.",
+      "validation_method": "Current metadata lists rawoptions and timestamp;all52collectionscope retained.",
+      "documentation_disposition": "CLOSED wording:zero nonempty validators observed in52 current local collection rawoptions;the old bool flag could not distinguish absent from empty{}.",
+      "final_disposition": "CLOSED local metadata scope;global/production validator state and business validation acceptance remain OPEN. No schema changes made.",
+      "evidence_references": [
+        "db-metadata-current.json"
+      ],
+      "responsible_party": "Owner/reviewer",
+      "previous_classification": "VERIFIED",
+      "minimal_next_action": "Owner accepts bounded claim;production custodian provides separately authorized metadata if needed.",
+      "claim_classification": "VERIFIED",
+      "status": "PASS",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R11",
+      "description": "Actual configuration/dependency preservation is fully proven.",
+      "severity_or_priority": "MEDIUM config evidence",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Configuration custodian supplies safe presence/version/custody attestation;never disclose credentials or backdate hashes.",
+      "validation_method": "Fresh nonsecret tool/package versions,95frontend and113backend/script source bindings,TEST credential presence-only checks;no secret values published.",
+      "documentation_disposition": "Exclusions explicit:actual secret.env,dependency trees,.git internals and selected caches/uploads were not included in baseline preservation.",
+      "final_disposition": "OPEN full historical/excluded config or dependency integrity. Current receipts support only inspected tools/bindings and unchanged covered source.",
+      "evidence_references": [
+        "native-provider-validation.json",
+        "frontend-validation.json",
+        "backend-offline-result.json"
+      ],
+      "responsible_party": "Configuration/security custodian and owner",
+      "previous_classification": "PARTIALLY VERIFIED",
+      "minimal_next_action": "Configuration custodian supplies safe presence/version/custody attestation;never disclose credentials or backdate hashes.",
+      "claim_classification": "PARTIALLY VERIFIED",
+      "status": "BLOCKED",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R12",
+      "description": "The unresolved HIGH reset finding can be closed.",
+      "severity_or_priority": "HIGH SEC-01 OPEN",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Owner reviews findings and separately authorizes minimal scoped source fixes;require positive single-use/rollback/matched-target tests and explicit recovery/session policy.",
+      "validation_method": "30 final function/model cases with real Mongo,bcrypt/PyJWT/Pydantic:23PASS7FAIL0ERROR0SKIP;source bytes unchanged.",
+      "documentation_disposition": "Citation clarification cannot close code risk. Fresh controlled interleavings/fault injection confirm two accepted resets and password/token partial state.",
+      "final_disposition": "FAIL — SEC-01 HIGH remains OPEN:RESET-16/17 confirm local same-token concurrency and partial-write faults. RESET-10/18 are LOW subissues under SEC-01;RESET-19 mapsSEC-02 MEDIUM,RESET-27 SEC-04 MEDIUM,RESET-30 SEC-06 LOW. No owner risk closure or source fix.",
+      "evidence_references": [
+        "password-reset-results-v2.json",
+        "password-reset-junit-v2.xml",
+        "validate_password_reset.py",
+        "security-audit.json",
+        "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md"
+      ],
+      "responsible_party": "Owner/reviewer",
+      "previous_classification": "BLOCKED",
+      "minimal_next_action": "Owner reviews findings and separately authorizes minimal scoped source fixes;require positive single-use/rollback/matched-target tests and explicit recovery/session policy.",
+      "claim_classification": "CONTRADICTED",
+      "status": "FAIL",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R13",
+      "description": "Other security impact/severity and mitigation acceptance.",
+      "severity_or_priority": "MEDIUM conditional security",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Use security report severity/minimal-fix recommendations;authorize fixes separately and validate critical concurrency with actual isolated DB before closure.",
+      "validation_method": "Final independent exact-command controlled-double reproduction:49PASS1FAIL0ERROR0SKIP;source/harness hashes unchanged. Earlier v1/v2 attempts remain preserved,not added to final counts. Real Mongo reset validation separately exposes limiter/password invariants.",
+      "documentation_disposition": "Prior conditions retained;fresh isolated helper/handler checks provide scoped observations,not production exploit proof.",
+      "final_disposition": "OPEN:SEC-09last-admin concurrency and other evidenced findings require scoped remediation/owner decision;deployment ingress,request sizes,revocation policy/load guarantees remain unverified.",
+      "evidence_references": [
+        "broad-security-isolated-v2.xml",
+        "test_broad_security_isolated.py",
+        "password-reset-results-v2.json",
+        "security-audit.json",
+        "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+        "broad-security-reproduction.json",
+        "broad-security-reproduced.xml"
+      ],
+      "responsible_party": "Owner/reviewer",
+      "previous_classification": "PARTIALLY VERIFIED",
+      "minimal_next_action": "Use security report severity/minimal-fix recommendations;authorize fixes separately and validate critical concurrency with actual isolated DB before closure.",
+      "claim_classification": "PARTIALLY VERIFIED",
+      "status": "FAIL",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R14",
+      "description": "Every button and workflow is runtime verified.",
+      "severity_or_priority": "HIGH workflow acceptance",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Owner scopes missing rendered-browser and lifecycle scenarios,then authorizes isolated UI execution.",
+      "validation_method": "Actual isolated HTTP/Mongo/ASGI,additional unchanged legacyHTTP suite,pure frontend helpers andwebexport. Legacyorderfixture failures prevented some requested guest/order calls;no rendered-browser/all-button/native matrix.",
+      "documentation_disposition": "579 source event bindings and prior17 browser checks are bounded;fresh70HTTP/2ASGI cases,helper scripts and webexport improve selected evidence.",
+      "final_disposition": "BLOCKED complete workflow acceptance. Selected70HTTP/2ASGI scenarios PASS;additionallegacy23cases yield17PASS2FAIL3ERROR1SKIP. Guest/order fixture-dependent calls were not reached. No full current UI/event/permission state evidence.",
+      "evidence_references": [
+        "backend-regression.json",
+        "frontend-validation.json",
+        "backend-legacy-result.json"
+      ],
+      "responsible_party": "Owner/reviewer",
+      "previous_classification": "UNVERIFIED",
+      "minimal_next_action": "Owner scopes missing rendered-browser and lifecycle scenarios,then authorizes isolated UI execution.",
+      "claim_classification": "PARTIALLY VERIFIED",
+      "status": "BLOCKED",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R15",
+      "description": "Android/iOS compiled binaries and device workflows are verified.",
+      "severity_or_priority": "HIGH external release gate",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Provide authorized native development hosts/toolchains and devices;build isolated debug/dev binaries and execute launch/navigation/permissions/checkout/cancel/resume flows.",
+      "validation_method": "Current host/tool/path inventory plus actual autolink resolution;zero native builds/devices.",
+      "documentation_disposition": "Fresh source metadata detects installed Expo58.0.17,RN0.88.0,Razorpay3.0.0;Android andiOS autolink commands both exit0.",
+      "final_disposition": "BLOCKED:Android lacks javac/SDK/build-tools/sdkmanager/Gradle/adb/emulator/device;Linux lacks macOS/Xcode/xcrun/CocoaPods/iOSdevice. SDK metadata andJS VM mocks are not native build/device PASS.",
+      "evidence_references": [
+        "native-provider-validation.json",
+        "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md"
+      ],
+      "responsible_party": "Native developer/device custodian and owner",
+      "previous_classification": "BLOCKED",
+      "minimal_next_action": "Provide authorized native development hosts/toolchains and devices;build isolated debug/dev binaries and execute launch/navigation/permissions/checkout/cancel/resume flows.",
+      "claim_classification": "BLOCKED",
+      "status": "BLOCKED",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R16",
+      "description": "Actual providers TEST payments,webhooks,refunds and deliveries are verified.",
+      "severity_or_priority": "HIGH external release gate",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Authorized custodian configures TEST-only variables privately andowned HTTPS TEST webhook,then performs provider-supported sandbox scenarios;never share secrets/chat or use LIVE.",
+      "validation_method": "0actual provider calls;selected local ASGI/Mongo mocked-provider scenarios PASS. No genuine TEST transaction/delivery/settlement record exists.",
+      "documentation_disposition": "Fresh presence-only inspection finds TEST key/secret/webhook values empty and Razorpay mode absent;local provider mocks are correctly separate.",
+      "final_disposition": "BLOCKED actual provider TEST payment/webhook/refund and otherexternal integration delivery. Never treat synthetic signatures,SDKmocks or offline SMTP as real delivery.",
+      "evidence_references": [
+        "native-provider-validation.json",
+        "RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+        "backend-local-result.json"
+      ],
+      "responsible_party": "Owner/provider integration custodian",
+      "previous_classification": "BLOCKED",
+      "minimal_next_action": "Authorized custodian configures TEST-only variables privately andowned HTTPS TEST webhook,then performs provider-supported sandbox scenarios;never share secrets/chat or use LIVE.",
+      "claim_classification": "BLOCKED",
+      "status": "BLOCKED",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R17",
+      "description": "Production security/configuration/infrastructure is verified.",
+      "severity_or_priority": "HIGH production gate",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Production/security custodian supplies approved read-only deployment/control and recoverability evidence;do not deploy or change settings.",
+      "validation_method": "No production access,credentials,data operations or configuration changes performed.",
+      "documentation_disposition": "Source/local guards and metadata do not establish realTLS/CORS/DBgrants/firewalls/secretcustody/backupretention/logging/ingress controls.",
+      "final_disposition": "BLOCKED actual production controls and recovery/retention evidence;localMongo7.0.45PRIMARYrs0 is not proof of production readiness or olderMongo8.0.38claim.",
+      "evidence_references": [
+        "db-metadata-current.json",
+        "native-provider-validation.json"
+      ],
+      "responsible_party": "Production/security custodian and owner",
+      "previous_classification": "BLOCKED",
+      "minimal_next_action": "Production/security custodian supplies approved read-only deployment/control and recoverability evidence;do not deploy or change settings.",
+      "claim_classification": "BLOCKED",
+      "status": "BLOCKED",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R18",
+      "description": "Data/reference/transaction/financial consistency is comprehensively established.",
+      "severity_or_priority": "HIGH consistency acceptance",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Retain scoped passes;owner scopes further isolated domain/backup recovery checks andproductioncustodian evidence without touching user records.",
+      "validation_method": "70localHTTP/Mongo cases include stock/concurrency/idempotency/rollback,Grocery/Restaurant;2localASGI+Mongo cases cover mocked-provider payment/refund/webhook transactions.",
+      "documentation_disposition": "Metadata67matches supports structure only;fresh local transactions and payment/refund consistency now have scoped actual Mongo evidence.",
+      "final_disposition": "FAIL comprehensive consistency claim due confirmed reset password/token partial-write failure. Selected stock/order/payment/refund disposable scenarios PASS;all user-record/orphan/financial-settlement and realbackuprestore/production acceptance remain OPEN. Structural metadata is insufficient.",
+      "evidence_references": [
+        "backend-regression.json",
+        "backend-local-result.json",
+        "db-metadata-current.json",
+        "password-reset-results-v2.json"
+      ],
+      "responsible_party": "DB/QA/financial custodian and owner",
+      "previous_classification": "PARTIALLY VERIFIED",
+      "minimal_next_action": "Retain scoped passes;owner scopes further isolated domain/backup recovery checks andproductioncustodian evidence without touching user records.",
+      "claim_classification": "PARTIALLY VERIFIED",
+      "status": "FAIL",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R19",
+      "description": "Delivery,guest and replacement operational scope is owner-accepted.",
+      "severity_or_priority": "MEDIUM product decision",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Owner defines required guest/replacement/delivery acceptance,then approves any separate implementation or validation.",
+      "validation_method": "Selected existing delivery/customer contracts and local workflows PASS;not full delivery provider orguest/replacement lifecycle.",
+      "documentation_disposition": "Source-present pieces and pending full operational lifecycles remain distinguished. No business policy invented orchanged.",
+      "final_disposition": "OPEN product/operational decisions and end-to-end evidence;passing existing contracts do not approve newpolicy.",
+      "evidence_references": [
+        "backend-regression.json",
+        "../iteration-2026-11-18T072632-0800/FINAL_OWNER_DECISION_READINESS.md"
+      ],
+      "responsible_party": "Owner/reviewer",
+      "previous_classification": "PARTIALLY VERIFIED",
+      "minimal_next_action": "Owner defines required guest/replacement/delivery acceptance,then approves any separate implementation or validation.",
+      "claim_classification": "PARTIALLY VERIFIED",
+      "status": "BLOCKED",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    },
+    {
+      "id": "R20",
+      "description": "Remote freshness,quality and advisory gates are all current.",
+      "severity_or_priority": "MEDIUM quality/remote evidence",
+      "not_all_rows_are_vulnerabilities": true,
+      "evidence_required": "Owner reviews legacyfixture/currentcontract compatibility before any separatelyauthorized correction;decides mandatory optionalfeatures andwarnings;scopes remote/advisory evidence. Do not suppress or rewrite assertions merely to obtain green.",
+      "validation_method": "Source-bound compiler/lint/helper/build andisolatedregression receipts;all existinginvocations663PASS2assertionFAIL3setupERROR7SKIP,with5remaininguniqueskips. Historical558vsfresh574comparison adds exactly16imageboundary caseidentities;zero removed.",
+      "documentation_disposition": "Fresh TypeScript0errors,ESLint0errors10warnings andactualwebexportPASS. Existingregression firstselectionsPASS;additional unchangedlegacy suiteFAIL. Remote freshness/advisories not queried.",
+      "final_disposition": "FAIL current all-regression green gate;legacy contract/fixture mismatches require owner review without automatically calling them source defects. CurrentTS/lint-error/web gates PASS;10warnings,4missing optionaldependencies,storage skip,remote freshness/advisories remain OPEN.",
+      "evidence_references": [
+        "frontend-validation.json",
+        "backend-regression.json",
+        "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+        "backend-legacy-result.json"
+      ],
+      "responsible_party": "Owner/developer/quality custodian",
+      "previous_classification": "UNVERIFIED",
+      "minimal_next_action": "Owner reviews legacyfixture/currentcontract compatibility before any separatelyauthorized correction;decides mandatory optionalfeatures andwarnings;scopes remote/advisory evidence. Do not suppress or rewrite assertions merely to obtain green.",
+      "claim_classification": "PARTIALLY VERIFIED",
+      "status": "FAIL",
+      "validation_status_scope": "Status applies to the gate stated in this row;qualified documentary closure and underlying acceptance are recorded separately."
+    }
+  ],
+  "operations_by_this_workstream": {
+    "tests_rerun": 0,
+    "DBqueries": 0,
+    "provider_calls": 0,
+    "original_file_changes": 0
+  },
+  "closure_rule": "Documentation closure does not waive runtime,security,provider,device,production or owner gates. Fresh execution receipts do not retroactively authenticate historical runs. Seven final reset invariant failures and one controlled last-admin failure remain open;no source fixes were performed.",
+  "historical_current_coverage_comparison": {
+    "historical_xml": "/workspace/come-in-current/evidence/resume-20261118/backend-final-v2.xml",
+    "current_xml": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline.xml",
+    "historical_counts": {
+      "total_cases": 564,
+      "counts": {
+        "PASS": 558,
+        "FAIL": 0,
+        "ERROR": 0,
+        "SKIPPED": 6
+      },
+      "suites": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "6",
+          "tests": "564",
+          "time": "32.190",
+          "timestamp": "2026-11-18T13:25:23.275822+00:00",
+          "hostname": "4fa0f8dc6b53"
+        }
+      ]
+    },
+    "current_counts": {
+      "total_cases": 580,
+      "counts": {
+        "PASS": 574,
+        "FAIL": 0,
+        "ERROR": 0,
+        "SKIPPED": 6
+      },
+      "suites": [
+        {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "6",
+          "tests": "580",
+          "time": "39.590",
+          "timestamp": "2026-11-19T08:40:05.248082+00:00",
+          "hostname": "b06f778daec6"
+        }
+      ]
+    },
+    "same_testcase_identities": 564,
+    "added_cases": [
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_declared_image_mime_cannot_store_non_image_bytes[-image/gif]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_declared_image_mime_cannot_store_non_image_bytes[-image/jpeg]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_declared_image_mime_cannot_store_non_image_bytes[-image/png]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_declared_image_mime_cannot_store_non_image_bytes[-image/webp]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/gif]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/jpeg]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/png]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_declared_image_mime_cannot_store_non_image_bytes[<html>not an image</html>-image/webp]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_matching_format_headers_preserve_supported_upload_paths[image/gif-GIF89alocal-header-test]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_matching_format_headers_preserve_supported_upload_paths[image/jpeg-\\xff\\xd8\\xff\\xe0local-header-test]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_matching_format_headers_preserve_supported_upload_paths[image/png-\\x89PNG\\r\\n\\x1a\\nlocal-header-test]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_matching_format_headers_preserve_supported_upload_paths[image/webp-RIFF\\x04\\x00\\x00\\x00WEBP]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_mismatched_or_truncated_headers_are_not_stored[image/gif-\\xff\\xd8\\xff]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_mismatched_or_truncated_headers_are_not_stored[image/jpeg-\\x89PNG\\r\\n\\x1a\\n]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_mismatched_or_truncated_headers_are_not_stored[image/png-GIF89a]"
+      },
+      {
+        "class": "tests.test_image_upload_type_boundary",
+        "name": "test_mismatched_or_truncated_headers_are_not_stored[image/webp-RIFFno-webp]"
+      }
+    ],
+    "removed_cases": [],
+    "added_by_module": {
+      "tests.test_image_upload_type_boundary": 16
+    },
+    "scope_conclusion": "All564 old testcase identities remain;16 current cases,all test_image_upload_type_boundary,account exactly for558->574PASS. Same six skip identities/reasons. Current source was preserved,not changed by this validation. Historical source provenance remains unverified."
+  },
+  "current_input_receipts": [
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline-result.json",
+      "sha256": "c028f7f33bcda10fb91fee8a922ea0cc8806e528e3082cbbe4870f579139cd2a",
+      "bytes": 140897,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-result.json",
+      "sha256": "4e751c87296efe31265fabc5934827487abf6ee79bd10c15622488b88d050367",
+      "bytes": 38250,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-regression.json",
+      "sha256": "053aaf8f932c399d09f2c3da1e3fb7991b45c040162944427abfcc1f14583b1f",
+      "bytes": 68082,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-validation.json",
+      "sha256": "68fe4bd577043a7b749ec901bef289125c3d5de4972f6b0efe19fcf30c4c5fc3",
+      "bytes": 38080,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-web-build-execution.json",
+      "sha256": "9c6d74cb867d814023c195915a3d86aa8adc2b3cfc0324bbf0086323b83326e7",
+      "bytes": 28738,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/db-metadata-current.json",
+      "sha256": "a69d49de14375d0bcc5f30b994001e7dda6b9589618e974993c73f04f4647814",
+      "bytes": 51002,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/native-provider-validation.json",
+      "sha256": "db0c0289f99e1741cbb7bc5d6bd7202ad3297189d89feb8d07bbfcf1fbdcc971",
+      "bytes": 20149,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-results-v2.json",
+      "sha256": "be5a75734eba51bda75879a956001b6abd7fcd740550b35ffa7b9b1cc1e9da1b",
+      "bytes": 20367,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-junit-v2.xml",
+      "sha256": "40c79ad03d4be8a8abaf22d1fa5bb8b438effae87329af2393cee358791245cd",
+      "bytes": 5516,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated-v2.xml",
+      "sha256": "ff5130c54c07fc2b298ecdfb693beb97b7e7df3120efa8460bf6bad1e6ed270f",
+      "bytes": 10606,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/test_broad_security_isolated.py",
+      "sha256": "8e02180373829fd4c09e57c3cdd64f9f5483bb86fc186ef15894dc91acdd73ea",
+      "bytes": 9471,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/validate_password_reset.py",
+      "sha256": "79952bdfc4bc80b54cb54709728eb9d80e299e469460c4ca50d3edc492ea27fd",
+      "bytes": 33866,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/run_backend_regression.py",
+      "sha256": "6a678ea081c18a8f9b3397390ef091fe9a459325a357eae6467fcfe45306f386",
+      "bytes": 3847,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/run_local_backend_validation.py",
+      "sha256": "ea2b2d5ad028f4b3bcef669ca908d0fc14a9ca378ec003fbb516b2158c0a61f9",
+      "bytes": 8077,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy-result.json",
+      "sha256": "012cf0cb588498982651a5da6b3b94ea661c75c7122a48ad5070bce54869d194",
+      "bytes": 33491,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy.xml",
+      "sha256": "89920e0251f3fe7dd642ffb98c501cf8aa560980c330842eb58fe590fa927250",
+      "bytes": 9349,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/security-audit.json",
+      "sha256": "a303912187bc7892a4bede7a46f24f74a54f8b1a961ebb3384969381be8736f6",
+      "bytes": 55380,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "sha256": "c951efdca846b6f730baf9615e51b95df88b568cc395633adfce954bc0ceadf5",
+      "bytes": 35817,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "sha256": "e754482ef849b988a651ab7a2b604cb0bd820b589bfc79cb195e9842e5c8324f",
+      "bytes": 19486,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-execution-provenance.json",
+      "sha256": "4ad4407fa6ed451d96d682a1b018b0014b51d8df5d1d06b02b70b4546e5f13ba",
+      "bytes": 4816,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-final-artifact-verification.json",
+      "sha256": "5ceda8c2dc6d8b022dd823b308026e2303a17a34dc217c9bb51b0a25a2a43e18",
+      "bytes": 1607,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "sha256": "61a6ad3748a6f677db22ea4531cee06f273c1ba7f4028f00e83df06c75529c2e",
+      "bytes": 26209,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduction.json",
+      "sha256": "997611121fc9dcf9c80d7f4d4d86c902ee53863a113681acb169a54895449667",
+      "bytes": 2090,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.xml",
+      "sha256": "3b89fca9bae7286d852d31e788a497e6031d2a45573d6900c815123597435424",
+      "bytes": 9206,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.log",
+      "sha256": "50d5a79eb05f35cf8ca056c8d468f9a0fdc11647873f80f9b20f49bbd4340abe",
+      "bytes": 3200,
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/reproduce-broad-security.py",
+      "sha256": "932c2ddef544c96c2c2161d52f5b5b4b417c5ab86f7d27543b3356cf322cd0d9",
+      "bytes": 2376,
+      "fully_read": true
+    }
+  ],
+  "historical_provenance_disposition": "39 current XML/log byte hashes and parsed stored outcomes verified. Missing original per-run source/environment/command/trusted capture proofs remain UNVERIFIED. New executions establish new scoped evidence only.",
+  "claim_classification_counts": {
+    "VERIFIED": 5,
+    "PARTIALLY VERIFIED": 9,
+    "CONTRADICTED": 2,
+    "UNVERIFIED": 1,
+    "BLOCKED": 3
+  },
+  "diagnostic_attempts_preserved": [
+    {
+      "artifact": "password-reset-junit.xml",
+      "result": {
+        "total_cases": 30,
+        "counts": {
+          "PASS": 15,
+          "FAIL": 6,
+          "ERROR": 9,
+          "SKIPPED": 0
+        },
+        "suites": [
+          {
+            "name": "actual_password_reset_security_local_integration",
+            "tests": "30",
+            "failures": "6",
+            "errors": "9",
+            "skipped": "0",
+            "timestamp": "2026-11-19T15:46:54.403399+00:00"
+          }
+        ]
+      },
+      "disposition": "First harness compile inherited future annotations and caused nine unresolvedEmailStr PydanticUserError results;final v2 usescompile(dont_inherit=True),unchanged source/test assertions,new output names. First script pre-correction hash was not captured;no retrospective hash claim."
+    },
+    {
+      "artifact": "broad-security-isolated.xml",
+      "result": {
+        "total_cases": 50,
+        "counts": {
+          "PASS": 48,
+          "FAIL": 2,
+          "ERROR": 0,
+          "SKIPPED": 0
+        },
+        "suites": [
+          {
+            "name": "pytest",
+            "errors": "0",
+            "failures": "2",
+            "skipped": "0",
+            "tests": "50",
+            "time": "0.673",
+            "timestamp": "2026-11-19T08:42:13.948575+00:00",
+            "hostname": "b06f778daec6"
+          }
+        ]
+      },
+      "disposition": "One initial failure was invalid reserved synthetic EmailStr fixture(example.test);example.com fixture correction preserves assertions andsource. Otherlast-admin invariant failure persists inv2. Do notsum attempts."
+    }
+  ],
+  "status_vocabulary": [
+    "PASS",
+    "FAIL",
+    "BLOCKED",
+    "NOT RUN",
+    "NOT APPLICABLE"
+  ],
+  "claim_classification_vocabulary": [
+    "VERIFIED",
+    "PARTIALLY VERIFIED",
+    "UNVERIFIED",
+    "CONTRADICTED",
+    "BLOCKED"
+  ],
+  "status_note": "Action status reports current stated validation gate. claim_classification retains the independent five-label assessment;previous_classification preserves the inherited ledger. A bounded PASS never closes separately listed historical/runtime/security/production acceptance.",
+  "security_action_register": [
+    {
+      "id": "SEC-01",
+      "description": "reset_password/forgot_password/_send_password_reset_email",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 1123
+      },
+      "evidence_required": "Atomically claim the active token and update the user in the same existing transaction/session;check matched user count;ensure rollback and safe retry. Keep existing token-expiry/used/hash checks and API behavior. Owner authorization required. RESET-18 missing-user false success and RESET-10 invalid SMTP_PORT cleanup are LOW subissues within this recovery finding,not extra numbered vulnerabilities.",
+      "actual_evidence": "Actual AST-extracted functions with real Motor/Mongo on a unique retained local database:both same-token consumers accepted under a controlled read barrier;injected token-marker write failure left a changed password and unused token,then accepted retry.",
+      "validation_method_and_limit": "An existing account and unused/unexpired valid synthetic token;deliberately forced concurrent read or post-password-write failure. No arbitrary unauthenticated takeover or deployed-account exploit is claimed.",
+      "minimal_proposed_correction": "Atomically claim the active token and update the user in the same existing transaction/session;check matched user count;ensure rollback and safe retry. Keep existing token-expiry/used/hash checks and API behavior. Owner authorization required. RESET-18 missing-user false success and RESET-10 invalid SMTP_PORT cleanup are LOW subissues within this recovery finding,not extra numbered vulnerabilities.",
+      "final_disposition": "OPEN — owner authorization/decision required",
+      "fix_applied": false,
+      "evidence_references": [
+        "security-audit.json",
+        "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+        "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md"
+      ]
+    },
+    {
+      "id": "SEC-02",
+      "description": "create_access_token/get_current_user_optional/reset_password",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 250
+      },
+      "evidence_required": "After owner policy approval,introduce a server-side session/password version or equivalent cutoff and verify it during authentication;include reset/logout revocation semantics. Do not change the approved session policy implicitly.",
+      "actual_evidence": "Actual local Mongo/JWT execution accepted a pre-reset access JWT after a successful password reset.",
+      "validation_method_and_limit": "Requires possession of a still-valid prior JWT. Current DB user/role lookup,signature/type/expiry and deleted-account checks still apply. The owner must define relevant recovery/logout-all revocation policy.",
+      "minimal_proposed_correction": "After owner policy approval,introduce a server-side session/password version or equivalent cutoff and verify it during authentication;include reset/logout revocation semantics. Do not change the approved session policy implicitly.",
+      "final_disposition": "OPEN — owner authorization/decision required",
+      "fix_applied": false,
+      "evidence_references": [
+        "security-audit.json",
+        "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+        "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md"
+      ]
+    },
+    {
+      "id": "SEC-03",
+      "description": "_client_ip/_rate_keys",
+      "severity": "MEDIUM",
+      "status": "BLOCKED",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 819
+      },
+      "evidence_required": "Obtain authorized ingress evidence;define trusted proxies and use a trustworthy client address at that boundary. No spoofing attack or source correction performed.",
+      "actual_evidence": "Source and helper observation select the first X-Forwarded-For value without an in-function trusted-proxy boundary.",
+      "validation_method_and_limit": "Actual bypass depends on exposed direct ingress or an unsanitized proxy;production proxy trust/sanitization was not examined. Helper observation is not a deployed bypass proof.",
+      "minimal_proposed_correction": "Obtain authorized ingress evidence;define trusted proxies and use a trustworthy client address at that boundary. No spoofing attack or source correction performed.",
+      "final_disposition": "OPEN — owner authorization/decision required",
+      "fix_applied": false,
+      "evidence_references": [
+        "security-audit.json",
+        "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+        "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md"
+      ]
+    },
+    {
+      "id": "SEC-04",
+      "description": "_check_auth_rate_limit/_record_auth_attempt/_enforce_auth_rate_limit",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 833
+      },
+      "evidence_required": "Use an atomic limit reservation/counter update consistent with existing window semantics and preserve both subject/IP protections;authorize source change first.",
+      "actual_evidence": "Real local Mongo scheduling test starts the subject count at4 for cap5;two concurrent checks accept and final count is6. Sequential cap checks pass.",
+      "validation_method_and_limit": "Both requests read before increments;observed local overshoot is2accepts at the one remaining slot. No load/capacity outage or unlimited-bypass claim.",
+      "minimal_proposed_correction": "Use an atomic limit reservation/counter update consistent with existing window semantics and preserve both subject/IP protections;authorize source change first.",
+      "final_disposition": "OPEN — owner authorization/decision required",
+      "fix_applied": false,
+      "evidence_references": [
+        "security-audit.json",
+        "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+        "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md"
+      ]
+    },
+    {
+      "id": "SEC-05",
+      "description": "create_status_check/list_status_checks",
+      "severity": "MEDIUM",
+      "status": "BLOCKED",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 687
+      },
+      "evidence_required": "Owner decides diagnostic exposure;then authorize role/size/retention/rate safeguards appropriate to that policy. Do not silently remove legacy functionality.",
+      "actual_evidence": "Anonymous diagnostic POST inserts a client_name;shared GET feed has a1000limit. No length/auth/rate dependency appears in these route declarations.",
+      "validation_method_and_limit": "Intended audience and effective edge caps are unknown;no diagnostic abuse/load test was run. Public intended policy requires owner decision.",
+      "minimal_proposed_correction": "Owner decides diagnostic exposure;then authorize role/size/retention/rate safeguards appropriate to that policy. Do not silently remove legacy functionality.",
+      "final_disposition": "OPEN — owner authorization/decision required",
+      "fix_applied": false,
+      "evidence_references": [
+        "security-audit.json",
+        "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+        "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md"
+      ]
+    },
+    {
+      "id": "SEC-06",
+      "description": "RegisterIn/ResetPasswordIn/hash_password",
+      "severity": "LOW",
+      "status": "FAIL",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 305
+      },
+      "evidence_required": "Approve a byte-aware bound or compatible prehash/versioned password approach;retain existing hashes and avoid silently invalidating users. Add boundary/migration checks after authorization.",
+      "actual_evidence": "Actual current model+bcrypt4.1.3 check accepts distinct long inputs above72UTF-8bytes that authenticate interchangeably.",
+      "validation_method_and_limit": "Requires an accepted long password;no production credential collision or account takeover was attempted. Existing compatibility concerns require a considered migration/password policy.",
+      "minimal_proposed_correction": "Approve a byte-aware bound or compatible prehash/versioned password approach;retain existing hashes and avoid silently invalidating users. Add boundary/migration checks after authorization.",
+      "final_disposition": "OPEN — owner authorization/decision required",
+      "fix_applied": false,
+      "evidence_references": [
+        "security-audit.json",
+        "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+        "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md"
+      ]
+    },
+    {
+      "id": "SEC-07",
+      "description": "create_restaurant_payment_intent/verify_grocery_payment/refund helpers",
+      "severity": "LOW",
+      "status": "BLOCKED",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 4990
+      },
+      "evidence_required": "Authorize an existing-architecture compatible async I/O or bounded offload change,then isolated latency/concurrency verification;no new provider calls now.",
+      "actual_evidence": "Synchronous requests calls run inside async handlers;provider requests use explicit timeouts.",
+      "validation_method_and_limit": "Provider latency/concurrency/SLO impact was not measured;no event-loop outage is claimed.",
+      "minimal_proposed_correction": "Authorize an existing-architecture compatible async I/O or bounded offload change,then isolated latency/concurrency verification;no new provider calls now.",
+      "final_disposition": "OPEN — owner authorization/decision required",
+      "fix_applied": false,
+      "evidence_references": [
+        "security-audit.json",
+        "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+        "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md"
+      ]
+    },
+    {
+      "id": "SEC-08",
+      "description": "razorpay_webhook/event_payload",
+      "severity": "MEDIUM",
+      "status": "BLOCKED",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 5362
+      },
+      "evidence_required": "Obtain ingress body-limit evidence and authorize bounded transport/application reads before untrusted full allocation/HMAC;preserve raw-body signature verification and retry-safe event handling.",
+      "actual_evidence": "Configured webhook reads full request.body and computes HMAC before event_payload enforces1MiB. The standalone verified_event helper bounds size first,but this endpoint does not call it.",
+      "validation_method_and_limit": "Missing payment configuration returns503 before buffering. Actual proxy/server body caps are unknown;no oversized request or load test performed.",
+      "minimal_proposed_correction": "Obtain ingress body-limit evidence and authorize bounded transport/application reads before untrusted full allocation/HMAC;preserve raw-body signature verification and retry-safe event handling.",
+      "final_disposition": "OPEN — owner authorization/decision required",
+      "fix_applied": false,
+      "evidence_references": [
+        "security-audit.json",
+        "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+        "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md"
+      ]
+    },
+    {
+      "id": "SEC-09",
+      "description": "admin_update_user_role",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "source": {
+        "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+        "line": 3877
+      },
+      "evidence_required": "Serialize admin-role changes through a shared guard/version CAS within the transaction (or equivalent sound serialization),recount and update under that serialization. Merely putting count+updates of different user documents in separate snapshot transactions may allow write skew. Owner authorization and dedicated real-Mongo verification are required.",
+      "actual_evidence": "Actual function body with synthetic in-memory collections and a deterministic count barrier accepts two cross-demotions;remaining_admins=0. Existing own-session demotion rejection passes.",
+      "validation_method_and_limit": "Two already privileged admins and concurrent cross-demotion are prerequisites. This is model-double execution of an observed source race,not a real Mongo race,customer privilege escalation or production lockout.",
+      "minimal_proposed_correction": "Serialize admin-role changes through a shared guard/version CAS within the transaction (or equivalent sound serialization),recount and update under that serialization. Merely putting count+updates of different user documents in separate snapshot transactions may allow write skew. Owner authorization and dedicated real-Mongo verification are required.",
+      "final_disposition": "OPEN — owner authorization/decision required",
+      "fix_applied": false,
+      "evidence_references": [
+        "security-audit.json",
+        "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+        "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+        "broad-security-reproduction.json",
+        "broad-security-reproduced.xml"
+      ]
+    }
+  ],
+  "security_finding_counts": {
+    "CRITICAL": 0,
+    "HIGH": 1,
+    "MEDIUM": 6,
+    "LOW": 2
+  },
+  "validation_status_counts": {
+    "PASS": 6,
+    "BLOCKED": 9,
+    "FAIL": 5
+  },
+  "broad_security_final_count_rule": "One canonical50-case final independently reproduced outcome49PASS1FAIL0ERROR0SKIP. Retained prior v1/v2 attempts are diagnostic history,not additional acceptance coverage."
+}

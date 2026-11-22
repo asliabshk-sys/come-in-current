@@ -1,0 +1,155 @@
+{
+  root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend'[39m,
+  reactNativePath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native'[39m,
+  dependencies: {
+    [32m'@react-native-async-storage/async-storage'[39m: {
+      root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@react-native-async-storage/async-storage'[39m,
+      name: [32m'@react-native-async-storage/async-storage'[39m,
+      platforms: {
+        ios: {
+          podspecPath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@react-native-async-storage/async-storage/RNCAsyncStorage.podspec'[39m,
+          version: [32m'2.2.0'[39m,
+          configurations: [],
+          scriptPhases: []
+        }
+      }
+    },
+    [32m'@react-native-masked-view/masked-view'[39m: {
+      root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@react-native-masked-view/masked-view'[39m,
+      name: [32m'@react-native-masked-view/masked-view'[39m,
+      platforms: {
+        ios: {
+          podspecPath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@react-native-masked-view/masked-view/RNCMaskedView.podspec'[39m,
+          version: [32m'0.3.2'[39m,
+          configurations: [],
+          scriptPhases: []
+        }
+      }
+    },
+    [32m'@react-native-vector-icons/feather'[39m: {
+      root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@react-native-vector-icons/feather'[39m,
+      name: [32m'@react-native-vector-icons/feather'[39m,
+      platforms: {
+        ios: {
+          podspecPath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/@react-native-vector-icons/feather/react-native-vector-icons-feather.podspec'[39m,
+          version: [32m'14.0.0'[39m,
+          configurations: [],
+          scriptPhases: []
+        }
+      }
+    },
+    expo: {
+      root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo'[39m,
+      name: [32m'expo'[39m,
+      platforms: {
+        ios: {
+          podspecPath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo/Expo.podspec'[39m,
+          version: [32m'58.0.17'[39m,
+          configurations: [],
+          scriptPhases: []
+        }
+      }
+    },
+    [32m'react-native-gesture-handler'[39m: {
+      root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-gesture-handler'[39m,
+      name: [32m'react-native-gesture-handler'[39m,
+      platforms: {
+        ios: {
+          podspecPath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-gesture-handler/RNGestureHandler.podspec'[39m,
+          version: [32m'3.3.0'[39m,
+          configurations: [],
+          scriptPhases: []
+        }
+      }
+    },
+    [32m'react-native-keyboard-controller'[39m: {
+      root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-keyboard-controller'[39m,
+      name: [32m'react-native-keyboard-controller'[39m,
+      platforms: {
+        ios: {
+          podspecPath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-keyboard-controller/react-native-keyboard-controller.podspec'[39m,
+          version: [32m'1.22.7'[39m,
+          configurations: [],
+          scriptPhases: []
+        }
+      }
+    },
+    [32m'react-native-razorpay'[39m: {
+      root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay'[39m,
+      name: [32m'react-native-razorpay'[39m,
+      platforms: {
+        ios: {
+          podspecPath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay/react-native-razorpay.podspec'[39m,
+          version: [32m'3.0.0'[39m,
+          configurations: [],
+          scriptPhases: []
+        }
+      }
+    },
+    [32m'react-native-reanimated'[39m: {
+      root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-reanimated'[39m,
+      name: [32m'react-native-reanimated'[39m,
+      platforms: {
+        ios: {
+          podspecPath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-reanimated/RNReanimated.podspec'[39m,
+          version: [32m'4.7.1'[39m,
+          configurations: [],
+          scriptPhases: []
+        }
+      }
+    },
+    [32m'react-native-safe-area-context'[39m: {
+      root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-safe-area-context'[39m,
+      name: [32m'react-native-safe-area-context'[39m,
+      platforms: {
+        ios: {
+          podspecPath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-safe-area-context/react-native-safe-area-context.podspec'[39m,
+          version: [32m'5.10.1'[39m,
+          configurations: [],
+          scriptPhases: []
+        }
+      }
+    },
+    [32m'react-native-screens'[39m: {
+      root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-screens'[39m,
+      name: [32m'react-native-screens'[39m,
+      platforms: {
+        ios: {
+          podspecPath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-screens/RNScreens.podspec'[39m,
+          version: [32m'4.30.0'[39m,
+          configurations: [],
+          scriptPhases: []
+        }
+      }
+    },
+    [32m'react-native-webview'[39m: {
+      root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-webview'[39m,
+      name: [32m'react-native-webview'[39m,
+      platforms: {
+        ios: {
+          podspecPath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-webview/react-native-webview.podspec'[39m,
+          version: [32m'14.0.1'[39m,
+          configurations: [],
+          scriptPhases: []
+        }
+      }
+    },
+    [32m'react-native-worklets'[39m: {
+      root: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-worklets'[39m,
+      name: [32m'react-native-worklets'[39m,
+      platforms: {
+        ios: {
+          podspecPath: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-worklets/RNWorklets.podspec'[39m,
+          version: [32m'0.13.0'[39m,
+          configurations: [],
+          scriptPhases: []
+        }
+      }
+    }
+  },
+  project: {
+    ios: {
+      sourceDir: [32m'/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/ios'[39m
+    }
+  }
+}

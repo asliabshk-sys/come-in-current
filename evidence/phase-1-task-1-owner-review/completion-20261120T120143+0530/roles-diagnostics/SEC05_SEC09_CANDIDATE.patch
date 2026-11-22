@@ -1,0 +1,83 @@
+--- before/backend/server.py
++++ candidate/backend/server.py
+@@ -680,18 +680,18 @@
+ 
+ 
+ class StatusCheckCreate(BaseModel):
+-    client_name: str
++    client_name: str = Field(min_length=1, max_length=256)
+ 
+ 
+ @api.post("/status", response_model=StatusCheck)
+-async def create_status_check(payload: StatusCheckCreate):
++async def create_status_check(payload: StatusCheckCreate, _: dict = Depends(require_role("admin"))):
+     obj = StatusCheck(**payload.model_dump())
+     await db.status_checks.insert_one(obj.model_dump())
+     return obj
+ 
+ 
+ @api.get("/status", response_model=List[StatusCheck])
+-async def list_status_checks():
++async def list_status_checks(_: dict = Depends(require_role("admin"))):
+     rows = await db.status_checks.find().to_list(1000)
+     return [StatusCheck(**r) for r in rows]
+ 
+@@ -3897,16 +3897,48 @@
+     oid = _object_id_or_404(user_id, "User")
+     if str(oid) == str(user.get("id")) and body.role != "admin":
+         raise HTTPException(status_code=409, detail="You cannot remove your own admin role from this session")
+-    target = await db.users.find_one({"_id": oid})
+-    if not target:
+-        raise HTTPException(status_code=404, detail="User not found")
+-    if target.get("role") == "admin" and body.role != "admin":
+-        admin_count = await db.users.count_documents({"role": "admin"})
+-        if admin_count <= 1:
+-            raise HTTPException(status_code=409, detail="The last admin account cannot be demoted")
+-    await db.users.update_one({"_id": oid}, {"$set": {"role": body.role, "updated_at": now_utc(), "role_updated_by": user["id"]}})
+-    fresh = await db.users.find_one({"_id": oid}, {"password_hash": 0, "password_reset_token_hash": 0})
+-    return doc_out(fresh)
++    actor_oid = _object_id_or_404(user["id"], "User")
++    guard_id = "admin-role-mutations"
++    # Initialize the shared serialization document without migrating user data.
++    try:
++        await db.security_locks.update_one(
++            {"_id": guard_id}, {"$setOnInsert": {"version": 0}}, upsert=True,
++        )
++    except DuplicateKeyError:
++        if not await db.security_locks.find_one({"_id": guard_id}):
++            raise
++
++    async def apply(session):
++        # Every role mutation writes this same document before reading role/count.
++        # Concurrent transactions therefore retry instead of allowing write skew.
++        guarded = await db.security_locks.update_one(
++            {"_id": guard_id}, {"$inc": {"version": 1}}, session=session,
++        )
++        if guarded.matched_count != 1:
++            raise HTTPException(status_code=503, detail="Role update could not be serialized")
++        actor = await db.users.find_one({"_id": actor_oid, "role": "admin"}, session=session)
++        if not actor:
++            raise HTTPException(status_code=403, detail="Forbidden")
++        target = await db.users.find_one({"_id": oid}, session=session)
++        if not target:
++            raise HTTPException(status_code=404, detail="User not found")
++        if target.get("role") == "admin" and body.role != "admin":
++            admin_count = await db.users.count_documents({"role": "admin"}, session=session)
++            if admin_count <= 1:
++                raise HTTPException(status_code=409, detail="The last admin account cannot be demoted")
++        changed = await db.users.update_one(
++            {"_id": oid},
++            {"$set": {"role": body.role, "updated_at": now_utc(), "role_updated_by": user["id"]}},
++            session=session,
++        )
++        if changed.matched_count != 1:
++            raise HTTPException(status_code=404, detail="User not found")
++        fresh = await db.users.find_one(
++            {"_id": oid}, {"password_hash": 0, "password_reset_token_hash": 0}, session=session,
++        )
++        return doc_out(fresh)
++
++    return await run_transaction(client, apply)
+ 
+ 
+ @api.get("/admin/shops")

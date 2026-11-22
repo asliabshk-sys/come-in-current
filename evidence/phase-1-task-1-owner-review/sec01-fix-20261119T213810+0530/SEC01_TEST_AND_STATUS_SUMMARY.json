@@ -1,0 +1,60 @@
+{
+  "timestamp_Asia_Kolkata": "2026-11-19T21:53:23.407856+05:30",
+  "SEC01_HIGH": "FIXED — verified scoped implementation;owner review pending",
+  "focused_before": {
+    "PASS": 10,
+    "FAIL": 10,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "focused_after": {
+    "PASS": 20,
+    "FAIL": 0,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "distinct_password_concurrency_before": {
+    "PASS": 0,
+    "FAIL": 2,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "distinct_password_concurrency_after": {
+    "PASS": 2,
+    "FAIL": 0,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "old_related_after": {
+    "PASS": 78,
+    "FAIL": 0,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "old_30_before": {
+    "PASS": 23,
+    "FAIL": 7,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "old_30_after": {
+    "PASS": 26,
+    "FAIL": 4,
+    "ERROR": 0,
+    "SKIPPED": 0
+  },
+  "unrelated_failure_cases_unchanged": [
+    "RESET-10",
+    "RESET-19",
+    "RESET-27",
+    "RESET-30"
+  ],
+  "count_scope": "20focused cases plus2strengthened variants of existing concurrency cases;do not present them as22unique caseIDs or sum baseline/after/diagnostic runs.",
+  "source_before_SHA256": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+  "source_after_SHA256": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07",
+  "helper_unchanged": true,
+  "source_files_modified": 1,
+  "source_symbol_modified": "reset_password",
+  "Task1_status": "REVIEW PENDING",
+  "owner_approval_or_closure": false
+}

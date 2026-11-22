@@ -1,0 +1,33 @@
+{
+  "db_name": "comein_disposable_test_onboarding",
+  "collections_total": 51,
+  "collections_created": 0,
+  "indexes_ensured": 67,
+  "indexes_verified": 67,
+  "ok": true
+}
+{
+  "mongo_url": "REDACTED",
+  "db_name": "comein_disposable_test_onboarding",
+  "checked_at": "2026-11-17T08:33:37.855415+00:00",
+  "ping": true,
+  "server_version": "7.0.45",
+  "replica_set": "rs0",
+  "is_writable_primary": true,
+  "fcv": "7.0",
+  "transactions": {
+    "commit_visible": true,
+    "abort_rolled_back": true,
+    "ok": true
+  },
+  "indexes_expected": 67,
+  "indexes_missing": [],
+  "indexes_ok": true,
+  "collections_with_declared_indexes": 39,
+  "ok": true
+}
+curl: (7) Failed to connect to 127.0.0.1 port 8001 after 0 ms: Could not connect to server
+curl: (7) Failed to connect to 127.0.0.1 port 3000 after 0 ms: Could not connect to server
+curl: (7) Failed to connect to 127.0.0.1 port 8001 after 0 ms: Could not connect to server
+curl: (7) Failed to connect to 127.0.0.1 port 8001 after 0 ms: Could not connect to server
+{"service":"come-in","status":"ok","time":"2026-11-17T08:33:40.543674+00:00"}

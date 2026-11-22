@@ -1,0 +1,696 @@
+INFO:     Started server process [4007]
+INFO:     Waiting for application startup.
+WARNING:comein:EMERGENT_LLM_KEY missing; uploads disabled
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:47292 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47304 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47314 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47326 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44934 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44944 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44952 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44964 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:44974 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44976 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44990 - "POST /api/auth/register HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:44998 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45006 - "GET /api/shops/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45016 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45018 - "PATCH /api/admin/shops/6afc11847d481fcdbb5e524c/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45020 - "PATCH /api/shops/6afc11847d481fcdbb5e524c/availability HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45022 - "GET /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45034 - "GET /api/shops HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45050 - "GET /api/catalog/products?q=Dal HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45054 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45070 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45074 - "GET /api/orders/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45084 - "GET /api/shops/6afc11847d481fcdbb5e524c/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45092 - "PATCH /api/orders/6afc1450f3f82a419feb83dd/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45102 - "GET /api/orders/6afc1450f3f82a419feb83dd/tracking HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45108 - "PATCH /api/orders/6afc1450f3f82a419feb83dd/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:45120 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45134 - "GET /api/restaurants/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45136 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45142 - "PATCH /api/admin/restaurants/6afc11857d481fcdbb5e5252/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45150 - "GET /api/restaurants/6afc11857d481fcdbb5e5252/menu HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45158 - "GET /api/restaurants HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45166 - "POST /api/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45174 - "POST /api/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45182 - "GET /api/restaurant/orders/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45184 - "GET /api/restaurant/payments/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45186 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45202 - "GET /api/admin/shops HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45218 - "GET /api/admin/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45220 - "GET /api/admin/earnings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45234 - "GET /api/admin/restaurants HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45240 - "GET /api/admin/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45248 - "GET /api/admin/users HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:45258 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45274 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45280 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45282 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45288 - "GET /api/shops/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45298 - "PATCH /api/admin/shops/6afc11847d481fcdbb5e524c/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45310 - "PATCH /api/shops/6afc11847d481fcdbb5e524c/availability HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45316 - "GET /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45318 - "GET /api/admin/dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45330 - "GET /api/admin/dashboard HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:45332 - "GET /api/admin/dashboard HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:45334 - "GET /api/admin/dashboard HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45340 - "POST /api/admin/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45342 - "PATCH /api/admin/announcements/6afc1452f3f82a419feb83e4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45346 - "PATCH /api/admin/announcements/6afc1452f3f82a419feb83e4 HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:45354 - "PATCH /api/admin/announcements/6afc1452f3f82a419feb83e4 HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:45368 - "PATCH /api/admin/announcements/6afc1452f3f82a419feb83e4 HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:45382 - "PATCH /api/admin/announcements/6afc1452f3f82a419feb83e4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45388 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45390 - "PATCH /api/admin/users/6afc11827d481fcdbb5e5248/role HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:45394 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45410 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45416 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45428 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45442 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45444 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45460 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45466 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45470 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45484 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45494 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45510 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45516 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45530 - "POST /api/auth/login HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:45546 - "POST /api/auth/login HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:45556 - "POST /api/grocery/quotes HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:45562 - "GET /api/shops/6afc11847d481fcdbb5e524c/orders HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:45572 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45578 - "POST /api/grocery/quotes HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:45592 - "POST /api/grocery/measured-price HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45596 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45602 - "POST /api/grocery/quotes HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:45604 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45612 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45616 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45624 - "POST /api/orders HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:45632 - "GET /api/grocery/payments/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45642 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45654 - "PATCH /api/orders/6afc1452f3f82a419feb83e8/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45670 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45674 - "GET /api/notifications/unread-count HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45688 - "POST /api/notifications/6afc1452f3f82a419feb83ea/read HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45696 - "GET /api/notifications/unread-count HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45698 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45706 - "POST /api/notifications/6afc1452f3f82a419feb83ea/read HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:45714 - "GET /api/restaurants/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45722 - "GET /api/restaurants/6afc11857d481fcdbb5e5252/menu HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45732 - "POST /api/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45736 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45748 - "PATCH /api/restaurant/orders/6afc1452f3f82a419feb83eb/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45758 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45772 - "POST /api/notifications/read-all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45774 - "GET /api/notifications/unread-count HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45786 - "GET /api/notifications/mine HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45800 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45802 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45810 - "GET /api/notifications/mine HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:45824 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45840 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45842 - "POST /api/notifications/6afc1452f3f82a419feb83e9/read HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:45844 - "POST /api/notifications/read-all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45852 - "GET /api/notifications/unread-count HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45864 - "POST /api/notifications/notanid/read HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:45868 - "GET /api/admin/announcements HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:45878 - "PATCH /api/admin/users/000000000000000000000000/role HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:45882 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45890 - "POST /api/admin/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45894 - "PATCH /api/admin/announcements/6afc1453f3f82a419feb83ee HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45906 - "PATCH /api/admin/announcements/6afc1453f3f82a419feb83ee HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45910 - "GET /api/admin/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45924 - "GET /api/announcements/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45934 - "GET /api/shops/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45936 - "GET /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45948 - "POST /api/grocery/measured-price HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45952 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:45962 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:45976 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:45980 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:45988 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45990 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46002 - "POST /api/shops HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46018 - "PATCH /api/admin/shops/6afc1454f3f82a419feb83f0/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46034 - "POST /api/shops/6afc1454f3f82a419feb83f0/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46050 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46062 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46078 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46088 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46102 - "POST /api/orders HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:46104 - "POST /api/shops/6afc1454f3f82a419feb83f0/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46120 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46136 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46142 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46154 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46164 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46178 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46190 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46196 - "POST /api/shops/6afc1454f3f82a419feb83f0/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46198 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46202 - "POST /api/grocery/quotes HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:46216 - "POST /api/shops/6afc1454f3f82a419feb83f0/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46232 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46234 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46242 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46252 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46260 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46262 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46272 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46274 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46312 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46302 - "POST /api/orders HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:46286 - "POST /api/orders HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:46314 - "POST /api/orders HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:46320 - "POST /api/shops/6afc1454f3f82a419feb83f0/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46332 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46340 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+ERROR:comein:Grocery transactional order failed
+Traceback (most recent call last):
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py", line 3352, in create_order
+    prior_response = await run_transaction(client, apply)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py", line 76, in run_transaction
+    return await session.with_transaction(commit_with_retry)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/motor/core.py", line 473, in with_transaction
+    ret = await coro(self)
+          ^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py", line 57, in commit_with_retry
+    result = await callback(session)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py", line 3346, in apply
+    res = await db.orders.insert_one(order_doc, session=session)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 875, in insert_one
+    self._insert_one(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 815, in _insert_one
+    self._database.client._retryable_write(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2099, in _retryable_write
+    return self._retry_with_session(retryable, func, s, bulk, operation, operation_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 1969, in _retry_with_session
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/_csot.py", line 126, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2022, in _retry_internal
+    ).run()
+      ^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2890, in run
+    res = self._read() if self._is_read else self._write()
+                                             ^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 3103, in _write
+    return self._func(self._session, conn, self._retryable)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 813, in _insert_command
+    _check_write_command_response(result)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py", line 365, in _check_write_command_response
+    _raise_last_write_error(write_errors)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py", line 336, in _raise_last_write_error
+    raise WriteError(error.get("errmsg"), error.get("code"), error)
+pymongo.errors.WriteError: Document failed validation, full error: {'index': 0, 'code': 121, 'errmsg': 'Document failed validation', 'errInfo': {'failingDocumentId': ObjectId('6afc1456f3f82a419feb8408'), 'details': {'operatorName': '$ne', 'specifiedAs': {'customer_name': {'$ne': 'TEST_ROLLBACK_INJECT_d81446b2'}}, 'reason': 'comparison succeeded', 'consideredValue': 'TEST_ROLLBACK_INJECT_d81446b2'}}}
+INFO:     127.0.0.1:46348 - "POST /api/orders HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:46358 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46370 - "POST /api/shops/6afc1454f3f82a419feb83f0/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46376 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46378 - "POST /api/grocery/measured-price HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46382 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:46388 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46398 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46404 - "POST /api/shops/6afc1454f3f82a419feb83f0/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46420 - "POST /api/shops/6afc1454f3f82a419feb83f0/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46434 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46436 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46438 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46452 - "POST /api/grocery/quotes HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:46460 - "POST /api/shops/6afc1454f3f82a419feb83f0/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46462 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46478 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46486 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46490 - "PATCH /api/products/6afc1457f3f82a419feb8414 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46492 - "GET /api/orders/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46496 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46504 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46510 - "POST /api/grocery/quotes HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:46518 - "POST /api/shops/6afc1454f3f82a419feb83f0/products/import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46522 - "POST /api/shops/6afc1454f3f82a419feb83f0/products/import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46524 - "POST /api/shops/6afc1454f3f82a419feb83f0/products/import HTTP/1.1" 200 OK
+ERROR:comein:Shop catalog import transaction failed
+Traceback (most recent call last):
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py", line 2645, in import_shop_products
+    await run_transaction(client, apply)
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py", line 76, in run_transaction
+    return await session.with_transaction(commit_with_retry)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/motor/core.py", line 473, in with_transaction
+    ret = await coro(self)
+          ^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py", line 57, in commit_with_retry
+    result = await callback(session)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py", line 2639, in apply
+    await db.products.insert_one(payload, session=session)
+  File "/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 875, in insert_one
+    self._insert_one(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 815, in _insert_one
+    self._database.client._retryable_write(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2099, in _retryable_write
+    return self._retry_with_session(retryable, func, s, bulk, operation, operation_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 1969, in _retry_with_session
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/_csot.py", line 126, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2022, in _retry_internal
+    ).run()
+      ^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2890, in run
+    res = self._read() if self._is_read else self._write()
+                                             ^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 3103, in _write
+    return self._func(self._session, conn, self._retryable)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 813, in _insert_command
+    _check_write_command_response(result)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py", line 365, in _check_write_command_response
+    _raise_last_write_error(write_errors)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py", line 336, in _raise_last_write_error
+    raise WriteError(error.get("errmsg"), error.get("code"), error)
+pymongo.errors.WriteError: Document failed validation, full error: {'index': 0, 'code': 121, 'errmsg': 'Document failed validation', 'errInfo': {'failingDocumentId': ObjectId('6afc1457f3f82a419feb841d'), 'details': {'operatorName': '$ne', 'specifiedAs': {'name': {'$ne': 'TEST_IMPORT_FAIL_d81446b2'}}, 'reason': 'comparison succeeded', 'consideredValue': 'TEST_IMPORT_FAIL_d81446b2'}}}
+INFO:     127.0.0.1:46526 - "POST /api/shops/6afc1454f3f82a419feb83f0/products/import HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:53604 - "GET /api/announcements/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53614 - "GET /api/catalog/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53614 - "GET /api/restaurants HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53614 - "GET /api/announcements/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53604 - "GET /api/catalog/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54478 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53738 - "GET /api/announcements/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53742 - "GET /api/catalog/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53742 - "GET /api/restaurants HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53742 - "GET /api/announcements/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53738 - "GET /api/catalog/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34354 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43984 - "GET /api/announcements/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44000 - "GET /api/catalog/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44000 - "GET /api/restaurants HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44000 - "GET /api/announcements/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44000 - "GET /api/catalog/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44014 - "OPTIONS /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44016 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44016 - "GET /api/catalog/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44016 - "OPTIONS /api/orders/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44014 - "OPTIONS /api/restaurant/orders/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44028 - "GET /api/orders/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44016 - "GET /api/restaurant/orders/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44016 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44028 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44028 - "OPTIONS /api/delivery-partner/application/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44016 - "OPTIONS /api/delivery-partner/provider-status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44028 - "GET /api/delivery-partner/provider-status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44014 - "GET /api/delivery-partner/application/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40958 - "OPTIONS /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "OPTIONS /api/shops/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40958 - "GET /api/shops/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40958 - "OPTIONS /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "OPTIONS /api/shops/6afc11847d481fcdbb5e524c/catalogue-import/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40958 - "GET /api/shops/6afc11847d481fcdbb5e524c/catalogue-import/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40958 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40968 - "OPTIONS /api/seller/support HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40958 - "GET /api/seller/support HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40978 - "OPTIONS /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40994 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40994 - "OPTIONS /api/restaurant/payments/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40978 - "GET /api/restaurant/payments/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40978 - "OPTIONS /api/restaurants/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40994 - "GET /api/restaurants/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40994 - "OPTIONS /api/restaurants/6afc11857d481fcdbb5e5252/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40978 - "OPTIONS /api/restaurants/6afc11857d481fcdbb5e5252/menu HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40994 - "GET /api/restaurants/6afc11857d481fcdbb5e5252/menu HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40996 - "GET /api/restaurants/6afc11857d481fcdbb5e5252/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40996 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40994 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36328 - "OPTIONS /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36338 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36328 - "OPTIONS /api/admin/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36340 - "OPTIONS /api/admin/shops HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36356 - "OPTIONS /api/admin/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36368 - "OPTIONS /api/admin/requests/anything HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36378 - "OPTIONS /api/admin/requests/assist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36328 - "OPTIONS /api/admin/restaurants HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36338 - "GET /api/home-services/fee-policy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36356 - "OPTIONS /api/admin/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36368 - "OPTIONS /api/admin/restaurant/support HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36378 - "OPTIONS /api/catalog/master-products?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36328 - "OPTIONS /api/admin/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36338 - "OPTIONS /api/admin/dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36356 - "GET /api/admin/shops HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36340 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36368 - "GET /api/admin/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36328 - "GET /api/admin/requests/assist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36338 - "GET /api/admin/restaurants HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36356 - "GET /api/admin/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36378 - "GET /api/admin/requests/anything HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36368 - "GET /api/catalog/master-products?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36340 - "GET /api/admin/restaurant/support HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36328 - "GET /api/admin/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36328 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36340 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36340 - "OPTIONS /api/delivery-partner/admin/applications HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36328 - "GET /api/delivery-partner/admin/applications HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32952 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48472 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48486 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48498 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48514 - "GET /api/delivery-partner/provider-status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48520 - "PUT /api/delivery-partner/application HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48536 - "GET /api/delivery-partner/application/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48550 - "POST /api/delivery-partner/application/submit HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:48558 - "POST /api/delivery-partner/otp/request HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:48562 - "GET /api/delivery-partner/admin/applications HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:48566 - "GET /api/delivery-partner/admin/applications HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48578 - "GET /api/delivery-partner/access HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:48586 - "GET /api/delivery-partner/application/mine HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:48594 - "GET /api/delivery-partner/application/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49550 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46730 - "GET /api/announcements/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46736 - "GET /api/catalog/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46736 - "GET /api/assistant/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46736 - "GET /api/announcements/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46736 - "GET /api/catalog/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46736 - "GET /api/assistant/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46846 - "GET /api/grocery/payments/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46858 - "GET /api/restaurant/payments/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46870 - "GET /api/assistant/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47706 - "GET /api/grocery/payments/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47716 - "GET /api/restaurant/payments/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47728 - "GET /api/assistant/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57638 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57642 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36740 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36742 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36758 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36768 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36772 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36774 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:36780 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36788 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36802 - "POST /api/auth/register HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:36816 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36818 - "GET /api/shops/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36822 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36826 - "PATCH /api/admin/shops/6afc11847d481fcdbb5e524c/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36828 - "PATCH /api/shops/6afc11847d481fcdbb5e524c/availability HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36834 - "GET /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36844 - "GET /api/shops HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36850 - "GET /api/catalog/products?q=Dal HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36852 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36856 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36862 - "GET /api/orders/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36870 - "GET /api/shops/6afc11847d481fcdbb5e524c/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36880 - "PATCH /api/orders/6afc22d9f3f82a419feb8420/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36890 - "GET /api/orders/6afc22d9f3f82a419feb8420/tracking HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36892 - "PATCH /api/orders/6afc22d9f3f82a419feb8420/status HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:36898 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36900 - "GET /api/restaurants/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36902 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36916 - "PATCH /api/admin/restaurants/6afc11857d481fcdbb5e5252/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36930 - "GET /api/restaurants/6afc11857d481fcdbb5e5252/menu HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36938 - "GET /api/restaurants HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36948 - "POST /api/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36962 - "POST /api/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36972 - "GET /api/restaurant/orders/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36976 - "GET /api/restaurant/payments/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36980 - "GET /api/admin/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36990 - "GET /api/admin/shops HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37006 - "GET /api/admin/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37020 - "GET /api/admin/earnings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37026 - "GET /api/admin/restaurants HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37028 - "GET /api/admin/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37036 - "GET /api/admin/users HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:37038 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37040 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37048 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37060 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37076 - "GET /api/shops/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37086 - "PATCH /api/admin/shops/6afc11847d481fcdbb5e524c/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37094 - "PATCH /api/shops/6afc11847d481fcdbb5e524c/availability HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37096 - "GET /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37112 - "GET /api/admin/dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37116 - "GET /api/admin/dashboard HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:37122 - "GET /api/admin/dashboard HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:37126 - "GET /api/admin/dashboard HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37132 - "POST /api/admin/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37148 - "PATCH /api/admin/announcements/6afc22dbf3f82a419feb8427 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37162 - "PATCH /api/admin/announcements/6afc22dbf3f82a419feb8427 HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:37176 - "PATCH /api/admin/announcements/6afc22dbf3f82a419feb8427 HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:37180 - "PATCH /api/admin/announcements/6afc22dbf3f82a419feb8427 HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:37196 - "PATCH /api/admin/announcements/6afc22dbf3f82a419feb8427 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37212 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37224 - "PATCH /api/admin/users/6afc11827d481fcdbb5e5248/role HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:37234 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37236 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37248 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37250 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37266 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37282 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37294 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37302 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37318 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37324 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37338 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37350 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37364 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37372 - "POST /api/auth/login HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:37378 - "POST /api/auth/login HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:37392 - "POST /api/grocery/quotes HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:37408 - "GET /api/shops/6afc11847d481fcdbb5e524c/orders HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:37422 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37426 - "POST /api/grocery/quotes HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:37428 - "POST /api/grocery/measured-price HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37440 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37452 - "POST /api/grocery/quotes HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:37456 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37470 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37476 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37478 - "POST /api/orders HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:37486 - "GET /api/grocery/payments/config HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37496 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37512 - "PATCH /api/orders/6afc22dbf3f82a419feb842b/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37524 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37534 - "GET /api/notifications/unread-count HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37536 - "POST /api/notifications/6afc22dbf3f82a419feb842d/read HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37548 - "GET /api/notifications/unread-count HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37552 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37558 - "POST /api/notifications/6afc22dbf3f82a419feb842d/read HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:37564 - "GET /api/restaurants/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37572 - "GET /api/restaurants/6afc11857d481fcdbb5e5252/menu HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37576 - "POST /api/restaurant/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37578 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37592 - "PATCH /api/restaurant/orders/6afc22dbf3f82a419feb842e/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37606 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37612 - "POST /api/notifications/read-all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37620 - "GET /api/notifications/unread-count HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37626 - "GET /api/notifications/mine HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37642 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37648 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37650 - "GET /api/notifications/mine HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:37654 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37668 - "GET /api/notifications/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37670 - "POST /api/notifications/6afc22dbf3f82a419feb842c/read HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:37678 - "POST /api/notifications/read-all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37690 - "GET /api/notifications/unread-count HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37700 - "POST /api/notifications/notanid/read HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:37706 - "GET /api/admin/announcements HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:37708 - "PATCH /api/admin/users/000000000000000000000000/role HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:37722 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37736 - "POST /api/admin/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37740 - "PATCH /api/admin/announcements/6afc22dcf3f82a419feb8431 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37752 - "PATCH /api/admin/announcements/6afc22dcf3f82a419feb8431 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37764 - "GET /api/admin/announcements HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37780 - "GET /api/announcements/active HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37790 - "GET /api/shops/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37794 - "GET /api/shops/6afc11847d481fcdbb5e524c/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37796 - "POST /api/grocery/measured-price HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37798 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:37814 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:37822 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:37830 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:37832 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37840 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37850 - "POST /api/shops HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37866 - "PATCH /api/admin/shops/6afc22ddf3f82a419feb8433/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37878 - "POST /api/shops/6afc22ddf3f82a419feb8433/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37886 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37892 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37908 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37910 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37920 - "POST /api/orders HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:37934 - "POST /api/shops/6afc22ddf3f82a419feb8433/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37942 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37952 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37954 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37962 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37970 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37978 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37984 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37986 - "POST /api/shops/6afc22ddf3f82a419feb8433/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37988 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37998 - "POST /api/grocery/quotes HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:38008 - "POST /api/shops/6afc22ddf3f82a419feb8433/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38018 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38028 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38040 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38056 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38072 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38078 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38084 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38088 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38108 - "POST /api/orders HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:38100 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38122 - "POST /api/orders HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:38110 - "POST /api/orders HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:38128 - "POST /api/shops/6afc22ddf3f82a419feb8433/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38130 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38136 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+ERROR:comein:Grocery transactional order failed
+Traceback (most recent call last):
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py", line 3352, in create_order
+    prior_response = await run_transaction(client, apply)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py", line 76, in run_transaction
+    return await session.with_transaction(commit_with_retry)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/motor/core.py", line 473, in with_transaction
+    ret = await coro(self)
+          ^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py", line 57, in commit_with_retry
+    result = await callback(session)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py", line 3346, in apply
+    res = await db.orders.insert_one(order_doc, session=session)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 875, in insert_one
+    self._insert_one(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 815, in _insert_one
+    self._database.client._retryable_write(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2099, in _retryable_write
+    return self._retry_with_session(retryable, func, s, bulk, operation, operation_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 1969, in _retry_with_session
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/_csot.py", line 126, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2022, in _retry_internal
+    ).run()
+      ^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2890, in run
+    res = self._read() if self._is_read else self._write()
+                                             ^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 3103, in _write
+    return self._func(self._session, conn, self._retryable)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 813, in _insert_command
+    _check_write_command_response(result)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py", line 365, in _check_write_command_response
+    _raise_last_write_error(write_errors)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py", line 336, in _raise_last_write_error
+    raise WriteError(error.get("errmsg"), error.get("code"), error)
+pymongo.errors.WriteError: Document failed validation, full error: {'index': 0, 'code': 121, 'errmsg': 'Document failed validation', 'errInfo': {'failingDocumentId': ObjectId('6afc22dff3f82a419feb844b'), 'details': {'operatorName': '$ne', 'specifiedAs': {'customer_name': {'$ne': 'TEST_ROLLBACK_INJECT_542f556b'}}, 'reason': 'comparison succeeded', 'consideredValue': 'TEST_ROLLBACK_INJECT_542f556b'}}}
+INFO:     127.0.0.1:38144 - "POST /api/orders HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:38148 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38158 - "POST /api/shops/6afc22ddf3f82a419feb8433/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38174 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38186 - "POST /api/grocery/measured-price HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38190 - "POST /api/grocery/measured-price HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:38194 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38210 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38218 - "POST /api/shops/6afc22ddf3f82a419feb8433/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38222 - "POST /api/shops/6afc22ddf3f82a419feb8433/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38232 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38914 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38930 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38938 - "POST /api/grocery/quotes HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:38946 - "POST /api/shops/6afc22ddf3f82a419feb8433/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38948 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38960 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38972 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38982 - "PATCH /api/products/6afc22e0f3f82a419feb8457 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38996 - "GET /api/orders/mine HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39008 - "POST /api/grocery/quotes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39016 - "POST /api/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39022 - "POST /api/grocery/quotes HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:39038 - "POST /api/shops/6afc22ddf3f82a419feb8433/products/import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39050 - "POST /api/shops/6afc22ddf3f82a419feb8433/products/import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39066 - "POST /api/shops/6afc22ddf3f82a419feb8433/products/import HTTP/1.1" 200 OK
+ERROR:comein:Shop catalog import transaction failed
+Traceback (most recent call last):
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py", line 2645, in import_shop_products
+    await run_transaction(client, apply)
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py", line 76, in run_transaction
+    return await session.with_transaction(commit_with_retry)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/motor/core.py", line 473, in with_transaction
+    ret = await coro(self)
+          ^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/mongo_transactions.py", line 57, in commit_with_retry
+    result = await callback(session)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py", line 2639, in apply
+    await db.products.insert_one(payload, session=session)
+  File "/workspace/come-in-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 875, in insert_one
+    self._insert_one(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 815, in _insert_one
+    self._database.client._retryable_write(
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2099, in _retryable_write
+    return self._retry_with_session(retryable, func, s, bulk, operation, operation_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 1969, in _retry_with_session
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/_csot.py", line 126, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2022, in _retry_internal
+    ).run()
+      ^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2890, in run
+    res = self._read() if self._is_read else self._write()
+                                             ^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 3103, in _write
+    return self._func(self._session, conn, self._retryable)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 813, in _insert_command
+    _check_write_command_response(result)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py", line 365, in _check_write_command_response
+    _raise_last_write_error(write_errors)
+  File "/workspace/come-in-tools/py311/lib/python3.11/site-packages/pymongo/helpers_shared.py", line 336, in _raise_last_write_error
+    raise WriteError(error.get("errmsg"), error.get("code"), error)
+pymongo.errors.WriteError: Document failed validation, full error: {'index': 0, 'code': 121, 'errmsg': 'Document failed validation', 'errInfo': {'failingDocumentId': ObjectId('6afc22e0f3f82a419feb8460'), 'details': {'operatorName': '$ne', 'specifiedAs': {'name': {'$ne': 'TEST_IMPORT_FAIL_542f556b'}}, 'reason': 'comparison succeeded', 'consideredValue': 'TEST_IMPORT_FAIL_542f556b'}}}
+INFO:     127.0.0.1:39068 - "POST /api/shops/6afc22ddf3f82a419feb8433/products/import HTTP/1.1" 503 Service Unavailable

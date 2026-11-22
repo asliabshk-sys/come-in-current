@@ -1,0 +1,23 @@
+--- a/frontend/app/checkout.tsx
++++ b/frontend/app/checkout.tsx
+@@ -72,9 +72,10 @@
+   const guestHeaders = { "X-Comein-Guest-Session": guestSession };
+   const cartFingerprint = JSON.stringify(checkoutLines.map((line) => ({ id: line.product.id, variant: line.variant?.id || null, qty: line.qty, shop: line.product.shopId || null })));
+ 
++  const optionsShopId = shopIds[0];
+   useEffect(() => {
+     let active = true;
+-    const shopId = shopIds[0];
++    const shopId = optionsShopId;
+     if (!shopId || hasDemoItems || hasMixedShops) return () => { active = false; };
+     api.get<{ delivery_available?: boolean; pickup_available?: boolean; name?: string; payment_methods?: string[]; public_upi?: string }>(`/shops/${encodeURIComponent(shopId)}`, false).then((shop) => {
+       if (!active) return;
+@@ -85,7 +86,7 @@
+       setFulfillment((current) => current === "delivery" && !options.delivery && options.pickup ? "pickup" : current === "pickup" && !options.pickup && options.delivery ? "delivery" : current);
+     }).catch(() => { if (active) setShopOptions({ delivery: false, pickup: false, name: "Selected shop", paymentMethods: [], loadFailed: true }); });
+     return () => { active = false; };
+-  }, [cartFingerprint]);
++  }, [cartFingerprint, optionsShopId, hasDemoItems, hasMixedShops]);
+ 
+   useEffect(() => {
+     let active = true;

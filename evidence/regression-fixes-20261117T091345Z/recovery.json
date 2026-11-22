@@ -1,0 +1,14 @@
+{
+  "checkpoint_sha256": {
+    "COME_IN_LIVE_CHECKPOINT.md": "3908065b6b598ed9d8b104576c67e507c763f1de18212316bb5473f39b7bf254",
+    "COME_IN_MASTER_TASK_TRACKER.md": "7f781ad59d0534751daa68858d1516bb611a06d848f8caa4114fc4d2167a6aec",
+    "COME_IN_DECISIONS_AND_BLOCKERS.md": "9dcb001c45fde78f47bad09533fde7a158098dc81ea913cebbf02cf789a056b8",
+    "COME_IN_SESSION_LOG.md": "f537383b2ea2f908e0e8ac104308c5aa0b7f1c22cf0ef74afbb0f0feff43ce64",
+    "COME_IN_NEXT_SESSION_RESUME_PROMPT.md": "37509cb85b78b4d5e1ca343b555c21a365916856086b35888d488a59b96750c9"
+  },
+  "git_status": "?? AGENTS.md\n?? COME_IN_DECISIONS_AND_BLOCKERS.md\n?? COME_IN_LIVE_CHECKPOINT.md\n?? COME_IN_MASTER_TASK_TRACKER.md\n?? COME_IN_NEXT_SESSION_RESUME_PROMPT.md\n?? COME_IN_RELEASE_READINESS.md\n?? COME_IN_SESSION_LOG.md\n?? evidence/\n?? patches/\n",
+  "branch": "work",
+  "head": "a223290a8866a1ebeaac982f546491fdc197ae7a",
+  "last_recorded_operation": "Final prior report/checkpoints/patch saved and verified. No tests interrupted. Prior source patch reverse check passes.",
+  "services": "retained MongoDB container running and local API /api/ responds; no restart performed"
+}

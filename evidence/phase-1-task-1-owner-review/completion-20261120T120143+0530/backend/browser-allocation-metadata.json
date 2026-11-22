@@ -1,0 +1,9 @@
+{
+  "backend_url": "http://127.0.0.1:28151",
+  "port": 28151,
+  "database": "comein_disposable_test_completion_browser_b48995f1dc",
+  "synthetic_only": true,
+  "credential_file_mode": "0600",
+  "credential_values_written_to_repository": false,
+  "server_started": false
+}

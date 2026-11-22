@@ -1,0 +1,31 @@
+bringing up nodes...
+bringing up nodes...
+
+.................s...s.s...................s............................ [ 12%]
+........................................................................ [ 25%]
+.................F...................................................... [ 38%]
+........................................................................ [ 51%]
+........................................................................ [ 63%]
+........................................................................ [ 76%]
+........................................................................ [ 89%]
+.....................................................ss.....             [100%]
+=================================== FAILURES ===================================
+__ test_customer_cancellation_clears_any_stored_restaurant_delivery_location ___
+[gw1] linux -- Python 3.11.18 /workspace/come-in-tools/py311/bin/python
+
+    def test_customer_cancellation_clears_any_stored_restaurant_delivery_location():
+        source = function_source("cancel_restaurant_order")
+>       assert '"status":"cancelled"' in source
+E       assert '"status":"cancelled"' in 'async def cancel_restaurant_order(order_id: str, user: dict = Depends(get_current_user)):\n    oid=_object_id_or_404(...tail="Order changed; refresh before cancelling")\n    return doc_out(await db.restaurant_orders.find_one({"_id":oid}))'
+
+tests/test_delivery_tracking_contract.py:70: AssertionError
+=============================== warnings summary ===============================
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+../../../come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12
+  /workspace/come-in-tools/py311/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_delivery_tracking_contract.py::test_customer_cancellation_clears_any_stored_restaurant_delivery_location
+1 failed, 557 passed, 6 skipped, 2 warnings in 31.27s

@@ -1,0 +1,11 @@
+--- test_auth_crypto_candidate.py
++++ test_auth_crypto_candidate_v2.py
+@@ -79,7 +79,7 @@
+   self.user=None
+  async def seed(self):
+   self.password='Initial synthetic fixture!'
+-  self.user={'_id':ObjectId(),'name':'Synthetic fixture','email':self.caseid.lower()+'-'+self.runid+'@example.com',
++  self.user={'_id':ObjectId(),'name':'Synthetic fixture','email':(self.caseid+'-'+self.runid+'@example.com').lower(),
+     'role':'customer','password_hash':self.ns['hash_password'](self.password),'validation_run':self.runid}
+   await self.db.users.insert_one(self.user)
+  def request(self,token=None):

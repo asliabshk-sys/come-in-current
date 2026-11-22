@@ -1,0 +1,58 @@
+{
+  "timestamp_UTC": "2026-11-19T16:16:40.607578+00:00",
+  "files": [
+    {
+      "path": "sec01_focused_regression.py",
+      "bytes": 28689,
+      "SHA256": "71d15423b6bf06ce679af2b02456f53233a67ec324f655246855cf6775b70a85"
+    },
+    {
+      "path": "focused-before.json",
+      "bytes": 10142,
+      "SHA256": "0e50ed3e99a8ab8bd594a28f9e5287bcb633d955c74ae6616c5548bba00054dc"
+    },
+    {
+      "path": "focused-before.xml",
+      "bytes": 4170,
+      "SHA256": "40fa6c520a4b5d3cd77dc2dd89a9affbdc83e5840766e1d9a48fd936e1f8d0ac"
+    },
+    {
+      "path": "focused-before.log",
+      "bytes": 1069,
+      "SHA256": "527e77ecb1a4ac6e2148698549ccb6c5b55c69f5481396a67f192e2f43c533a8"
+    },
+    {
+      "path": "focused-after.json",
+      "bytes": 9727,
+      "SHA256": "68417220fe5e839351f33fce855f12c136e7e6843714820f261b323d134a00fe"
+    },
+    {
+      "path": "focused-after.xml",
+      "bytes": 1793,
+      "SHA256": "d7ae72234cb3420968ea578dbe450719e054023f6e7d73ccb41879be1ee9efbb"
+    },
+    {
+      "path": "focused-after.log",
+      "bytes": 457,
+      "SHA256": "e19614175c29c238b6c7bdd160f6cff0fc3354839a58ce0a611e37a093ae43bd"
+    },
+    {
+      "path": "focused-before-after-summary.json",
+      "bytes": 1725,
+      "SHA256": "4cbff2da3f1cbd58c72a1156a54cb84a24df4233295ed25c33e9cf5b6eab48d0"
+    },
+    {
+      "path": "SEC01_FOCUSED_TEST_CHECKPOINT.json",
+      "bytes": 1469,
+      "SHA256": "19213569b8558c69ada853531c45e57a482a12177a5ae60354c476d7e520c312"
+    },
+    {
+      "path": "SEC01_FOCUSED_REGRESSION_REPORT.md",
+      "bytes": 10870,
+      "SHA256": "dd170230e8f2a655e1c212231073ee2243df67d0d99770a608e00aeadf4d2e62"
+    }
+  ],
+  "self_excluded": true,
+  "source_sha_before": "a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db",
+  "source_sha_after": "70f5ee7be1bd94cd96d0fb7dbcb89c067cd7224a05bc1422e069a51538fddd07"
+}

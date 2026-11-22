@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="8" time="1.783" timestamp="2026-11-18T13:36:52.433912+00:00" hostname="4fa0f8dc6b53"><testcase classname="tests.test_image_upload_type_boundary" name="test_declared_image_mime_cannot_store_non_image_bytes[-image/jpeg]" time="0.250"><failure message="Failed: DID NOT RAISE HTTPException">mime = 'image/jpeg', data = b''
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"&lt;html&gt;not an image&lt;/html&gt;"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+&gt;       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed</failure></testcase><testcase classname="tests.test_image_upload_type_boundary" name="test_declared_image_mime_cannot_store_non_image_bytes[-image/png]" time="0.092"><failure message="Failed: DID NOT RAISE HTTPException">mime = 'image/png', data = b''
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"&lt;html&gt;not an image&lt;/html&gt;"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+&gt;       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed</failure></testcase><testcase classname="tests.test_image_upload_type_boundary" name="test_declared_image_mime_cannot_store_non_image_bytes[-image/gif]" time="0.082"><failure message="Failed: DID NOT RAISE HTTPException">mime = 'image/gif', data = b''
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"&lt;html&gt;not an image&lt;/html&gt;"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+&gt;       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed</failure></testcase><testcase classname="tests.test_image_upload_type_boundary" name="test_declared_image_mime_cannot_store_non_image_bytes[-image/webp]" time="0.100"><failure message="Failed: DID NOT RAISE HTTPException">mime = 'image/webp', data = b''
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"&lt;html&gt;not an image&lt;/html&gt;"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+&gt;       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed</failure></testcase><testcase classname="tests.test_image_upload_type_boundary" name="test_declared_image_mime_cannot_store_non_image_bytes[&lt;html&gt;not an image&lt;/html&gt;-image/jpeg]" time="0.085"><failure message="Failed: DID NOT RAISE HTTPException">mime = 'image/jpeg', data = b'&lt;html&gt;not an image&lt;/html&gt;'
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"&lt;html&gt;not an image&lt;/html&gt;"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+&gt;       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed</failure></testcase><testcase classname="tests.test_image_upload_type_boundary" name="test_declared_image_mime_cannot_store_non_image_bytes[&lt;html&gt;not an image&lt;/html&gt;-image/png]" time="0.081"><failure message="Failed: DID NOT RAISE HTTPException">mime = 'image/png', data = b'&lt;html&gt;not an image&lt;/html&gt;'
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"&lt;html&gt;not an image&lt;/html&gt;"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+&gt;       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed</failure></testcase><testcase classname="tests.test_image_upload_type_boundary" name="test_declared_image_mime_cannot_store_non_image_bytes[&lt;html&gt;not an image&lt;/html&gt;-image/gif]" time="0.104"><failure message="Failed: DID NOT RAISE HTTPException">mime = 'image/gif', data = b'&lt;html&gt;not an image&lt;/html&gt;'
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"&lt;html&gt;not an image&lt;/html&gt;"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+&gt;       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed</failure></testcase><testcase classname="tests.test_image_upload_type_boundary" name="test_declared_image_mime_cannot_store_non_image_bytes[&lt;html&gt;not an image&lt;/html&gt;-image/webp]" time="0.089"><failure message="Failed: DID NOT RAISE HTTPException">mime = 'image/webp', data = b'&lt;html&gt;not an image&lt;/html&gt;'
+
+    @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+    @pytest.mark.parametrize("data", [b"", b"&lt;html&gt;not an image&lt;/html&gt;"])
+    def test_declared_image_mime_cannot_store_non_image_bytes(mime, data):
+        call, writes = upload_endpoint(mime, data)
+&gt;       with pytest.raises(HTTPException) as error:
+E       Failed: DID NOT RAISE HTTPException
+
+tests/test_image_upload_type_boundary.py:34: Failed</failure></testcase></testsuite></testsuites>

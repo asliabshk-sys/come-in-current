@@ -1,0 +1,8 @@
+[
+  "backend/server.py",
+  "backend/tests/test_final_payment_transition_races.py",
+  "backend/tests/test_restaurant_api_contract.py",
+  "backend/tests/test_shared_system_integration_contract.py",
+  "backend/tests/test_upload_allocation_bound.py",
+  "frontend/scripts/cmd-guard/rules.js"
+]

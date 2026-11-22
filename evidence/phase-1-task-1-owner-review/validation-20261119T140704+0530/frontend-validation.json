@@ -1,0 +1,732 @@
+{
+  "workstream": "Frontend safe validation E",
+  "started_at_utc": "2026-11-19T08:39:03.691806+00:00",
+  "completed_at_utc": "2026-11-19T08:44:00.690353+00:00",
+  "source_commit_context": "a223290a8866a1ebeaac982f546491fdc197ae7a (actual extracted current source is outside Git;95-source hashes bind tests to current work)",
+  "tools": {
+    "node": "v24.22.1",
+    "yarn_path": "/workspace/come-in-tools/yarn/node_modules/.bin/yarn",
+    "typescript": "6.0.3",
+    "eslint": "9.25.0"
+  },
+  "input_reports_and_checkpoint": [
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_EVIDENCE_GAP_CLOSURE_REPORT.md",
+      "sha256": "3d3c47c66f5997d2a90d8e41beee3ebee886f64a894ed60f4d0d2bf3689e6ce1",
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_NAVIGATION_AND_API_INVENTORY.md",
+      "sha256": "c3196394b04218f9220e7bbb77b2573736e8b56352b9cafb88eba2a266c8c044",
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_SECURITY_VALIDATION_REPORT.md",
+      "sha256": "f2bac57653f5348adceaa8fa158fef2d7b6c9c3d61ac3e417e27fb682118715c",
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_OWNER_DECISION_READINESS.md",
+      "sha256": "71ca13c7180de6624a5844e483e6cd7966c177c71a5c206977a8656b32dab4c8",
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_PRESERVATION_VERIFICATION.md",
+      "sha256": "5459f05e0daefde654244dc6d59425d0589caad31e8f1217d14f5e84114e1494",
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/FINAL_REVIEW_MANIFEST.json",
+      "sha256": "7fbe1ee4d606157421f7192cc69fc0ee59f8fd9409ac655fe1fd4a6a8308b8af",
+      "fully_read": true
+    },
+    {
+      "path": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/iteration-2026-11-18T072632-0800/ITERATION_CHECKPOINT.md",
+      "sha256": "b402d622c2b33e7f8e7bf676f474a5f7eb544b3e38cd3fcfff6e033bf828a847",
+      "fully_read": true
+    }
+  ],
+  "safety_review": {
+    "tsconfig": "strict extends Expo,noEmit base;use explicit --noEmit --incremental false;no application execution",
+    "eslint": "existing flat Expo config,no --fix,--no-cache;no app/server/provider execution",
+    "planner": "in-memoryTypeScript purehelper,import type only;no filesystem writes/network/storage",
+    "native_adapter_test": "transpile native adapter in memory into VM with mocked react-native/SDK;no realnative/provider/network",
+    "python_contracts": "Not run here;backend agent owns existing offline Python contract suites",
+    "excluded": "No install,Expo start/build/prebuild,config generation,browser,API,DB orsource modification."
+  },
+  "checks": [
+    {
+      "id": "FE-TSC",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --incremental false --pretty false",
+      "exit_code": 0,
+      "result": "PASS",
+      "error_count": 0,
+      "warning_count": 0,
+      "scope": "Current full project semantic TypeScript check,no emission/incremental write;notUIruntime",
+      "stdout_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-typecheck.log"
+    },
+    {
+      "id": "FE-ESLINT",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": "node node_modules/eslint/bin/eslint.js . --format json --no-cache",
+      "exit_code": 0,
+      "result": "PASS error gate;warnings remain",
+      "error_count": 0,
+      "warning_count": 10,
+      "linted_file_results": 111,
+      "stdout_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-eslint.json",
+      "stderr_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-eslint.stderr.log",
+      "scope": "Existingrules;no --fix/no cache/no warningsuppression"
+    },
+    {
+      "id": "FE-PLANNER",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": "node scripts/test-chand-party-planner.cjs",
+      "exit_code": 0,
+      "result": "PASS",
+      "reported_assertions_passed": 11,
+      "assertion_sites_observed_in_source": 13,
+      "count_caveat": "Existing stdout says11;source has13 top-level assert invocations including transpilation/shape guards. Exact rawoutput retained. No edit or inflated aggregate.",
+      "failed": 0,
+      "skipped": 0,
+      "stdout_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-planner.log",
+      "scope": "Pure in-memory CHAND planner helper;synthetic products,notactualAI/provider/cart purchase"
+    },
+    {
+      "id": "FE-NATIVE-MOCK",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": "node scripts/test-native-payment.cjs",
+      "exit_code": 0,
+      "result": "PASS",
+      "scenario_count": 5,
+      "failed": 0,
+      "skipped": 0,
+      "stdout_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-native-mock.log",
+      "scope": "Pure VM SDK adapter mock:no native module/device,binary,bank,provider,webhook or refund verification"
+    },
+    {
+      "id": "FE-CONFIG-GUARD",
+      "cwd": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend",
+      "command": "node /workspace/come-in-current/evidence/resume-20261118/config-and-guard-check.cjs",
+      "exit_code": 0,
+      "result": "PASS",
+      "scenario_count": 9,
+      "failed": 0,
+      "skipped": 0,
+      "stdout_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-config-guard.log",
+      "scope": "Pure production URL config and cmd-guard boundary assertions;writes new unique /tmp/comein-guard-* scratch only;no actualconfiguration/dependency edit or network"
+    },
+    {
+      "id": "FE-WEB-EXPORT",
+      "cwd": "/tmp/comein-web-validation-grxizkha",
+      "command": "/workspace/come-in-tools/yarn/node_modules/.bin/yarn build:web --output-dir /workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export",
+      "environment": {
+        "EXPO_NO_TELEMETRY": "1",
+        "EXPO_OFFLINE": "1",
+        "CI": "1",
+        "COMEIN_BUILD_ENV": "development",
+        "EXPO_PUBLIC_BACKEND_URL": "http://127.0.0.1:8001",
+        "METRO_CACHE_ROOT": "/tmp/comein-web-validation-grxizkha/metro-cache"
+      },
+      "exit_code": 0,
+      "result": "PASS",
+      "stdout_log": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-web-build.log",
+      "artifact_count": 100,
+      "artifact_manifest": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-web-export-manifest.json",
+      "scope": "Actual Expo web export from95hash-bound scratch source copies with existing pinned deps;not browser/device/provider/runtime testing"
+    }
+  ],
+  "eslint_diagnostics": [
+    {
+      "file": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/.expo/types/router.d.ts",
+      "line": 1,
+      "column": 1,
+      "severity": 1,
+      "rule": "unused-eslint-disable-directive",
+      "message": "Unused eslint-disable directive (no problems were reported)."
+    },
+    {
+      "file": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/chand.tsx",
+      "line": 190,
+      "column": 81,
+      "severity": 1,
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "React Hook useMemo has an unnecessary dependency: 'lang'. Either exclude it or remove the dependency array."
+    },
+    {
+      "file": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/checkout.tsx",
+      "line": 88,
+      "column": 6,
+      "severity": 1,
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "React Hook useEffect has missing dependencies: 'hasDemoItems', 'hasMixedShops', and 'shopIds'. Either include them or remove the dependency array."
+    },
+    {
+      "file": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/[id].tsx",
+      "line": 12,
+      "column": 320,
+      "severity": 1,
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "React Hook useEffect has a missing dependency: 'local'. Either include it or remove the dependency array."
+    },
+    {
+      "file": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/checkout.tsx",
+      "line": 75,
+      "column": 6,
+      "severity": 1,
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "React Hook useEffect has a missing dependency: 'user'. Either include it or remove the dependency array."
+    },
+    {
+      "file": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/dashboard.tsx",
+      "line": 13,
+      "column": 962,
+      "severity": 1,
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "React Hook useCallback has a missing dependency: 'selected'. Either include it or remove the dependency array."
+    },
+    {
+      "file": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/orders/index.tsx",
+      "line": 51,
+      "column": 6,
+      "severity": 1,
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "React Hook useCallback has a missing dependency: 'user'. Either include it or remove the dependency array."
+    },
+    {
+      "file": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/services.tsx",
+      "line": 20,
+      "column": 34,
+      "severity": 1,
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "React Hook useEffect has a missing dependency: 'loadDashboard'. Either include it or remove the dependency array."
+    },
+    {
+      "file": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/MeasuredQuantityPicker.tsx",
+      "line": 45,
+      "column": 6,
+      "severity": 1,
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array."
+    },
+    {
+      "file": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/useDiscoveryAddress.ts",
+      "line": 64,
+      "column": 6,
+      "severity": 1,
+      "rule": "react-hooks/exhaustive-deps",
+      "message": "React Hook useCallback has a missing dependency: 'user'. Either include it or remove the dependency array."
+    }
+  ],
+  "preservation": {
+    "protected_frontend_file_count": 7627,
+    "changed_files": [],
+    "new_files_in_original_frontend": [],
+    "private_env_metadata_changed": [],
+    "scope": "All frontend files excluding dependency tree/node_modules and actual.env contents;includes.expo,source/assets/config/lockfiles/existingbuild outputs;actualenv size/mtime checked without values. No dependencies installed or tools downloaded.",
+    "verified_after_web_export": true
+  },
+  "source_binding_95_files": [
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/_layout.tsx",
+      "sha256": "a3482d454745d4335d3aa1eee4d4b53ebb0cc55c26a240e37fdc0c259105cd73",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/account.tsx",
+      "sha256": "7566864cafb5516b0767094c5199ca449865987e8dd4f82b6416fc157904a59e",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/cart.tsx",
+      "sha256": "46a7fb33cd58c41fd458223f5f1e9d5764c8659cb4aff861617450bcee0f209d",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/categories.tsx",
+      "sha256": "be13823e513d9ab22d22ba8a8cb2dd45e2f06e2c2d9a911f173178b1a62b265d",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/index.tsx",
+      "sha256": "62682994c1c885b0334d363cff1060f5a78b61352b3173f8bc222a2bd5919657",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/(tabs)/search.tsx",
+      "sha256": "49d729c2a04ee184a8df3715571b8cc88180701ddf6b904003b531ef73d62f99",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/+html.tsx",
+      "sha256": "5d7c888914b4fe9d302967bb867059b98f7f457a3891ce011e6e4a9849c9a792",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/+not-found.tsx",
+      "sha256": "98df243531bcd19fca8dfe9499a99836993da1855de9c185410937d41a200e74",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/_layout.tsx",
+      "sha256": "a384996331e509b25de63de87e68eb08595532b82e99e116179a479527df3c05",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/addresses.tsx",
+      "sha256": "b21314d98938794b5d9c1b47b6ce56130a7a9672e1a75170cade9d6261e3f3c9",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/admin-delivery-partners.tsx",
+      "sha256": "e0da25fc52b9adf3172492b7d874959315e50961140bf3921fab452e454bd07e",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/admin-earnings.tsx",
+      "sha256": "6e0b68c48576a38fd1c87e720a531bd6aff3834434f4af4d474045c962a98c66",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/admin.tsx",
+      "sha256": "0f281894c0b9168556d31cc44b0203d714cebc43c31381718ff35bb6b0cb7021",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/auth.tsx",
+      "sha256": "659f752a8f5cfda19a3667a1cb547542102f2bfd34f70e94a78438c3d06d4fbb",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/become-seller.tsx",
+      "sha256": "c0b688b9c98880dea5d315f29ee7af17e70d891c4624989f63c4a28df36d6afd",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/category/[slug].tsx",
+      "sha256": "6b0172853580f1901421f50565caf377d6e556ba228c7cf4f5b0d1d4acedc1dd",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/chand.tsx",
+      "sha256": "3789bf027ee8ef8e3a0a4fa1a6972219bd019af9b8d06c9ba270412cba980fea",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/checkout.tsx",
+      "sha256": "bb20b859e7b917cafbededaa16594407b2eab02400ccd1e7d94e5ac6dc2d81b0",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/delivery-address.tsx",
+      "sha256": "702268be825f74a9bea47e9a8445dd81460d346f1c6f59666d038f2510911f53",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/delivery-partner.tsx",
+      "sha256": "095e7aa47fe97d607a80570af7652c025de1cfd273c27a8e5240d73b31ff1993",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/index.tsx",
+      "sha256": "bdcaf585d82447d77ae63599499e5f0b8a67af2577e6b69a8c65138bf3015fca",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/language.tsx",
+      "sha256": "a1df71f3108c83cb1570883b2ccc7e7d5e2395a9b7019cb6b4d7ac9d5a81756c",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/notifications.tsx",
+      "sha256": "f5068e725296b8ed20d20bf334d18872f5d97b5039956eddaaaa1af99f281b73",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/order-tracking.tsx",
+      "sha256": "dd7548a11c6fbb66823b3f52952bd4521a3ccb6b2c53ad45e7f0cd69548c4dcd",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/orders.tsx",
+      "sha256": "89e29f44f3a25fafa926c1bf3e063b48c2227e9fcbe5662419b25285d16cb396",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/password-reset.tsx",
+      "sha256": "d2bb6580b8bf48b7ec8ad25f1151b01683fa6aecf53ae7159845d0f2ac163a39",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/payment-methods.tsx",
+      "sha256": "9944a34fc268ec4e0b26e468eaf15f9d69127f15412c02d29175e0a28ef35aeb",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/product/[id].tsx",
+      "sha256": "b2ffbb560288b209ad55c0329040f39cd4a9b89d2626ee7fd357efc202aa7409",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/referral-dashboard.tsx",
+      "sha256": "afc7b243babe250a9ab830e5e6ccf16ed954ce584d7232f1f846523d78be8581",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/referral.tsx",
+      "sha256": "428254c165b7df98b374b22f1945d71aa78e2c99d81416cb7c926860ad4c7dd8",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/request.tsx",
+      "sha256": "3e5b3cc97901b0f12dc86cac60852d196b027b0a2dd6d509354ecc1e4562126f",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/[id].tsx",
+      "sha256": "a8b650fb8d27cc03a6a3faa5ffb6864e7ca5785877fdd72bbb7d5eda972e2fea",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/account.tsx",
+      "sha256": "1199797d551cf07872327827241acfc3e0caeda2c0409640a23c0f0e096924ed",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/addresses.tsx",
+      "sha256": "e58cf69394368886cef5204ada9f4a8d57ea56afa1eab38037f3ef0a8c8a3b7d",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/cart.tsx",
+      "sha256": "f1e382c7a5e31798f9a6306da88cc2b700436178642d982d426854baa2718834",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/categories.tsx",
+      "sha256": "55667009218c11ffa50f8fb1db1fb2f9bb16569d6cc27fd61255f2eb62ae35e4",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/checkout.tsx",
+      "sha256": "47e4a7f154b2a7606576f4d2a609a17c24d1c35b1a492caf5920e9408e9207f7",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/dashboard.tsx",
+      "sha256": "9961ef968bbc01fb2403452113beca551c9ae3742dc10f3d12c16fe810362a9b",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/index.tsx",
+      "sha256": "c4b34423e7250b9354621d49379c3532db35d4b4385d8b07f17f4faebf83edcf",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/menu.tsx",
+      "sha256": "2b99545e869a5d51a6bd5b981a46edf3e11c34e981b520a98e7b6597d9e849cc",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/order-confirmation.tsx",
+      "sha256": "0998f7cd47587875248e583bd78946e174f8d698b0ef6d9e65ff42765cec7033",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/orders/[id].tsx",
+      "sha256": "4fd236838a478f6cf331b181e396a95883973f606cc922753b00cf0b2aa103c3",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/orders/index.tsx",
+      "sha256": "979d6cdc3ee7b3644b22c353399a4ecdc37862766ad31ef5b5dffd06295c514d",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/search.tsx",
+      "sha256": "67f2e1da417ec010c6c61d4a573cc29945ca33db3f23e5028c5db9e78b237b4c",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/restaurant/support.tsx",
+      "sha256": "048dae6a532e82a548a67881e2e6ff16b0e69fad8b69841f864173f44f084e90",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/retail-prices.tsx",
+      "sha256": "27751094cfc92471666f15923ce6539425d24ce300c1649e8ddaa8b63fdb5202",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/orders.tsx",
+      "sha256": "2b6b13ccd18f50fbb949ff6063fd6a650aa191bfead27799b033875318ae3884",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/products.tsx",
+      "sha256": "4e1e8ab6f7e878c22ea408a79432f6572110cbcb12e6c901f36a48f2d717ebc7",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller/support.tsx",
+      "sha256": "da3c4741142206a7d5d6dcf311be25c865615c69050317ce4d6620c58dc67a0e",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/seller-earnings.tsx",
+      "sha256": "94cbda2608a6e90fe69532f3672d7a4e814410f94300fc6e1de5bd8bb7bca7b1",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/services.tsx",
+      "sha256": "69fc7fe5dc8e39ab210d42db6820195340b5df5fb2f4d38f812e3f52242d2d7d",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/shop/[id].tsx",
+      "sha256": "0112e5c6ba65dbd024800e052322737768eb73ea21be9a6221cb35ff30293cf2",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app/shops.tsx",
+      "sha256": "70bbb00b155166bae4dd23ea4571f56d786bdb9ff2b237f4b43612c396372984",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/AnnouncementBanner.tsx",
+      "sha256": "cc4efbdfd040566135e41af3cd89d363c3ef65c72a5bcef3d473ae648d3b9b83",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/BrandLogo.tsx",
+      "sha256": "710524d8890642d7c3306a4be335afe665214eda9024f1ef51f48d6435d9c98f",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/GroceryOnlinePayment.tsx",
+      "sha256": "14b53a2152e7092ef97207c4b1f03e658216d1cbfdfd6192dc46b73d97ee9be5",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/MeasuredQuantityPicker.tsx",
+      "sha256": "99d807f0e3c9c622ce7d4c11b5c3853b553454cf58e7c6cbb528139079a55264",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/ProductCard.tsx",
+      "sha256": "cb05ca1e015def539adb0dffc817559de548a8bb3f8b61e1190a1b170c51849f",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/QuantityStepper.tsx",
+      "sha256": "0a1668f664280f964e0494cf79de098ac440287f4a3b773f67397d3dd5e4dd1e",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/RestockAlertButton.tsx",
+      "sha256": "438ca9d97b19959f7e7344590228e159fddc8fd010fa7a79e2aa72d097bb204a",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/SellerMeasuredFields.tsx",
+      "sha256": "50dd60c689b73735a0fb0f2e4fcfa5f048099bf1e90f948e90ec33639aa39d48",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/components/error-boundary.tsx",
+      "sha256": "5fef573fc6c628acc2350d9147597cd1b6ff831cbcffc177ebb2d17b1c5165cd",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/data/catalog-reference.ts",
+      "sha256": "5b71f901a61aeaa45619df746fa10a258fb902743f8e487cd24eef6389c4796d",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/data/catalog.ts",
+      "sha256": "37c0cc02355d1d8cecc0d3a40967875b420d9e6225e7debb6963347dec2cc2c2",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/data/shops.ts",
+      "sha256": "26e98e9d7a8942d54e53e612d3930089d39544340231cbd5124f8100814dab4c",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/data/useCatalogProducts.ts",
+      "sha256": "9b48c9c43496ee56f174ccdc3c6a0c9f50da340b91d380717e8730fc42396b19",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/i18n/index.tsx",
+      "sha256": "c84e0341a6ba928e280c10a8e6f7f1f5f0dbc3d2be4fe7efe59cdd825ced060a",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/i18n/translations.ts",
+      "sha256": "6afbf0cf3fbcadae914503569f1623d73ef174e3d9119a43034a50364008dc68",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/api.ts",
+      "sha256": "5eb84c952369340f047e44b38a5bc3b90068802530daa6d772ff456297b28a0c",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/chand-party-planner.ts",
+      "sha256": "00fec9786c749ed02ed126d7f54026ee8c81218811f3c76192a6b0de5fe08285",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/measure.ts",
+      "sha256": "7c7152b0fd246c6498a7feffa17a7e1da4cb4166a253962e2f05ae383c4ef626",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/razorpay-checkout.native.ts",
+      "sha256": "69575525f94fd2041e3bc2f4446ab26f3eec14b6685b7f4115678071592027e7",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/razorpay-checkout.ts",
+      "sha256": "ffd002ad2c172c6b416b98ed01fc3248c6f40f5dd2ee9129862397f2506fe880",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/razorpay.ts",
+      "sha256": "e0e41ac6ab6087fcdb05d782e91eb91103db4c9ef18914991d173f0112e97aa9",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/lib/react-native-razorpay.d.ts",
+      "sha256": "a5e3bc9b967a07dae0587a1f4f92e5cee4a06aed0bc4935eec822b533f8f7103",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/navigation.ts",
+      "sha256": "60b3fc096cd315ef09fe5f9362187de6c64114ccabc21f9e985e9fcbcf00075a",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/query-client.ts",
+      "sha256": "5add7aa5aaa5794543b70fe1e5851ababe9918daf343a3e40953343abad55379",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantCard.tsx",
+      "sha256": "f0fe2acd67c2879fdb6e1d5f453c7a0609aa7781de4c783c3db2e68a8b606e88",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantModeShell.tsx",
+      "sha256": "ff0f404d7b9955ecc03fcac6057f9629c3fa42318b258b9bbb48f7aff5c37ae2",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantNav.tsx",
+      "sha256": "8c35e6151a212b0a157d378528664b8016aedb1b1cddb2927f9169d8262fef46",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/RestaurantPage.tsx",
+      "sha256": "5fa41449d6d19f86db7119eb1711b6837417c6ec41a01a39cc5ae51e433421fe",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/api.ts",
+      "sha256": "a3c17abe3e494a18e6669a8b6e267a37f8c84b62f99bc70112a9fa5eceb62d9a",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/cart.ts",
+      "sha256": "609a594ed03fce9f0e80e10c46e1a386aef41c07876bba46ef9815b53625279e",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/data.ts",
+      "sha256": "558b18ed31b0b213c4572b9bca04360f4f28e181f6023e6082daf38d215166d0",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/theme.ts",
+      "sha256": "2123bebc3fe3cc87e15012dce2a5da2f0084e2ff8ca9320d9f5f15588d71700e",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/restaurant/useDiscoveryAddress.ts",
+      "sha256": "2cb454769b2d66f329c2e4874716808a7ebb831d9d3b52e916d6a867ae13713f",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/store/auth.tsx",
+      "sha256": "d5931dfe1e81234b34a280c2ed3726fbb949cae315bdf8aaf6e2fd687ea1b8b8",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/store/cart.tsx",
+      "sha256": "a3361399507f3b609301ffe083da5ec8cbcd473de4389d4fa8a22170d90c6c35",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/store/location.tsx",
+      "sha256": "19904dbbf8f58ef0bbafddc6ef094ea74f72727187d120bc8cb5a49626b4e9be",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/theme.ts",
+      "sha256": "2d2375508d53cf2e10c8824652328330a4359cc900072bef5c14b25fe3629067",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/alert.ts",
+      "sha256": "b84943bcc5e6194dd2e316d812f3a0bf880f79b5d921d95d3f4eff418fd5ee17",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/storage/index.ts",
+      "sha256": "99a605a86752495ea234e3724e1bb80198663860d9e988ffc2bd2a2ed4e783e1",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/storage/index.web.ts",
+      "sha256": "20cc49ebd12eb74e4b906ac9daf92ed862330e70c663eed53bfb38e324e92d37",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/storage/storage-base.ts",
+      "sha256": "dd3aee0836f120049f403bca2c99398f945a557d88f64566e11fb805973c4559",
+      "matches_verified_navigation_source": true
+    },
+    {
+      "path": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/src/utils/upload.ts",
+      "sha256": "4cb8f97a9ba38bd14e1b87080958aa5b4ead09a8ad011bf940efd06af852c59f",
+      "matches_verified_navigation_source": true
+    }
+  ],
+  "source_binding_json_sha256": "bb9ca4690bdd40db56cb3f8f6b5ebe88daba2599015d28c34c1c2d880fccda5b",
+  "source_binding_claim": "All95currentapp/srcTS/TSX hashes match prior verified navigationclosure;inventories not regenerated.",
+  "handoff_scope": {
+    "python_frontend_navigation_state_cart_checkout_contracts": "Assigned to separate backend offline regression agent,not duplicated here.",
+    "fresh_UI_browser": "NOT RUN;outsidethissafeoffline frontend check scope",
+    "device_or_provider": "NOT VERIFIED;mockadapterpass is not device/provider success",
+    "newsource_or_config_edits": false,
+    "package_installs": false,
+    "database_or_API_calls": 0,
+    "task2_started": false
+  },
+  "status": "Frontend available safe checks PASS;10lintwarnings and count discrepancy documented;owner task acceptance/provider/native/runtime still require other evidence.",
+  "web_build_followup": {
+    "status": "PASS",
+    "execution_record": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-web-build-execution.json",
+    "output_dir": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/web-export",
+    "scope": "Actual Expo web export from95hash-bound scratch source copies with existing pinned deps;not browser/device/provider/runtime testing"
+  },
+  "reported_JS_check_counts": {
+    "planner_stdout_nominal_passed": 11,
+    "native_adapter_mock_scenarios_passed": 5,
+    "config_guard_scenarios_passed": 9,
+    "nominal_total": 25,
+    "caveat": "Heterogeneous script counts,not25UIworkflows. Planner stdout says11while source has13top-levelassertcall sites incltranspile/shape guards;rawoutput preserved."
+  }
+}

@@ -1,0 +1,148 @@
+--- a/backend/mongo_transactions.py
++++ b/backend/mongo_transactions.py
+@@ -2,7 +2,10 @@
+ from __future__ import annotations
+ 
+ from collections.abc import Awaitable, Callable
++from time import monotonic
+ from typing import Any
++
++from pymongo.errors import PyMongoError
+ 
+ 
+ def has_transaction_error_label(error: BaseException, label: str) -> bool:
+@@ -42,7 +45,32 @@
+     Callbacks MUST contain only session-bound database operations and MUST be
+     safe to re-execute: the driver can retry the whole callback on transient
+     transaction errors or retry commit on UnknownTransactionCommitResult.
+-    There is intentionally no DIY unbounded retry loop or provider API call.
++    Motor 3.7.1 commits while exiting its callback context, before its own commit
++    retry loop. Commit inside the callback so unknown commit results are retried
++    here and transient errors still reach the driver's whole-transaction retry.
++    The commit retry budget shares the driver's 120-second transaction budget.
++    No provider API call belongs in either retry path.
+     """
++    started = monotonic()
++
++    async def commit_with_retry(session: Any) -> Any:
++        result = await callback(session)
++        # Also respect callbacks that intentionally ended their transaction.
++        # Session adapters used by offline tests may own commit internally.
++        if not getattr(session, "in_transaction", False):
++            return result
++        while True:
++            try:
++                await session.commit_transaction()
++                return result
++            except PyMongoError as error:
++                if (
++                    has_transaction_error_label(error, "UnknownTransactionCommitResult")
++                    and getattr(error, "code", None) != 50
++                    and monotonic() - started < 120
++                ):
++                    continue
++                raise
++
+     async with await client.start_session() as session:
+-        return await session.with_transaction(callback)
++        return await session.with_transaction(commit_with_retry)
+--- /dev/null
++++ b/backend/tests/test_transaction_commit_retry.py
+@@ -0,0 +1,97 @@
++"""Regression for Motor committing before its with_transaction retry loop."""
++import asyncio
++
++import pytest
++from pymongo.errors import OperationFailure
++
++import mongo_transactions
++
++
++def unknown_commit(code=91):
++    return OperationFailure("synthetic unknown commit", code, {
++        "errorLabels": ["UnknownTransactionCommitResult"], "code": code,
++    })
++
++
++class Session:
++    def __init__(self, failures):
++        self.failures = list(failures)
++        self.commits = 0
++        self.in_transaction = True
++
++    async def __aenter__(self):
++        return self
++
++    async def __aexit__(self, *args):
++        pass
++
++    async def with_transaction(self, callback):
++        result = await callback(self)
++        # Model Motor 3.7.1's context exit before its explicit commit loop.
++        if self.in_transaction:
++            await self.commit_transaction()
++        return result
++
++    async def commit_transaction(self):
++        self.commits += 1
++        self.in_transaction = False
++        if self.failures:
++            raise self.failures.pop(0)
++
++
++class Client:
++    def __init__(self, session):
++        self.session = session
++
++    async def start_session(self):
++        return self.session
++
++
++def test_unknown_commit_retries_commit_without_replaying_callback():
++    session = Session([unknown_commit()])
++    calls = []
++
++    async def callback(current):
++        calls.append(current)
++        return "saved"
++
++    assert asyncio.run(mongo_transactions.run_transaction(Client(session), callback)) == "saved"
++    assert session.commits == 2
++    assert calls == [session]
++
++
++@pytest.mark.parametrize("error", [unknown_commit(50), OperationFailure("denied", 13)])
++def test_timeout_and_nonretryable_commit_errors_are_not_retried(error):
++    session = Session([error])
++
++    async def callback(current):
++        return "saved"
++
++    with pytest.raises(OperationFailure) as caught:
++        asyncio.run(mongo_transactions.run_transaction(Client(session), callback))
++    assert caught.value is error
++    assert session.commits == 1
++
++
++def test_unknown_commit_retry_stops_at_transaction_budget(monkeypatch):
++    times = iter([0, 120])
++    monkeypatch.setattr(mongo_transactions, "monotonic", lambda: next(times))
++    session = Session([unknown_commit()])
++
++    async def callback(current):
++        return "saved"
++
++    with pytest.raises(OperationFailure):
++        asyncio.run(mongo_transactions.run_transaction(Client(session), callback))
++    assert session.commits == 1
++
++
++def test_intentionally_ended_transaction_is_not_committed_again():
++    session = Session([])
++
++    async def callback(current):
++        current.in_transaction = False
++        return "ended"
++
++    assert asyncio.run(mongo_transactions.run_transaction(Client(session), callback)) == "ended"
++    assert session.commits == 0

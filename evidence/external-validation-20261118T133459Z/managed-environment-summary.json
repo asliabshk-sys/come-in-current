@@ -1,0 +1,14 @@
+{
+  "environment_id": "ccarenv_b64_Y2NhcmVudl8yZmM0NTY4NTU5NjA4MTkxYmFjM2JlMTM5ZjIwMmU1MA",
+  "network_mode": "restricted",
+  "secret_binding_count": 0,
+  "runtime_variable_count": 0,
+  "razorpay_api_allowed": false,
+  "razorpay_checkout_allowed": false,
+  "portals": [
+    {
+      "port": 22,
+      "protocol": "ssh"
+    }
+  ]
+}

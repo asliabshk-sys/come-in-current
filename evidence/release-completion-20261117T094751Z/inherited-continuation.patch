@@ -1,0 +1,1439 @@
+--- a/backend/mongo_transactions.py
++++ b/backend/mongo_transactions.py
+@@ -2,7 +2,10 @@
+ from __future__ import annotations
+ 
+ from collections.abc import Awaitable, Callable
++from time import monotonic
+ from typing import Any
++
++from pymongo.errors import PyMongoError
+ 
+ 
+ def has_transaction_error_label(error: BaseException, label: str) -> bool:
+@@ -42,7 +45,32 @@
+     Callbacks MUST contain only session-bound database operations and MUST be
+     safe to re-execute: the driver can retry the whole callback on transient
+     transaction errors or retry commit on UnknownTransactionCommitResult.
+-    There is intentionally no DIY unbounded retry loop or provider API call.
++    Motor 3.7.1 commits while exiting its callback context, before its own commit
++    retry loop. Commit inside the callback so unknown commit results are retried
++    here and transient errors still reach the driver's whole-transaction retry.
++    The commit retry budget shares the driver's 120-second transaction budget.
++    No provider API call belongs in either retry path.
+     """
++    started = monotonic()
++
++    async def commit_with_retry(session: Any) -> Any:
++        result = await callback(session)
++        # Also respect callbacks that intentionally ended their transaction.
++        # Session adapters used by offline tests may own commit internally.
++        if not getattr(session, "in_transaction", False):
++            return result
++        while True:
++            try:
++                await session.commit_transaction()
++                return result
++            except PyMongoError as error:
++                if (
++                    has_transaction_error_label(error, "UnknownTransactionCommitResult")
++                    and getattr(error, "code", None) != 50
++                    and monotonic() - started < 120
++                ):
++                    continue
++                raise
++
+     async with await client.start_session() as session:
+-        return await session.with_transaction(callback)
++        return await session.with_transaction(commit_with_retry)
+--- a/backend/tests/test_task14_seller_support_ui_contract.py
++++ b/backend/tests/test_task14_seller_support_ui_contract.py
+@@ -34,7 +34,11 @@
+     assert 'label: "Seller Support"' in ACCOUNT
+     assert 'router.push("/seller/support")' in ACCOUNT
+     assert 'user?.role === "shopkeeper"' in ACCOUNT
+-    assert 'user?.role === "restaurant"' in ACCOUNT
++    # The authenticated Role model stays customer/shopkeeper/admin. A typed
++    # membership check also preserves legacy Restaurant support without an
++    # impossible literal comparison after the shopkeeper branch narrows Role.
++    assert 'const SELLER_SUPPORT_ROLES: readonly string[] = ["shopkeeper", "restaurant"];' in ACCOUNT
++    assert 'SELLER_SUPPORT_ROLES.includes(user?.role || "")' in ACCOUNT
+ 
+ 
+ def test_support_ui_does_not_trigger_refund_cancellation_or_notification_claims():
+--- a/frontend/app/(tabs)/account.tsx
++++ b/frontend/app/(tabs)/account.tsx
+@@ -10,6 +10,8 @@
+ import { useCart } from "@/src/store/cart";
+ import { useLocationCtx } from "@/src/store/location";
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
++
++const SELLER_SUPPORT_ROLES: readonly string[] = ["shopkeeper", "restaurant"];
+ 
+ type Row = {
+   icon: React.ComponentProps<typeof Feather>["name"];
+@@ -50,7 +52,7 @@
+             { icon: "life-buoy" as const, label: "Seller Support", onPress: () => router.push("/seller/support") },
+             { icon: "trending-up" as const, label: "My Shop Earnings", onPress: () => router.push("/seller-earnings") },
+           ]
+-        : user?.role === "restaurant"
++        : SELLER_SUPPORT_ROLES.includes(user?.role || "")
+           ? [{ icon: "life-buoy" as const, label: "Seller Support", onPress: () => router.push("/seller/support") }]
+           : []),
+     ],
+--- a/frontend/app/(tabs)/cart.tsx
++++ b/frontend/app/(tabs)/cart.tsx
+@@ -3,7 +3,7 @@
+ import { useRouter } from "expo-router";
+ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+ import { useSafeAreaInsets } from "react-native-safe-area-context";
+-import { useEffect, useState } from "react";
++import { useState } from "react";
+ import { getProductPlaceholder } from "@/src/data/catalog";
+ 
+ import { QuantityStepper } from "@/src/components/QuantityStepper";
+@@ -29,12 +29,12 @@
+   const { t } = useT();
+   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
+   const [quantityNotice, setQuantityNotice] = useState<Record<string, string>>({});
+-  useEffect(() => {
+-    setFailedImages((current) => {
+-      const valid = new Set(cartLines.map((line) => line.key));
+-      return Object.fromEntries(Object.entries(current).filter(([key]) => valid.has(key)));
+-    });
+-  }, [cartLines]);
++  const [previousLines, setPreviousLines] = useState(cartLines);
++  if (previousLines !== cartLines) {
++    setPreviousLines(cartLines);
++    const valid = new Set(cartLines.map((line) => line.key));
++    setFailedImages((current) => Object.fromEntries(Object.entries(current).filter(([key]) => valid.has(key))));
++  }
+ 
+   if (cartLines.length === 0) {
+     return (
+--- a/frontend/app/(tabs)/index.tsx
++++ b/frontend/app/(tabs)/index.tsx
+@@ -45,7 +45,8 @@
+   const { t } = useT();
+   const { liveProducts } = useCatalogProducts();
+   const { user } = useAuth();
+-  const [showProminentReferral, setShowProminentReferral] = useState(false);
++  const [referralClaim, setReferralClaim] = useState<{ userId: string; show: boolean } | null>(null);
++  const showProminentReferral = user?.role === "customer" && referralClaim?.userId === user.id && referralClaim.show;
+   const [unread, setUnread] = useState(0);
+ 
+   // Task 20: unread in-app notification badge, refreshed whenever Home regains focus.
+@@ -57,10 +58,10 @@
+   }, [user?.id]));
+   useEffect(() => {
+     let active = true;
+-    if (!user?.id || user.role !== "customer") { setShowProminentReferral(false); return () => { active = false; }; }
++    if (!user?.id || user.role !== "customer") return () => { active = false; };
+     void api.post<{ show_prominent: boolean }>("/referrals/home-banner-claim", {}).then((result) => {
+-      if (active) setShowProminentReferral(Boolean(result.show_prominent));
+-    }).catch(() => { if (active) setShowProminentReferral(false); });
++      if (active) setReferralClaim({ userId: user.id, show: Boolean(result.show_prominent) });
++    }).catch(() => { if (active) setReferralClaim({ userId: user.id, show: false }); });
+     return () => { active = false; };
+   }, [user?.id, user?.role]);
+   const quickProducts = liveProducts.length ? liveProducts.slice(0, 6) : QUICK_DELIVERY_PRODUCTS.slice(0, 6);
+@@ -74,11 +75,11 @@
+   // Re-sync the modal input with the currently-saved location every time
+   // the modal is opened so stale text from a prior session isn't shown
+   // after the address was changed from Account settings.
+-  useEffect(() => {
+-    if (locModalOpen) {
+-      setLocInput(location === DEFAULT_LOCATION ? "" : location);
+-    }
+-  }, [locModalOpen, location]);
++  const [locationSync, setLocationSync] = useState({ open: locModalOpen, location });
++  if (locationSync.open !== locModalOpen || locationSync.location !== location) {
++    setLocationSync({ open: locModalOpen, location });
++    if (locModalOpen) setLocInput(location === DEFAULT_LOCATION ? "" : location);
++  }
+ 
+   return (
+     <View style={styles.root}>
+--- a/frontend/app/+not-found.tsx
++++ b/frontend/app/+not-found.tsx
+@@ -16,7 +16,7 @@
+         <BrandLogo size="lg" />
+         <Text style={styles.title}>Page not found</Text>
+         <Text style={styles.sub}>
+-          The link you followed does not lead anywhere in Come In. Let's take you back home.
++          The link you followed does not lead anywhere in Come In. Let&#39;s take you back home.
+         </Text>
+         <Link href="/(tabs)" asChild>
+           <Pressable testID="not-found-home-btn" style={styles.btn}>
+--- a/frontend/app/admin-delivery-partners.tsx
++++ b/frontend/app/admin-delivery-partners.tsx
+@@ -10,8 +10,13 @@
+ 
+ export default function AdminDeliveryPartnersScreen() {
+   const insets = useSafeAreaInsets(); const { colors } = useTheme(); const { user } = useAuth();
+-  const [items, setItems] = useState<QueueItem[]>([]); const [selected, setSelected] = useState<Detail | null>(null); const [reason, setReason] = useState(""); const [busy, setBusy] = useState(false); const [notice, setNotice] = useState("");
+-  const load = useCallback(async () => { if (user?.role !== "admin") return; setBusy(true); try { setItems(await api.get<QueueItem[]>("/delivery-partner/admin/applications")); } catch (e: any) { setNotice(e?.message || "Could not load applications."); } finally { setBusy(false); } }, [user]);
++  const [items, setItems] = useState<QueueItem[]>([]); const [selected, setSelected] = useState<Detail | null>(null); const [reason, setReason] = useState(""); const [busy, setBusy] = useState(true); const [notice, setNotice] = useState("");
++  const load = useCallback(() => {
++    if (user?.role !== "admin") return Promise.resolve();
++    return api.get<QueueItem[]>("/delivery-partner/admin/applications").then(setItems)
++      .catch((e: any) => setNotice(e?.message || "Could not load applications."))
++      .finally(() => setBusy(false));
++  }, [user]);
+   useEffect(() => { load(); }, [load]);
+   const open = async (id: string) => { setNotice(""); try { setSelected(await api.get<Detail>(`/delivery-partner/admin/applications/${id}`)); setReason(""); } catch (e: any) { setNotice(e?.message || "Could not open application."); } };
+   const decide = async (decision: "approve" | "reject" | "correction" | "suspend" | "reactivate") => { if (!selected || reason.trim().length < 3) { setNotice("Enter an administrative reason of at least 3 characters."); return; } setBusy(true); try { await api.patch(`/delivery-partner/admin/applications/${selected.id}`, { decision, reason: reason.trim() }); setSelected(null); setReason(""); setNotice(`Application ${decision} action recorded.`); await load(); } catch (e: any) { setNotice(e?.message || "Action failed."); } finally { setBusy(false); } };
+--- a/frontend/app/admin-earnings.tsx
++++ b/frontend/app/admin-earnings.tsx
+@@ -23,10 +23,12 @@
+     const suffix = params.toString() ? `?${params.toString()}` : "";
+     const txParams = new URLSearchParams(params); if(transactionOrderId)txParams.set("order_id",transactionOrderId);if(transactionShopId)txParams.set("shop_id",transactionShopId);if(transactionStatus)txParams.set("status_filter",transactionStatus);if(transactionType)txParams.set("transaction_type",transactionType);if(settlementReference)txParams.set("settlement_reference",settlementReference);
+     const txSuffix = txParams.toString() ? `?${txParams.toString()}` : "";
+-    const [summary, tx, ledger, settle, bank, shops, restaurants] = await Promise.all([api.get<any>(`/admin/earnings${suffix}`), api.get<any>(`/admin/earnings/transactions${txSuffix}`), api.get<any>(`/admin/earnings/ledger${suffix}`), api.get<any>("/admin/earnings/settlements"), api.get<any>("/admin/earnings/bank-account"), api.get<any[]>("/admin/shops"), api.get<any[]>("/admin/restaurants")]);
++    return Promise.all([api.get<any>(`/admin/earnings${suffix}`), api.get<any>(`/admin/earnings/transactions${txSuffix}`), api.get<any>(`/admin/earnings/ledger${suffix}`), api.get<any>("/admin/earnings/settlements"), api.get<any>("/admin/earnings/bank-account"), api.get<any[]>("/admin/shops"), api.get<any[]>("/admin/restaurants")]).then(async ([summary, tx, ledger, settle, bank, shops, restaurants]) => {
+     setData(summary); setTransactions(tx.items || []); setLedgerEntries(ledger.items || []); setSettlements(settle.items || []); setBankSummary(bank); setPolicyEntities([...(shops||[]).map((x:any)=>({...x,policy_kind:"shop"})),...(restaurants||[]).map((x:any)=>({...x,policy_kind:"restaurant"}))]);
++  
++    });
+   }, [startDate,endDate,transactionOrderId,transactionShopId,transactionStatus,transactionType,settlementReference]);
+-  useEffect(()=>{ if(user?.role !== "admin"){setLoading(false);return;} load().catch((e:any)=>setNotice(e?.message||"Earnings could not be loaded.")).finally(()=>setLoading(false)); },[user,load]);
++  useEffect(()=>{ if(user?.role !== "admin"){return;} load().catch((e:any)=>setNotice(e?.message||"Earnings could not be loaded.")).finally(()=>setLoading(false)); },[user,load]);
+   const refresh = async () => { try { await load(); setNotice("Refreshed from server records."); } catch(e:any) { setNotice(e?.message||"Refresh failed."); } };
+   const choosePolicy = (entity:any) => { setPolicyKind(entity.policy_kind); setPolicyId(entity.id); setCommissionRate(entity.commission_rate_percent==null?"":String(entity.commission_rate_percent)); setServiceFee(String(entity.platform_service_fee_inr??0)); setDeliveryBeneficiary(entity.delivery_fee_beneficiary||"not_applicable"); };
+   const savePolicy = async () => { if(!policyId || commissionRate.trim()===""){setNotice("Choose a shop/restaurant and enter an explicit commission percentage; do not guess a rate.");return;} try { await api.patch(`/admin/financial-policy/${policyKind}/${policyId}`,{commission_rate_percent:Number(commissionRate),platform_service_fee_inr:Number(serviceFee||0),delivery_fee_beneficiary:deliveryBeneficiary}); setNotice("Financial policy saved and audited. Future reports use this explicit policy; historical rates are not reconstructed."); await refresh(); } catch(e:any){setNotice(e?.message||"Policy save failed.");} };
+--- a/frontend/app/admin.tsx
++++ b/frontend/app/admin.tsx
+@@ -72,7 +72,7 @@
+   const [adminNotice, setAdminNotice] = useState("");
+ 
+   const load = useCallback(async () => {
+-    const [userRows, s, o, a, g, restaurantRows, foodOrderRows, supportRows, masterRows, announcementRows, homeFeePolicy, summary] = await Promise.all([
++    return Promise.all([
+       api.get<any[]>("/admin/users"),
+       api.get<any[]>("/admin/shops"),
+       api.get<any[]>("/admin/orders"),
+@@ -85,9 +85,11 @@
+       api.get<any[]>("/admin/announcements"),
+       api.get<any>("/home-services/fee-policy", false),
+       api.get<any>("/admin/dashboard"),
+-    ]);
++    ]).then(async ([userRows, s, o, a, g, restaurantRows, foodOrderRows, supportRows, masterRows, announcementRows, homeFeePolicy, summary]) => {
+     setDashboard(summary);
+     setUsers(userRows); setShops(s); setOrders(o); setAnything(a); setAssist(g); setRestaurants(restaurantRows); setFoodOrders(foodOrderRows); setSupport(supportRows); setMasterProducts(masterRows); setAnnouncements(announcementRows); setHomeFeeMode(homeFeePolicy.mode || "provider"); setHomeFixedFee(String(homeFeePolicy.fixed_visit_fee ?? 0));
++  
++    });
+   }, []);
+ 
+   useEffect(() => {
+@@ -110,14 +112,8 @@
+   }, [tab, user?.role]);
+ 
+   useEffect(() => {
+-    if (!user) {
+-      setLoading(false);
+-      return;
+-    }
+-    if (user.role !== "admin") {
+-      setLoading(false);
+-      return;
+-    }
++    if (!user) return;
++    if (user.role !== "admin") return;
+     load().catch((e: any) => setAdminNotice(e?.message || "Admin data could not be loaded.")).finally(() => setLoading(false));
+   }, [user, load]);
+ 
+@@ -427,7 +423,7 @@
+         </View>}
+         {tab === "referrals" && <View style={styles.card} testID="admin-referral-review">
+           <Text style={styles.cardTitle}>Referral qualification and reward review</Text>
+-          <Text style={styles.cardMeta}>Approve only after independently verifying the referred customer's contact, confirming the qualifying payment, and completing refund/return and fraud checks. This admin action records your attestation; it does not perform bank payout.</Text>
++          <Text style={styles.cardMeta}>Approve only after independently verifying the referred customer&#39;s contact, confirming the qualifying payment, and completing refund/return and fraud checks. This admin action records your attestation; it does not perform bank payout.</Text>
+           <ActionBtn label="Refresh referral queue" tone="ghost" onPress={async()=>{try{const result=await api.get<any>("/admin/referrals");setReferralRows(result.referrals||[]);setReferralRewards(result.rewards||[]);setAdminNotice("Referral queue refreshed.");}catch(e:any){setAdminNotice(e?.message||"Could not refresh referral queue.");}}} />
+           <Text style={styles.section}>Referral registrations</Text>
+           {referralRows.map((r:any)=><View key={r.id} style={styles.catalogRow}>
+@@ -451,7 +447,7 @@
+ 
+         {tab === "retailImport" && <View style={styles.card} testID="admin-retail-price-import">
+           <Text style={styles.cardTitle}>Retail Price Import</Text>
+-          <Text style={styles.cardMeta}>Admin-only source-scoped import for authorized retailer files. Each offer is stored under its own retailer + retailer shop ID + SKU/name key, so one retailer cannot overwrite another retailer or a COME-IN shop's checkout price. Preview does not write data.</Text>
++          <Text style={styles.cardMeta}>Admin-only source-scoped import for authorized retailer files. Each offer is stored under its own retailer + retailer shop ID + SKU/name key, so one retailer cannot overwrite another retailer or a COME-IN shop&#39;s checkout price. Preview does not write data.</Text>
+           <Text style={styles.cardMeta}>Required columns: retailer, retailer_shop_id, name, price. Recommended: sku, category_id, brand, pack_size/unit, stock, last_updated, source_url.</Text>
+           <View style={styles.btnRow}>
+             <ActionBtn label="Download Retail CSV template" tone="ghost" onPress={async () => { try { const blob = await api.downloadRetailPriceImportTemplate(); if (typeof document === "undefined" || typeof URL === "undefined") { setAdminNotice("Template download is supported in the web admin."); return; } const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "come-in-retail-price-template.csv"; a.click(); URL.revokeObjectURL(url); setAdminNotice("Retail Price Import template downloaded."); } catch(e:any) { setAdminNotice(e?.message || "Retail template download failed."); } }} />
+--- a/frontend/app/auth.tsx
++++ b/frontend/app/auth.tsx
+@@ -32,13 +32,18 @@
+   const { colors } = useTheme();
+   const { login, register } = useAuth();
+   const { next, ref, mode: initialMode } = useLocalSearchParams<{ next?: string; ref?: string; mode?: string }>();
+-  const [mode, setMode] = useState<Mode>("signin");
+-  const [referralCode, setReferralCode] = useState("");
++  const [mode, setMode] = useState<Mode>(initialMode === "signup" ? "signup" : "signin");
++  const [referralCode, setReferralCode] = useState(typeof ref === "string" ? ref.toUpperCase() : "");
++  const [previousRoute, setPreviousRoute] = useState({ ref, mode: initialMode });
++  if (previousRoute.ref !== ref || previousRoute.mode !== initialMode) {
++    setPreviousRoute({ ref, mode: initialMode });
++    if (typeof ref === "string" && ref) setReferralCode(ref.toUpperCase());
++    if (initialMode === "signup") setMode("signup");
++  }
+   useEffect(() => {
+     const incoming = typeof ref === "string" ? ref : "";
+-    if (incoming) { setReferralCode(incoming.toUpperCase()); void storage.setItem("comein.pendingReferralCode", incoming.toUpperCase()); }
++    if (incoming) { void storage.setItem("comein.pendingReferralCode", incoming.toUpperCase()); }
+     else void storage.getItem<string>("comein.pendingReferralCode", "").then((value) => { if (value) setReferralCode(value.toUpperCase()); });
+-    if (initialMode === "signup") setMode("signup");
+   }, [ref, initialMode]);
+ 
+   const [name, setName] = useState("");
+--- a/frontend/app/become-seller.tsx
++++ b/frontend/app/become-seller.tsx
+@@ -80,6 +80,7 @@
+ };
+ 
+ export default function BecomeSellerScreen() {
++  const razorpayConfig = useGroceryPaymentConfig();
+   const insets = useSafeAreaInsets();
+   const router = useRouter();
+   const params = useLocalSearchParams<{ type?: string }>();
+@@ -98,10 +99,7 @@
+   const fileInputRef = useRef<HTMLInputElement | null>(null);
+ 
+   useEffect(() => {
+-    if (!user) {
+-      setLoading(false);
+-      return;
+-    }
++    if (!user) return;
+     api
+       .get<Shop | null>("/shops/mine")
+       .then((data) => {
+@@ -137,7 +135,6 @@
+   const field = <K extends keyof Shop>(key: K, value: Shop[K]) =>
+     setShop((prev) => ({ ...prev, [key]: value }));
+ 
+-  const razorpayConfig = useGroceryPaymentConfig();
+   const togglePayment = (code: string) => {
+     const set = new Set(shop.payment_methods);
+     if (set.has(code)) set.delete(code);
+@@ -317,7 +314,7 @@
+           </View>
+         </View>
+         <Text style={styles.helpText}>
+-          Lat/Long power the "Get directions" button. Grab them from Google Maps and paste here — a
++          Lat/Long power the &quot;Get directions&quot; button. Grab them from Google Maps and paste here — a
+           full map picker will activate once the Maps key is configured.
+         </Text>
+ 
+--- a/frontend/app/chand.tsx
++++ b/frontend/app/chand.tsx
+@@ -160,8 +160,13 @@
+   const [sending, setSending] = useState(false);
+   const [requestError, setRequestError] = useState("");
+   const [retryQuery, setRetryQuery] = useState("");
+-  const messageInputRef = useRef<TextInput | null>(null);
+-  const [voiceTypingHint, setVoiceTypingHint] = useState(false);
++  const messageInputRef = useRef<React.ComponentRef<typeof TextInput> | null>(null);
++  const [voiceTypingHint, setVoiceTypingHint] = useState(routeParams.voice === "1");
++  const [previousVoiceParam, setPreviousVoiceParam] = useState(routeParams.voice);
++  if (previousVoiceParam !== routeParams.voice) {
++    setPreviousVoiceParam(routeParams.voice);
++    if (routeParams.voice === "1") setVoiceTypingHint(true);
++  }
+   const [voiceLanguage, setVoiceLanguage] = useState<"auto" | "hi" | "en">("auto");
+   const [voiceRecording, setVoiceRecording] = useState(false);
+   const [voiceBusy, setVoiceBusy] = useState(false);
+@@ -176,7 +181,6 @@
+   const [providerStatus, setProviderStatus] = useState<"checking" | "not_configured" | "configured_unverified" | "live" | "unavailable">("checking");
+   useEffect(() => {
+     if (routeParams.voice === "1") {
+-      setVoiceTypingHint(true);
+       messageInputRef.current?.focus();
+     }
+   }, [routeParams.voice]);
+@@ -192,12 +196,19 @@
+     }).catch(() => { if (active) setProviderStatus((current) => current === "live" ? current : "unavailable"); });
+     return () => { active = false; };
+   }, []);
+-  useEffect(() => {
++  const [welcomeLanguage, setWelcomeLanguage] = useState(lang);
++  if (welcomeLanguage !== lang) {
++    setWelcomeLanguage(lang);
+     setMessages((current) => current.length === 1 && current[0]?.id === "welcome"
+       ? [{ ...current[0], text: `${t("brand.tagline")} ${t("chand.subtitle")}. ${t("chand.provider.note")}` }]
+       : current);
+-  }, [lang, t]);
+-  const [helpOpen, setHelpOpen] = useState(false);
++  }
++  const [helpOpen, setHelpOpen] = useState(routeParams.openHelp === "1");
++  const [previousHelpParam, setPreviousHelpParam] = useState(routeParams.openHelp);
++  if (previousHelpParam !== routeParams.openHelp) {
++    setPreviousHelpParam(routeParams.openHelp);
++    if (routeParams.openHelp === "1") setHelpOpen(true);
++  }
+   const [helpLoading, setHelpLoading] = useState(false);
+   const [helpError, setHelpError] = useState("");
+   const [helpNotice, setHelpNotice] = useState("");
+@@ -454,17 +465,14 @@
+     } finally { setFeedbackBusy(false); }
+   };
+ 
+-  const loadHelpData = useCallback(async () => {
+-    setHelpLoading(true); setHelpError("");
+-    if (!user) {
+-      setHelpError("Sign in to load your private order history and submit a support request. Demo help topics remain available without signing in.");
+-      setHelpLoading(false); return;
+-    }
+-    const [groceryResult, restaurantResult, ticketResult] = await Promise.allSettled([
++  const fetchHelpData = useCallback(() => {
++    if (!user) return Promise.resolve();
++    return Promise.allSettled([
+       api.get<any[]>("/orders/mine"),
+       api.get<any[]>("/restaurant/orders/mine"),
+       api.get<any[]>("/restaurant/support/mine"),
+-    ]);
++    ]).then(([groceryResult, restaurantResult, ticketResult]) => {
++    setHelpError("");
+     const mapped: SupportOrder[] = [];
+     if (groceryResult.status === "fulfilled") for (const o of groceryResult.value) mapped.push({ ...o, kind: "grocery" });
+     if (restaurantResult.status === "fulfilled") for (const o of restaurantResult.value) mapped.push({ ...o, kind: "restaurant" });
+@@ -477,20 +485,32 @@
+       setHelpError("Orders loaded, but the shared support ticket endpoint is unavailable. You can retry.");
+     }
+     setHelpLoading(false);
+-  }, [user?.id]);
+-
++    });
++  }, [user]);
++  const loadHelpData = useCallback(() => {
++    setHelpLoading(Boolean(user));
++    setHelpError(user ? "" : "Sign in to load your private order history and submit a support request. Demo help topics remain available without signing in.");
++    return fetchHelpData();
++  }, [user, fetchHelpData]);
++  const helpContextKey = `${routeParams.openHelp || ""}:${user?.id || ""}`;
++  const [previousHelpContext, setPreviousHelpContext] = useState<string | null>(null);
++  if (previousHelpContext !== helpContextKey) {
++    setPreviousHelpContext(helpContextKey);
++    if (routeParams.openHelp === "1") {
++      setHelpLoading(Boolean(user));
++      setHelpError(user ? "" : "Sign in to load your private order history and submit a support request. Demo help topics remain available without signing in.");
++    }
++  }
+   useEffect(() => {
+-    if (routeParams.openHelp === "1") {
+-      setHelpOpen(true);
+-      void loadHelpData();
+-    }
+-  }, [routeParams.openHelp, loadHelpData]);
+-
+-  useEffect(() => {
+-    if (!routeParams.order_id || !orders.length) return;
++    if (routeParams.openHelp === "1") void fetchHelpData();
++  }, [routeParams.openHelp, fetchHelpData]);
++
++  const [previousOrderSelection, setPreviousOrderSelection] = useState({ id: routeParams.order_id, kind: routeParams.order_kind, orders });
++  if (previousOrderSelection.id !== routeParams.order_id || previousOrderSelection.kind !== routeParams.order_kind || previousOrderSelection.orders !== orders) {
++    setPreviousOrderSelection({ id: routeParams.order_id, kind: routeParams.order_kind, orders });
+     const match = orders.find((order) => order.id === routeParams.order_id && order.kind === (routeParams.order_kind === "grocery" ? "grocery" : "restaurant"));
+     if (match) setSelectedOrder(match);
+-  }, [routeParams.order_id, routeParams.order_kind, orders]);
++  }
+ 
+   const openHelp = () => {
+     setHelpOpen((current) => !current);
+--- a/frontend/app/checkout.tsx
++++ b/frontend/app/checkout.tsx
+@@ -75,9 +75,8 @@
+   useEffect(() => {
+     let active = true;
+     const shopId = shopIds[0];
+-    setShopOptions(null);
+     if (!shopId || hasDemoItems || hasMixedShops) return () => { active = false; };
+-    api.get<any>(`/shops/${encodeURIComponent(shopId)}`, false).then((shop) => {
++    api.get<{ delivery_available?: boolean; pickup_available?: boolean; name?: string; payment_methods?: string[]; public_upi?: string }>(`/shops/${encodeURIComponent(shopId)}`, false).then((shop) => {
+       if (!active) return;
+       const options = { delivery: Boolean(shop.delivery_available), pickup: Boolean(shop.pickup_available), name: String(shop.name || "Selected shop"), paymentMethods: Array.isArray(shop.payment_methods) ? shop.payment_methods : ["cod"], publicUpi: typeof shop.public_upi === "string" ? shop.public_upi : undefined };
+       setShopOptions(options);
+@@ -103,7 +102,7 @@
+ 
+   useEffect(() => {
+     let active = true;
+-    if (user?.role !== "customer") { setRewardBalance(0); setUseRewards(false); return () => { active = false; }; }
++    if (user?.role !== "customer") return () => { active = false; };
+     api.get<any>("/referrals/me").then((data) => { if (active) setRewardBalance(Math.max(0, Number(data.available_balance || 0))); }).catch(() => { if (active) setRewardBalance(0); });
+     return () => { active = false; };
+   }, [user?.id, user?.role]);
+@@ -130,7 +129,24 @@
+     })();
+     return () => { active = false; };
+   }, [cartFingerprint]);
+-  useEffect(() => { setQuote(null); }, [cartFingerprint, fulfillment]);
++  const checkoutKey = `${cartFingerprint}:${fulfillment}`;
++  const [previousCheckoutKey, setPreviousCheckoutKey] = useState(checkoutKey);
++  if (previousCheckoutKey !== checkoutKey) {
++    setPreviousCheckoutKey(checkoutKey);
++    setQuote(null);
++  }
++  const [previousCartFingerprint, setPreviousCartFingerprint] = useState(cartFingerprint);
++  if (previousCartFingerprint !== cartFingerprint) {
++    setPreviousCartFingerprint(cartFingerprint);
++    setShopOptions(null);
++  }
++
++  const rewardUserKey = `${user?.id || ""}:${user?.role || ""}`;
++  const [previousRewardUserKey, setPreviousRewardUserKey] = useState(rewardUserKey);
++  if (previousRewardUserKey !== rewardUserKey) {
++    setPreviousRewardUserKey(rewardUserKey);
++    if (user?.role !== "customer") { setRewardBalance(0); setUseRewards(false); }
++  }
+ 
+   const place = async () => {
+     setError(null);
+@@ -196,7 +212,7 @@
+         <Text style={styles.sTitle}>{placed.payment_status === "paid_by_rewards" ? "Order placed — covered by rewards" : placed.payment_method === "upi" || placed.payment_status === "razorpay_pending" ? "Order created — payment pending" : "Order placed!"}</Text>
+         <Text style={styles.sSub}>Reference <Text style={{ fontWeight: "800" }}>{placed.ref}</Text></Text>
+         {placed.payment_status === "paid_by_rewards" ? <Text style={styles.sSub}>Your approved referral rewards covered the order total. No additional payment is due.</Text> : placed.payment_method === "upi" ? <>
+-          <Text style={styles.sSub}>Pay ₹{Number(placed.total).toFixed(2)} to the shop's UPI ID. The order stays pending until the shopkeeper verifies receipt.</Text>
++          <Text style={styles.sSub}>Pay ₹{Number(placed.total).toFixed(2)} to the shop&#39;s UPI ID. The order stays pending until the shopkeeper verifies receipt.</Text>
+           <Pressable testID="pay-upi-btn" onPress={() => { if (placed.payment_uri) Linking.openURL(placed.payment_uri).catch(() => setError("Could not open a UPI app. Copy the shop UPI ID from the shop page and pay manually; the order remains unpaid until the shop verifies receipt.")); }} style={styles.primary}>
+             <Text style={styles.primaryText}>Pay with UPI app</Text>
+           </Pressable>
+@@ -224,17 +240,17 @@
+       <ScrollView contentContainerStyle={{ padding: spacing.lg, paddingBottom: 160 }} keyboardShouldPersistTaps="handled">
+         <SectionTitle text="Fulfillment" />
+         {shopOptions && <Text style={styles.pmSub}>{shopOptions.name}</Text>}
+-        {checkoutLines.length > 0 && !shopOptions ? <Text style={styles.pmSub} testID="fulfillment-options-loading">Checking this shop's delivery and pickup availability…</Text> : null}
++        {checkoutLines.length > 0 && !shopOptions ? <Text style={styles.pmSub} testID="fulfillment-options-loading">Checking this shop&#39;s delivery and pickup availability…</Text> : null}
+         <View style={{ flexDirection: "row", gap: spacing.sm }}>
+           {shopOptions?.delivery && <Pressable testID="fulfillment-delivery" onPress={() => setFulfillment("delivery")} style={[styles.pmRow, { flex: 1 }, fulfillment === "delivery" && { borderColor: colors.brandPrimary, backgroundColor: colors.brandTertiary }]}><Feather name="truck" size={16} color={colors.brandPrimary} /><Text style={styles.pmTitle}>Delivery</Text></Pressable>}
+           {shopOptions?.pickup && <Pressable testID="fulfillment-pickup" onPress={() => setFulfillment("pickup")} style={[styles.pmRow, { flex: 1 }, fulfillment === "pickup" && { borderColor: colors.brandPrimary, backgroundColor: colors.brandTertiary }]}><Feather name="map-pin" size={16} color={colors.brandPrimary} /><Text style={styles.pmTitle}>Pickup</Text></Pressable>}
+         </View>
+-        {shopOptions?.loadFailed ? <Text style={styles.errorText} testID="fulfillment-options-error">Could not load this shop's delivery and pickup options. Check your connection and return to the cart to retry.</Text> : null}
++        {shopOptions?.loadFailed ? <Text style={styles.errorText} testID="fulfillment-options-error">Could not load this shop&#39;s delivery and pickup options. Check your connection and return to the cart to retry.</Text> : null}
+         {shopOptions && !shopOptions.loadFailed && !shopOptions.delivery && !shopOptions.pickup ? <Text style={styles.errorText} testID="fulfillment-unavailable">This shop currently offers neither delivery nor pickup. Please contact the shop before placing an order.</Text> : null}
+         {fulfillment === "delivery" && shopOptions?.delivery ? <>
+           <SectionTitle text="Delivery details" />
+           <Field testID="co-address" label="Delivery address" value={address} onChange={setAddress} multiline />
+-        </> : fulfillment === "pickup" && shopOptions?.pickup ? <Text style={styles.pmSub}>Collect your order from the shop's listed location. No delivery service is assumed.</Text> : null}
++        </> : fulfillment === "pickup" && shopOptions?.pickup ? <Text style={styles.pmSub}>Collect your order from the shop&#39;s listed location. No delivery service is assumed.</Text> : null}
+         <Field testID="co-name" label="Full name" value={name} onChange={setName} />
+         <Field testID="co-phone" label="Phone number" value={phone} onChange={setPhone} keyboardType="phone-pad" />
+         <Field testID="co-notes" label="Notes for shop (optional)" value={notes} onChange={setNotes} multiline />
+@@ -272,7 +288,7 @@
+             </View>
+           ))}
+           <View style={styles.billLine}><Text style={styles.billName}>Items subtotal</Text><Text style={styles.billValue}>₹{quote?.subtotal ?? subtotal}</Text></View>
+-          <View style={styles.billLine}><Text style={styles.billName}>{fulfillment === "pickup" ? "Pickup" : "Delivery"}</Text><Text style={styles.billValue}>{fulfillment === "pickup" ? "At shop" : (quote?.delivery_fee ?? (fulfillment === "pickup" ? 0 : deliveryFee)) === 0 ? "FREE" : `₹${quote?.delivery_fee ?? deliveryFee}`}</Text></View>
++          <View style={styles.billLine}><Text style={styles.billName}>{fulfillment === "pickup" ? "Pickup" : "Delivery"}</Text><Text style={styles.billValue}>{fulfillment === "pickup" ? "At shop" : (quote?.delivery_fee ?? deliveryFee) === 0 ? "FREE" : `₹${quote?.delivery_fee ?? deliveryFee}`}</Text></View>
+           {Number(quote?.reward_discount || 0) > 0 ? <View style={styles.billLine}><Text style={styles.billName}>Referral rewards</Text><Text style={styles.billValue}>−₹{Number(quote?.reward_discount || 0).toFixed(2)}</Text></View> : null}
+           <View style={styles.divider} />
+           <View style={styles.billLine}><Text style={[styles.billName, { fontWeight: "800", color: colors.onSurface }]}>To pay</Text><Text style={[styles.billValue, { fontWeight: "800", fontSize: 16 }]}>₹{quote?.total ?? total}</Text></View>
+--- a/frontend/app/delivery-partner.tsx
++++ b/frontend/app/delivery-partner.tsx
+@@ -26,19 +26,19 @@
+   const [notice, setNotice] = useState("");
+   const [busyProvider, setBusyProvider] = useState(false);
+ 
+-  const refresh = useCallback(async () => {
+-    if (!user) { setLoading(false); return; }
+-    try {
+-      const [mine, status] = await Promise.all([
+-        api.get<Application | null>("/delivery-partner/application/mine"),
+-        api.get<Providers>("/delivery-partner/provider-status"),
+-      ]);
++  const refresh = useCallback(() => {
++    if (!user) return Promise.resolve();
++    return Promise.all([
++      api.get<Application | null>("/delivery-partner/application/mine"),
++      api.get<Providers>("/delivery-partner/provider-status"),
++    ]).then(([mine, status]) => {
+       setApplication(mine);
+       if (mine) { setFullName((mine as any).full_name || ""); setMobile((mine as any).mobile || ""); setAddress((mine as any).residential_address || ""); setAlternate((mine as any).alternate_contact || ""); }
+       setProviders(status);
+-    } catch (e: any) { setNotice(e?.message || "Could not load your application."); }
+-    finally { setLoading(false); }
++    }).catch((e: any) => setNotice(e?.message || "Could not load your application."))
++      .finally(() => setLoading(false));
+   }, [user]);
++
+   useEffect(() => { void refresh(); }, [refresh]);
+ 
+   const saveDraft = async () => {
+--- a/frontend/app/notifications.tsx
++++ b/frontend/app/notifications.tsx
+@@ -26,12 +26,15 @@
+ 
+   const load = useCallback(() => {
+     if (!user) return;
+-    setLoading(true);
+-    api.get<{ items: Notice[] }>("/notifications/mine")
++    return api.get<{ items: Notice[] }>("/notifications/mine")
+       .then((r) => { setItems(r.items || []); setError(""); })
+       .catch((e: any) => setError(e?.message || t("n.loadError")))
+       .finally(() => setLoading(false));
+   }, [user, t]);
++  const [notificationUser, setNotificationUser] = useState(user?.id);
++  if (notificationUser !== user?.id) {
++    setNotificationUser(user?.id); setLoading(Boolean(user));
++  }
+   useEffect(() => { load(); }, [load]);
+ 
+   const open = async (n: Notice) => {
+--- a/frontend/app/order-tracking.tsx
++++ b/frontend/app/order-tracking.tsx
+@@ -8,7 +8,7 @@
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
+ 
+ type Tracking = { order_id: string; kind: string; status: string; status_history?: { status: string; at: string; note?: string }[]; tracking_active: boolean; location: null | { latitude: number; longitude: number; accuracy_m?: number | null; updated_at: string }; eta_minutes: number | null; map_provider: string | null; message: string };
+-type GroceryOrderDetails = { id: string; ref: string; status: string; items: { product_id: string; variant_id?: string | null; name: string; unit: string; qty: number; price: number }[]; subtotal: number; delivery_fee: number; total: number; payment_method: string; payment_status: string; delivery_address: string; status_history?: { status: string; at: string; note?: string }[] };
++type GroceryOrderDetails = { id: string; ref: string; status: string; items: { product_id: string; variant_id?: string | null; name: string; unit: string; qty: number; price: number; quantity_label?: string; line_total?: number }[]; subtotal: number; delivery_fee: number; total: number; payment_method: string; payment_status: string; delivery_address: string; status_history?: { status: string; at: string; note?: string }[] };
+ 
+ export default function OrderTrackingScreen() {
+   const { id, kind } = useLocalSearchParams<{ id: string; kind?: string }>();
+@@ -21,24 +21,19 @@
+   const [order, setOrder] = useState<GroceryOrderDetails | null>(null);
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState("");
+-  const load = useCallback(async () => {
+-    if (!id) return;
+-    try {
+-      const [nextTracking, nextOrder] = await Promise.all([
+-        api.get<Tracking>(`/orders/${encodeURIComponent(id)}/tracking?kind=${orderKind}`),
+-        orderKind === "grocery" ? api.get<GroceryOrderDetails>(`/orders/${encodeURIComponent(id)}`) : Promise.resolve(null),
+-      ]);
+-      setTracking(nextTracking);
+-      setOrder(nextOrder);
+-      setError("");
+-    }
+-    catch (e: any) {
+-      setTracking(null);
+-      setOrder(null);
+-      setError(e?.message || "Tracking could not be loaded. Sign in with the account that owns this order.");
+-    }
+-    finally { setLoading(false); }
++  const load = useCallback(() => {
++    if (!id) return Promise.resolve();
++    return Promise.all([
++      api.get<Tracking>(`/orders/${encodeURIComponent(id)}/tracking?kind=${orderKind}`),
++      orderKind === "grocery" ? api.get<GroceryOrderDetails>(`/orders/${encodeURIComponent(id)}`) : Promise.resolve(null),
++    ]).then(([nextTracking, nextOrder]) => {
++      setTracking(nextTracking); setOrder(nextOrder); setError("");
++    }).catch((e: unknown) => {
++      setTracking(null); setOrder(null);
++      setError(e && typeof e === "object" && "message" in e && typeof e.message === "string" ? e.message : "Tracking could not be loaded. Sign in with the account that owns this order.");
++    }).finally(() => setLoading(false));
+   }, [id, orderKind]);
++
+   useEffect(() => { void load(); const timer = setInterval(() => { void load(); }, 10000); return () => clearInterval(timer); }, [load]);
+ 
+   return <View style={styles.root}>
+@@ -67,7 +62,7 @@
+           {!order && tracking.status_history?.length ? <View style={styles.history}><Text style={styles.eyebrow}>STATUS HISTORY</Text>{tracking.status_history.map((entry, index) => <Text key={`${entry.status}:${index}`} style={styles.body}>{entry.status.replaceAll("_", " ")} · {new Date(entry.at).toLocaleString()}{entry.note ? ` · ${entry.note}` : ""}</Text>)}</View> : null}
+           {tracking.location ? <><Text style={styles.body}>Latest coordinates: {tracking.location.latitude.toFixed(5)}, {tracking.location.longitude.toFixed(5)}</Text>{tracking.location.accuracy_m != null ? <Text style={styles.body}>Reported accuracy: ±{Math.round(tracking.location.accuracy_m)} m</Text> : null}<Text style={styles.body}>Last update: {new Date(tracking.location.updated_at).toLocaleString()}</Text><Text style={styles.body}>Map/route and ETA are unavailable because no mapping provider is configured.</Text></> : <Text style={styles.body}>No driver movement, route, or ETA is simulated. A location appears only after an authorized order operator submits a valid update.</Text>}
+         </View>
+-        <View style={styles.card}><Feather name="shield" size={20} color={colors.brandPrimary} /><Text style={styles.body}>This tracking information is private to the order's customer and authorized shop/restaurant operator.</Text></View>
++        <View style={styles.card}><Feather name="shield" size={20} color={colors.brandPrimary} /><Text style={styles.body}>This tracking information is private to the order&#39;s customer and authorized shop/restaurant operator.</Text></View>
+       </> : null}
+     </ScrollView>
+   </View>;
+--- a/frontend/app/orders.tsx
++++ b/frontend/app/orders.tsx
+@@ -29,14 +29,12 @@
+   const [actionNotice, setActionNotice] = useState("");
+   const [busyOrderId, setBusyOrderId] = useState("");
+ 
+-  const loadOrders = useCallback(async () => {
+-    if (!user) { setLoading(false); return; }
+-    setLoading(true);
+-    setLoadError("");
+-    const [grocery, restaurant] = await Promise.allSettled([
++  const fetchOrders = useCallback(() => {
++    if (!user) return Promise.resolve();
++    return Promise.allSettled([
+       api.get<any[]>("/orders/mine"),
+       api.get<any[]>("/restaurant/orders/mine"),
+-    ]);
++    ]).then(([grocery, restaurant]) => {
+     const combined: any[] = [];
+     if (grocery.status === "fulfilled") combined.push(...grocery.value.map((o) => ({ ...o, kind: "grocery" })));
+     if (restaurant.status === "fulfilled") combined.push(...restaurant.value.map((o) => ({ ...o, kind: "restaurant" })));
+@@ -45,9 +43,15 @@
+     if (grocery.status === "rejected" && restaurant.status === "rejected") setLoadError("Order history could not be loaded. Check your connection and retry.");
+     else if (grocery.status === "rejected" || restaurant.status === "rejected") setLoadError("Some order history is unavailable; the displayed orders are from the API that responded successfully.");
+     setLoading(false);
++    });
+   }, [user]);
+-
+-  useEffect(() => { void loadOrders(); }, [loadOrders]);
++  const loadOrders = useCallback(() => {
++    setLoading(Boolean(user)); setLoadError("");
++    return fetchOrders();
++  }, [user, fetchOrders]);
++  const [ordersUser, setOrdersUser] = useState(user?.id);
++  if (ordersUser !== user?.id) { setOrdersUser(user?.id); setLoading(Boolean(user)); setLoadError(""); }
++  useEffect(() => { void fetchOrders(); }, [fetchOrders]);
+ 
+   const repeatOrder = (order: any) => {
+     setActionNotice("");
+--- a/frontend/app/product/[id].tsx
++++ b/frontend/app/product/[id].tsx
+@@ -33,16 +33,25 @@
+ 
+   const product = id ? (liveProducts.find((p) => p.id === id) ?? getProductById(id)) : undefined;
+ 
+-  useEffect(() => { setImageFailed(false); setSelectedVariantId(undefined); setCartMessage(""); }, [product?.id, product?.image]);
++  const productKey = `${product?.id || ""}:${product?.image || ""}`;
++  const [previousProductKey, setPreviousProductKey] = useState(productKey);
++  if (previousProductKey !== productKey) {
++    setPreviousProductKey(productKey);
++    setImageFailed(false); setSelectedVariantId(undefined); setCartMessage("");
++  }
++  const comparisonKey = `${product?.masterProductId || ""}:${product?.masterVariantId || ""}:${product?.sellBy || ""}`;
++  const [previousComparisonKey, setPreviousComparisonKey] = useState<string | null>(null);
++  if (previousComparisonKey !== comparisonKey) {
++    setPreviousComparisonKey(comparisonKey);
++    if (!product?.masterProductId || !product?.masterVariantId) { setComparison(null); setComparisonMessage(""); }
++    else setComparisonMessage("Loading verified offers…");
++  }
+ 
+   useEffect(() => {
+     let active = true;
+     if (!product?.masterProductId || !product?.masterVariantId) {
+-      setComparison(null);
+-      setComparisonMessage("");
+       return () => { active = false; };
+     }
+-    setComparisonMessage("Loading verified offers…");
+     api.get<any>(`/catalog/price-comparison?master_product_id=${encodeURIComponent(product.masterProductId)}&variant_id=${encodeURIComponent(product.masterVariantId)}${product.sellBy === "weight" || product.sellBy === "volume" ? `&sell_by=${product.sellBy}` : ""}`, false)
+       .then((result) => { if (active) { setComparison(result); setComparisonMessage(""); } })
+       .catch(() => { if (active) { setComparison(null); setComparisonMessage("Price comparison is currently unavailable. This offer's displayed price is from its own shop listing."); } });
+--- a/frontend/app/referral-dashboard.tsx
++++ b/frontend/app/referral-dashboard.tsx
+@@ -10,8 +10,11 @@
+ type Dashboard={referral_code:string;referral_url:string;message:string;counts:Record<string,number>;eligible_count:number;target:number;reward_amount:number;reward_status:string;available_balance:number;referrals:any[];ledger:any[];payout_integration:string};
+ export default function ReferralDashboardScreen(){
+  const router=useRouter();const insets=useSafeAreaInsets();const {colors}=useTheme();const styles=useStyles();const {user}=useAuth();const [data,setData]=useState<Dashboard|null>(null);const [error,setError]=useState("");const [notice,setNotice]=useState("");const [loading,setLoading]=useState(true);
+- const load=useCallback(async()=>{setLoading(true);try{const result=await api.get<Dashboard>("/referrals/me");setData(result);setError("");}catch(e:any){setError(e?.message||"Could not load Referral & Earn.");}finally{setLoading(false);}},[]);
+- useEffect(()=>{if(user?.role!=="customer"){setError("Referral & Earn is available to customer accounts only.");setLoading(false);return;}void load();},[user?.role,load]);
++ const load=useCallback(()=>api.get<Dashboard>("/referrals/me").then(result=>{setData(result);setError("");}).catch((e:any)=>setError(e?.message||"Could not load Referral & Earn.")).finally(()=>setLoading(false)),[]);
++ const referralUserKey=`${user?.id || ""}:${user?.role || ""}`;
++ const [previousReferralUserKey,setPreviousReferralUserKey]=useState<string|null>(null);
++ if(previousReferralUserKey!==referralUserKey){setPreviousReferralUserKey(referralUserKey);setLoading(user?.role==="customer");setError(user?.role==="customer"?"":"Referral & Earn is available to customer accounts only.");}
++ useEffect(()=>{if(user?.role!=="customer")return;void load();},[user?.id,user?.role,load]);
+  const share=async()=>{if(!data)return;try{const result=await Share.share({message:data.message,url:data.referral_url,title:"Join me on COME-IN"});setNotice(result.action==="sharedAction"?"Share sheet opened.":"Sharing cancelled.");}catch(e:any){setNotice(e?.message||"Could not open sharing options.");}};
+  const copy=async()=>{if(!data)return;try{if(Platform.OS==="web"&&typeof navigator!=="undefined"&&navigator.clipboard?.writeText){await navigator.clipboard.writeText(data.referral_url);setNotice("Referral link copied.");return;}const result=await Share.share({message:data.referral_url,title:"COME-IN referral link"});setNotice(result.action==="sharedAction"?"Share sheet opened. Choose Copy to copy your referral link.":"Sharing cancelled.");}catch{setNotice("Could not copy the link. Use Share Link instead.");}};
+  const whatsapp=async()=>{if(!data)return;if(Platform.OS==="web"){await Linking.openURL(`https://wa.me/?text=${encodeURIComponent(data.message)}`);setNotice("Opened WhatsApp web link.");return;}const url=`whatsapp://send?text=${encodeURIComponent(data.message)}`;try{await Linking.openURL(url);setNotice("WhatsApp opened.");}catch{try{await Linking.openURL(`https://wa.me/?text=${encodeURIComponent(data.message)}`);setNotice("Opened WhatsApp web link. Availability depends on the device.");}catch{setNotice("WhatsApp is unavailable. Copy Link or Share Link instead.");}}};
+--- a/frontend/app/referral.tsx
++++ b/frontend/app/referral.tsx
+@@ -12,11 +12,17 @@
+   const { code } = useLocalSearchParams<{ code?: string }>();
+   const router = useRouter(); const insets = useSafeAreaInsets(); const styles = useStyles(); const { colors } = useTheme(); const { user } = useAuth();
+   const [valid, setValid] = useState<boolean | null>(null); const [error, setError] = useState("");
+-  useEffect(() => { let active = true; const normalized = typeof code === "string" ? code.trim().toUpperCase() : "";
+-    if (!normalized) { setValid(false); setError("This referral link does not include a referral code."); return; }
++  const normalized = typeof code === "string" ? code.trim().toUpperCase() : "";
++  const [previousCode, setPreviousCode] = useState<string | null>(null);
++  if (previousCode !== normalized) {
++    setPreviousCode(normalized); setValid(normalized ? null : false);
++    setError(normalized ? "" : "This referral link does not include a referral code.");
++  }
++  useEffect(() => { let active = true;
++    if (!normalized) return;
+     void api.get<{valid:boolean}>(`/referral/validate?code=${encodeURIComponent(normalized)}`, false).then((r) => { if (active) { setValid(r.valid); if (r.valid) void storage.setItem("comein.pendingReferralCode", normalized); else setError("This referral code is invalid or no longer eligible."); } }).catch((e:any) => { if(active){setValid(false);setError(e?.message || "Could not validate this referral link.");} });
+     return () => { active = false; };
+-  }, [code]);
++  }, [normalized]);
+   return <ScrollView style={styles.root} contentContainerStyle={{padding:spacing.lg,paddingTop:insets.top+spacing.xl,gap:spacing.md}}>
+     <View style={{alignItems:"center",marginTop:spacing.xl}}><Feather name="gift" size={48} color={colors.brandPrimary}/><Text style={styles.title}>Join COME-IN</Text><Text style={styles.sub}>Explore shops, restaurants, products, and services.</Text></View>
+     {valid === null ? <ActivityIndicator /> : valid ? <Text style={styles.sub}>Referral code verified. Continue to create a new customer account to attach this referral.</Text> : <Text style={{color:colors.error}}>{error}</Text>}
+--- a/frontend/app/request.tsx
++++ b/frontend/app/request.tsx
+@@ -241,7 +241,7 @@
+             <Text style={styles.sheetTitle}>Request placed!</Text>
+             {submittedRef && <Text style={styles.sheetSub}>Reference {submittedRef}</Text>}
+             <Text style={styles.sheetSub}>
+-              A rider will accept your request shortly. You'll see live status on the home screen.
++              A rider will accept your request shortly. You&#39;ll see live status on the home screen.
+             </Text>
+             <Pressable
+               testID="req-done-btn"
+--- a/frontend/app/restaurant/cart.tsx
++++ b/frontend/app/restaurant/cart.tsx
+@@ -4,4 +4,4 @@
+ import { calculateCart, readRestaurantCart, RestaurantCartLine, writeRestaurantCart } from '@/src/restaurant/cart';
+ import { RestaurantPage, rs } from '@/src/restaurant/RestaurantPage';
+ import { restaurantTheme as t } from '@/src/restaurant/theme';
+-export default function RestaurantCart(){const [lines,setLines]=useState<RestaurantCartLine[]>([]);const [ready,setReady]=useState(false);const router=useRouter();useFocusEffect(useCallback(()=>{let active=true;readRestaurantCart().then(v=>{if(active){setLines(v);setReady(true)}});return()=>{active=false}},[]));const totals=calculateCart(lines);async function update(next:RestaurantCartLine[]){setLines(next);await writeRestaurantCart(next)}return <RestaurantPage title="Your food cart" subtitle="A local demo cart saved on this device">{!ready?<Text style={rs.muted}>Loading cart…</Text>:!totals.rows.length?<View style={rs.card}><Text style={rs.heading}>Your cart is empty</Text><Text style={rs.muted}>Explore the demo menu and add something delicious.</Text><Pressable style={rs.button} onPress={()=>router.push('/restaurant' as never)}><Text style={rs.buttonText}>Browse restaurants</Text></Pressable></View>:<>{totals.rows.map(row=><View key={row.itemId} style={[rs.card,rs.row,{alignItems:'flex-start'}]}><Image source={{uri:row.item.image}} style={{width:72,height:72,borderRadius:12}}/><View style={{flex:1,gap:4}}><Text style={{color:t.text,fontWeight:'900'}}>{row.item.name}</Text><Text style={rs.muted}>{row.restaurant.name}</Text><Text style={{color:t.accent,fontWeight:'900'}}>₹{row.lineTotal}</Text><View style={[rs.row,{justifyContent:'flex-start'}]}><Pressable style={rs.chip} onPress={()=>update(row.quantity===1?lines.filter(x=>x.itemId!==row.itemId):lines.map(x=>x.itemId===row.itemId?{...x,quantity:x.quantity-1}:x))}><Text style={rs.chipText}>−</Text></Pressable><Text style={{color:t.text,fontWeight:'900'}}>{row.quantity}</Text><Pressable style={rs.chip} onPress={()=>update(lines.map(x=>x.itemId===row.itemId?{...x,quantity:x.quantity+1}:x))}><Text style={rs.chipText}>+</Text></Pressable><Pressable onPress={()=>update(lines.filter(x=>x.itemId!==row.itemId))}><Text style={{color:t.primary,fontWeight:'800'}}>Remove</Text></Pressable></View></View></View>)}<View style={rs.card}><Text style={rs.heading}>Price details</Text>{[['Subtotal',totals.subtotal],['Delivery (demo fee)',totals.delivery],['Tax (demo estimate 5%)',totals.tax]].map(([label,value])=><View key={String(label)} style={[rs.row,{justifyContent:'space-between'}]}><Text style={rs.muted}>{label}</Text><Text style={{color:t.text,fontWeight:'700'}}>₹{value}</Text></View>)}<View style={[rs.row,{justifyContent:'space-between'}]}><Text style={rs.heading}>Total</Text><Text style={{color:t.accent,fontWeight:'900',fontSize:18}}>₹{totals.total}</Text></View><Text style={rs.muted}>Fees and tax are illustrative development rules, not a restaurant's live quote.</Text><Pressable style={rs.button} onPress={()=>router.push('/restaurant/checkout' as never)}><Text style={rs.buttonText}>Continue to demo checkout</Text></Pressable></View></>}</RestaurantPage>}
++export default function RestaurantCart(){const [lines,setLines]=useState<RestaurantCartLine[]>([]);const [ready,setReady]=useState(false);const router=useRouter();useFocusEffect(useCallback(()=>{let active=true;readRestaurantCart().then(v=>{if(active){setLines(v);setReady(true)}});return()=>{active=false}},[]));const totals=calculateCart(lines);async function update(next:RestaurantCartLine[]){setLines(next);await writeRestaurantCart(next)}return <RestaurantPage title="Your food cart" subtitle="A local demo cart saved on this device">{!ready?<Text style={rs.muted}>Loading cart…</Text>:!totals.rows.length?<View style={rs.card}><Text style={rs.heading}>Your cart is empty</Text><Text style={rs.muted}>Explore the demo menu and add something delicious.</Text><Pressable style={rs.button} onPress={()=>router.push('/restaurant' as never)}><Text style={rs.buttonText}>Browse restaurants</Text></Pressable></View>:<>{totals.rows.map(row=><View key={row.itemId} style={[rs.card,rs.row,{alignItems:'flex-start'}]}><Image source={{uri:row.item.image}} style={{width:72,height:72,borderRadius:12}}/><View style={{flex:1,gap:4}}><Text style={{color:t.text,fontWeight:'900'}}>{row.item.name}</Text><Text style={rs.muted}>{row.restaurant.name}</Text><Text style={{color:t.accent,fontWeight:'900'}}>₹{row.lineTotal}</Text><View style={[rs.row,{justifyContent:'flex-start'}]}><Pressable style={rs.chip} onPress={()=>update(row.quantity===1?lines.filter(x=>x.itemId!==row.itemId):lines.map(x=>x.itemId===row.itemId?{...x,quantity:x.quantity-1}:x))}><Text style={rs.chipText}>−</Text></Pressable><Text style={{color:t.text,fontWeight:'900'}}>{row.quantity}</Text><Pressable style={rs.chip} onPress={()=>update(lines.map(x=>x.itemId===row.itemId?{...x,quantity:x.quantity+1}:x))}><Text style={rs.chipText}>+</Text></Pressable><Pressable onPress={()=>update(lines.filter(x=>x.itemId!==row.itemId))}><Text style={{color:t.primary,fontWeight:'800'}}>Remove</Text></Pressable></View></View></View>)}<View style={rs.card}><Text style={rs.heading}>Price details</Text>{[['Subtotal',totals.subtotal],['Delivery (demo fee)',totals.delivery],['Tax (demo estimate 5%)',totals.tax]].map(([label,value])=><View key={String(label)} style={[rs.row,{justifyContent:'space-between'}]}><Text style={rs.muted}>{label}</Text><Text style={{color:t.text,fontWeight:'700'}}>₹{value}</Text></View>)}<View style={[rs.row,{justifyContent:'space-between'}]}><Text style={rs.heading}>Total</Text><Text style={{color:t.accent,fontWeight:'900',fontSize:18}}>₹{totals.total}</Text></View><Text style={rs.muted}>Fees and tax are illustrative development rules, not a restaurant&#39;s live quote.</Text><Pressable style={rs.button} onPress={()=>router.push('/restaurant/checkout' as never)}><Text style={rs.buttonText}>Continue to demo checkout</Text></Pressable></View></>}</RestaurantPage>}
+--- a/frontend/app/restaurant/checkout.tsx
++++ b/frontend/app/restaurant/checkout.tsx
+@@ -27,27 +27,32 @@
+ export default function RestaurantCheckout() {
+   const router = useRouter();
+   const { user } = useAuth();
+-  const [contactName, setContactName] = useState('');
+-  const [contactPhone, setContactPhone] = useState('');
++  const [contactName, setContactName] = useState(user?.name || '');
++  const [contactPhone, setContactPhone] = useState(user?.phone || '');
+   const [fulfillment, setFulfillment] = useState<'delivery' | 'pickup'>('delivery');
+   const [restaurantPaymentMethods, setRestaurantPaymentMethods] = useState<string[]>([]);
+   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'pickup'>('cod');
+   const [address, setAddress] = useState('');
+   const [addressId, setAddressId] = useState('');
+   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
+-  const [addressesLoading, setAddressesLoading] = useState(false);
++  const [addressesLoading, setAddressesLoading] = useState(Boolean(user));
+   const [addressNotice, setAddressNotice] = useState('');
+   const [notice, setNotice] = useState('');
+   const [busy, setBusy] = useState(false);
+   const [idempotencyKey] = useState(() => `restaurant-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`);
+ 
++  const [addressUser, setAddressUser] = useState(user?.id);
++  if (addressUser !== user?.id) {
++    setAddressUser(user?.id);
++    if (user) {
++      setContactName((current) => current || user.name || '');
++      setContactPhone((current) => current || user.phone || '');
++      setAddressesLoading(true); setAddressNotice('');
++    }
++  }
+   useEffect(() => {
+     if (!user) return;
+-    setContactName((current) => current || user.name || '');
+-    setContactPhone((current) => current || user.phone || '');
+     let active = true;
+-    setAddressesLoading(true);
+-    setAddressNotice('');
+     api.get<SavedAddress[]>('/addresses')
+       .then((rows) => {
+         if (!active) return;
+@@ -194,12 +199,12 @@
+           </View>
+           <Text style={rs.muted}>The selected saved address is revalidated against your account by the backend. Current location is optional; GPS access is requested only when you choose it, and coordinates are not a postal address. Delivery is confirmed only when the backend has an explicitly configured verified pincode coverage list for this restaurant. If coverage is missing or the pincode is outside that list, checkout is blocked; choosing an address alone never confirms eligibility.</Text>
+           {addressNotice ? <Text style={rs.muted}>{addressNotice}</Text> : null}
+-        </> : <Text style={rs.muted}>Pickup uses the restaurant's supported pickup option; no delivery address is required.</Text>}
++        </> : <Text style={rs.muted}>Pickup uses the restaurant&#39;s supported pickup option; no delivery address is required.</Text>}
+ 
+         <Text style={rs.heading}>Payment</Text>
+         {restaurantPaymentMethods.includes('cod') ? <Pressable style={[rs.chip,paymentMethod==='cod'&&rs.chipActive]} onPress={()=>setPaymentMethod('cod')}><Text style={[rs.chipText,paymentMethod==='cod'&&rs.chipTextActive]}>Cash on Delivery</Text></Pressable> : null}
+         {fulfillment==='pickup' && restaurantPaymentMethods.includes('pickup') ? <Pressable style={[rs.chip,paymentMethod==='pickup'&&rs.chipActive]} onPress={()=>setPaymentMethod('pickup')}><Text style={[rs.chipText,paymentMethod==='pickup'&&rs.chipTextActive]}>Pay at Pickup</Text></Pressable> : null}
+-        <Text style={rs.muted}>Only the selected restaurant's enabled COD and pay-at-pickup methods are offered here. Online payment is not offered in this UI (Razorpay needs a customer-facing payment screen) until a customer-facing payment screen is connected. The backend validates the selected method and authoritative prices. No payment is taken or inferred as successful by this screen.</Text>
++        <Text style={rs.muted}>Only the selected restaurant&#39;s enabled COD and pay-at-pickup methods are offered here. Online payment is not offered in this UI (Razorpay needs a customer-facing payment screen) until a customer-facing payment screen is connected. The backend validates the selected method and authoritative prices. No payment is taken or inferred as successful by this screen.</Text>
+         <Pressable disabled={busy} style={[rs.button, busy && { opacity: 0.6 }]} onPress={placeOrder}><Text style={rs.buttonText}>{busy ? 'Submitting…' : 'Place order'}</Text></Pressable>
+         {notice ? <Text style={{ color: t.error, fontSize: 12 }}>{notice}</Text> : null}
+       </View>
+--- a/frontend/app/restaurant/orders/[id].tsx
++++ b/frontend/app/restaurant/orders/[id].tsx
+@@ -5,4 +5,4 @@
+ import { RestaurantPage, rs } from '@/src/restaurant/RestaurantPage';
+ import { restaurantTheme as t } from '@/src/restaurant/theme';
+ type Order={id:string;ref:string;restaurant_id:string;restaurant_name:string;status:string;payment_status:string;refund_status?:string;total:number;created_at:string;items:any[];status_history:any[];delivery_address:string;fulfillment:string};
+-export default function RestaurantOrderDetail(){const {id}=useLocalSearchParams<{id:string}>();const router=useRouter();const [order,setOrder]=useState<Order|null>(null);const [loading,setLoading]=useState(true);const [message,setMessage]=useState('');const [rating,setRating]=useState(5);const [comment,setComment]=useState('');const load=useCallback(()=>{setLoading(true);api.get<Order[]>('/restaurant/orders/mine').then(rows=>setOrder(rows.find(o=>o.id===id)||null)).catch((e:any)=>setMessage(e?.message||'Sign in to view this order.')).finally(()=>setLoading(false))},[id]);useFocusEffect(useCallback(()=>{load()},[load]));async function cancel(){try{const updated=await api.post<Order>(`/restaurant/orders/${id}/cancel`,{});setOrder(updated);setMessage('Cancellation saved.')}catch(e:any){setMessage(e?.message||'This order can no longer be cancelled online.')}}async function review(){if(!order)return;try{const r=await api.post(`/restaurants/${order.restaurant_id}/reviews`,{rating,comment});setMessage(`Review saved. Updated restaurant rating: ${(r as any).rating}`)}catch(e:any){setMessage(e?.message||'Review could not be saved. Only delivered orders can be reviewed.')}}return <RestaurantPage title="Order tracking" subtitle="Persistent order status · no GPS tracking is available unless a delivery provider is connected">{loading?<ActivityIndicator color={t.primary}/>:!order?<Text style={rs.muted}>Order not found for this account.</Text>:<><View style={rs.card}><Text style={rs.heading}>{order.ref}</Text><Text style={{color:t.primary,fontWeight:'900'}}>{order.status.replaceAll('_',' ')}</Text><Text style={rs.muted}>{order.restaurant_name} · ₹{order.total}</Text><Text style={rs.muted}>Payment: {order.payment_status}{order.refund_status?` · Refund: ${order.refund_status}`:''}</Text><Text style={rs.muted}>{order.fulfillment==='pickup'?'Pickup':`Delivery address: ${order.delivery_address}`}</Text><Text style={rs.muted}>ETA/GPS: no live delivery-partner location is connected. The displayed restaurant preparation estimate is not live tracking.</Text><Pressable style={rs.chip} onPress={()=>router.push({pathname:'/order-tracking',params:{id:order.id,kind:'restaurant'}} as never)}><Text style={rs.chipText}>Open delivery tracking</Text></Pressable>{['placed','pending_payment'].includes(order.status)?<Pressable style={rs.chip} onPress={cancel}><Text style={rs.chipText}>Cancel order (when eligible)</Text></Pressable>:null}</View><Text style={rs.heading}>Status history</Text>{(order.status_history||[]).map((h:any,i:number)=><View key={`${h.status}-${i}`} style={rs.card}><Text style={{color:t.text,fontWeight:'800'}}>{h.status.replaceAll('_',' ')}</Text><Text style={rs.muted}>{new Date(h.at).toLocaleString()}</Text>{h.note?<Text style={rs.muted}>{h.note}</Text>:null}</View>)}{order.status==='delivered'?<View style={rs.card}><Text style={rs.heading}>Rate your order</Text><View style={rs.row}>{[1,2,3,4,5].map(n=><Pressable key={n} style={[rs.chip,rating===n&&rs.chipActive]} onPress={()=>setRating(n)}><Text style={[rs.chipText,rating===n&&rs.chipTextActive]}>{n} ★</Text></Pressable>)}</View><TextInput value={comment} onChangeText={setComment} placeholder="Optional review" placeholderTextColor={t.textMuted} style={rs.input}/><Pressable style={rs.button} onPress={review}><Text style={rs.buttonText}>Submit review</Text></Pressable></View>:null}</>}{message?<Text style={{color:t.primary,fontSize:12}}>{message}</Text>:null}<Pressable style={rs.chip} onPress={()=>router.push({pathname:'/restaurant/support',params:{order_id:order.id,order_kind:'restaurant'}} as never)}><Text style={rs.chipText}>Need help? Contact support</Text></Pressable></RestaurantPage>}
++export default function RestaurantOrderDetail(){const {id}=useLocalSearchParams<{id:string}>();const router=useRouter();const [order,setOrder]=useState<Order|null>(null);const [loading,setLoading]=useState(true);const [message,setMessage]=useState('');const [rating,setRating]=useState(5);const [comment,setComment]=useState('');const load=useCallback(()=>{setLoading(true);api.get<Order[]>('/restaurant/orders/mine').then(rows=>setOrder(rows.find(o=>o.id===id)||null)).catch((e:any)=>setMessage(e?.message||'Sign in to view this order.')).finally(()=>setLoading(false))},[id]);useFocusEffect(useCallback(()=>{load()},[load]));async function cancel(){try{const updated=await api.post<Order>(`/restaurant/orders/${id}/cancel`,{});setOrder(updated);setMessage('Cancellation saved.')}catch(e:any){setMessage(e?.message||'This order can no longer be cancelled online.')}}async function review(){if(!order)return;try{const r=await api.post(`/restaurants/${order.restaurant_id}/reviews`,{rating,comment});setMessage(`Review saved. Updated restaurant rating: ${(r as any).rating}`)}catch(e:any){setMessage(e?.message||'Review could not be saved. Only delivered orders can be reviewed.')}}return <RestaurantPage title="Order tracking" subtitle="Persistent order status · no GPS tracking is available unless a delivery provider is connected">{loading?<ActivityIndicator color={t.primary}/>:!order?<Text style={rs.muted}>Order not found for this account.</Text>:<><View style={rs.card}><Text style={rs.heading}>{order.ref}</Text><Text style={{color:t.primary,fontWeight:'900'}}>{order.status.replaceAll('_',' ')}</Text><Text style={rs.muted}>{order.restaurant_name} · ₹{order.total}</Text><Text style={rs.muted}>Payment: {order.payment_status}{order.refund_status?` · Refund: ${order.refund_status}`:''}</Text><Text style={rs.muted}>{order.fulfillment==='pickup'?'Pickup':`Delivery address: ${order.delivery_address}`}</Text><Text style={rs.muted}>ETA/GPS: no live delivery-partner location is connected. The displayed restaurant preparation estimate is not live tracking.</Text><Pressable style={rs.chip} onPress={()=>router.push({pathname:'/order-tracking',params:{id:order.id,kind:'restaurant'}} as never)}><Text style={rs.chipText}>Open delivery tracking</Text></Pressable>{['placed','pending_payment'].includes(order.status)?<Pressable style={rs.chip} onPress={cancel}><Text style={rs.chipText}>Cancel order (when eligible)</Text></Pressable>:null}</View><Text style={rs.heading}>Status history</Text>{(order.status_history||[]).map((h:any,i:number)=><View key={`${h.status}-${i}`} style={rs.card}><Text style={{color:t.text,fontWeight:'800'}}>{h.status.replaceAll('_',' ')}</Text><Text style={rs.muted}>{new Date(h.at).toLocaleString()}</Text>{h.note?<Text style={rs.muted}>{h.note}</Text>:null}</View>)}{order.status==='delivered'?<View style={rs.card}><Text style={rs.heading}>Rate your order</Text><View style={rs.row}>{[1,2,3,4,5].map(n=><Pressable key={n} style={[rs.chip,rating===n&&rs.chipActive]} onPress={()=>setRating(n)}><Text style={[rs.chipText,rating===n&&rs.chipTextActive]}>{n} ★</Text></Pressable>)}</View><TextInput value={comment} onChangeText={setComment} placeholder="Optional review" placeholderTextColor={t.textMuted} style={rs.input}/><Pressable style={rs.button} onPress={review}><Text style={rs.buttonText}>Submit review</Text></Pressable></View>:null}</>}{message?<Text style={{color:t.primary,fontSize:12}}>{message}</Text>:null}<Pressable style={rs.chip} onPress={()=>{if(order) router.push({pathname:'/restaurant/support',params:{order_id:order.id,order_kind:'restaurant'}} as never)}}><Text style={rs.chipText}>Need help? Contact support</Text></Pressable></RestaurantPage>}
+--- a/frontend/app/seller/orders.tsx
++++ b/frontend/app/seller/orders.tsx
+@@ -39,12 +39,14 @@
+   const [refreshing, setRefreshing] = useState(false);
+ 
+   const load = useCallback(async () => {
+-    const s = await api.get<any>("/shops/mine");
++    return api.get<any>("/shops/mine").then(async (s) => {
+     setShop(s);
+     if (s) {
+       const list = await api.get<any[]>(`/shops/${s.id}/orders`);
+       setOrders(list);
+     }
++  
++    });
+   }, []);
+ 
+   const confirmUpiPayment = async (orderId: string) => {
+@@ -53,10 +55,7 @@
+   };
+ 
+   useEffect(() => {
+-    if (!user) {
+-      setLoading(false);
+-      return;
+-    }
++    if (!user) return;
+     load().finally(() => setLoading(false));
+   }, [user, load]);
+ 
+--- a/frontend/app/seller/products.tsx
++++ b/frontend/app/seller/products.tsx
+@@ -119,10 +119,7 @@
+   };
+ 
+   useEffect(() => {
+-    if (!user) {
+-      setLoading(false);
+-      return;
+-    }
++    if (!user) return;
+     api.get<{ id: string; status?: string } | null>("/shops/mine").then(async (s) => {
+       if (!s) return;
+       setShopId(s.id);
+@@ -289,7 +286,7 @@
+       setError("Enter whole-number stock of 0 or more and an optional MRP greater than or equal to the selling price.");
+       return;
+     }
+-    if ((editing.variants || []).some((v) => !v.id.trim() || !v.unit.trim() || !Number.isFinite(v.price) || v.price <= 0 || !Number.isInteger(v.stock) || v.stock < 0 || (v.mrp != null && (!Number.isFinite(v.mrp) || v.mrp < v.price)))) {
++    if ((editing.variants || []).some((v) => !v.id.trim() || !v.unit.trim() || !Number.isFinite(v.price) || v.price <= 0 || typeof v.stock !== "number" || !Number.isInteger(v.stock) || v.stock < 0 || (v.mrp != null && (!Number.isFinite(v.mrp) || v.mrp < v.price)))) {
+       setError("Each variant needs a unit, positive price, whole-number stock of 0 or more, and MRP at least equal to price.");
+       return;
+     }
+@@ -441,7 +438,7 @@
+       {masterOpen ? (
+         <ScrollView contentContainerStyle={{ padding: spacing.lg, paddingBottom: 120, gap: spacing.sm }} keyboardShouldPersistTaps="handled">
+           <Text style={styles.title}>Link from Master Catalog</Text>
+-          <Text style={styles.pmeta}>Search approved master products, select a catalog variant, then set this shop's price and stock. A product is linked only after the backend confirms success.</Text>
++          <Text style={styles.pmeta}>Search approved master products, select a catalog variant, then set this shop&#39;s price and stock. A product is linked only after the backend confirms success.</Text>
+           <View style={{ flexDirection: "row", gap: spacing.sm, alignItems: "center" }}>
+             <View style={{ flex: 1 }}><Field label="Search products" value={masterQuery} onChange={setMasterQuery} placeholder="Name or brand" /></View>
+             <Pressable onPress={searchMasterCatalog} disabled={masterLoading} style={[styles.primary, { marginTop: spacing.sm, minWidth: 86 }]}>
+@@ -577,7 +574,7 @@
+       ) : (
+         <ScrollView contentContainerStyle={{ padding: spacing.lg, gap: spacing.sm }}>
+           {products.length === 0 && (
+-            <Text style={styles.msg}>You haven't added any products yet. Tap "Add" to list your first product.</Text>
++            <Text style={styles.msg}>You haven&#39;t added any products yet. Tap &quot;Add&quot; to list your first product.</Text>
+           )}
+           {products.map((p) => (
+             <View key={p.id} style={styles.card}>
+@@ -598,7 +595,17 @@
+   );
+ }
+ 
+-function Field({ label, value, onChange, multiline, keyboardType, placeholder, testID }: any) {
++type FieldProps = {
++  label: string;
++  value: string;
++  onChange: (value: string) => void;
++  multiline?: boolean;
++  keyboardType?: React.ComponentProps<typeof TextInput>["keyboardType"];
++  placeholder?: string;
++  testID?: string;
++};
++
++function Field({ label, value, onChange, multiline, keyboardType, placeholder, testID }: FieldProps) {
+   const styles = useStyles();
+   const { colors } = useTheme();
+   return (
+--- a/frontend/app/seller/support.tsx
++++ b/frontend/app/seller/support.tsx
+@@ -21,6 +21,8 @@
+   updated_at?: string;
+ };
+ 
++const SELLER_SUPPORT_ROLES: readonly string[] = ["shopkeeper", "restaurant"];
++
+ const NEXT: Record<string, { status: "in_progress" | "resolved"; label: string }> = {
+   open: { status: "in_progress", label: "Start handling" },
+   in_progress: { status: "resolved", label: "Mark resolved" },
+@@ -40,20 +42,18 @@
+   const [notice, setNotice] = useState("");
+ 
+   const load = useCallback(async () => {
+-    setError("");
+-    try {
+-      const rows = await api.get<SupportTicket[]>("/seller/support");
+-      setTickets(Array.isArray(rows) ? rows : []);
+-    } catch (e: any) {
++    return api.get<SupportTicket[]>("/seller/support").then((rows) => {
++      setTickets(Array.isArray(rows) ? rows : []); setError("");
++    }).catch((e: any) => {
+       const status = (e as any)?.status;
+       setError(status === 401 ? "Your session has expired. Please sign in again." : status === 403 ? "Seller access is not authorized for this account." : e?.message || "Support tickets could not be loaded.");
+       throw e;
+-    }
++    });
+   }, []);
+ 
+   useEffect(() => {
+-    if (!user) { setLoading(false); setError("Please sign in to view seller support tickets."); return; }
+-    if (user.role !== "shopkeeper" && user.role !== "restaurant") { setLoading(false); setError("Seller access is required."); return; }
++    if (!user) return;
++    if (!SELLER_SUPPORT_ROLES.includes(user.role)) return;
+     load().catch(() => undefined).finally(() => setLoading(false));
+   }, [user, load]);
+ 
+@@ -96,7 +96,7 @@
+   };
+ 
+   if (!user) return <View style={styles.centered}><Text style={styles.message}>Please sign in to view seller support.</Text><Pressable style={styles.button} onPress={() => router.push("/auth")}><Text style={styles.buttonText}>Sign in</Text></Pressable></View>;
+-  if (user.role !== "shopkeeper" && user.role !== "restaurant") return <View style={styles.centered}><Text style={styles.message}>Seller access is required.</Text></View>;
++  if (!SELLER_SUPPORT_ROLES.includes(user.role)) return <View style={styles.centered}><Text style={styles.message}>Seller access is required.</Text></View>;
+ 
+   return <View style={styles.root}>
+     <View style={[styles.header, { paddingTop: insets.top + spacing.sm }]}>
+--- a/frontend/app/seller-earnings.tsx
++++ b/frontend/app/seller-earnings.tsx
+@@ -12,8 +12,10 @@
+  const [data,setData]=useState<any>(null);const [selected,setSelected]=useState("");const [loading,setLoading]=useState(true);const [notice,setNotice]=useState("");const [startDate,setStartDate]=useState("");const [endDate,setEndDate]=useState("");
+  const [holder,setHolder]=useState("");const [bankName,setBankName]=useState("");const [account,setAccount]=useState("");const [ifsc,setIfsc]=useState("");const [bankSummary,setBankSummary]=useState<any>(null);const [settlementKey,setSettlementKey]=useState("");
+  const styles=StyleSheet.create({root:{flex:1,backgroundColor:colors.background},header:{paddingHorizontal:spacing.lg,paddingBottom:spacing.md,backgroundColor:colors.surface,flexDirection:"row",alignItems:"center",gap:spacing.sm,borderBottomWidth:StyleSheet.hairlineWidth,borderBottomColor:colors.border},title:{fontSize:20,fontWeight:"800",color:colors.onSurface},sub:{fontSize:12,color:colors.muted},section:{backgroundColor:colors.surface,borderColor:colors.border,borderWidth:1,borderRadius:radius.md,padding:spacing.md,gap:spacing.sm},sectionTitle:{fontSize:15,fontWeight:"800",color:colors.onSurface},text:{fontSize:12,color:colors.onSurface},muted:{fontSize:11,color:colors.muted},input:{minHeight:40,borderWidth:1,borderColor:colors.border,borderRadius:radius.sm,paddingHorizontal:spacing.sm,color:colors.onSurface,backgroundColor:colors.surfaceSecondary},btn:{paddingHorizontal:spacing.md,paddingVertical:10,borderRadius:radius.sm,backgroundColor:colors.brandPrimary,alignItems:"center"},btnText:{color:colors.onBrandPrimary,fontWeight:"800",fontSize:12},row:{paddingVertical:spacing.sm,borderTopWidth:StyleSheet.hairlineWidth,borderTopColor:colors.border,gap:4},metric:{fontSize:18,fontWeight:"800",color:colors.onSurface},wrap:{flexDirection:"row",flexWrap:"wrap",gap:spacing.sm},chip:{flexGrow:1,minWidth:140,padding:spacing.sm,borderWidth:1,borderColor:colors.border,borderRadius:radius.sm,gap:3}});
+- const load=useCallback(async()=>{const q=new URLSearchParams();if(selected)q.set("shop_id",selected);if(startDate)q.set("start_date",startDate);if(endDate)q.set("end_date",endDate);const suffix=q.toString()?`?${q.toString()}`:"";const result=await api.get<any>(`/earnings/mine${suffix}`);setData(result);const current=(result.shops||[]).find((s:any)=>s.id===selected)||(result.shops||[])[0];if(current&&!selected)setSelected(current.id);if(current){const b=current.type==="restaurant"?await api.get<any>(`/restaurants/${current.id}/bank-account`):await api.get<any>(`/shops/${current.id}/bank-account`);setBankSummary(b);}else setBankSummary(null);},[selected,startDate,endDate]);
+- useEffect(()=>{if(user?.role!=="shopkeeper"){setLoading(false);return;}load().catch((e:any)=>setNotice(e?.message||"Earnings could not be loaded.")).finally(()=>setLoading(false));},[user,load]);
++ const load=useCallback(async()=>{const q=new URLSearchParams();if(selected)q.set("shop_id",selected);if(startDate)q.set("start_date",startDate);if(endDate)q.set("end_date",endDate);const suffix=q.toString()?`?${q.toString()}`:"";return api.get<any>(`/earnings/mine${suffix}`).then(async (result) => {setData(result);const current=(result.shops||[]).find((s:any)=>s.id===selected)||(result.shops||[])[0];if(current&&!selected)setSelected(current.id);if(current){const b=current.type==="restaurant"?await api.get<any>(`/restaurants/${current.id}/bank-account`):await api.get<any>(`/shops/${current.id}/bank-account`);setBankSummary(b);}else setBankSummary(null);
++    });
++  },[selected,startDate,endDate]);
++ useEffect(()=>{if(user?.role!=="shopkeeper"){return;}load().catch((e:any)=>setNotice(e?.message||"Earnings could not be loaded.")).finally(()=>setLoading(false));},[user,load]);
+  const refresh=async()=>{try{await load();setNotice("Refreshed from authorized shop records.");}catch(e:any){setNotice(e?.message||"Refresh failed.");}};
+  const current=(data?.shops||[]).find((s:any)=>s.id===selected)||(data?.shops||[])[0];
+  const saveBank=async()=>{if(!current){setNotice("No authorized shop/restaurant selected.");return;}try{const path=current.type==="restaurant"?`/restaurants/${current.id}/bank-account`:`/shops/${current.id}/bank-account`;const b=await api.put<any>(path,{account_holder_name:holder,bank_name:bankName,account_number:account,ifsc:ifsc.toUpperCase()});setBankSummary(b);setAccount("");setIfsc("");setNotice("Bank details encrypted and saved; bank ownership is not verified.");}catch(e:any){setNotice(e?.message||"Bank details were not saved.");}};
+--- a/frontend/app/services.tsx
++++ b/frontend/app/services.tsx
+@@ -9,7 +9,7 @@
+ import { useAuth } from "@/src/store/auth";
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
+ 
+-type Provider = { id:string; photo_url?:string; status?:string; is_active?:boolean; full_name:string; category:string; specializations:string[]; experience_years:number; description:string; tasks:string[]; service_area:string; available_slots:string[]; service_charge:number|null; visit_fee:number; additional_charges:string; quotation_required:boolean; phone?:string; payment_preferences?:string[]; photo_url?:string };
++type Provider = { id:string; photo_url?:string; status?:string; is_active?:boolean; full_name:string; category:string; specializations:string[]; experience_years:number; description:string; tasks:string[]; service_area:string; available_slots:string[]; service_charge:number|null; visit_fee:number; additional_charges:string; quotation_required:boolean; phone?:string; payment_preferences?:string[] };
+ const CATEGORIES = ["Plumber","Electrician","Carpenter","Maid","Cook","Cleaner","Stone worker / stone mason","Other home service"];
+ type Appointment = { id:string; ref:string; provider_id:string; provider_name:string; requested_service:string; appointment_at:string; address:string; notes:string; status:string; payment_status:string; visit_fee:number; service_charge:number|null; quotation_required:boolean; status_note?:string };
+ export default function ServicesScreen() {
+@@ -19,12 +19,13 @@
+  const [mine,setMine]=useState<Provider|null>(null),[appointments,setAppointments]=useState<Appointment[]>([]),[customerAppointments,setCustomerAppointments]=useState<Appointment[]>([]),[reschedule,setReschedule]=useState<Record<string,string>>({}),[savingAction,setSavingAction]=useState(false); const fileInputRef=useRef<any>(null);
+  const loadDashboard=()=>{if(!user)return; Promise.all([api.get<Provider|null>("/home-services/providers/mine"),api.get<Appointment[]>("/home-services/appointments/provider"),api.get<Appointment[]>("/home-services/appointments/mine")]).then(([p,a,c])=>{setMine(p);if(p){setName(p.full_name||"");setPhone(p.phone||"");setCategory(p.category||"Plumber");setExperience(String(p.experience_years||0));setTasks((p.tasks||[]).join(", "));setArea(p.service_area||"");setDescription(p.description||"");setCharge(p.service_charge==null?"":String(p.service_charge));setVisitFee(String(p.visit_fee??0));setCashAfterService((p.payment_preferences||["cash_after_service"]).includes("cash_after_service"));setCashVisitFee((p.payment_preferences||[]).includes("cash_visit_fee"));}setAppointments(a);setCustomerAppointments(c);}).catch((e:any)=>setError(e?.message||"Could not load provider dashboard"));};
+  useEffect(()=>{loadDashboard()},[user?.id]);
+- useEffect(()=>{if(params.openRegistration === "1")setRegister(true)},[params.openRegistration]);
++ const [previousRegistrationParam,setPreviousRegistrationParam]=useState(params.openRegistration);
++ if(previousRegistrationParam!==params.openRegistration){setPreviousRegistrationParam(params.openRegistration);if(params.openRegistration === "1")setRegister(true);}
+  const [selected,setSelected]=useState<Provider|null>(null),[service,setService]=useState(""),[date,setDate]=useState(""),[address,setAddress]=useState(""),[notes,setNotes]=useState("");
+- const load=()=>{setLoading(true);api.get<Provider[]>("/home-services/providers",false).then(setRows).catch(e=>setError(e?.message||"Could not load providers")).finally(()=>setLoading(false));};
++ const load=()=>{return api.get<Provider[]>("/home-services/providers",false).then(setRows).catch(e=>setError(e?.message||"Could not load providers")).finally(()=>setLoading(false));};
+  useEffect(()=>{load()},[]);
+  const field=(label:string,value:string,set:(v:string)=>void,placeholder:string)=> <View style={{gap:4}}><Text style={styles.label}>{label}</Text><TextInput value={value} onChangeText={set} placeholder={placeholder} placeholderTextColor={colors.muted} style={styles.input}/></View>;
+- const registerProvider=async()=>{if(!user){Alert.alert("Sign in required","Please sign in before registering as a service provider.");return;} if(!name.trim()||!phone.trim()||!area.trim()){Alert.alert("Missing details","Enter your name, phone and service area.");return;} setBusy(true);try{const payload={full_name:name,category,phone,experience_years:Number(experience)||0,tasks:tasks.split(",").map(x=>x.trim()).filter(Boolean),specializations:[],service_area:area,description,service_charge:charge.trim()?Number(charge):null,visit_fee:Number(visitFee)||0,additional_charges:"",quotation_required:!charge.trim(),available_slots:mine?.available_slots||[],working_hours:"",payment_preferences:[...(cashAfterService?["cash_after_service"]:[]),...(cashVisitFee?["cash_visit_fee"]:[])]};if(mine)await api.patch(`/home-services/providers/${mine.id}`,payload);else await api.post("/home-services/providers",payload);Alert.alert(mine?"Profile updated":"Application submitted",mine?"Profile changes were saved. Admin approval is required again before public listing.":"Your profile is pending admin approval. It will not appear publicly until approved and activated.");setRegister(false);loadDashboard();load();}catch(e:any){Alert.alert("Could not register",e?.message||"Please try again.");}finally{setBusy(false)}};
++ const registerProvider=async()=>{if(!user){Alert.alert("Sign in required","Please sign in before registering as a service provider.");return;} if(!name.trim()||!phone.trim()||!area.trim()){Alert.alert("Missing details","Enter your name, phone and service area.");return;} setBusy(true);try{const payload={full_name:name,category,phone,experience_years:Number(experience)||0,tasks:tasks.split(",").map(x=>x.trim()).filter(Boolean),specializations:[],service_area:area,description,service_charge:charge.trim()?Number(charge):null,visit_fee:Number(visitFee)||0,additional_charges:"",quotation_required:!charge.trim(),available_slots:mine?.available_slots||[],working_hours:"",payment_preferences:[...(cashAfterService?["cash_after_service"]:[]),...(cashVisitFee?["cash_visit_fee"]:[])]};if(mine)await api.patch(`/home-services/providers/${mine.id}`,payload);else await api.post("/home-services/providers",payload);Alert.alert(mine?"Profile updated":"Application submitted",mine?"Profile changes were saved. Admin approval is required again before public listing.":"Your profile is pending admin approval. It will not appear publicly until approved and activated.");setRegister(false);loadDashboard();setLoading(true);load();}catch(e:any){Alert.alert("Could not register",e?.message||"Please try again.");}finally{setBusy(false)}};
+  const book=async()=>{if(!user){Alert.alert("Sign in required","Sign in to book an appointment.");return;} if(!selected||!service.trim()||!date.trim()||!address.trim()){Alert.alert("Missing details","Enter the service, appointment date/time and address.");return;}const parsed=new Date(date);if(Number.isNaN(parsed.getTime())){Alert.alert("Invalid date","Use a date/time such as 2026-11-05T14:00:00+05:30");return;}setBusy(true);try{const result:any=await api.post("/home-services/appointments",{provider_id:selected.id,requested_service:service,appointment_at:parsed.toISOString(),address,notes});Alert.alert("Booking request created",`Reference: ${result.ref}\nStatus: ${result.status}\nVisit fee: ₹${result.visit_fee}. ${result.quotation_required?"Final service price requires a quotation.":"Service charge shown is the provider's configured charge."}`);setSelected(null);loadDashboard();}catch(e:any){Alert.alert("Booking not confirmed",e?.message||"The booking could not be created.");}finally{setBusy(false)}};
+  const updateAppointment=async(a:Appointment,status:"accepted"|"rejected"|"rescheduled",dateValue?:string)=>{setSavingAction(true);try{await api.patch(`/home-services/appointments/${a.id}/status`,{status,note:"",...(status==="rescheduled"?{rescheduled_at:new Date(dateValue||"").toISOString()}: {})});Alert.alert("Appointment updated",`Status: ${status}. Payment remains not charged unless a separate payment is completed.`);loadDashboard();}catch(e:any){Alert.alert("Could not update appointment",e?.message||"Refresh and try again.");}finally{setSavingAction(false)}};
+  const uploadProviderPhoto=async(e:any)=>{const file:File|undefined=e?.target?.files?.[0];if(!file)return;setBusy(true);try{const up=await api.upload(file,file.name);if(!mine)throw new Error("Register your provider profile first");const updated=await api.patch<Provider>(`/home-services/providers/${mine.id}/photo`,{photo_url:up.url});setMine(updated);Alert.alert("Photo uploaded","Profile photo saved. Your approval status was not changed.");}catch(err:any){Alert.alert("Photo upload failed",err?.message||"Try again.");}finally{setBusy(false);if(fileInputRef.current)fileInputRef.current.value=""}};
+--- a/frontend/app/shop/[id].tsx
++++ b/frontend/app/shop/[id].tsx
+@@ -33,10 +33,7 @@
+   const [assistBusy, setAssistBusy] = useState(false);
+ 
+   useEffect(() => {
+-    if (!id) {
+-      setLoading(false);
+-      return;
+-    }
++    if (!id) return;
+     (async () => {
+       try {
+         const s = await api.get<any>(`/shops/${id}`);
+@@ -62,7 +59,7 @@
+   const seedShop: SeedShop | undefined = id ? getShopById(id) : undefined;
+   const shop: any = liveShop || seedShop;
+ 
+-  if (loading) {
++  if (loading && id) {
+     return (
+       <View style={styles.missing}>
+         <ActivityIndicator color={colors.brandPrimary} />
+--- a/frontend/scripts/cmd-guard/vendor/wildcard-match.js
++++ b/frontend/scripts/cmd-guard/vendor/wildcard-match.js
+@@ -32,8 +32,8 @@
+  * Escapes all characters in a given string that have a special meaning in regular expressions
+  */
+ function escapeRegExpString(str) {
+-    var result = '';
+-    for (var i = 0; i < str.length; i++) {
++    let result = '';
++    for (let i = 0; i < str.length; i++) {
+         result += escapeRegExpChar(str[i]);
+     }
+     return result;
+@@ -44,12 +44,12 @@
+ function transform(pattern, separator) {
+     if (separator === void 0) { separator = true; }
+     if (Array.isArray(pattern)) {
+-        var regExpPatterns = pattern.map(function (p) { return "^".concat(transform(p, separator), "$"); });
++        let regExpPatterns = pattern.map(function (p) { return "^".concat(transform(p, separator), "$"); });
+         return "(?:".concat(regExpPatterns.join('|'), ")");
+     }
+-    var separatorSplitter = '';
+-    var separatorMatcher = '';
+-    var wildcard = '.';
++    let separatorSplitter = '';
++    let separatorMatcher = '';
++    let wildcard = '.';
+     if (separator === true) {
+         separatorSplitter = '/';
+         separatorMatcher = '[/\\\\]';
+@@ -66,14 +66,14 @@
+             wildcard = "[^".concat(separatorMatcher, "]");
+         }
+     }
+-    var requiredSeparator = separator ? "".concat(separatorMatcher, "+?") : '';
+-    var optionalSeparator = separator ? "".concat(separatorMatcher, "*?") : '';
+-    var segments = separator ? pattern.split(separatorSplitter) : [pattern];
+-    var result = '';
+-    for (var s = 0; s < segments.length; s++) {
+-        var segment = segments[s];
+-        var nextSegment = segments[s + 1];
+-        var currentSeparator = '';
++    let requiredSeparator = separator ? "".concat(separatorMatcher, "+?") : '';
++    let optionalSeparator = separator ? "".concat(separatorMatcher, "*?") : '';
++    let segments = separator ? pattern.split(separatorSplitter) : [pattern];
++    let result = '';
++    for (let s = 0; s < segments.length; s++) {
++        let segment = segments[s];
++        let nextSegment = segments[s + 1];
++        let currentSeparator = '';
+         if (!segment && s > 0) {
+             continue;
+         }
+@@ -100,8 +100,8 @@
+             }
+             continue;
+         }
+-        for (var c = 0; c < segment.length; c++) {
+-            var char = segment[c];
++        for (let c = 0; c < segment.length; c++) {
++            let char = segment[c];
+             if (char === '\\') {
+                 if (c < segment.length - 1) {
+                     result += escapeRegExpChar(segment[c + 1]);
+@@ -160,9 +160,9 @@
+     if (options.separator === '\\') {
+         throw new Error('\\ is not a valid separator because it is used for escaping. Try setting the separator to `true` instead');
+     }
+-    var regexpPattern = transform(pattern, options.separator);
+-    var regexp = new RegExp("^".concat(regexpPattern, "$"), options.flags);
+-    var fn = isMatch.bind(null, regexp);
++    let regexpPattern = transform(pattern, options.separator);
++    let regexp = new RegExp("^".concat(regexpPattern, "$"), options.flags);
++    let fn = isMatch.bind(null, regexp);
+     fn.options = options;
+     fn.pattern = pattern;
+     fn.regexp = regexp;
+--- a/frontend/scripts/test-chand-party-planner.cjs
++++ b/frontend/scripts/test-chand-party-planner.cjs
+@@ -8,7 +8,7 @@
+ const Module = require("node:module");
+ const ts = require("typescript");
+ 
+-const helperPath = path.resolve(__dirname, "../src/lib/chand-party-planner.ts");
++const helperPath = path.resolve(path.dirname(module.filename), "../src/lib/chand-party-planner.ts");
+ const source = fs.readFileSync(helperPath, "utf8");
+ const compiled = ts.transpileModule(source, {
+   compilerOptions: {
+--- a/frontend/src/components/MeasuredQuantityPicker.tsx
++++ b/frontend/src/components/MeasuredQuantityPicker.tsx
+@@ -22,10 +22,19 @@
+   const [message, setMessage] = useState("");
+   const error = amountError(product, amount, t);
+ 
+-  useEffect(() => { if (cartQty) setAmount(cartQty); }, [cartQty]);
++  const [previousCartQty, setPreviousCartQty] = useState(cartQty);
++  if (previousCartQty !== cartQty) {
++    setPreviousCartQty(cartQty);
++    if (cartQty) setAmount(cartQty);
++  }
++  const priceKey = `${product.id}:${amount}:${error || ""}`;
++  const [previousPriceKey, setPreviousPriceKey] = useState(priceKey);
++  if (previousPriceKey !== priceKey) {
++    setPreviousPriceKey(priceKey);
++    setServer(null);
++  }
+   useEffect(() => {
+     let active = true;
+-    setServer(null);
+     if (error) return () => { active = false; };
+     const timer = setTimeout(() => {
+       api.post<ServerPrice>("/grocery/measured-price", { product_id: product.id, qty: amount })
+--- a/frontend/src/components/ProductCard.tsx
++++ b/frontend/src/components/ProductCard.tsx
+@@ -1,7 +1,7 @@
+ import { Image } from "expo-image";
+ import { useRouter } from "expo-router";
+ import { Pressable, StyleSheet, Text, View } from "react-native";
+-import { useEffect, useState } from "react";
++import { useState } from "react";
+ 
+ import { QuantityStepper } from "@/src/components/QuantityStepper";
+ import { getProductPlaceholder, Product } from "@/src/data/catalog";
+@@ -21,7 +21,11 @@
+   const { t } = useT();
+   const { getQty, addProduct, increment, decrement, startBuyNow } = useCart();
+   const [imageFailed, setImageFailed] = useState(!product.image);
+-  useEffect(() => setImageFailed(!product.image), [product.image, product.id]);
++  const [imageSource, setImageSource] = useState({ id: product.id, image: product.image });
++  if (imageSource.id !== product.id || imageSource.image !== product.image) {
++    setImageSource({ id: product.id, image: product.image });
++    setImageFailed(!product.image);
++  }
+   const hasVariants = Boolean(product.variants?.length);
+   const measured = isMeasured(product);
+   const qty = getQty(product.id);
+--- a/frontend/src/restaurant/RestaurantModeShell.tsx
++++ b/frontend/src/restaurant/RestaurantModeShell.tsx
+@@ -23,7 +23,7 @@
+ 
+   return (
+     <View style={styles.root}>
+-      <StatusBar barStyle="dark-content" backgroundColor={theme.background} />
++      <StatusBar barStyle="dark-content" />
+       <View style={[styles.header, { paddingTop: insets.top + theme.spacingSm }]}>
+         <View style={styles.headerRow}>
+           <View style={styles.brandMark}>
+--- a/frontend/src/restaurant/useDiscoveryAddress.ts
++++ b/frontend/src/restaurant/useDiscoveryAddress.ts
+@@ -51,7 +51,7 @@
+         const safeRows = Array.isArray(rows) ? rows : [];
+         setAddresses(safeRows);
+         let persistedId = '';
+-        try { persistedId = await storage.getItem<string>(SELECTED_ADDRESS_KEY, ''); } catch { /* fall back to the account default */ }
++        try { persistedId = (await storage.getItem<string>(SELECTED_ADDRESS_KEY, '')) ?? ''; } catch { /* fall back to the account default */ }
+         setSelectedAddressId((current) => safeRows.some((row) => row.id === current)
+           ? current
+           : (safeRows.find((row) => row.id === persistedId) || safeRows.find((row) => row.is_default) || safeRows[0])?.id || '');
+--- a/frontend/src/store/auth.tsx
++++ b/frontend/src/store/auth.tsx
+@@ -47,29 +47,23 @@
+ export function AuthProvider({ children }: { children: React.ReactNode }) {
+   const [user, setUser] = useState<User | null | undefined>(null);
+ 
+-  const refresh = useCallback(async (): Promise<User | undefined> => {
+-    try {
+-      const token = await storage.secureGet<string>(TOKEN_KEY, "");
+-      if (!token || typeof token !== "string") {
+-        setUser(undefined);
+-        return undefined;
+-      }
++  const refresh = useCallback((): Promise<User | undefined> => {
++    return storage.secureGet<string>(TOKEN_KEY, "").then(async (token) => {
++      if (!token || typeof token !== "string") { setUser(undefined); return undefined; }
+       const me = await api.get<User>("/auth/me");
+       setUser(me);
+       return me;
+-    } catch (error) {
+-      // A rejected/expired token should be removed; transient network failures
+-      // must not destroy the persisted session so it can recover on reconnect.
++    }).catch(async (error: unknown) => {
++      // Only an explicitly expired session discards the persisted token.
+       if (error && typeof error === "object" && "status" in error && error.status === 401) {
+         await storage.secureRemove(TOKEN_KEY);
+         setUser(undefined);
+         return undefined;
+       }
+       // Keep an already-hydrated user signed in through transient network/5xx errors.
+-      // On cold start, finish loading as anonymous while retaining the persisted token.
+       setUser((current) => (current && typeof current === "object" ? current : undefined));
+       return undefined;
+-    }
++    });
+   }, []);
+ 
+   useEffect(() => {
+--- /dev/null
++++ b/backend/tests/test_transaction_commit_retry.py
+@@ -0,0 +1,97 @@
++"""Regression for Motor committing before its with_transaction retry loop."""
++import asyncio
++
++import pytest
++from pymongo.errors import OperationFailure
++
++import mongo_transactions
++
++
++def unknown_commit(code=91):
++    return OperationFailure("synthetic unknown commit", code, {
++        "errorLabels": ["UnknownTransactionCommitResult"], "code": code,
++    })
++
++
++class Session:
++    def __init__(self, failures):
++        self.failures = list(failures)
++        self.commits = 0
++        self.in_transaction = True
++
++    async def __aenter__(self):
++        return self
++
++    async def __aexit__(self, *args):
++        pass
++
++    async def with_transaction(self, callback):
++        result = await callback(self)
++        # Model Motor 3.7.1's context exit before its explicit commit loop.
++        if self.in_transaction:
++            await self.commit_transaction()
++        return result
++
++    async def commit_transaction(self):
++        self.commits += 1
++        self.in_transaction = False
++        if self.failures:
++            raise self.failures.pop(0)
++
++
++class Client:
++    def __init__(self, session):
++        self.session = session
++
++    async def start_session(self):
++        return self.session
++
++
++def test_unknown_commit_retries_commit_without_replaying_callback():
++    session = Session([unknown_commit()])
++    calls = []
++
++    async def callback(current):
++        calls.append(current)
++        return "saved"
++
++    assert asyncio.run(mongo_transactions.run_transaction(Client(session), callback)) == "saved"
++    assert session.commits == 2
++    assert calls == [session]
++
++
++@pytest.mark.parametrize("error", [unknown_commit(50), OperationFailure("denied", 13)])
++def test_timeout_and_nonretryable_commit_errors_are_not_retried(error):
++    session = Session([error])
++
++    async def callback(current):
++        return "saved"
++
++    with pytest.raises(OperationFailure) as caught:
++        asyncio.run(mongo_transactions.run_transaction(Client(session), callback))
++    assert caught.value is error
++    assert session.commits == 1
++
++
++def test_unknown_commit_retry_stops_at_transaction_budget(monkeypatch):
++    times = iter([0, 120])
++    monkeypatch.setattr(mongo_transactions, "monotonic", lambda: next(times))
++    session = Session([unknown_commit()])
++
++    async def callback(current):
++        return "saved"
++
++    with pytest.raises(OperationFailure):
++        asyncio.run(mongo_transactions.run_transaction(Client(session), callback))
++    assert session.commits == 1
++
++
++def test_intentionally_ended_transaction_is_not_committed_again():
++    session = Session([])
++
++    async def callback(current):
++        current.in_transaction = False
++        return "ended"
++
++    assert asyncio.run(mongo_transactions.run_transaction(Client(session), callback)) == "ended"
++    assert session.commits == 0
+--- a/backend/catalogue_import_engine.py
++++ b/backend/catalogue_import_engine.py
+@@ -142,10 +142,19 @@
+ 
+ def _rows_from_csv(raw: bytes, filename: str) -> tuple[list[dict], int, list[str]]:
+     text = raw.decode("utf-8-sig")
+-    try:
+-        dialect = csv.Sniffer().sniff(text[:8192], delimiters=",;\t|") if text.strip() else csv.excel
++    dialect = csv.excel
++    try:
++        if text.strip():
++            # Column separators come from the header, not punctuation inside
++            # untrusted cell values (for example a formula containing '|').
++            dialect = csv.Sniffer().sniff(text.splitlines()[0], delimiters=",;\t|")
++            try:
++                dialect = csv.Sniffer().sniff(text[:8192], delimiters=dialect.delimiter)
++            except csv.Error:
++                # Irregular source rows must not change the header's separator.
++                pass
+     except csv.Error:
+-        dialect = csv.excel
++        pass
+     reader = csv.DictReader(io.StringIO(text), dialect=dialect)
+     if not reader.fieldnames or any(not str(h or "").strip() for h in reader.fieldnames):
+         raise ValueError("CSV needs a non-empty header row")
+--- a/backend/tests/test_universal_catalogue_import_engine.py
++++ b/backend/tests/test_universal_catalogue_import_engine.py
+@@ -136,6 +136,30 @@
+     assert record["raw_values"]["name"].startswith("=HYPERLINK")
+     assert record["normalized"]["name"].startswith("=HYPERLINK")
+ 
++
++@pytest.mark.parametrize("delimiter", [",", ";", "\t", "|"])
++def test_csv_header_selects_separator_without_reinterpreting_cell_punctuation(delimiter):
++    import csv
++    stream = io.StringIO(newline="")
++    writer = csv.writer(stream, delimiter=delimiter)
++    writer.writerow(["name", "description"])
++    name = '=HYPERLINK("https://untrusted.invalid","click")'
++    description = 'Untrusted , ; | \t punctuation\nand a second line'
++    writer.writerow([name, description])
++
++    result = process_file("source.csv", stream.getvalue().encode("utf-8-sig"))
++
++    assert len(result.records) == 1
++    assert result.records[0]["raw_values"] == {"name": name, "description": description}
++    assert result.records[0]["normalized"]["name"] == name
++    assert result.records[0]["status"] == "NEEDS_REVIEW"
++
++
++def test_csv_quoted_header_punctuation_is_not_a_column_separator():
++    result = process_file("source.csv", b'"Product, label";price\nRice;65\n')
++    assert result.records[0]["raw_values"] == {"Product, label": "Rice", "price": "65"}
++    assert result.records[0]["normalized"]["price"] == "65"
++
+ def test_xls_signature_is_recognized_but_missing_xlrd_is_reported_cleanly():
+     payload = bytes.fromhex("D0CF11E0A1B11AE1") + b"\x00" * 64
+     with pytest.raises((RuntimeError, ValueError)):
+--- a/backend/tests/test_frontend_contracts.py
++++ b/backend/tests/test_frontend_contracts.py
+@@ -73,13 +73,14 @@
+         'testID="offline-shops-card"',
+         'testID="restaurant-mode-card"',
+         'testID="home-services-card"',
+-        'testID="request-anything-card"',
++        'testID="chand-home-entry"',
+         '{CATEGORIES.map((item) => (',
+         'testID="header-language"',
+         'testID="header-voice-search"',
+         'testID="fresh-groceries-banner"',
+         'router.push("/restaurant")',
+         'router.push("/services")',
++        'router.push("/chand")',
+     ):
+         assert marker in home
+     assert 'brandHeader: "#FFE34F"' in theme
+@@ -92,6 +93,10 @@
+     assert 'backgroundColor: colors.brandForest' in tabs
+     assert 'useLocalSearchParams<{ type?: string }>()' in shops
+     assert 'params.type === "online" || params.type === "offline"' in shops
++    # Approved product decision: CHAND is the shopping-assistant entry point;
++    # the old Request Anything shortcut must not be restored to satisfy a test.
++    assert 'testID="request-anything-card"' not in home
++    assert 'router.push("/request")' not in home
+ 
+ 
+ def test_bakery_has_no_fabricated_sample_inventory_and_voice_is_honest():
+@@ -100,8 +105,20 @@
+     assert 'id: "bakery"' in catalog
+     assert 'id: "p-bakery-bread"' not in catalog
+     assert 'name: "Fresh Bread Loaf"' not in catalog
+-    assert 'Voice search unavailable' in home
+-    assert 'Speech recognition is not configured for this app.' in home
++    # Home opens editable CHAND voice typing rather than claiming that every
++    # device lacks speech support. Native/provider capability stays conditional.
++    voice_button = home.split('testID="header-voice-search"', 1)[1].split('</Pressable>', 1)[0]
++    assert 'accessibilityLabel="Open CHAND AI voice typing"' in voice_button
++    assert 'router.push("/chand?voice=1")' in voice_button
++    assert 'Voice search unavailable' not in voice_button
++    assert 'Speech recognition is not configured for this app.' not in voice_button
++    chand = (ROOT / "frontend/app/chand.tsx").read_text()
++    assert 'routeParams.voice === "1"' in chand
++    assert 'messageInputRef.current?.focus()' in chand
++    assert 'if (!permission.granted)' in chand
++    assert 'Microphone permission was not granted.' in chand
++    assert 'api.chandTranscribe' in chand
++    assert 'Voice transcription failed. Please try again or type your request.' in chand
+ 
+ def test_bakery_category_uses_catalog_filter_and_existing_empty_state():
+     catalog = (ROOT / "frontend/src/data/catalog.ts").read_text()

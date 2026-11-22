@@ -1,0 +1,2414 @@
+{
+  "timestamp": "2026-11-19T21:30:36.783643+05:30",
+  "references_checked": 401,
+  "missing": [],
+  "references": [
+    {
+      "report": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/native-provider-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/java-version.stdout",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/java-version.stderr",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/android-autolinking-current.stdout",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/android-autolinking-current.stderr",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/ios-autolinking-current.stdout",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/ios-autolinking-current.stderr",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/app.config.js",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/plugins/withReleaseSafety.js",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay/android/build.gradle",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/react-native-razorpay/react-native-razorpay.podspec",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/security-audit.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated-v2.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-results-v2.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-junit-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated-harness-v1.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 1123,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 250,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 819,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 833,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 687,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 305,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 4990,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 5362,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3877,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 1123,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 250,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 819,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 833,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 687,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 305,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 4990,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 5362,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3877,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 854,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 889,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 1123,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 1211,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 4636,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 2939,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 291,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3877,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 6751,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 6740,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 6941,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 6999,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 250,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 268,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 284,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 291,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 1211,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3607,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 4636,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 478,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3080,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3236,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 4851,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 575,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 4812,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 4831,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3236,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3522,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3634,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3643,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3217,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3331,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 5041,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 5169,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 5362,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 6470,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 5670,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 6186,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 6254,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 1142,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 1185,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 161,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 201,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 215,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 4775,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 6920,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 6927,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 1087,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 6888,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 250,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 268,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 1123,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 819,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 833,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 841,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 847,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 960,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 1014,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3236,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 5041,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 6254,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 5813,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 7030,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 5813,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 5840,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-live.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-payments.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-results-v2.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/db-metadata-current.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduction.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/reproduce-broad-security.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-payments.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-payments.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-live.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-live.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-regression.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 487,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 486,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/backend_test.py",
+      "line": 195,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/backend_test.py",
+      "line": 227,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 859,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/tests/backend_test.py",
+      "line": 80,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-typecheck.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-eslint.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-planner.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-native-mock.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-config-guard.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-web-build.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/FRONTEND_VALIDATION_NOTES.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-regression.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/security-audit.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/../iteration-2026-11-18T072632-0800/navigation-closure.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/../iteration-2026-11-18T072632-0800/navigation-closure.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/../iteration-2026-11-18T072632-0800/navigation-closure.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/../iteration-2026-11-18T072632-0800/complete-api-inventory.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-regression.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-results-v2.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-junit-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/../iteration-2026-11-18T072632-0800/get-side-effect-inventory.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/preservation-baseline.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-regression.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-regression.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/db-metadata-current.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/db-metadata-check.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/db-metadata-current.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/native-provider-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-results-v2.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-junit-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/validate_password_reset.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/security-audit.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-isolated-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/test_broad_security_isolated.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-results-v2.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/security-audit.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-regression.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/native-provider-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/native-provider-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/db-metadata-current.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/native-provider-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-regression.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/db-metadata-current.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-results-v2.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-regression.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/../iteration-2026-11-18T072632-0800/FINAL_OWNER_DECISION_READINESS.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-regression.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/consolidated-action-register.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduction.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_PRESERVATION_AND_GIT_AUDIT_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/preservation-baseline.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_PRESERVATION_AND_GIT_AUDIT_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/final-preservation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_PRESERVATION_AND_GIT_AUDIT_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/source-state-binding.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_PRESERVATION_AND_GIT_AUDIT_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/git-status-before.txt",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_PRESERVATION_AND_GIT_AUDIT_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/git-status-after.txt",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_PRESERVATION_AND_GIT_AUDIT_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/git-diff-after.txt",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "FINAL_PRESERVATION_AND_GIT_AUDIT_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/git-diff-cached-after.txt",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-results-v2.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-junit-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-run-v2.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/validate_password_reset.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-execution-provenance.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 1123,
+      "resolved": true
+    },
+    {
+      "report": "PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 250,
+      "resolved": true
+    },
+    {
+      "report": "PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 819,
+      "resolved": true
+    },
+    {
+      "report": "PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 833,
+      "resolved": true
+    },
+    {
+      "report": "PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 687,
+      "resolved": true
+    },
+    {
+      "report": "PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 305,
+      "resolved": true
+    },
+    {
+      "report": "PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 4990,
+      "resolved": true
+    },
+    {
+      "report": "PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 5362,
+      "resolved": true
+    },
+    {
+      "report": "PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3877,
+      "resolved": true
+    },
+    {
+      "report": "RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/native-provider-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 1123,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 250,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 819,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 833,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 687,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 305,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 4990,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 5362,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+      "target": "/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/server.py",
+      "line": 3877,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/consolidated-action-register.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-payments.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-live.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-junit-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/FRONTEND_VALIDATION_NOTES.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/validation-status-register.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/recovery.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/recovery.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/final-preservation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/final-preservation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/final-preservation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/db-metadata-current.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/db-metadata-current.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/db-metadata-current.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-payments.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-live.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-eslint.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-planner.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-native-mock.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-config-guard.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-web-build-execution.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/source-state-binding.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/android-autolinking-current.stdout",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/ios-autolinking-current.stdout",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-junit-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/TASK_1_OWNER_APPROVAL_CHECKLIST.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/TASK_1_CONSOLIDATED_ACTION_REGISTER.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/FINAL_EVIDENCE_GAP_DISPOSITION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/COMPLETE_REGRESSION_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/ANDROID_IOS_NATIVE_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/FINAL_PRESERVATION_AND_GIT_AUDIT_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/TASK_1_OWNER_APPROVAL_CHECKLIST.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/TASK_1_FINAL_RESUME_CHECKPOINT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_OWNER_APPROVAL_CHECKLIST.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/TASK_1_FINAL_MASTER_REVIEW_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TASK_1_OWNER_APPROVAL_CHECKLIST.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/PROPOSED_MINIMAL_CORRECTIONS_REQUIRING_OWNER_AUTHORIZATION.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/preservation-baseline.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/frontend-group-regression.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/frontend-group-regression.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/transaction-regression.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/transaction-regression.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/release-offline.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/release-offline.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/frontend-effects-regression.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/frontend-effects-regression.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/seller-support-contract-final.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/seller-support-contract-final.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/state-group-regression.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/state-group-regression.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/live-after-fix.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/live-after-fix.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/release-offline-final.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/release-offline-final.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/transaction-regression-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/transaction-regression-v2.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/remaining-runtime.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/remaining-runtime.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/auth-contract-correction.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/session-20261117/auth-contract-correction.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step3-tests.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step3-tests.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step9-payment-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step9-payment-v2.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step5-tests.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step5-tests.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-tests-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-tests-v2.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step1-live.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step1-live.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step9-payment.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step9-payment.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step5-tests-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step5-tests-v2.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-final.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-final.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-tests.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/release-completion-20261117T094751Z/step4-tests.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/three-failures-after.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/three-failures-after.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/csv-focused.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/csv-focused.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/three-failures-before.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/three-failures-before.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/relevant-regression.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/regression-fixes-20261117T091345Z/relevant-regression.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/external-validation-20261118T133459Z/upload-types-before.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/external-validation-20261118T133459Z/upload-types-before.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/external-validation-20261118T133459Z/upload-security-after.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/external-validation-20261118T133459Z/upload-security-after.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/security-races-before.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/security-races-before.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/backend-final.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/backend-final.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/payment-local.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/payment-local.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/backend-full.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/backend-full.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/contract-focused.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/contract-focused.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/backend-final-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/backend-final-v2.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/security-races-after.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/security-races-after.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/security-final-focused.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/security-final-focused.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/security-tracking-final.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/security-tracking-final.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/live-regression.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/live-regression.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/affected-local-final.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/affected-local-final.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/live-regression-final.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/live-regression-final.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/backend-full-v2.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/resume-20261118/backend-full-v2.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-offline-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-local-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-live.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/password-reset-results-v2.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/db-metadata-current.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/native-provider-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/RAZORPAY_TEST_PAYMENT_REFUND_VALIDATION_REPORT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy-result.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-legacy.log",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/run_backend_regression.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/run_local_backend_validation.py",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/backend-regression.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/frontend-validation.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/security-audit.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/COMPLETE_APPLICATION_SECURITY_AUDIT.md",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/consolidated-action-register.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduction.json",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.xml",
+      "line": null,
+      "resolved": true
+    },
+    {
+      "report": "TEST_PROVENANCE_AND_REPRODUCTION_REPORT.md",
+      "target": "/workspace/come-in-current/evidence/phase-1-task-1-owner-review/validation-20261119T140704+0530/broad-security-reproduced.log",
+      "line": null,
+      "resolved": true
+    }
+  ],
+  "scope": "All local Markdown link targets/line references in top-level generated reports;external URLs are not contacted."
+}

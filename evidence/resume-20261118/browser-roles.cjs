@@ -1,0 +1,10 @@
+const fs=require('node:fs');const assert=require('node:assert/strict');const {chromium}=require('playwright');
+const env=require('/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/dotenv').parse(fs.readFileSync('/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.env'));
+const accounts=JSON.parse(fs.readFileSync('/workspace/come-in-tools/continuation-test-accounts.json','utf8'));
+(async()=>{const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox']});const checks=[],errors=[];try{
+for(const [role,routes] of [['CUSTOMER',['/orders','/delivery-partner']],['SELLER',['/seller/products','/seller/support']],['RESTO',['/restaurant/dashboard','/restaurant/orders']],['ADMIN',['/admin','/admin-delivery-partners']]]){
+ const context=await browser.newContext();const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));await page.goto('http://localhost:3000/auth',{waitUntil:'networkidle'});
+ await page.locator('[data-testid="auth-email"]:visible').fill(role==='ADMIN'?env.ADMIN_EMAIL:'continuation.'+role.toLowerCase()+'@comein-preview.com');
+ await page.locator('[data-testid="auth-password"]:visible').fill(role==='ADMIN'?env.ADMIN_PASSWORD:accounts[role]);await page.locator('[data-testid="auth-submit"]:visible').click();await page.waitForURL(u=>u.pathname==='/account',{timeout:30000});
+ checks.push(role+' real UI login');for(const route of routes){await page.goto('http://localhost:3000'+route,{waitUntil:'networkidle'});assert.equal(new URL(page.url()).pathname,route);assert((await page.locator('body').innerText()).length>80);checks.push(role+' '+route+' renders');}await context.close();}
+assert.equal(errors.length,0);fs.writeFileSync('/workspace/come-in-current/evidence/resume-20261118/browser-roles.json',JSON.stringify({ok:true,checks,pageErrors:errors,scope:'Web login/render only; no provider/device workflows'},null,2));console.log(checks.length+' PASS, 0 FAIL; zero page errors');}finally{await browser.close();}})().catch(e=>{console.error(e.message);process.exitCode=1;});

@@ -1,0 +1,13 @@
+# Password reset validation checkpoint
+
+COME-IN; 2026-11-19T21:21:15.123617+05:30; `/workspace/come-in-current`; branch `work`; HEAD `a223290a8866a1ebeaac982f546491fdc197ae7a`.
+
+Task1 isolated security validation, source fixes not authorized. Last completed operation: actual-function local-Mongo corrected run30cases23PASS7FAIL0ERROR0SKIP, exit1; source SHA256 `a1e340dc58e2e10e9ed5283ef02220251edf3be8e2f88193becd406aaa3778db` unchanged. All inputs and attempt1 retained. Initial9harness errors disclosed and corrected by matching original compile annotation semantics; final tests did not weaken assertions.
+
+Confirmed local findings: SEC01 token race/partial-write retry (HIGH OPEN); low SMTP config and missing-user consistency subissues; SEC02 oldJWT remains; SEC04 shared throttle overshoot; SEC06 bcrypt72-byte suffix alias. No new canonical IDs. Two observation cases do not approve production ingress or concurrent-forgot policy.
+
+DB `comein_reset_validation_20261119t154740z_b138456219` retained on localhost27018 rs0 PRIMARY Mongo7.0.45; synthetic fixtures only. First attempt DB also retained. No drop/reset/source/config/provider/realemail/production operation. No operation running/interrupted. Existing checkpoints/reports untouched. New files: runner, attempt1+v2log/JSON/JUnit, report builder, executionprovenance, this checkpoint and report. Parent will finalize overall preservation/checkpoint.
+
+Next action: consolidate report and owner evidence; owner authorization is required before any remediation. Current runner automatically selects a new DB but writes fixed v2 artifact names, so do NOT rerun it in this preserved folder: if future approved validation is needed, place the reviewed runner in a newly authorized dated output folder and redirect to a new log. No completed check needs rerun absent a related source or harness change.
+
+NEXT_SESSION_RESUME_PROMPT: Read PASSWORD_RESET_SECURITY_VALIDATION_REPORT.md, password-reset-results-v2.json, password-reset-execution-provenance.json and the parent Task1 validation checkpoint first. Verify work/HEADa223290a8866a1ebeaac982f546491fdc197ae7a, Git status and all captured source/report hashes. Preserve every original and both retained test DBs. The corrected30-case run finished23PASS7FAIL0ERROR0SKIP; do not infer a passing reset gate or repeat it without cause. HIGH SEC01 is locally confirmed OPEN; no source fixes or Task2 are authorized. Continue only the exact owner-authorized next scope, keeping new evidence in a new dated output folder and updating its checkpoint after progress. Never contact production/provider SMTP or expose fixture tokens/secrets.

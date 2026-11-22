@@ -1,0 +1,1158 @@
+{
+  "_razorpay_settings": {
+    "line": 80,
+    "end_line": 84
+  },
+  "_claim_payment_intent": {
+    "line": 87,
+    "end_line": 93
+  },
+  "init_storage": {
+    "line": 117,
+    "end_line": 133
+  },
+  "put_object": {
+    "line": 136,
+    "end_line": 158
+  },
+  "get_object": {
+    "line": 161,
+    "end_line": 176
+  },
+  "now_utc": {
+    "line": 185,
+    "end_line": 186
+  },
+  "now_iso": {
+    "line": 189,
+    "end_line": 190
+  },
+  "doc_out": {
+    "line": 201,
+    "end_line": 212
+  },
+  "public_doc": {
+    "line": 215,
+    "end_line": 221
+  },
+  "hash_password": {
+    "line": 233,
+    "end_line": 236
+  },
+  "verify_password": {
+    "line": 239,
+    "end_line": 243
+  },
+  "_jwt_secret": {
+    "line": 246,
+    "end_line": 247
+  },
+  "create_access_token": {
+    "line": 250,
+    "end_line": 258
+  },
+  "get_bearer_token": {
+    "line": 261,
+    "end_line": 265
+  },
+  "get_current_user_optional": {
+    "line": 268,
+    "end_line": 281
+  },
+  "get_current_user": {
+    "line": 284,
+    "end_line": 288
+  },
+  "require_role": {
+    "line": 291,
+    "end_line": 297
+  },
+  "root": {
+    "line": 669,
+    "end_line": 670
+  },
+  "create_status_check": {
+    "line": 687,
+    "end_line": 690
+  },
+  "list_status_checks": {
+    "line": 694,
+    "end_line": 696
+  },
+  "_new_referral_code": {
+    "line": 703,
+    "end_line": 705
+  },
+  "_ensure_referral_code": {
+    "line": 708,
+    "end_line": 728
+  },
+  "_validate_referral_code": {
+    "line": 731,
+    "end_line": 740
+  },
+  "_record_referral_registration": {
+    "line": 743,
+    "end_line": 756
+  },
+  "_refresh_referral_order_candidate": {
+    "line": 759,
+    "end_line": 770
+  },
+  "_maybe_create_referral_reward": {
+    "line": 773,
+    "end_line": 797
+  },
+  "_public_referral_url": {
+    "line": 800,
+    "end_line": 806
+  },
+  "_client_ip": {
+    "line": 819,
+    "end_line": 821
+  },
+  "_rate_keys": {
+    "line": 824,
+    "end_line": 830
+  },
+  "_check_auth_rate_limit": {
+    "line": 833,
+    "end_line": 838
+  },
+  "_record_auth_attempt": {
+    "line": 841,
+    "end_line": 844
+  },
+  "_enforce_auth_rate_limit": {
+    "line": 847,
+    "end_line": 850
+  },
+  "register": {
+    "line": 854,
+    "end_line": 885
+  },
+  "login": {
+    "line": 889,
+    "end_line": 897
+  },
+  "referral_dashboard": {
+    "line": 901,
+    "end_line": 923
+  },
+  "claim_first_home_referral_banner": {
+    "line": 927,
+    "end_line": 939
+  },
+  "validate_referral": {
+    "line": 943,
+    "end_line": 946
+  },
+  "open_referral": {
+    "line": 950,
+    "end_line": 956
+  },
+  "admin_referrals": {
+    "line": 960,
+    "end_line": 963
+  },
+  "admin_review_referral": {
+    "line": 967,
+    "end_line": 1010
+  },
+  "admin_update_referral_reward": {
+    "line": 1014,
+    "end_line": 1055
+  },
+  "me": {
+    "line": 1059,
+    "end_line": 1060
+  },
+  "update_me": {
+    "line": 1069,
+    "end_line": 1076
+  },
+  "_send_password_reset_email": {
+    "line": 1087,
+    "end_line": 1104
+  },
+  "forgot_password": {
+    "line": 1107,
+    "end_line": 1120
+  },
+  "reset_password": {
+    "line": 1123,
+    "end_line": 1130
+  },
+  "upload_image": {
+    "line": 1142,
+    "end_line": 1181
+  },
+  "serve_upload": {
+    "line": 1185,
+    "end_line": 1192
+  },
+  "_get_shop_or_404": {
+    "line": 1200,
+    "end_line": 1208
+  },
+  "_assert_shop_owner": {
+    "line": 1211,
+    "end_line": 1218
+  },
+  "create_shop": {
+    "line": 1222,
+    "end_line": 1247
+  },
+  "my_shop": {
+    "line": 1251,
+    "end_line": 1255
+  },
+  "update_shop": {
+    "line": 1259,
+    "end_line": 1266
+  },
+  "set_shop_availability": {
+    "line": 1274,
+    "end_line": 1285
+  },
+  "list_shops": {
+    "line": 1289,
+    "end_line": 1318
+  },
+  "get_shop": {
+    "line": 1322,
+    "end_line": 1329
+  },
+  "_redact_chand_feedback_comment": {
+    "line": 1358,
+    "end_line": 1363
+  },
+  "submit_chand_feedback": {
+    "line": 1367,
+    "end_line": 1390
+  },
+  "my_chand_feedback": {
+    "line": 1394,
+    "end_line": 1395
+  },
+  "admin_chand_feedback": {
+    "line": 1399,
+    "end_line": 1400
+  },
+  "admin_chand_feedback_summary": {
+    "line": 1404,
+    "end_line": 1411
+  },
+  "admin_update_chand_feedback": {
+    "line": 1415,
+    "end_line": 1426
+  },
+  "assistant_context": {
+    "line": 1430,
+    "end_line": 1604
+  },
+  "_chand_provider_settings": {
+    "line": 1617,
+    "end_line": 1622
+  },
+  "_chand_upload_rate_limit": {
+    "line": 1625,
+    "end_line": 1640
+  },
+  "assistant_health": {
+    "line": 1644,
+    "end_line": 1660
+  },
+  "assistant_transcribe": {
+    "line": 1664,
+    "end_line": 1698
+  },
+  "assistant_vision": {
+    "line": 1702,
+    "end_line": 1769
+  },
+  "_normalized_category_token": {
+    "line": 1783,
+    "end_line": 1785
+  },
+  "_is_directory_only_category": {
+    "line": 1788,
+    "end_line": 1796
+  },
+  "_reject_directory_only_product": {
+    "line": 1799,
+    "end_line": 1807
+  },
+  "create_master_product": {
+    "line": 1876,
+    "end_line": 1893
+  },
+  "search_master_products": {
+    "line": 1897,
+    "end_line": 1906
+  },
+  "link_master_product": {
+    "line": 1910,
+    "end_line": 1939
+  },
+  "create_product": {
+    "line": 1948,
+    "end_line": 1972
+  },
+  "_import_measure": {
+    "line": 1975,
+    "end_line": 2010
+  },
+  "create_catalogue_import_job": {
+    "line": 2014,
+    "end_line": 2099
+  },
+  "get_catalogue_import_job": {
+    "line": 2103,
+    "end_line": 2109
+  },
+  "_owned_catalogue_import_job": {
+    "line": 2112,
+    "end_line": 2118
+  },
+  "_assert_catalogue_job_review_open": {
+    "line": 2121,
+    "end_line": 2123
+  },
+  "_catalogue_record_fields": {
+    "line": 2126,
+    "end_line": 2134
+  },
+  "_catalogue_record_validation": {
+    "line": 2137,
+    "end_line": 2150
+  },
+  "list_catalogue_import_jobs": {
+    "line": 2154,
+    "end_line": 2158
+  },
+  "list_catalogue_import_categories": {
+    "line": 2162,
+    "end_line": 2168
+  },
+  "edit_catalogue_import_record": {
+    "line": 2172,
+    "end_line": 2192
+  },
+  "approve_catalogue_import_record": {
+    "line": 2196,
+    "end_line": 2212
+  },
+  "reject_catalogue_import_record": {
+    "line": 2216,
+    "end_line": 2228
+  },
+  "bulk_approve_catalogue_import_records": {
+    "line": 2232,
+    "end_line": 2251
+  },
+  "_catalogue_applied_result": {
+    "line": 2254,
+    "end_line": 2281
+  },
+  "_apply_catalogue_import_job_transactionally": {
+    "line": 2284,
+    "end_line": 2403
+  },
+  "confirm_catalogue_import_apply": {
+    "line": 2407,
+    "end_line": 2441
+  },
+  "import_shop_products": {
+    "line": 2445,
+    "end_line": 2680
+  },
+  "shop_product_import_template": {
+    "line": 2684,
+    "end_line": 2692
+  },
+  "admin_catalog_import_history": {
+    "line": 2696,
+    "end_line": 2698
+  },
+  "admin_catalog_price_audit": {
+    "line": 2702,
+    "end_line": 2704
+  },
+  "compare_master_product_prices": {
+    "line": 2708,
+    "end_line": 2737
+  },
+  "_retail_external_key": {
+    "line": 2752,
+    "end_line": 2756
+  },
+  "retail_price_import_template": {
+    "line": 2760,
+    "end_line": 2762
+  },
+  "admin_retail_price_import": {
+    "line": 2766,
+    "end_line": 2859
+  },
+  "public_retail_prices": {
+    "line": 2863,
+    "end_line": 2871
+  },
+  "admin_retail_price_import_history": {
+    "line": 2875,
+    "end_line": 2877
+  },
+  "list_shop_products": {
+    "line": 2881,
+    "end_line": 2895
+  },
+  "list_catalog_products": {
+    "line": 2899,
+    "end_line": 2935
+  },
+  "update_product": {
+    "line": 2939,
+    "end_line": 2979
+  },
+  "delete_product": {
+    "line": 2983,
+    "end_line": 2999
+  },
+  "_measured_line_total": {
+    "line": 3007,
+    "end_line": 3008
+  },
+  "_measured_label": {
+    "line": 3011,
+    "end_line": 3013
+  },
+  "_line_amount": {
+    "line": 3016,
+    "end_line": 3019
+  },
+  "_order_total": {
+    "line": 3022,
+    "end_line": 3023
+  },
+  "_grocery_scope": {
+    "line": 3031,
+    "end_line": 3036
+  },
+  "_aggregate_grocery_quote_lines": {
+    "line": 3039,
+    "end_line": 3056
+  },
+  "_catalogue_publication_allowed": {
+    "line": 3059,
+    "end_line": 3063
+  },
+  "_price_for": {
+    "line": 3066,
+    "end_line": 3077
+  },
+  "_resolve_grocery_lines": {
+    "line": 3080,
+    "end_line": 3128
+  },
+  "_quote_totals": {
+    "line": 3131,
+    "end_line": 3136
+  },
+  "_available_shopping_reward_balance": {
+    "line": 3139,
+    "end_line": 3150
+  },
+  "_consume_shopping_reward": {
+    "line": 3153,
+    "end_line": 3178
+  },
+  "measured_price": {
+    "line": 3182,
+    "end_line": 3188
+  },
+  "create_grocery_quote": {
+    "line": 3192,
+    "end_line": 3215
+  },
+  "_atomic_decrement_line": {
+    "line": 3218,
+    "end_line": 3232
+  },
+  "create_order": {
+    "line": 3236,
+    "end_line": 3414
+  },
+  "confirm_grocery_upi_payment": {
+    "line": 3418,
+    "end_line": 3442
+  },
+  "my_orders": {
+    "line": 3446,
+    "end_line": 3448
+  },
+  "_restore_grocery_order_stock": {
+    "line": 3451,
+    "end_line": 3479
+  },
+  "_cancel_grocery_order": {
+    "line": 3482,
+    "end_line": 3518
+  },
+  "cancel_grocery_order": {
+    "line": 3522,
+    "end_line": 3529
+  },
+  "shop_orders": {
+    "line": 3533,
+    "end_line": 3537
+  },
+  "update_order_status": {
+    "line": 3541,
+    "end_line": 3590
+  },
+  "_tracking_order": {
+    "line": 3593,
+    "end_line": 3604
+  },
+  "_tracking_can_read": {
+    "line": 3607,
+    "end_line": 3630
+  },
+  "get_grocery_order_details": {
+    "line": 3634,
+    "end_line": 3639
+  },
+  "get_order_tracking": {
+    "line": 3643,
+    "end_line": 3661
+  },
+  "update_order_tracking_location": {
+    "line": 3665,
+    "end_line": 3691
+  },
+  "submit_request_anything": {
+    "line": 3700,
+    "end_line": 3716
+  },
+  "my_requests_anything": {
+    "line": 3720,
+    "end_line": 3722
+  },
+  "submit_agent_assist": {
+    "line": 3726,
+    "end_line": 3742
+  },
+  "admin_announcements": {
+    "line": 3769,
+    "end_line": 3771
+  },
+  "create_announcement": {
+    "line": 3775,
+    "end_line": 3780
+  },
+  "set_announcement_active": {
+    "line": 3784,
+    "end_line": 3824
+  },
+  "admin_dashboard": {
+    "line": 3828,
+    "end_line": 3850
+  },
+  "active_announcements": {
+    "line": 3854,
+    "end_line": 3863
+  },
+  "admin_users": {
+    "line": 3871,
+    "end_line": 3873
+  },
+  "admin_update_user_role": {
+    "line": 3877,
+    "end_line": 3890
+  },
+  "admin_shops": {
+    "line": 3894,
+    "end_line": 3896
+  },
+  "admin_set_shop_status": {
+    "line": 3904,
+    "end_line": 3913
+  },
+  "admin_orders": {
+    "line": 3917,
+    "end_line": 3919
+  },
+  "_financial_date_bounds": {
+    "line": 3929,
+    "end_line": 3933
+  },
+  "_dt_in_range": {
+    "line": 3936,
+    "end_line": 3941
+  },
+  "_order_financial_rows": {
+    "line": 3944,
+    "end_line": 3965
+  },
+  "_sum_rows": {
+    "line": 3968,
+    "end_line": 3977
+  },
+  "_record_finalized_order_ledger": {
+    "line": 3980,
+    "end_line": 4011
+  },
+  "_record_refund_reversal": {
+    "line": 4014,
+    "end_line": 4036
+  },
+  "_financial_summary": {
+    "line": 4039,
+    "end_line": 4061
+  },
+  "confirm_manual_cash_collection": {
+    "line": 4065,
+    "end_line": 4104
+  },
+  "_financial_ledger_summary": {
+    "line": 4107,
+    "end_line": 4117
+  },
+  "admin_earnings": {
+    "line": 4121,
+    "end_line": 4151
+  },
+  "admin_earnings_ledger": {
+    "line": 4155,
+    "end_line": 4162
+  },
+  "admin_earnings_transactions": {
+    "line": 4166,
+    "end_line": 4189
+  },
+  "shopkeeper_earnings": {
+    "line": 4193,
+    "end_line": 4254
+  },
+  "_bank_cipher": {
+    "line": 4257,
+    "end_line": 4265
+  },
+  "_mask_account": {
+    "line": 4268,
+    "end_line": 4269
+  },
+  "_masked_bank_account": {
+    "line": 4272,
+    "end_line": 4276
+  },
+  "_save_bank_account": {
+    "line": 4279,
+    "end_line": 4286
+  },
+  "admin_platform_bank_account": {
+    "line": 4290,
+    "end_line": 4291
+  },
+  "save_admin_platform_bank_account": {
+    "line": 4295,
+    "end_line": 4296
+  },
+  "get_shop_bank_account": {
+    "line": 4300,
+    "end_line": 4303
+  },
+  "save_shop_bank_account": {
+    "line": 4307,
+    "end_line": 4310
+  },
+  "get_restaurant_bank_account": {
+    "line": 4314,
+    "end_line": 4317
+  },
+  "save_restaurant_bank_account": {
+    "line": 4321,
+    "end_line": 4324
+  },
+  "admin_set_financial_policy": {
+    "line": 4328,
+    "end_line": 4336
+  },
+  "admin_settlement_list": {
+    "line": 4340,
+    "end_line": 4343
+  },
+  "request_shop_settlement": {
+    "line": 4347,
+    "end_line": 4391
+  },
+  "request_restaurant_settlement": {
+    "line": 4395,
+    "end_line": 4431
+  },
+  "admin_settlement_decision": {
+    "line": 4435,
+    "end_line": 4463
+  },
+  "admin_requests_anything": {
+    "line": 4467,
+    "end_line": 4469
+  },
+  "admin_agent_assist": {
+    "line": 4473,
+    "end_line": 4475
+  },
+  "admin_update_request": {
+    "line": 4484,
+    "end_line": 4502
+  },
+  "admin_update_assist": {
+    "line": 4506,
+    "end_line": 4524
+  },
+  "_object_id_or_404": {
+    "line": 4624,
+    "end_line": 4628
+  },
+  "_restaurant_or_404": {
+    "line": 4630,
+    "end_line": 4634
+  },
+  "_restaurant_owner": {
+    "line": 4636,
+    "end_line": 4643
+  },
+  "_restaurant_public": {
+    "line": 4645,
+    "end_line": 4648
+  },
+  "list_restaurants": {
+    "line": 4651,
+    "end_line": 4670
+  },
+  "my_restaurants": {
+    "line": 4673,
+    "end_line": 4674
+  },
+  "create_restaurant": {
+    "line": 4677,
+    "end_line": 4688
+  },
+  "restaurant_detail": {
+    "line": 4691,
+    "end_line": 4695
+  },
+  "restaurant_delivery_serviceability": {
+    "line": 4698,
+    "end_line": 4704
+  },
+  "update_restaurant": {
+    "line": 4708,
+    "end_line": 4717
+  },
+  "restaurant_availability": {
+    "line": 4720,
+    "end_line": 4729
+  },
+  "restaurant_menu": {
+    "line": 4732,
+    "end_line": 4741
+  },
+  "create_menu_item": {
+    "line": 4744,
+    "end_line": 4751
+  },
+  "update_menu_item": {
+    "line": 4754,
+    "end_line": 4763
+  },
+  "delete_menu_item": {
+    "line": 4766,
+    "end_line": 4772
+  },
+  "list_addresses": {
+    "line": 4775,
+    "end_line": 4776
+  },
+  "create_address": {
+    "line": 4779,
+    "end_line": 4786
+  },
+  "update_address": {
+    "line": 4789,
+    "end_line": 4798
+  },
+  "delete_address": {
+    "line": 4801,
+    "end_line": 4805
+  },
+  "get_restaurant_cart": {
+    "line": 4812,
+    "end_line": 4828
+  },
+  "save_restaurant_cart": {
+    "line": 4831,
+    "end_line": 4843
+  },
+  "clear_restaurant_cart": {
+    "line": 4846,
+    "end_line": 4848
+  },
+  "create_restaurant_order": {
+    "line": 4851,
+    "end_line": 4921
+  },
+  "my_restaurant_orders": {
+    "line": 4924,
+    "end_line": 4928
+  },
+  "restaurant_orders": {
+    "line": 4931,
+    "end_line": 4933
+  },
+  "update_restaurant_order_status": {
+    "line": 4936,
+    "end_line": 4967
+  },
+  "cancel_restaurant_order": {
+    "line": 4970,
+    "end_line": 4981
+  },
+  "restaurant_payment_config": {
+    "line": 4984,
+    "end_line": 4987
+  },
+  "create_restaurant_payment_intent": {
+    "line": 4990,
+    "end_line": 5021
+  },
+  "retry_restaurant_payment": {
+    "line": 5024,
+    "end_line": 5038
+  },
+  "verify_restaurant_payment": {
+    "line": 5041,
+    "end_line": 5088
+  },
+  "_commit_restaurant_capture": {
+    "line": 5091,
+    "end_line": 5166
+  },
+  "_captured_payment_matches_order": {
+    "line": 5169,
+    "end_line": 5189
+  },
+  "_mark_restaurant_payment_failed": {
+    "line": 5192,
+    "end_line": 5215
+  },
+  "_claim_restaurant_refund_for_gateway": {
+    "line": 5218,
+    "end_line": 5255
+  },
+  "_apply_restaurant_refund_webhook_transactionally": {
+    "line": 5258,
+    "end_line": 5344
+  },
+  "_record_razorpay_event": {
+    "line": 5347,
+    "end_line": 5358
+  },
+  "razorpay_webhook": {
+    "line": 5362,
+    "end_line": 5446
+  },
+  "create_restaurant_review": {
+    "line": 5449,
+    "end_line": 5460
+  },
+  "create_restaurant_support": {
+    "line": 5470,
+    "end_line": 5497
+  },
+  "my_restaurant_support": {
+    "line": 5500,
+    "end_line": 5501
+  },
+  "seller_order_support": {
+    "line": 5504,
+    "end_line": 5517
+  },
+  "seller_update_order_support": {
+    "line": 5526,
+    "end_line": 5574
+  },
+  "admin_restaurant_support": {
+    "line": 5578,
+    "end_line": 5579
+  },
+  "admin_update_restaurant_support": {
+    "line": 5582,
+    "end_line": 5589
+  },
+  "_fetch_razorpay_refunds": {
+    "line": 5591,
+    "end_line": 5612
+  },
+  "_persist_restaurant_admin_refund_state": {
+    "line": 5615,
+    "end_line": 5666
+  },
+  "admin_refund_restaurant_order": {
+    "line": 5670,
+    "end_line": 5788
+  },
+  "admin_restaurant_orders": {
+    "line": 5792,
+    "end_line": 5793
+  },
+  "admin_restaurants": {
+    "line": 5796,
+    "end_line": 5797
+  },
+  "admin_restaurant_status": {
+    "line": 5800,
+    "end_line": 5805
+  },
+  "_startup": {
+    "line": 5813,
+    "end_line": 5937
+  },
+  "_shutdown": {
+    "line": 5941,
+    "end_line": 5942
+  },
+  "get_home_service_fee_policy": {
+    "line": 5954,
+    "end_line": 5956
+  },
+  "set_home_service_fee_policy": {
+    "line": 5959,
+    "end_line": 5962
+  },
+  "effective_home_visit_fee": {
+    "line": 5964,
+    "end_line": 5968
+  },
+  "list_service_providers": {
+    "line": 5996,
+    "end_line": 6008
+  },
+  "my_service_provider": {
+    "line": 6011,
+    "end_line": 6013
+  },
+  "register_service_provider": {
+    "line": 6016,
+    "end_line": 6024
+  },
+  "update_service_provider": {
+    "line": 6027,
+    "end_line": 6034
+  },
+  "update_service_provider_photo": {
+    "line": 6040,
+    "end_line": 6053
+  },
+  "create_service_appointment": {
+    "line": 6056,
+    "end_line": 6082
+  },
+  "my_service_appointments": {
+    "line": 6085,
+    "end_line": 6086
+  },
+  "provider_service_appointments": {
+    "line": 6089,
+    "end_line": 6093
+  },
+  "update_service_appointment": {
+    "line": 6101,
+    "end_line": 6141
+  },
+  "admin_service_providers": {
+    "line": 6144,
+    "end_line": 6145
+  },
+  "admin_approve_service_provider": {
+    "line": 6152,
+    "end_line": 6158
+  },
+  "_grocery_razorpay_keys": {
+    "line": 6168,
+    "end_line": 6177
+  },
+  "_apply_grocery_refund_transactionally": {
+    "line": 6186,
+    "end_line": 6235
+  },
+  "_grocery_refund_review": {
+    "line": 6238,
+    "end_line": 6250
+  },
+  "admin_refund_grocery_order": {
+    "line": 6254,
+    "end_line": 6320
+  },
+  "admin_grocery_refunds": {
+    "line": 6324,
+    "end_line": 6328
+  },
+  "grocery_payment_config": {
+    "line": 6332,
+    "end_line": 6334
+  },
+  "_grocery_online_order": {
+    "line": 6337,
+    "end_line": 6344
+  },
+  "create_grocery_payment_intent": {
+    "line": 6348,
+    "end_line": 6383
+  },
+  "_mark_grocery_paid": {
+    "line": 6386,
+    "end_line": 6466
+  },
+  "verify_grocery_payment": {
+    "line": 6470,
+    "end_line": 6506
+  },
+  "_mark_grocery_payment_failed": {
+    "line": 6509,
+    "end_line": 6523
+  },
+  "_handle_grocery_webhook_capture": {
+    "line": 6526,
+    "end_line": 6535
+  },
+  "_notify": {
+    "line": 6558,
+    "end_line": 6566
+  },
+  "_notify_new_grocery_order": {
+    "line": 6569,
+    "end_line": 6577
+  },
+  "_notify_order_status": {
+    "line": 6580,
+    "end_line": 6583
+  },
+  "_refund_summary": {
+    "line": 6586,
+    "end_line": 6606
+  },
+  "_sellable_stock": {
+    "line": 6609,
+    "end_line": 6615
+  },
+  "_fire_restock_alerts": {
+    "line": 6618,
+    "end_line": 6624
+  },
+  "my_notifications": {
+    "line": 6628,
+    "end_line": 6631
+  },
+  "my_unread_notifications": {
+    "line": 6635,
+    "end_line": 6636
+  },
+  "read_all_notifications": {
+    "line": 6640,
+    "end_line": 6642
+  },
+  "read_notification": {
+    "line": 6646,
+    "end_line": 6651
+  },
+  "restock_alert_status": {
+    "line": 6655,
+    "end_line": 6656
+  },
+  "subscribe_restock_alert": {
+    "line": 6660,
+    "end_line": 6665
+  },
+  "unsubscribe_restock_alert": {
+    "line": 6669,
+    "end_line": 6671
+  },
+  "_delivery_partner_cipher": {
+    "line": 6725,
+    "end_line": 6733
+  },
+  "_dp_encrypt": {
+    "line": 6736,
+    "end_line": 6737
+  },
+  "_dp_safe_reason": {
+    "line": 6740,
+    "end_line": 6744
+  },
+  "_dp_decrypt": {
+    "line": 6747,
+    "end_line": 6748
+  },
+  "_dp_public": {
+    "line": 6751,
+    "end_line": 6765
+  },
+  "delivery_partner_provider_status": {
+    "line": 6769,
+    "end_line": 6777
+  },
+  "delivery_partner_otp_request": {
+    "line": 6781,
+    "end_line": 6786
+  },
+  "delivery_partner_otp_verify": {
+    "line": 6790,
+    "end_line": 6791
+  },
+  "delivery_partner_identity_start": {
+    "line": 6795,
+    "end_line": 6796
+  },
+  "save_delivery_partner_application": {
+    "line": 6800,
+    "end_line": 6870
+  },
+  "submit_delivery_partner_application": {
+    "line": 6874,
+    "end_line": 6899
+  },
+  "my_delivery_partner_application": {
+    "line": 6903,
+    "end_line": 6907
+  },
+  "delivery_partner_referral": {
+    "line": 6911,
+    "end_line": 6916
+  },
+  "admin_delivery_partner_applications": {
+    "line": 6920,
+    "end_line": 6923
+  },
+  "admin_delivery_partner_application_detail": {
+    "line": 6927,
+    "end_line": 6937
+  },
+  "admin_decide_delivery_partner_application": {
+    "line": 6941,
+    "end_line": 6995
+  },
+  "delivery_partner_access": {
+    "line": 6999,
+    "end_line": 7003
+  },
+  "ensure_delivery_partner_indexes": {
+    "line": 7009,
+    "end_line": 7015
+  },
+  "security_headers": {
+    "line": 7022,
+    "end_line": 7028
+  }
+}

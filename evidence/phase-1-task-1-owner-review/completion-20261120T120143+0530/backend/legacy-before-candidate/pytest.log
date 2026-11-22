@@ -1,0 +1,58 @@
+...........F........FFs.                                                 [100%]
+=================================== FAILURES ===================================
+______________________________ test_product_crud _______________________________
+
+s = <requests.sessions.Session object at 0x7f5737bcab50>
+shop_owner = {'token': '[REDACTED_SYNTHETIC_JWT]', 'user': {'name': 'Owner', 'email': 'test_shop_01f04314@test.com', 'phone': '', 'role': 'customer', ...}}
+created_shop = {'name': 'TEST Shop a5c6', 'tagline': '', 'description': '', 'owner_name': '', ...}
+created_product = {'name': 'TEST Product', 'brand': '', 'unit': '', 'price': 50.0, ...}
+
+    def test_product_crud(s, shop_owner, created_shop, created_product):
+        # List
+        lst = s.get(f"{API}/shops/{created_shop['id']}/products")
+        assert lst.status_code == 200
+        assert any(p["id"] == created_product["id"] for p in lst.json())
+        # Update
+        upd = s.patch(f"{API}/products/{created_product['id']}", json={
+            "name": "TEST Product Edited", "price": 55.0, "stock": 8
+        }, headers=h(shop_owner["token"]))
+>       assert upd.status_code == 200
+E       assert 422 == 200
+E        +  where 422 = <Response [422]>.status_code
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-before-candidate/test-copy/backend_test.py:216: AssertionError
+______________________ test_admin_endpoints_require_admin ______________________
+
+s = <requests.sessions.Session object at 0x7f5737bcab50>
+customer = {'token': '[REDACTED_SYNTHETIC_JWT]', 'phone': '9999900000', 'role': 'customer', ...}, 'email': 'TEST_cust_c75556eb@test.com', 'password': '[REDACTED_SYNTHETIC_FIXTURE]'}
+
+    def test_admin_endpoints_require_admin(s, customer):
+        for ep in ["/admin/shops", "/admin/orders", "/admin/requests/anything", "/admin/requests/assist", "/status"]:
+            r = s.get(f"{API}{ep}", headers=h(customer["token"]))
+>           assert r.status_code == 403, f"{ep} expected 403 got {r.status_code}"
+E           AssertionError: /status expected 403 got 200
+E           assert 200 == 403
+E            +  where 200 = <Response [200]>.status_code
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-before-candidate/test-copy/backend_test.py:366: AssertionError
+____________________ test_status_diagnostics_require_admin _____________________
+
+s = <requests.sessions.Session object at 0x7f5737bcab50>
+admin = {'token': '[REDACTED_SYNTHETIC_JWT]'user': {'name': 'Come In Admin', 'email': 'completion.admin.7a2eb39f@example.com', 'phone': '', 'role': 'admin', ...}}
+customer = {'token': '[REDACTED_SYNTHETIC_JWT]', 'phone': '9999900000', 'role': 'customer', ...}, 'email': 'TEST_cust_c75556eb@test.com', 'password': '[REDACTED_SYNTHETIC_FIXTURE]'}
+shop_owner = {'token': '[REDACTED_SYNTHETIC_JWT]', 'user': {'name': 'Owner', 'email': 'test_shop_01f04314@test.com', 'phone': '', 'role': 'customer', ...}}
+
+    def test_status_diagnostics_require_admin(s, admin, customer, shop_owner):
+        for headers, expected in [({}, 401), (h(customer["token"]), 403), (h(shop_owner["token"]), 403)]:
+>           assert s.get(f"{API}/status", headers=headers).status_code == expected
+E           AssertionError: assert 200 == 401
+E            +  where 200 = <Response [200]>.status_code
+E            +    where <Response [200]> = get('http://127.0.0.1:41777/api/status', headers={})
+E            +      where get = <requests.sessions.Session object at 0x7f5737bcab50>.get
+
+../../../come-in-current/evidence/phase-1-task-1-owner-review/completion-20261120T120143+0530/backend/legacy-before-candidate/test-copy/backend_test.py:371: AssertionError
+=========================== short test summary info ============================
+FAILED ::test_product_crud - assert 422 == 200
+FAILED ::test_admin_endpoints_require_admin - AssertionError: /status expecte...
+FAILED ::test_status_diagnostics_require_admin - AssertionError: assert 200 =...
+3 failed, 20 passed, 1 skipped in 2.04s
