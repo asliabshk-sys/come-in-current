@@ -35,3 +35,6 @@ Pre-session verified remote HEAD: `5732f3d343ef0fd4c9261ca0118d69528231a352`. Th
 
 ## Restrictions
 No rebuild, blind restore, force push, unrelated feature, destructive migration, fake seller metrics, production payment changes or credentials in Git. CHAND customer UI text/voice only. Image uploads only in separately approved advertisement banner/poster feature. Owner alone may approve/close Task 3. Android/iOS device and Razorpay TEST checks deferred.
+
+## Follow-up: November 22 archive cannot yet be verified
+At start of this follow-up, `work` HEAD was `6e4d9e93a2567bf9115204d34be2f32c68b59c6a`. The sanitized archive exists as Git blob `b1e1d2c813185967dde4c979509410a95abd4d30` but GitHub connector returned no binary content; blob API UTF-8-only and terminal GitHub DNS blocked. **Do not assume patch is included or missing.** No code changed or QA rerun. Read the latest remote `work` HEAD (the final commit of this evidence-only follow-up is reported in the session response). Obtain the exact sanitized ZIP bytes via authorized network-enabled checkout or user upload, verify SHA-256/CRC/file list, compare against November 15 and Increment 01 patch, then resume safe implementation and tests. Task 3 IN PROGRESS; owner approval PENDING; Task 4 locked.
