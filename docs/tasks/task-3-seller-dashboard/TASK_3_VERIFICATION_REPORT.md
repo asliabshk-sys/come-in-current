@@ -42,3 +42,16 @@ Earlier Increment 01 report records 44 PASS, TypeScript/ESLint/web export PASS *
 | GitHub repository ZIP endpoint | BLOCKED | DNS failure for api.github.com |
 | November 22 ZIP SHA-256/CRC and patch inclusion | NOT RUN | Binary unavailable |
 | New seller implementation/QA tests | NOT RUN | No verified latest source; no application changes |
+
+## Current workspace verification (2026-11-22)
+| Exact check | Result | Detail |
+|---|---|---|
+| `git --version` | PASS | git version 2.47.3 |
+| `getent hosts github.com raw.githubusercontent.com api.github.com` | FAIL | no DNS results |
+| `git ls-remote https://github.com/asliabshk-sys/come-in-current.git refs/heads/work` | FAIL | Could not resolve host: github.com |
+| GitHub connector compare `24bb7a5143e85fd89e363e943693383de72f9a5b` vs `work` | PASS | identical before updates |
+| GitHub connector fetch_file November 22 ZIP base64 | BLOCKED | blob `b1e1d2c813185967dde4c979509410a95abd4d30`, zero content bytes |
+| `ZipFile.testzip()` on local November 15 ZIP | PASS | None (no bad member), 646 entries |
+| SHA-256 local November 15 ZIP via Python hashlib | PASS | `3233dcd9c8f1997b06035fd5cd7b458ab511658faf25e184044b17aec624d28c` |
+| November 22 SHA-256, ZIP CRC, inventory and patch inclusion | NOT RUN | binary not retrieved |
+| Task 3 TypeScript, ESLint, API/security and regression | NOT RUN | no new verified source baseline; prior results historical only |
