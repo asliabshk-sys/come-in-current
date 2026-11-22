@@ -36,3 +36,7 @@
 ## Owner decision applied: CHAND voice removal
 
 On 22 November 2026 the owner removed Voice Shopping from the customer CHAND scope. The implementation removes the home shortcut, recorder UI/state, microphone permission configuration, `expo-audio` dependency and lock entry, frontend transcription adapter, and backend `/assistant/transcribe` route. Text and Photo Shopping remain. Fresh regression evidence: 34 focused CHAND/frontend contracts passed; TypeScript and targeted ESLint passed with no warnings/errors. Voice-specific provider validation is no longer applicable.
+
+## Membership lifecycle foundation
+
+The backend now persists shop membership purchase requests at ₹299 / 30 days, uses per-shop idempotency keys, prevents a duplicate active entitlement, stores audit events, and has expiry-aware entitlement queries. The purchase request remains `payment_pending`; only a verified payment-confirmation path may change it to `payment_confirmed`, after which an admin may activate it. No payment success is fabricated and no real payment provider was used. Frontend dashboard/search/category presentation and payment confirmation remain incomplete.

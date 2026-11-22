@@ -8,7 +8,7 @@
 
  logging.basicConfig(level=logging.INFO)
  logger = logging.getLogger("comein")
-@@ -1182,6 +1183,46 @@
+@@ -1182,6 +1183,56 @@
      token: str = Field(min_length=32, max_length=256)
      new_password: str = Field(min_length=8, max_length=128)
 
@@ -52,10 +52,20 @@
 +    def advertisement_reason(cls, value: str) -> str:
 +        return value.strip()
 +
++
++class MembershipPurchaseIn(BaseModel):
++    shop_id: str = Field(min_length=1, max_length=40)
++    idempotency_key: str = Field(min_length=16, max_length=120)
++
++
++class MembershipDecisionIn(BaseModel):
++    decision: Literal["activate", "suspend", "cancel"]
++    reason: str = Field(default="", max_length=500)
++
  async def _send_password_reset_email(email: str, token: str) -> bool:
      host=os.environ.get("SMTP_HOST"); sender=os.environ.get("SMTP_FROM"); base=os.environ.get("PASSWORD_RESET_URL")
      if not host or not sender or not base:
-@@ -1258,6 +1299,44 @@
+@@ -1258,6 +1309,44 @@
  MAX_UPLOAD_BYTES = 5 * 1024 * 1024  # 5 MB
 
 
@@ -100,7 +110,7 @@
  @api.post("/uploads/image")
  async def upload_image(
      file: UploadFile = File(...),
-@@ -1271,13 +1350,7 @@
+@@ -1271,13 +1360,7 @@
          raise HTTPException(status_code=400, detail="Image too large (max 5 MB)")
      # Client MIME/filename declarations are untrusted. Require a matching
      # file signature before sending bytes to storage (not a full image decoder).
@@ -115,7 +125,7 @@
          raise HTTPException(status_code=400, detail="Image bytes do not match the declared file type")
      ext = (mimetypes.guess_extension(content_type) or ".jpg").lstrip(".")
      if ext == "jpe":
-@@ -1301,6 +1374,171 @@
+@@ -1301,6 +1384,217 @@
      return {"url": f"/api/uploads/{result['path']}", "storage_path": result["path"]}
 
 
@@ -268,6 +278,52 @@
 +    return [_advertisement_out(row, public=True) async for row in db.advertisements.find(query).sort("created_at", -1).limit(limit)]
 +
 +
++# Membership: payment confirmation is intentionally separate from the request.
++# This prevents a UI action from ever becoming a fabricated paid subscription.
++MEMBERSHIP_PRICE_PAISE = 29900
++MEMBERSHIP_DURATION_DAYS = 30
++
++async def _membership_entitlement(shop_id: str) -> Optional[dict]:
++    now = now_utc()
++    return await db.memberships.find_one({"shop_id": shop_id, "status": "active", "starts_at": {"$lte": now}, "expires_at": {"$gt": now}})
++
++@api.get("/shops/{shop_id}/membership")
++async def shop_membership(shop_id: str, user: dict = Depends(get_current_user)):
++    shop = await _get_shop_or_404(shop_id); _assert_shop_owner(shop, user)
++    return doc_out(await db.memberships.find_one({"shop_id": shop_id}, sort=[("created_at", -1)]))
++
++@api.post("/shops/{shop_id}/membership/purchase")
++async def request_membership(shop_id: str, body: MembershipPurchaseIn, user: dict = Depends(require_role("shopkeeper"))):
++    if body.shop_id != shop_id: raise HTTPException(status_code=422, detail="Shop id does not match membership request")
++    shop = await _get_shop_or_404(shop_id); _assert_shop_owner(shop, user)
++    if await _membership_entitlement(shop_id): raise HTTPException(status_code=409, detail="An active membership already exists")
++    now = now_utc(); doc = {"shop_id": shop_id, "owner_id": user["id"], "price_paise": MEMBERSHIP_PRICE_PAISE, "duration_days": MEMBERSHIP_DURATION_DAYS, "status": "payment_pending", "idempotency_key": body.idempotency_key, "created_at": now, "updated_at": now}
++    try: result = await db.memberships.insert_one(doc)
++    except DuplicateKeyError:
++        existing = await db.memberships.find_one({"shop_id": shop_id, "idempotency_key": body.idempotency_key}); return doc_out(existing)
++    doc["_id"] = result.inserted_id
++    await db.membership_audit.insert_one({"membership_id": str(result.inserted_id), "actor_id": user["id"], "event": "purchase_requested", "created_at": now})
++    return _membership_public(doc)
++
++def _membership_public(row: Optional[dict]) -> Optional[dict]:
++    if not row: return None
++    result = doc_out(row); result["benefits"] = {"gold_highlight": result.get("status") == "active", "crown_badge": result.get("status") == "active", "sponsored_placement": result.get("status") == "active"}; return result
++
++@api.patch("/admin/memberships/{membership_id}")
++async def admin_membership_decision(membership_id: str, body: MembershipDecisionIn, user: dict = Depends(require_role("admin"))):
++    try: oid = ObjectId(membership_id)
++    except Exception as exc: raise HTTPException(status_code=404, detail="Membership not found") from exc
++    row = await db.memberships.find_one({"_id": oid})
++    if not row: raise HTTPException(status_code=404, detail="Membership not found")
++    now = now_utc(); updates = {"updated_at": now, "admin_reason": body.reason, "updated_by": user["id"]}
++    if body.decision == "activate":
++        if row.get("status") != "payment_confirmed": raise HTTPException(status_code=409, detail="Membership needs verified payment confirmation before activation")
++        updates.update({"status": "active", "starts_at": now, "expires_at": now + timedelta(days=MEMBERSHIP_DURATION_DAYS)})
++    else: updates["status"] = "suspended" if body.decision == "suspend" else "cancelled"
++    await db.memberships.update_one({"_id": oid}, {"$set": updates}); await db.membership_audit.insert_one({"membership_id": membership_id, "actor_id": user["id"], "event": body.decision, "reason": body.reason, "created_at": now})
++    return _membership_public(await db.memberships.find_one({"_id": oid}))
++
++
 +@api.post("/advertisements/{advertisement_id}/events/{event_type}")
 +async def track_advertisement_event(advertisement_id: str, event_type: Literal["impression", "click"], user: Optional[dict] = Depends(get_current_user_optional)):
 +    # Only attributable authenticated events are recorded; anonymous tracking is
@@ -287,7 +343,7 @@
  @api.get("/uploads/{storage_path:path}")
  async def serve_upload(storage_path: str):
      if ".." in storage_path:
-@@ -1725,13 +1963,11 @@
+@@ -1725,13 +2019,11 @@
 
 
  # ---------------------------------------------------------------------------
@@ -302,7 +358,7 @@
 
 
  def _chand_provider_settings() -> tuple[str, str, str, str]:
-@@ -1776,48 +2012,9 @@
+@@ -1776,48 +2068,9 @@
          "live_probe": False,
          "message": "Configuration is present; provider connectivity has not been tested." if configured else "Configure a supported provider on the backend.",
          "vision_capability": "unverified" if configured else "not_configured",
@@ -351,7 +407,7 @@
  @api.post("/assistant/vision")
  async def assistant_vision(
      request: Request,
-@@ -6056,6 +6253,11 @@
+@@ -6056,6 +6309,14 @@
      await db.grocery_quotes.create_index("expires_at", expireAfterSeconds=0)
      await db.grocery_quotes.create_index([("scope", 1), ("status", 1)])
      await db.files.create_index("owner_id")
@@ -360,6 +416,9 @@
 +    await db.advertisement_events.create_index([("advertisement_id", 1), ("user_id", 1), ("event_type", 1), ("day", 1)], unique=True)
 +    await db.advertisement_events.create_index([("advertisement_id", 1), ("event_type", 1), ("created_at", -1)])
 +    await db.advertisement_audit.create_index([("advertisement_id", 1), ("created_at", -1)])
++    await db.memberships.create_index([("shop_id", 1), ("idempotency_key", 1)], unique=True)
++    await db.memberships.create_index([("shop_id", 1), ("status", 1), ("expires_at", 1)])
++    await db.membership_audit.create_index([("membership_id", 1), ("created_at", -1)])
      await db.restaurants.create_index("owner_id")
      await db.restaurants.create_index([("status", 1), ("available", 1), ("city", 1)])
      await db.restaurant_menu.create_index([("restaurant_id", 1), ("available", 1)])
