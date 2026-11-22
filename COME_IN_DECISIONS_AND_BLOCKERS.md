@@ -919,3 +919,9 @@ Synchronization decision executed: committed/pushed all safe handover material t
 ## Task 1 final reconciliation — 2026-11-22
 
 Decision: locally passing evidence is not owner approval. Task 1 remains REVIEW PENDING. Blockers unchanged: native/device, actual provider TEST and production validation need separately authorized external resources. Historical broad pytest environment errors remain disclosed and are not source failures.
+
+## Task 3 Increment 01 review decision — 2026-11-22
+
+Decision: preserve Increment 01's existing architecture and source/API boundaries. The independent review found one direct LOW accuracy issue: "Active products" described a stock-positive count, not availability. The approved minimal correction changes only the label and helper text to "Products with stock"; calculation, APIs, database, authorization, financial behavior, theme, navigation structure, and Restaurant Mode are unchanged. Patch SHA-256: `7ef6aa4af947837a7f63b824d22b5b6c298fc660ef2f06cda8ffc52ce40f3d86`.
+
+Limitations/blockers: static/source and local-build evidence cannot prove live multi-seller authorization, real seller usability, provider-backed AI/OCR/push/payment/bank behavior, or Android/iOS device behavior. These remain deferred/blocked rather than passed. Owner approval is still required; Task 4 remains locked.

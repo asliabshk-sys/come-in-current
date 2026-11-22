@@ -121,7 +121,7 @@
 +    ["In progress", String(metrics.processing), "Preparing, ready or out for delivery."],
 +    ["Completed orders", String(data?.summary?.delivered_orders || 0), "From authorized order records."],
 +    ["Cancelled orders", String(data?.summary?.cancelled_orders || 0), "Cancellation status only."],
-+    ["Active products", String((data?.stock || []).filter((row) => Number(row.stock || 0) > 0).length), "Current listed inventory records."],
++    ["Products with stock", String((data?.stock || []).filter((row) => Number(row.stock || 0) > 0).length), "Current inventory records with stock above zero."],
 +    ["Low / out of stock", `${metrics.low} / ${metrics.out}`, "Update stock before accepting more orders."],
 +    ["Pending settlements", `${data?.settlement_summary?.awaiting_count || 0} · ${inr(data?.settlement_summary?.awaiting_settlement_inr)}`, "Requests only; no bank transfer is implied."],
 +    ["Open support tickets", String(metrics.openTickets), "Only tickets linked to your orders."],
