@@ -882,3 +882,5 @@ Task 3 implementation is **COMPLETE**. Security and regression checks **PASSED**
 ## Task 4 final pending-work verification — 2026-11-23 IST
 
 The authorized local fixes and fresh verification are complete. Apply `patches/task4-storage-advertisement-verification.patch` after template restoration. The full backend run recorded 686 passes, zero failures and five skips; four parser cases passed in the optional suite and the external object-storage skip remains blocked. The project-wide closure and separate external dispositions are in `evidence/task-4-project-verification-20261123/final-pending-verification/`. Canonical Task 4 remains separately tracked and production rollout remains blocked.
+
+The project-wide verification cycle is **CLOSED**. Verified changes and evidence commit: `9b2538c7433d6a7e8eed0dec3a78fb3abdfef9ef`. See `evidence/task-4-project-verification-20261123/final-pending-verification/CLOSURE_RECORD.md`.
