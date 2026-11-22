@@ -22,7 +22,7 @@
 
 **Decision:** No static UI/theme finding justified a discretionary source change. Preserve the existing light-theme fallback and Restaurant Mode. Seven ESLint hook-dependency/generated-file warnings are recorded; no warning is suppressed or automatically refactored without a confirmed Task 2 defect.
 
-**Blockers:** Android/iOS native build/device verification remains deferred. This milestone verified source/config only and must not be presented as physical-device validation.
+**Blockers:** Android/iOS native build/device verification remains deferred. This milestone verified source/config only and must not be presented as physical-device validation. The completed Task 2 audit is REVIEW PENDING owner review; Task 3 is locked.
 
 ## Approved decisions (preserved from history, plus BATCH-02)
 | # | Decision | Source |
