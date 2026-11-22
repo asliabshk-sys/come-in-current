@@ -29,3 +29,13 @@
 - GitHub commit-history query scoped to archive returned empty result; cannot infer ZIP creation time from this query.
 - Inspected existing `patches/task3-seller-dashboard-overview.patch` and `evidence/task-3-seller-implementation-20261122/increment-01-review/NOV15_MASTER_SOURCE_RECOVERY_REPORT.md`. Patch records seller dashboard/help, account navigation and backend contract test changes. Does not prove archive inclusion.
 - No actual ZIP bytes, no source comparison, no patch application, no application changes or fresh QA.
+
+## 2026-11-22 — Network-enabled source recovery request
+- Terminal `git --version`: PASS (`git version 2.47.3`).
+- `getent hosts github.com raw.githubusercontent.com api.github.com`: no addresses; DNS unavailable.
+- `git ls-remote https://github.com/asliabshk-sys/come-in-current.git refs/heads/work`: FAIL, `Could not resolve host: github.com`.
+- GitHub connector compare `24bb7a5143e85fd89e363e943693383de72f9a5b` to `work`: IDENTICAL at start.
+- Connector fetch_file November 22 sanitized ZIP base64: blob `b1e1d2c813185967dde4c979509410a95abd4d30`, content length zero.
+- Local `/mnt/data/come-in-nov22-recovery/` is empty; November 22 archive not retrieved.
+- Reverified local November 15 ZIP: size 5,484,042 bytes; SHA-256 `3233dcd9c8f1997b06035fd5cd7b458ab511658faf25e184044b17aec624d28c`; 646 entries; CRC PASS (`ZipFile.testzip()` returned None).
+- No patch application, app code modification, new tests, or build. Documentation-only checkpoint.
