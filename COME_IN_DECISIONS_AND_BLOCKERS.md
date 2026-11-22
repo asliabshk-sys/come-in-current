@@ -36,6 +36,12 @@
 
 **Deferred:** native/device testing remains outside this phase. Any serious defect is documented for owner decision; it is not fixed in Task 3.
 
+## 22 November 2026 — Task 3 audit completion
+
+**Decision:** Task 3 audit evidence is complete and is REVIEW PENDING owner review. The audit does not authorize the proposed minimal category structure, category migration, seller dashboard additions or any remediation.
+
+**Owner decisions pending:** limited launch category policy; directory-only Stationery/Books policy; seller dashboard/inventory/reporting priorities; optional OCR/CHAND adapter/runtime validation; and Task 3 approval/corrections. Task 4 remains locked.
+
 ## Approved decisions (preserved from history, plus BATCH-02)
 | # | Decision | Source |
 |---|---|---|

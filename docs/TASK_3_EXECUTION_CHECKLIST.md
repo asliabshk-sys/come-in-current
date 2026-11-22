@@ -1,9 +1,9 @@
 # COME-IN Task 3 — Audit Execution Checklist
 
-**Task:** Home Screen, Navigation, Category and Seller Dashboard audit  
-**Started:** 22 November 2026 (Asia/Kolkata)  
-**Starting Git commit:** `01361d97b6b0f6d0418134070683c7a5ffc1d262`  
-**Status:** IN PROGRESS — audit and discovery only; not approved or closed.
+**Task:** Home Screen, Navigation, Category and Seller Dashboard audit
+**Started:** 22 November 2026 (Asia/Kolkata)
+**Starting Git commit:** `01361d97b6b0f6d0418134070683c7a5ffc1d262`
+**Status:** REVIEW PENDING — audit complete; owner review required, not approved or closed.
 
 ## Scope
 
@@ -20,12 +20,12 @@
 
 - [x] Fetch and verify `origin/work`, Task 2 approval and a clean starting tree.
 - [x] Locate active source, repository evidence and prior audit inventories.
-- [ ] Complete Home/navigation audit report.
-- [ ] Complete category/subcategory audit and minimal recommendation.
-- [ ] Complete seller frontend, backend/API/database and catalogue-import audits.
-- [ ] Run safe relevant checks and classify evidence boundaries.
-- [ ] Create user-journey, recommendations, testing and final owner-review reports.
-- [ ] Save final Task 3 checkpoint, commit/push/remote-verify; leave Task 3 REVIEW PENDING.
+- [x] Complete Home/navigation audit report.
+- [x] Complete category/subcategory audit and minimal recommendation.
+- [x] Complete seller frontend, backend/API/database and catalogue-import audits.
+- [x] Run safe relevant checks and classify evidence boundaries (84 PASS, 0 FAIL).
+- [x] Create user-journey, recommendations, testing and final owner-review reports.
+- [x] Prepare final Task 3 audit checkpoint for commit/push/remote verification; leave Task 3 REVIEW PENDING.
 
 ## Evidence directory
 

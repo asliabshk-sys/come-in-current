@@ -1,10 +1,12 @@
 # COME-IN — Master Task Tracker (22 canonical roadmap tasks)
 
-> **Current reconciliation pointer — 22 November 2026 (Asia/Kolkata):** The authoritative current board is [docs/COME_IN_MASTER_TASK_BOARD.md](docs/COME_IN_MASTER_TASK_BOARD.md). Phase 1 Task 1 is **APPROVED** by explicit owner decision, recorded in `docs/TASK_1_OWNER_APPROVAL_RECORD_20261122.md`. Task 2 is **IN PROGRESS** under explicit owner authorization. Android/iOS/Razorpay TEST/production validation remains deferred or blocked.
+> **Current reconciliation pointer — 22 November 2026 (Asia/Kolkata):** The authoritative current board is [docs/COME_IN_MASTER_TASK_BOARD.md](docs/COME_IN_MASTER_TASK_BOARD.md). Phase 1 Task 1 and Task 2 are **APPROVED** by explicit owner decisions, recorded in `docs/TASK_1_OWNER_APPROVAL_RECORD_20261122.md` and `docs/TASK_2_OWNER_APPROVAL_RECORD_20261122.md`. Task 3 is **REVIEW PENDING** after its audit-only execution. Android/iOS/Razorpay TEST/production validation remains deferred or blocked.
 
 > **Task 2 execution update — 22 November 2026:** Task 2 is now **APPROVED** by explicit owner decision, recorded in `docs/TASK_2_OWNER_APPROVAL_RECORD_20261122.md`. The official reference app icon was found already correctly integrated in Expo configuration; byte identity/configuration, static UI/theme audit, web export and relevant frontend evidence are at `evidence/task-2-theme-icon-20261122/`. TypeScript has 0 errors; ESLint has 0 errors and 7 existing warnings. No application source changed. Native/device and full runtime visual validation are deferred.
 
 > **Task 3 execution update — 22 November 2026:** Task 3 is **IN PROGRESS** under explicit owner authorization as a discovery/audit-only phase. Home/navigation, category and Seller Dashboard evidence is being collected under `evidence/task-3-home-category-seller-20261122/`. No source/category/API/database/auth/Restaurant Mode change or Task 4 work is authorized.
+
+> **Task 3 final audit — 22 November 2026:** Task 3 is **REVIEW PENDING**. Ten reports are saved under `evidence/task-3-home-category-seller-20261122/`; 13 selected safe source-contract modules passed **84/84**. No source implementation changed. Owner category/policy/priority decisions are pending; runtime/device/native/provider claims remain unmade; Task 4 is locked.
 
 **Updated:** 2026-11-12 — Chand AI Phase 5 deterministic party planner added; 128 focused Chand/Task 5/Restaurant/Cart/Checkout/Support regression tests pass; native dependency lock, live provider, MongoDB and device verification remain blocked  
 **Primary source:** `COME-IN-MASTER-COMPLETE-TASK5-MONGODB_2026-11-11 2.zip` (SHA-256 `9d871f9f04551017a5322a275ddbd63a353f2ed24d13be9cd57831d9c27738f6`)  
