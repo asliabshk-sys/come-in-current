@@ -7,7 +7,7 @@
 - Seller-owned campaign drafts with bounded title, destination, placement, and a maximum 90-day campaign window.
 - A dedicated advertisement-poster upload path. It verifies authenticated ownership, MIME/signature consistency, a 2 MB maximum, and bounded raster dimensions before object storage.
 - Restricted CHAND metadata review abstraction. If the provider is not configured, it returns `NOT_CONFIGURED` and the campaign stays unpublished; it never fabricates a safe decision.
-- Final publication is admin-only, requires a completed `safe` CHAND recommendation, and is auditable.
+- Final publication is designated-owner-only, requires a completed `safe` CHAND recommendation and the exact reviewed poster SHA-256, and is auditable. Ordinary administrators may reject, pause, or remove campaigns but cannot publish them.
 - Public active-campaign endpoint, authenticated daily impression/click de-duplication, and Mongo index declarations.
 - Seller Account entry and native/web poster-selection UI. This is the only new image-upload entry point introduced by this milestone.
 
@@ -28,6 +28,7 @@
 ## Explicit limitations / next work
 
 - No CHAND provider credential was used. Real provider review remains deferred until owner-configured credentials and authorized validation exist.
+- The deployment must set `ADVERTISEMENT_OWNER_EMAIL` to the designated owner-admin account before any campaign can be published. Without it, publication is safely forbidden.
 - No native Android/iOS or real user/device validation was performed.
 - The legacy general image-upload route and existing customer CHAND vision UI predate this work. They conflict with the new Phase 2 application-wide “advertisement-only image upload” policy and require an explicit compatibility/migration decision before disabling them; they were not silently broken in this slice.
 - Membership, pricing, verification, delivery performance, complaints, analytics, and admin UI integrations remain Phase 2 work in progress.

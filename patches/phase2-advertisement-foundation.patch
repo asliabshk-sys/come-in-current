@@ -44,7 +44,7 @@
 +
 +
 +class AdvertisementDecisionIn(BaseModel):
-+    decision: Literal["approve", "reject", "pause", "remove"]
++    decision: Literal["reject", "pause", "remove"]
 +    reason: str = Field(default="", max_length=500)
 +
 +    @field_validator("reason")
@@ -115,7 +115,7 @@
          raise HTTPException(status_code=400, detail="Image bytes do not match the declared file type")
      ext = (mimetypes.guess_extension(content_type) or ".jpg").lstrip(".")
      if ext == "jpe":
-@@ -1301,6 +1374,151 @@
+@@ -1301,6 +1374,171 @@
      return {"url": f"/api/uploads/{result['path']}", "storage_path": result["path"]}
 
 
@@ -155,6 +155,13 @@
 +        raise HTTPException(status_code=403, detail="You can only access your own advertisement")
 +
 +
++def _assert_designated_advertisement_owner(user: dict) -> None:
++    """Publication is deliberately narrower than ordinary admin authority."""
++    owner_email = (os.environ.get("ADVERTISEMENT_OWNER_EMAIL") or "").strip().lower()
++    if user.get("role") != "admin" or not owner_email or user.get("email", "").strip().lower() != owner_email:
++        raise HTTPException(status_code=403, detail="Only the designated advertisement owner can publish a campaign")
++
++
 +@api.post("/advertisements")
 +async def create_advertisement(body: AdvertisementCreateIn, user: dict = Depends(require_role("shopkeeper"))):
 +    shop = await _get_shop_or_404(body.shop_id)
@@ -163,7 +170,7 @@
 +    document.update({
 +        "owner_id": user["id"], "status": "draft", "poster_url": None,
 +        "poster_storage_path": None, "poster_dimensions": None,
-+        "ai_review": {"status": "NOT_RUN"}, "admin_reason": "",
++        "ai_review": {"status": "NOT_RUN"}, "admin_reason": "", "owner_approval": None,
 +        "created_at": now_utc(), "updated_at": now_utc(),
 +    })
 +    inserted = await db.advertisements.insert_one(document)
@@ -201,9 +208,10 @@
 +    path = f"{APP_NAME}/advertisements/{advertisement_id}/{uuid.uuid4().hex}.{extension}"
 +    stored = put_object(path, data, content_type)
 +    now = now_utc()
-+    await db.advertisements.update_one({"_id": advertisement["_id"]}, {"$set": {"poster_url": f"/api/uploads/{stored['path']}", "poster_storage_path": stored["path"], "poster_dimensions": {"width": width, "height": height}, "status": "draft", "ai_review": {"status": "NOT_RUN"}, "updated_at": now}})
++    poster_sha256 = hashlib.sha256(data).hexdigest()
++    await db.advertisements.update_one({"_id": advertisement["_id"]}, {"$set": {"poster_url": f"/api/uploads/{stored['path']}", "poster_storage_path": stored["path"], "poster_dimensions": {"width": width, "height": height}, "poster_sha256": poster_sha256, "status": "draft", "ai_review": {"status": "NOT_RUN"}, "owner_approval": None, "updated_at": now}})
 +    await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id, "actor_id": user["id"], "event": "poster_uploaded", "dimensions": {"width": width, "height": height}, "created_at": now})
-+    return {"poster_url": f"/api/uploads/{stored['path']}", "dimensions": {"width": width, "height": height}, "status": "draft"}
++    return {"poster_url": f"/api/uploads/{stored['path']}", "dimensions": {"width": width, "height": height}, "poster_sha256": poster_sha256, "status": "draft"}
 +
 +
 +@api.post("/advertisements/{advertisement_id}/chand-review")
@@ -213,11 +221,11 @@
 +    if not advertisement.get("poster_storage_path"):
 +        raise HTTPException(status_code=422, detail="Upload a verified advertisement poster before requesting CHAND review")
 +    review = await asyncio.to_thread(review_advertisement, advertisement)
-+    status_value = "pending_admin" if review.get("status") == "COMPLETED" else "draft"
++    status_value = "pending_owner_approval" if review.get("status") == "COMPLETED" else "draft"
 +    now = now_utc()
 +    await db.advertisements.update_one({"_id": advertisement["_id"]}, {"$set": {"ai_review": review, "status": status_value, "updated_at": now}})
 +    await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id, "actor_id": user["id"], "event": "chand_review", "review_status": review.get("status"), "created_at": now})
-+    return {"status": status_value, "ai_review": review, "admin_approval_required": True}
++    return {"status": status_value, "ai_review": review, "owner_approval_required": True}
 +
 +
 +@api.get("/admin/advertisements")
@@ -228,23 +236,35 @@
 +@api.patch("/admin/advertisements/{advertisement_id}")
 +async def decide_advertisement(advertisement_id: str, body: AdvertisementDecisionIn, user: dict = Depends(require_role("admin"))):
 +    advertisement = await _advertisement_or_404(advertisement_id)
-+    if body.decision == "approve":
-+        review = advertisement.get("ai_review") or {}
-+        if advertisement.get("status") != "pending_admin" or review.get("status") != "COMPLETED" or review.get("decision") != "safe":
-+            raise HTTPException(status_code=409, detail="CHAND review must complete safely before final admin approval")
-+        next_status = "approved"
-+    else:
-+        next_status = {"reject": "rejected", "pause": "paused", "remove": "removed"}[body.decision]
++    next_status = {"reject": "rejected", "pause": "paused", "remove": "removed"}[body.decision]
 +    now = now_utc()
 +    await db.advertisements.update_one({"_id": advertisement["_id"]}, {"$set": {"status": next_status, "admin_reason": body.reason, "admin_id": user["id"], "updated_at": now}})
 +    await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id, "actor_id": user["id"], "event": f"admin_{body.decision}", "reason": body.reason, "created_at": now})
 +    return _advertisement_out(await db.advertisements.find_one({"_id": advertisement["_id"]}))
 +
 +
++@api.post("/owner/advertisements/{advertisement_id}/publish")
++async def owner_publish_advertisement(advertisement_id: str, user: dict = Depends(get_current_user)):
++    _assert_designated_advertisement_owner(user)
++    advertisement = await _advertisement_or_404(advertisement_id)
++    review = advertisement.get("ai_review") or {}
++    poster_sha256 = advertisement.get("poster_sha256")
++    if (advertisement.get("status") != "pending_owner_approval" or review.get("status") != "COMPLETED" or review.get("decision") != "safe" or not isinstance(poster_sha256, str)):
++        raise HTTPException(status_code=409, detail="A safe CHAND review and unchanged poster are required before owner publication")
++    now = now_utc()
++    approval = {"owner_id": user["id"], "poster_sha256": poster_sha256, "approved_at": now}
++    await db.advertisements.update_one({"_id": advertisement["_id"], "status": "pending_owner_approval", "poster_sha256": poster_sha256}, {"$set": {"status": "approved", "owner_approval": approval, "updated_at": now}})
++    fresh = await db.advertisements.find_one({"_id": advertisement["_id"]})
++    if fresh.get("status") != "approved":
++        raise HTTPException(status_code=409, detail="Campaign changed before owner approval; submit it for review again")
++    await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id, "actor_id": user["id"], "event": "owner_published", "poster_sha256": poster_sha256, "created_at": now})
++    return _advertisement_out(fresh)
++
++
 +@api.get("/advertisements/active")
 +async def active_advertisements(placement: Literal["home_banner", "search_sponsored"] = "home_banner", limit: int = Query(default=6, ge=1, le=20)):
 +    now = now_utc()
-+    query = {"status": "approved", "placement": placement, "poster_url": {"$type": "string"}, "starts_at": {"$lte": now}, "ends_at": {"$gt": now}}
++    query = {"status": "approved", "placement": placement, "poster_url": {"$type": "string"}, "starts_at": {"$lte": now}, "ends_at": {"$gt": now}, "$expr": {"$eq": ["$poster_sha256", "$owner_approval.poster_sha256"]}}
 +    return [_advertisement_out(row, public=True) async for row in db.advertisements.find(query).sort("created_at", -1).limit(limit)]
 +
 +
@@ -267,7 +287,7 @@
  @api.get("/uploads/{storage_path:path}")
  async def serve_upload(storage_path: str):
      if ".." in storage_path:
-@@ -6056,6 +6274,11 @@
+@@ -6056,6 +6294,11 @@
      await db.grocery_quotes.create_index("expires_at", expireAfterSeconds=0)
      await db.grocery_quotes.create_index([("scope", 1), ("status", 1)])
      await db.files.create_index("owner_id")
@@ -432,7 +452,7 @@
 +const useStyles = makeStyles((c) => StyleSheet.create({ root:{flex:1,backgroundColor:c.background,paddingHorizontal:spacing.lg}, center:{flex:1,alignItems:"center",justifyContent:"center",backgroundColor:c.background,padding:spacing.lg,gap:spacing.md}, header:{flexDirection:"row",alignItems:"center",gap:spacing.md,marginBottom:spacing.lg}, heading:{fontSize:22,fontWeight:"800",color:c.onSurface}, card:{backgroundColor:c.surface,borderColor:c.border,borderWidth:1,borderRadius:radius.lg,padding:spacing.lg,gap:spacing.sm,marginBottom:spacing.md}, title:{fontSize:16,fontWeight:"800",color:c.onSurface}, section:{fontSize:17,fontWeight:"800",color:c.onSurface,marginVertical:spacing.sm}, muted:{color:c.muted,lineHeight:20}, error:{color:c.danger,lineHeight:20}, input:{borderWidth:1,borderColor:c.border,borderRadius:radius.md,color:c.onSurface,padding:spacing.md}, primary:{backgroundColor:c.brandPrimary,borderRadius:radius.md,padding:spacing.md,alignItems:"center"}, primaryText:{color:c.onBrandPrimary,fontWeight:"800"} }));
 --- a/backend/tests/test_phase2_advertisement_contract.py
 +++ b/backend/tests/test_phase2_advertisement_contract.py
-@@ -0,0 +1,52 @@
+@@ -0,0 +1,57 @@
 +"""Source-level contracts for Phase 2 advertisement safety boundaries."""
 +from pathlib import Path
 +
@@ -443,11 +463,13 @@
 +SERVER = (ROOT / "server.py").read_text()
 +
 +
-+def test_advertisement_routes_keep_chand_and_admin_publication_separate():
++def test_advertisement_routes_keep_chand_admin_and_owner_publication_separate():
 +    assert '@api.post("/advertisements/{advertisement_id}/chand-review")' in SERVER
 +    assert '@api.patch("/admin/advertisements/{advertisement_id}")' in SERVER
-+    assert 'admin_approval_required": True' in SERVER
-+    assert 'CHAND review must complete safely before final admin approval' in SERVER
++    assert '@api.post("/owner/advertisements/{advertisement_id}/publish")' in SERVER
++    assert 'owner_approval_required": True' in SERVER
++    assert 'Only the designated advertisement owner can publish a campaign' in SERVER
++    assert 'ADVERTISEMENT_OWNER_EMAIL' in SERVER
 +
 +
 +def test_advertisement_upload_is_a_bounded_verified_poster_path():
@@ -462,6 +484,9 @@
 +    assert 'You can only access your own advertisement' in SERVER
 +    assert 'advertisement_events.create_index([("advertisement_id", 1), ("user_id", 1), ("event_type", 1), ("day", 1)], unique=True)' in SERVER
 +    assert 'Only attributable authenticated events are recorded' in SERVER
++    assert '"poster_sha256": poster_sha256' in SERVER
++    assert 'Campaign changed before owner approval; submit it for review again' in SERVER
++    assert '"$owner_approval.poster_sha256"' in SERVER
 +
 +
 +def test_unconfigured_chand_advertisement_review_never_claims_a_safe_decision(monkeypatch):
