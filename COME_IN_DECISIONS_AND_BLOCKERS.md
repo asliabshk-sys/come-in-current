@@ -867,3 +867,7 @@ NEXT_SESSION_RESUME_PROMPT:Read all five checkpoints and COME_IN_TASK_1_ORIGINAL
 Decision: preserve both original ZIP and a separate current sanitized source archive rather than overwrite the baseline ZIP. The current archive excludes `.env`, credentials, keys, dependencies, caches and generated output, and is hash-verified. Blockers unchanged: Task 1 requires owner approval; native Android/iOS evidence and real Razorpay TEST/provider verification remain deferred external work. Do not treat local mocks/web export as provider/native PASS. No secrets may be synchronized.
 
 Synchronization decision executed: committed/pushed all safe handover material to `origin/work`, with remote SHA verification. Original ZIP and source snapshot are both retained. No force push, deletion, reset or remote overwrite was used.
+
+## Task 1 final reconciliation — 2026-11-22
+
+Decision: locally passing evidence is not owner approval. Task 1 remains REVIEW PENDING. Blockers unchanged: native/device, actual provider TEST and production validation need separately authorized external resources. Historical broad pytest environment errors remain disclosed and are not source failures.
