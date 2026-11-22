@@ -1,5 +1,13 @@
 # NEXT_SESSION_RESUME_PROMPT
 
+## Current resume instruction — 22 November 2026 (Asia/Kolkata)
+
+Continue COME-IN in `/workspace/come-in-current`. First read `docs/COME_IN_MASTER_TASK_BOARD.md`, `docs/ACCOUNT_HANDOVER_MASTER.md`, all five root checkpoint files, `docs/TASK_1_FINAL_OWNER_APPROVAL_REPORT_20261122.md`, `EXTERNAL_VALIDATION_REPORT.md`, and `COME_IN_RELEASE_READINESS.md`. Inspect Git status, branch, local `HEAD`, `origin/work`, and the last recorded operation. Do not repeat completed tests or start Task 2.
+
+Task 1 is **REVIEW PENDING**. The exact next action is owner approval or rejection using the Task 1 checklist in `docs/COME_IN_MASTER_TASK_BOARD.md`. Android/iOS native validation, actual Razorpay TEST payment/webhook/refund, and production validation stay DEFERRED/BLOCKED. If (and only if) Task 1 is explicitly approved and Task 2 separately authorized, use `docs/TASK_2_PREPARATION_PROMPT.md`; first fetch and verify `origin/work`.
+
+Before ending any future meaningful session, update the five checkpoint files and related handover/decision records, review changed files for secrets, commit, non-force push to `origin/work`, fetch, verify local/remote SHA equality and zero ahead/behind, then record the exact result. Never reset, force push, expose secrets, deploy, or publish without authorization.
+
 Read all five checkpoints and COME_IN_TASK_1_ORIGINAL_ROADMAP_RECOVERY.md in /workspace/come-in-current first, then inspect Git status/branch/HEAD. Phase1 Task1 ROADMAP RECOVERY is complete as a bounded read-only investigation:22 canonical task definitions SOURCE VERIFIED(document);later23–25 implementation reports found;26–30 TASK DETAILS NOT RECOVERED;no original30-task roadmap found in available records. Do not rename,merge,renumber or invent tasks. Do not treat historical completion claims as current implementation proof. Task2 has NOT STARTED and must wait for explicit user review/approval and their Task2 scope. Preserve all application files,source ZIP,backups,logs and user work;no source/DB/service/provider changes,commit,push,deploy or publish. Missing original artifacts remain missing;do not restart completed work. Update all five checkpoint documents after any authorized meaningful progress.
 
 

@@ -1,5 +1,15 @@
 # COME-IN — Decisions and Blockers
 
+## 22 November 2026 — master task-board reconciliation
+
+**Decision:** The recovered original roadmap has 22 canonical tasks. Later document labels (including Task 23–25 and Task 26–30) are report/work labels and must not invent a second task order. The reconciled board is `docs/COME_IN_MASTER_TASK_BOARD.md`.
+
+**Decision:** Historical `COMPLETED` rows retain implementation/evidence history but do not override governance. Phase 1 / Task 1 is **REVIEW PENDING** until the owner explicitly decides. Task 2 is canonical **Theme and Design**, prepared only, and locked.
+
+**Blockers/deferred gates:** Android native/device, iOS native/device, actual Razorpay TEST payment/webhook/refund, and production configuration/infrastructure validation. Each needs a separately authorized phase and appropriate non-production resources; none is a locally verified PASS.
+
+**Git rule:** Every meaningful future session follows the permanent checkpoint and non-force-push verification protocol in `docs/COME_IN_MASTER_TASK_BOARD.md`.
+
 ## Approved decisions (preserved from history, plus BATCH-02)
 | # | Decision | Source |
 |---|---|---|
