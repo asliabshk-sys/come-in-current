@@ -108,3 +108,7 @@ The first handover-content commit `831481f456fe758c4bb15a643530da2c3cf27339` was
 ## Task 1 final reconciliation
 
 On 22 November 2026 the final evidence manifest verified 189/189 entries. No unverified local implementation work remained. Task 1 is **REVIEW PENDING / ready for owner approval**, not approved/closed. Read `docs/TASK_1_FINAL_OWNER_APPROVAL_REPORT_20261122.md`; verify the current remote SHA at resume time.
+
+## Membership refund continuation — 2026-11-23 IST
+
+Apply `patches/membership-balanced-refunds.patch` after the Razorpay pre-test patch. See `docs/PREMIUM_MEMBERSHIP_REFUND_POLICY.md` for policy configuration and `evidence/phase-2-prelaunch-20261122/membership-balanced-refunds-20261123/IMPLEMENTATION_REPORT.md` for verified local results.

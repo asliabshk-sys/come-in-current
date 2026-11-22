@@ -30,3 +30,13 @@ Evidence: [78-test output](evidence/release-completion-20261117T094751Z/step9-pa
 
 ## Resume verification 2026-11-18T05:29:47.952268-08:00
 78 local/mock selectionPASS and7 final affected checksPASS;5 native adapter mocked checksPASS; both native JS bundlesPASS. All real provider/device rows remain BLOCKED. No actual provider operation. See evidence/resume-20261118 and final reports; no policy relaxation.
+
+## Premium Membership refund additions — 2026-11-23 IST
+
+| Scenario | Validated layer |
+|---|---|
+| Duplicate capture, one case per payment and one submission | Local HTTP/Mongo and mock gateway PASS |
+| Pending, final processing, timeout reconciliation and failure | Local HTTP/Mongo and mock gateway PASS |
+| Policy, authorization, extension and rollback | Local unit and integration PASS |
+| Seller and admin views | Chromium API fixture PASS |
+| Actual Razorpay TEST refund and external reconciliation | DEFERRED — authorized external TEST environment required |

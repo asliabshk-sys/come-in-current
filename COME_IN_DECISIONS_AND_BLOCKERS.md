@@ -943,3 +943,7 @@ Local checks passed on a disposable MongoDB replica set with mocked provider cal
 ## Razorpay external acceptance — 2026-11-23 (IST)
 
 Genuine TEST payment, external webhook and refund, production payments/webhook/rollout, financial settlement and Android/iOS device acceptance are deferred until authorized external environments are available. Membership refund policy is a business decision. See the Razorpay pre-test implementation report for the exact required access and configuration.
+
+## Membership refund approval boundary — 2026-11-23 IST
+
+The proposed policy is implemented with gateway execution disabled by default until owner confirmation and legal review. Genuine gateway refund/reconciliation and live customer financial operations remain deferred. No formal partial-refund formula was assumed.

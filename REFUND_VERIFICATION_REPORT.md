@@ -15,3 +15,7 @@ An uncertain/creating intent or refund is deliberately fail-closed; an administr
 
 ## External validation update — 2026-11-18T05:41:49.811034-08:00
 See [EXTERNAL_VALIDATION_REPORT.md](EXTERNAL_VALIDATION_REPORT.md) and `evidence/external-validation-20261118T133459Z/`. Native commands attempted in isolated scratch:Android prebuild succeeds then SDK/adb unavailable;iOS Linux refused;both native/device gates BLOCKED. Actual provider TEST now authorized by user but credentials,webhook and egress absent;no real provider flow executed. Production audit stays BLOCKED. General upload empty/MIME-spoof reproduced8FAIL then fixed;25focusedPASS and12localHTTPPASS,no external storage call. Earlier regression counts remain historical and were not rerun.
+
+## Premium Membership Balanced Refund Policy — 2026-11-23 IST
+
+The membership refund review, gateway mock and reconciliation tests use a separate membership case associated with the original capture and reuse the existing gateway refund-history helper. The proposed policy and limits are recorded in `docs/PREMIUM_MEMBERSHIP_REFUND_POLICY.md`. Genuine gateway refunds remain deferred.

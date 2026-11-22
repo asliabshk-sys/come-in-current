@@ -1,0 +1,61 @@
+.......................................................................s [ 10%]
+........................................................................ [ 20%]
+........................................................................ [ 31%]
+........................................................................ [ 41%]
+........................................................................ [ 52%]
+........................................................................ [ 62%]
+........................................................................ [ 73%]
+........................................................................ [ 83%]
+........................................................................ [ 93%]
+........s..ss..........s..................                               [100%]
+=============================== warnings summary ===============================
+../COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/starlette/formparsers.py:12
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+  /workspace/premium-source/backend/server.py:7093: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/fastapi/applications.py:4495: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    return self.router.on_event(event_type)
+
+tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+  /workspace/premium-source/backend/server.py:7240: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("shutdown")
+
+tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+  /workspace/premium-source/backend/server.py:8307: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] backend/tests/backend_test.py:397: Object storage unavailable
+SKIPPED [1] backend/tests/test_universal_catalogue_import_engine.py:47: could not import 'pypdf': No module named 'pypdf'
+SKIPPED [1] backend/tests/test_universal_catalogue_import_engine.py:80: could not import 'openpyxl': No module named 'openpyxl'
+SKIPPED [1] backend/tests/test_universal_catalogue_import_engine.py:98: could not import 'PIL': No module named 'PIL'
+SKIPPED [1] backend/tests/test_universal_catalogue_import_engine.py:170: could not import 'fitz': No module named 'fitz'
+685 passed, 5 skipped, 7 warnings in 73.39s (0:01:13)

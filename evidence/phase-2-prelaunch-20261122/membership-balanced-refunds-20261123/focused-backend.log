@@ -1,0 +1,46 @@
+...................                                                      [100%]
+=============================== warnings summary ===============================
+tests/test_membership_refund_policy.py::test_refunds_http_transactions_and_mock_gateway
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+tests/test_membership_refund_policy.py::test_refunds_http_transactions_and_mock_gateway
+  /workspace/premium-source/backend/server.py:7093: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+tests/test_membership_refund_policy.py::test_refunds_http_transactions_and_mock_gateway
+tests/test_membership_refund_policy.py::test_refunds_http_transactions_and_mock_gateway
+tests/test_membership_refund_policy.py::test_refunds_http_transactions_and_mock_gateway
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/fastapi/applications.py:4495: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    return self.router.on_event(event_type)
+
+tests/test_membership_refund_policy.py::test_refunds_http_transactions_and_mock_gateway
+  /workspace/premium-source/backend/server.py:7240: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("shutdown")
+
+tests/test_membership_refund_policy.py::test_refunds_http_transactions_and_mock_gateway
+  /workspace/premium-source/backend/server.py:8307: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+19 passed, 7 warnings in 19.31s

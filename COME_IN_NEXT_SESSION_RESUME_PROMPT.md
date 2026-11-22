@@ -91,3 +91,7 @@ Verify the live GitHub `work` tip and read `evidence/phase-2-prelaunch-20261122/
 ## Razorpay resume point — 2026-11-23 (IST)
 
 Verify the current GitHub `work` tip, restore the previous source and apply `patches/razorpay-pretest.patch` last. Read the Razorpay pre-test implementation report and its final results before any later authorized external validation.
+
+## Membership refunds — 2026-11-23 IST
+
+Verify GitHub `work`, apply the membership refund patch after Razorpay pre-tests, and read `docs/PREMIUM_MEMBERSHIP_REFUND_POLICY.md`. Keep gateway execution off until policy and environment are authorized.

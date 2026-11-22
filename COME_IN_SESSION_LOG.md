@@ -871,3 +871,7 @@ Continued from verified GitHub `work` at `e536f52e08bbe760ba7750b19f6f4e6b293d59
 ## Razorpay local pre-test — 2026-11-23 (IST)
 
 Continued from verified GitHub `work` at `ee627805b7f0c102f935315c242a11884a61a4fb`. Verified the Razorpay pre-test patch, local HTTP/mock gateway/refund/transaction tests, browser fixtures and full regression. Persisted sanitized evidence in `evidence/phase-2-prelaunch-20261122/razorpay-pretest-20261123/`. No external gateway or production operation occurred.
+
+## Membership Balanced Refund Policy — 2026-11-23 IST
+
+Restored GitHub baseline `0664e4bcd635c343973298e700c7e9394495247a` and saved the tested continuation patch, status updates and local test evidence. No genuine gateway action or production data was used.

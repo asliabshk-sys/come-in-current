@@ -1,0 +1,957 @@
+--- /dev/null
++++ b/backend/membership_refund_policy.py
+@@ -0,0 +1,37 @@
++"""Proposed operational rules. Gateway execution requires explicit enablement."""
++import os
++from datetime import timedelta
++
++from premium_exposure import utc
++
++
++def enabled(name, default=False):
++    return os.getenv(name, "true" if default else "false").strip().lower() == "true"
++
++
++def outage_threshold():
++    return timedelta(hours=int(os.getenv("MEMBERSHIP_OUTAGE_HOURS", "48")))
++
++
++def impact(outage, membership, now):
++    start = utc(membership.get("starts_at"))
++    end = utc(membership.get("expires_at"))
++    if not start or not end:
++        return timedelta(0)
++    return max(timedelta(0), min(end, utc(outage.get("recovered_at")) or now, now)
++               - max(start, utc(outage["started_at"])))
++
++
++def permitted(case, membership, now, outage=None):
++    reason = case["reason"]
++    if reason == "duplicate":
++        return case["_id"] != membership.get("gateway_payment_id")
++    if case["_id"] != membership.get("gateway_payment_id"):
++        return False
++    if reason in {"pre_activation", "wrong_purchase", "not_activated"}:
++        return enabled("MEMBERSHIP_PRE_ACTIVATION_REFUNDS", True) and not membership.get("starts_at")
++    if reason == "technical":
++        return bool(outage and impact(outage, membership, now) >= outage_threshold())
++    if reason == "suspension":
++        return membership.get("suspension_finding") in {"mistaken", "technical_or_admin_error"}
++    return False
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -71,6 +71,7 @@
+ from refund_rules import amount_to_paise, summarize_provider_refunds, grocery_refund_amount
+ from security_config import cors_origins_from_env
+ from payment_config import razorpay_settings
++import membership_refund_policy
+ from payment_webhook import event_payload
+ from premium_exposure import customer_offer_key, entitlement_filter, entitled, featured_feed, normalized, ranked_search, shop_distance, utc
+ from catalogue_import_engine import process_file as process_catalogue_import_file, process_zip as process_catalogue_import_zip, validate_upload_metadata as validate_catalogue_upload_metadata, MAX_BATCH_FILES as CATALOGUE_IMPORT_MAX_FILES, MAX_FILE_BYTES as CATALOGUE_IMPORT_MAX_FILE_BYTES, MAX_BATCH_TOTAL_BYTES as CATALOGUE_IMPORT_MAX_BATCH_BYTES
+@@ -1252,6 +1253,7 @@
+
+ class MembershipDecisionIn(BaseModel):
+     decision: Literal["activate", "suspend", "cancel"]
++    suspension_finding: Optional[Literal["mistaken", "verified_misconduct", "investigating", "technical_or_admin_error"]] = None
+     reason: str = Field(default="", max_length=500)
+
+ async def _send_password_reset_email(email: str, token: str) -> bool:
+@@ -1564,7 +1566,7 @@
+     if not ids:
+         return {}
+     now = now or now_utc()
+-    query = {"shop_id": {"$in": ids}, **entitlement_filter(now)}
++    query = {"shop_id": {"$in": ids}, "refund_hold": {"$ne": True}, **entitlement_filter(now)}
+     rows = db.memberships.find(query, session=session).sort("expires_at", 1)
+     return {row["shop_id"]: row async for row in rows}
+
+@@ -1624,8 +1626,9 @@
+         existing = await db.memberships.find_one({"shop_id": shop_id, "idempotency_key": body.idempotency_key}, session=session)
+         if existing:
+             return existing
+-        if await _membership_entitlement(shop_id, session=session):
+-            raise HTTPException(status_code=409, detail="An active membership already exists")
++        if (await _membership_entitlement(shop_id, session=session)
++                or await db.memberships.find_one({"shop_id": shop_id, "refund_hold": True}, session=session)):
++            raise HTTPException(status_code=409, detail="An active membership or refund hold already exists")
+         existing = await db.memberships.find_one({
+             "shop_id": shop_id, "status": {"$in": ["payment_pending", "payment_confirmed"]},
+         }, sort=[("created_at", -1)], session=session)
+@@ -1728,7 +1731,10 @@
+     async def confirm(session):
+         current = await db.memberships.find_one({"_id": row["_id"]}, session=session)
+         if current and current.get("gateway_payment_id") == payment_id and current.get("payment_confirmed_at"):
+-            return current
++            return current, None
++        if current and current.get("gateway_payment_id") and current.get("payment_confirmed_at"):
++            duplicate, created = await _new_membership_refund(current, payment_id, "duplicate", "Additional verified capture", actor_id, session)
++            return current, duplicate if created else None
+         now = now_utc()
+         changes = {"status": "payment_confirmed", "gateway_payment_id": payment_id,
+                    "payment_confirmed_at": now, "updated_at": now}
+@@ -1739,9 +1745,12 @@
+         if updated.modified_count != 1:
+             raise HTTPException(status_code=409, detail="Membership payment state changed; refresh before retrying")
+         await _membership_audit(row, actor_id, "payment_confirmed", session)
+-        return {**current, **changes}
+-
+-    return await run_transaction(client, confirm)
++        return {**current, **changes}, None
++
++    confirmed, duplicate = await run_transaction(client, confirm)
++    if duplicate:
++        await _notify_new_membership_refund(duplicate)
++    return confirmed
+
+
+ def _membership_public(row: Optional[dict]) -> Optional[dict]:
+@@ -1752,12 +1761,14 @@
+                   "razorpay_intent_state", "updated_by"):
+         result.pop(field, None)
+     now = now_utc()
+-    active = entitled(row, now)
++    active = entitled(row, now) and not row.get("refund_hold")
+     expires_at = utc(row.get("expires_at"))
+     if result["status"] == "active" and expires_at and expires_at <= now:
+         result["status"] = "expired"
+     result["remaining_days"] = math.ceil((expires_at - now).total_seconds() / 86400) if active else 0
+     result["renewal_eligible"] = not active and result["status"] in {"expired", "cancelled", "suspended"}
++    if row.get("refund_hold"):
++        result["status"] = "refund_hold"
+     result["payment_verified"] = bool(row.get("payment_confirmed_at") and row.get("gateway_payment_id"))
+     result["benefits"] = {"gold_highlight": active, "crown_badge": active, "sponsored_placement": False}
+     return result
+@@ -1777,14 +1788,21 @@
+         now = now_utc()
+         updates = {"updated_at": now, "admin_reason": body.reason, "updated_by": user["id"]}
+         if body.decision == "activate":
+-            if (row.get("status") != "payment_confirmed" or not row.get("payment_confirmed_at")
++            if (row.get("status") != "payment_confirmed" or row.get("refund_hold") or not row.get("payment_confirmed_at")
+                     or not row.get("gateway_payment_id") or row.get("price_paise") != MEMBERSHIP_PRICE_PAISE):
+                 raise HTTPException(status_code=409, detail="Membership needs verified payment confirmation before activation")
+-            if await _membership_entitlement(row["shop_id"], session=session):
+-                raise HTTPException(status_code=409, detail="An active membership already exists")
++            if (await _membership_entitlement(row["shop_id"], session=session)
++                    or await db.memberships.find_one({"shop_id": row["shop_id"], "refund_hold": True}, session=session)):
++                raise HTTPException(status_code=409, detail="An active membership or refund hold already exists")
+             updates.update({"status": "active", "starts_at": now, "expires_at": now + timedelta(days=MEMBERSHIP_DURATION_DAYS)})
+         elif body.decision == "suspend" and entitled(row, now):
+-            updates["status"] = "suspended"
++            if body.suspension_finding and not body.reason.strip():
++                raise HTTPException(422, "Document the suspension finding")
++            updates.update(status="suspended", suspension_finding=body.suspension_finding or "investigating")
++        elif body.decision == "suspend" and row.get("status") == "suspended" and body.suspension_finding:
++            if not body.reason.strip():
++                raise HTTPException(422, "Document the suspension finding")
++            updates["suspension_finding"] = body.suspension_finding
+         elif body.decision == "cancel" and row.get("status") in {"active", "suspended", "payment_pending", "payment_confirmed"}:
+             if row.get("status") == "payment_pending" and (row.get("gateway_order_id") or row.get("razorpay_intent_state")):
+                 raise HTTPException(status_code=409, detail="Reconcile the payment intent before cancelling")
+@@ -1800,6 +1818,349 @@
+         return {**row, **updates}
+
+     return _membership_public(await run_transaction(client, decide))
++
++
++REFUND_REASONS = Literal["pre_activation", "wrong_purchase", "not_activated", "technical", "suspension", "change_of_mind"]
++
++
++class MembershipRefundRequest(BaseModel):
++    membership_id: str
++    reason: REFUND_REASONS
++    explanation: str = Field(min_length=3, max_length=500)
++
++
++class MembershipRefundDecision(BaseModel):
++    action: Literal["review", "approve", "reject", "extend", "activate"]
++    reason: str = Field(min_length=3, max_length=500)
++    amount_paise: Optional[int] = Field(None, strict=True, gt=0)
++    extension_days: Optional[int] = Field(None, strict=True, ge=1, le=90)
++
++
++class MembershipOutageIn(BaseModel):
++    service: Literal["highlight", "search", "discovery", "entitlement"]
++    started_at: datetime
++    recovered_at: Optional[datetime] = None
++    evidence: str = Field(min_length=8, max_length=1000)
++
++
++def _refund_transition(state, actor, reason):
++    return {"state": state, "actor": actor, "reason": reason, "at": now_utc()}
++
++
++def _refund_view(row, admin=False):
++    result = doc_out(row)
++    if not admin:
++        for key in ("id", "owner_id", "gateway_order_id", "history", "receipt"):
++            result.pop(key, None)
++    return result
++
++
++async def _new_membership_refund(membership, payment_id, reason, explanation, actor, session, outage_id=None):
++    now = now_utc()
++    row = {"_id": payment_id, "membership_id": str(membership["_id"]), "owner_id": membership["owner_id"],
++           "shop_id": membership["shop_id"], "gateway_order_id": membership["gateway_order_id"],
++           "captured_paise": membership["price_paise"], "state": "REQUESTED", "reason": reason,
++           "explanation": explanation, "created_at": now, "outage_id": outage_id,
++           "receipt": "mref_" + hashlib.sha256(payment_id.encode()).hexdigest()[:32],
++           "history": [_refund_transition("REQUESTED", actor, explanation)]}
++    result = await db.membership_refunds.update_one({"_id": payment_id}, {"$setOnInsert": {
++        key: value for key, value in row.items() if key != "_id"
++    }}, upsert=True, session=session)
++    current = await db.membership_refunds.find_one({"_id": payment_id}, session=session)
++    if current["membership_id"] != row["membership_id"]:
++        raise HTTPException(409, "Payment belongs to a different purchase")
++    return current, result.upserted_id is not None
++
++
++@api.post("/shops/{shop_id}/membership/refunds")
++async def request_membership_refund(shop_id: str, body: MembershipRefundRequest,
++                                    user: dict = Depends(require_role("shopkeeper"))):
++    if not body.explanation.strip():
++        raise HTTPException(422, "An explanation is required")
++    _assert_shop_owner(await _get_shop_or_404(shop_id), user)
++    oid = _object_id_or_404(body.membership_id, "Membership")
++
++    async def request(session):
++        await _membership_lock(shop_id, session)
++        row = await db.memberships.find_one({"_id": oid, "shop_id": shop_id, "owner_id": user["id"]}, session=session)
++        if not row:
++            raise HTTPException(404, "Membership not found")
++        if not row.get("payment_confirmed_at") or not row.get("gateway_payment_id") or not row.get("gateway_order_id"):
++            raise HTTPException(409, "A verified capture is required")
++        if body.reason in {"pre_activation", "wrong_purchase", "not_activated"} and row.get("starts_at"):
++            raise HTTPException(409, "Membership has been activated")
++        return await _new_membership_refund(row, row["gateway_payment_id"], body.reason,
++                                            body.explanation.strip(), user["id"], session)
++
++    case, created = await run_transaction(client, request)
++    if created:
++        await _notify_new_membership_refund(case)
++    return _refund_view(case)
++
++
++async def _notify_new_membership_refund(case):
++    await _notify_membership_refund(case)
++    try:
++        async for admin in db.users.find({"role": "admin"}, {"_id": 1}):
++            await _notify(str(admin["_id"]), "membership_refund", "Membership refund requested",
++                          "A membership refund request is ready for review.")
++    except Exception:
++        logger.exception("Membership refund admin notification could not be sent")
++
++
++async def _notify_membership_refund(row):
++    await _notify(row["owner_id"], "membership_refund", "Premium Membership refund",
++                  row["state"].replace("_", " ").capitalize() + (". " + row["decision_reason"] if row.get("decision_reason") else ""),
++                  {"membership_id": row["membership_id"], "state": row["state"]})
++
++
++@api.get("/shops/{shop_id}/membership/refunds")
++async def seller_membership_refunds(shop_id: str, user: dict = Depends(require_role("shopkeeper"))):
++    _assert_shop_owner(await _get_shop_or_404(shop_id), user)
++    return [_refund_view(row) async for row in db.membership_refunds.find(
++        {"shop_id": shop_id, "owner_id": user["id"]}).sort("created_at", -1).limit(100)]
++
++
++@api.get("/admin/membership-refunds")
++async def admin_membership_refunds(shop_id: Optional[str] = Query(None, max_length=40),
++                                   payment_id: Optional[str] = Query(None, max_length=128),
++                                   state: Optional[Literal["REQUESTED", "UNDER_REVIEW", "APPROVED", "REJECTED", "PROCESSING", "SUCCESSFUL", "FAILED"]] = None,
++                                   start: Optional[datetime] = None, end: Optional[datetime] = None,
++                                   offset: int = Query(0, ge=0, le=10000),
++                                   _: dict = Depends(require_role("admin"))):
++    query = {k: v for k, v in (("shop_id", shop_id), ("_id", payment_id), ("state", state)) if v}
++    if start or end:
++        left, right = _premium_period(start, end)
++        query["created_at"] = {"$gte": left, "$lt": right}
++    return [_refund_view(row, True) async for row in db.membership_refunds.find(query)
++            .sort([("created_at", -1), ("_id", -1)]).skip(offset).limit(50)]
++
++
++@api.get("/admin/membership-refunds/{payment_id}")
++async def membership_refund_details(payment_id: str, _: dict = Depends(require_role("admin"))):
++    case = await _load_membership_refund(payment_id)
++    member = await db.memberships.find_one({"_id": ObjectId(case["membership_id"])})
++    return {"refund": _refund_view(case, True), "membership": _membership_public(member),
++            "outage": doc_out(await db.membership_outages.find_one({"_id": case["outage_id"]})) if case.get("outage_id") else None,
++            "usage": await db.premium_exposure.count_documents({"shop_id": case["shop_id"], "kind": "impression",
++                      "created_at": {"$gte": member["starts_at"], "$lt": member["expires_at"]}})
++                      if member and member.get("starts_at") and member.get("expires_at") else None}
++
++
++async def _load_membership_refund(payment_id, session=None):
++    if not re.fullmatch(r"[A-Za-z0-9_-]{1,128}", payment_id):
++        raise HTTPException(404, "Refund request not found")
++    row = await db.membership_refunds.find_one({"_id": payment_id}, session=session)
++    if not row:
++        raise HTTPException(404, "Refund request not found")
++    return row
++
++
++async def _set_membership_refund(row, state, actor, reason, session=None, **details):
++    updates = {"state": state, "updated_at": now_utc(), "decision_reason": reason, **details}
++    result = await db.membership_refunds.update_one({"_id": row["_id"], "state": row["state"],
++                                                    "updated_at": row.get("updated_at")},
++        {"$set": updates, "$push": {"history": _refund_transition(state, actor, reason)}}, session=session)
++    if result.modified_count != 1:
++        raise HTTPException(409, "Refund changed; reload before retrying")
++    return {**row, **updates}
++
++
++@api.patch("/admin/membership-refunds/{payment_id}")
++async def decide_membership_refund(payment_id: str, body: MembershipRefundDecision,
++                                   user: dict = Depends(require_role("admin"))):
++    reason = body.reason.strip()
++    if len(reason) < 3:
++        raise HTTPException(422, "A decision reason is required")
++
++    if body.action == "activate":
++        case = await _load_membership_refund(payment_id)
++        settings = _razorpay_settings()
++        try:
++            await _membership_refund_gateway(case, settings, False, activation=True)
++        except Exception as exc:
++            raise HTTPException(502, "Capture could not be verified for activation") from exc
++
++    async def decide(session):
++        row = await _load_membership_refund(payment_id, session)
++        if row["state"] not in {"REQUESTED", "UNDER_REVIEW"}:
++            raise HTTPException(409, "Refund is no longer under review")
++        member = await db.memberships.find_one({"_id": ObjectId(row["membership_id"])}, session=session)
++        await _membership_lock(row["shop_id"], session)
++        if body.action == "review":
++            return await _set_membership_refund(row, "UNDER_REVIEW", user["id"], reason, session)
++        if body.action == "reject":
++            return await _set_membership_refund(row, "REJECTED", user["id"], reason, session)
++        now = now_utc()
++        if body.action == "activate":
++            if (row["reason"] != "not_activated" or member["status"] != "payment_confirmed"
++                    or member.get("gateway_payment_id") != payment_id or member.get("refund_hold")
++                    or await _membership_entitlement(row["shop_id"], session=session)
++                    or await db.memberships.find_one({"shop_id": row["shop_id"], "refund_hold": True}, session=session)):
++                return await _set_membership_refund(row, "UNDER_REVIEW", user["id"],
++                    reason + " · Activation unavailable", session, activation_attempted=True)
++            await db.memberships.update_one({"_id": member["_id"]}, {"$set": {"status": "active", "starts_at": now,
++                "expires_at": now + timedelta(days=MEMBERSHIP_DURATION_DAYS)}}, session=session)
++            await _membership_audit(member, user["id"], "activated_during_refund_review", session, reason=reason)
++            return await _set_membership_refund(row, "REJECTED", user["id"], reason, session, remedy="activation")
++        outage = await db.membership_outages.find_one({"_id": row["outage_id"]}, session=session) if row.get("outage_id") else None
++        if not membership_refund_policy.permitted(row, member, now, outage):
++            raise HTTPException(409, "The proposed policy does not permit this remedy")
++        if body.action == "extend":
++            if row["reason"] not in {"technical", "suspension"} or not body.extension_days or not member.get("expires_at"):
++                raise HTTPException(422, "An eligible extension and duration are required")
++            shop = await db.shops.find_one({"_id": ObjectId(row["shop_id"])}, session=session)
++            if not shop or shop.get("status") != "approved" or member["status"] not in {"active", "suspended"}:
++                raise HTTPException(409, "Shop and membership must be eligible for restoration")
++            active = await _membership_entitlement(row["shop_id"], session=session)
++            if active and active["_id"] != member["_id"]:
++                raise HTTPException(409, "Another entitlement is active")
++            expiry = max(now, utc(member["expires_at"])) + timedelta(days=body.extension_days)
++            await db.memberships.update_one({"_id": member["_id"]}, {"$set": {"expires_at": expiry, "status": "active"}}, session=session)
++            await _membership_audit(member, user["id"], "extended_after_review", session, reason=reason)
++            return await _set_membership_refund(row, "APPROVED", user["id"], reason, session, remedy="extension")
++        amount = body.amount_paise if body.amount_paise is not None else row["captured_paise"]
++        if amount > row["captured_paise"] or (amount < row["captured_paise"] and row["reason"] not in {"technical", "suspension"}):
++            raise HTTPException(422, "Refund amount is outside policy")
++        if row["reason"] == "not_activated" and not row.get("activation_attempted"):
++            raise HTTPException(409, "Review and attempt activation before approving a refund")
++        full = amount == row["captured_paise"] and row["reason"] != "duplicate"
++        if full and membership_refund_policy.enabled("MEMBERSHIP_REFUNDS_ENABLED"):
++            await db.memberships.update_one({"_id": member["_id"]}, {"$set": {"refund_hold": True}}, session=session)
++            await _membership_audit(member, user["id"], "refund_hold", session, reason=reason)
++        return await _set_membership_refund(row, "APPROVED", user["id"], reason, session,
++                                            amount_paise=amount, remedy="refund", full_entitlement_refund=full)
++
++    result = await run_transaction(client, decide)
++    await _notify_membership_refund(result)
++    return _refund_view(result, True)
++
++
++async def _membership_refund_gateway(row, settings, submit, *, activation=False):
++    payment_id = row["_id"]
++    url = f"https://api.razorpay.com/v1/payments/{payment_id}"
++    auth = (settings.key_id, settings.key_secret)
++    response = await asyncio.to_thread(requests.get, url, auth=auth, timeout=15)
++    response.raise_for_status()
++    payment = response.json()
++    if (not isinstance(payment, dict) or payment.get("id") != payment_id
++            or payment.get("order_id") != row["gateway_order_id"] or payment.get("currency") != "INR"
++            or payment.get("status") not in {"captured", "refunded"} or type(payment.get("amount")) is not int
++            or payment["amount"] != row["captured_paise"]):
++        raise ValueError("Provider capture association does not match")
++    refunds = await asyncio.to_thread(_fetch_razorpay_refunds, payment_id, *auth)
++    if activation and (refunds or payment.get("amount_refunded", 0) or payment.get("status") != "captured"):
++        raise ValueError("Capture is no longer eligible for activation")
++    matching = [refund for refund in refunds if refund.get("receipt") == row["receipt"]
++                or (row.get("gateway_refund_id") and refund.get("id") == row["gateway_refund_id"])]
++    if len(matching) > 1:
++        raise ValueError("Multiple matching refunds require manual reconciliation")
++    if matching:
++        return matching[0]
++    if not submit:
++        return None
++    if refunds or payment.get("amount_refunded", 0) or payment.get("status") != "captured":
++        raise ValueError("Existing gateway refund requires manual reconciliation")
++    response = await asyncio.to_thread(requests.post, url + "/refund", auth=auth, timeout=15,
++                                      json={"amount": row["amount_paise"], "receipt": row["receipt"]})
++    response.raise_for_status()
++    return response.json()
++
++
++async def _record_membership_refund_result(row, result, actor):
++    if (not isinstance(result, dict) or result.get("payment_id") != row["_id"]
++            or type(result.get("amount")) is not int or result["amount"] != row["amount_paise"]
++            or not isinstance(result.get("id"), str) or not re.fullmatch(r"[A-Za-z0-9_-]{1,128}", result["id"])
++            or result.get("status") not in {"processed", "pending", "failed"}):
++        raise ValueError("Provider refund requires reconciliation")
++    state = {"processed": "SUCCESSFUL", "pending": "PROCESSING", "failed": "FAILED"}[result["status"]]
++
++    async def persist(session):
++        current = await _load_membership_refund(row["_id"], session)
++        if current["state"] != "PROCESSING":
++            return current
++        if state == "PROCESSING" and current.get("gateway_refund_id") == result["id"]:
++            return current
++        updated = await _set_membership_refund(current, state, actor, "Gateway " + result["status"], session,
++                                               gateway_refund_id=result["id"])
++        if row.get("full_entitlement_refund") and state in {"SUCCESSFUL", "FAILED"}:
++            member = await db.memberships.find_one({"_id": ObjectId(row["membership_id"])}, session=session)
++            await _membership_lock(row["shop_id"], session)
++            changes = {"refund_hold": False}
++            if state == "SUCCESSFUL":
++                changes.update(status="cancelled", refunded_at=now_utc())
++            await db.memberships.update_one({"_id": member["_id"]}, {"$set": changes}, session=session)
++            await _membership_audit(member, actor, "refund_" + state.lower(), session)
++        return updated
++
++    return await run_transaction(client, persist)
++
++
++@api.post("/admin/membership-refunds/{payment_id}/{operation}")
++async def execute_membership_refund(payment_id: str, operation: Literal["process", "reconcile"],
++                                    user: dict = Depends(require_role("admin"))):
++    if not membership_refund_policy.enabled("MEMBERSHIP_REFUNDS_ENABLED"):
++        raise HTTPException(503, "Membership gateway refunds are disabled pending policy approval")
++    settings = _razorpay_settings()
++    row = await _load_membership_refund(payment_id)
++    submit = operation == "process"
++    if submit:
++        if row["state"] != "APPROVED" or row.get("remedy") != "refund":
++            raise HTTPException(409, "Only a newly approved refund can be processed")
++        async def claim(session):
++            await _membership_lock(row["shop_id"], session)
++            member = await db.memberships.find_one({"_id": ObjectId(row["membership_id"])}, session=session)
++            outage = await db.membership_outages.find_one({"_id": row["outage_id"]}, session=session) if row.get("outage_id") else None
++            if not membership_refund_policy.permitted(row, member, now_utc(), outage):
++                raise HTTPException(409, "Membership eligibility changed since approval")
++            if row.get("full_entitlement_refund") and not member.get("refund_hold"):
++                await db.memberships.update_one({"_id": member["_id"]}, {"$set": {"refund_hold": True}}, session=session)
++                await _membership_audit(member, user["id"], "refund_hold", session)
++            return await _set_membership_refund(row, "PROCESSING", user["id"], "Gateway request claimed", session)
++        row = await run_transaction(client, claim)
++        await _notify_membership_refund(row)
++    elif row["state"] != "PROCESSING":
++        raise HTTPException(409, "Only a processing refund can be reconciled")
++    try:
++        result = await _membership_refund_gateway(row, settings, submit)
++        updated = await _record_membership_refund_result(row, result, user["id"]) if result else row
++    except Exception as exc:
++        raise HTTPException(502, "Refund remains processing; reconcile with the gateway before acting") from exc
++    if updated["state"] != row["state"]:
++        await _notify_membership_refund(updated)
++    return _refund_view(updated, True)
++
++
++@api.post("/admin/membership-outages")
++async def record_membership_outage(body: MembershipOutageIn, user: dict = Depends(require_role("admin"))):
++    now = now_utc()
++    started, recovered = utc(body.started_at), utc(body.recovered_at)
++    if started > now or (recovered and not started < recovered <= now) or len(body.evidence.strip()) < 8:
++        raise HTTPException(422, "Verified outage dates and evidence are required")
++    key = hashlib.sha256(f"{body.service}:{started.isoformat()}".encode()).hexdigest()
++    interval = {"service": body.service, "started_at": started, "recovered_at": recovered,
++                "evidence": body.evidence.strip(), "verified_by": user["id"]}
++    await db.membership_outages.update_one({"_id": key}, {"$setOnInsert": interval}, upsert=True)
++    if recovered:
++        await db.membership_outages.update_one({"_id": key, "recovered_at": None}, {"$set": {
++            "recovered_at": recovered, "recovery_evidence": body.evidence.strip(), "recovered_by": user["id"]}})
++    outage = await db.membership_outages.find_one({"_id": key})
++    affected = 0
++    query = {"starts_at": {"$lt": outage.get("recovered_at") or now}, "expires_at": {"$gt": started},
++             "payment_confirmed_at": {"$exists": True}, "gateway_payment_id": {"$type": "string"}}
++    async for member in db.memberships.find(query):
++        if membership_refund_policy.impact(outage, member, now) >= membership_refund_policy.outage_threshold():
++            case, created = await _new_membership_refund(member, member["gateway_payment_id"], "technical",
++                                         "Verified service outage", user["id"], None, key)
++            if created:
++                await _notify_new_membership_refund(case)
++            elif case["reason"] == "technical" and not case.get("outage_id"):
++                await db.membership_refunds.update_one({"_id": case["_id"], "outage_id": None,
++                    "state": {"$in": ["REQUESTED", "UNDER_REVIEW"]}},
++                    {"$set": {"outage_id": key}, "$push": {"history": _refund_transition(case["state"], user["id"], "Verified outage linked")}})
++            affected += 1
++    return {**doc_out(outage), "eligible_memberships": affected,
++            "verified_duration_seconds": ((utc(outage.get("recovered_at")) or now) - utc(outage["started_at"])).total_seconds()}
+
+
+ @api.get("/admin/memberships")
+@@ -1867,7 +2228,7 @@
+     start, end = _premium_period(start, end)
+     now = now_utc()
+     scope = {"shop_id": shop_id} if shop_id else {}
+-    active = await db.memberships.distinct("shop_id", {**scope, **entitlement_filter(now)})
++    active = await db.memberships.distinct("shop_id", {**scope, "refund_hold": {"$ne": True}, **entitlement_filter(now)})
+     status_rows = await db.memberships.aggregate([
+         {"$match": scope},
+         {"$group": {"_id": "$status", "count": {"$sum": 1}}},
+@@ -6819,6 +7180,7 @@
+     await db.premium_exposure.create_index([("surface", 1), ("kind", 1), ("created_at", -1), ("shop_id", 1)])
+     await db.premium_exposure.create_index([("shop_id", 1), ("created_at", -1)])
+     await db.premium_exposure.create_index("created_at", expireAfterSeconds=31708800)
++    await db.membership_refunds.create_index([("shop_id", 1), ("created_at", -1)])
+     await db.membership_audit.create_index([("membership_id", 1), ("created_at", -1)])
+     await db.restaurants.create_index("owner_id")
+     await db.restaurants.create_index([("status", 1), ("available", 1), ("city", 1)])
+--- /dev/null
++++ b/backend/tests/test_membership_refund_policy.py
+@@ -0,0 +1,187 @@
++"""Proposed policy and authenticated local Mongo integration with a fake gateway."""
++import asyncio
++from datetime import datetime, timedelta, timezone
++import os
++from types import SimpleNamespace
++from uuid import uuid4
++
++import pytest
++
++from membership_refund_policy import impact, permitted
++
++
++def test_balanced_policy_uses_verified_overlap_and_suspension_finding():
++    now = datetime.now(timezone.utc)
++    member = {"gateway_payment_id": "pay_initial", "starts_at": now - timedelta(days=8),
++              "expires_at": now + timedelta(days=10)}
++    case = {"_id": "pay_initial", "reason": "technical"}
++    incident = {"started_at": now - timedelta(hours=48)}
++    assert impact(incident, member, now) == timedelta(hours=48)
++    assert permitted(case, member, now, incident)
++    assert not permitted(case, member, now, {**incident, "recovered_at": now - timedelta(seconds=1)})
++    assert not permitted(case, member, now)
++    for reason in ("pre_activation", "wrong_purchase", "not_activated", "change_of_mind"):
++        assert not permitted({**case, "reason": reason}, member, now)
++    for reason in ("pre_activation", "wrong_purchase", "not_activated"):
++        assert permitted({**case, "reason": reason}, {**member, "starts_at": None}, now)
++    assert permitted({"_id": "pay_extra", "reason": "duplicate"}, member, now)
++    assert not permitted({**case, "reason": "duplicate"}, member, now)
++    for finding in ("mistaken", "technical_or_admin_error", "verified_misconduct", "investigating"):
++        assert permitted({**case, "reason": "suspension"}, {**member, "suspension_finding": finding}, now) == (finding in {"mistaken", "technical_or_admin_error"})
++
++
++def test_refunds_http_transactions_and_mock_gateway(monkeypatch):
++    if os.getenv("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
++        pytest.skip("requires disposable local MongoDB replica set")
++    import httpx
++    from bson import ObjectId
++    from motor.motor_asyncio import AsyncIOMotorClient
++    import server
++
++    monkeypatch.setenv("JWT_SECRET", uuid4().hex)
++    monkeypatch.setattr(server, "_razorpay_settings", lambda: SimpleNamespace(key_id="fixture", key_secret="fixture"))
++    captures, refunds, posts = {}, {}, []
++    outcomes = {}
++
++    def response(value):
++        return SimpleNamespace(json=lambda: value, raise_for_status=lambda: None)
++
++    def get(url, **kw):
++        assert url.startswith("https://api.razorpay.com/v1/payments/")
++        return response(captures[url.rsplit("/", 1)[1]])
++
++    def post(url, *, json, **kw):
++        assert url.startswith("https://api.razorpay.com/v1/payments/") and url.endswith("/refund")
++        payment = url.split("/")[-2]
++        posts.append(payment)
++        record = {"id": "rf_" + payment, "payment_id": payment, **json, "status": outcomes.get(payment, "pending")}
++        refunds[payment] = [record]
++        if payment == "pay_duplicate":
++            raise TimeoutError("mocked response loss")
++        return response(record)
++
++    monkeypatch.setattr(server.requests, "get", get)
++    monkeypatch.setattr(server.requests, "post", post)
++    monkeypatch.setattr(server, "_fetch_razorpay_refunds", lambda payment, *auth: refunds.get(payment, []))
++
++    async def scenario():
++        mongo = AsyncIOMotorClient("mongodb://127.0.0.1:27018/?replicaSet=rs0", serverSelectionTimeoutMS=3000)
++        name = "comein_disposable_membership_refund_" + uuid4().hex[:16]
++        db = mongo[name]
++        monkeypatch.setattr(server, "db", db)
++        monkeypatch.setattr(server, "client", mongo)
++        try:
++            headers, users = {}, {}
++            for role in ("seller", "other", "admin"):
++                actor = ObjectId()
++                users[role] = str(actor)
++                permission = "admin" if role == "admin" else "shopkeeper"
++                await db.users.insert_one({"_id": actor, "role": permission})
++                headers[role] = {"Authorization": "Bearer " + server.create_access_token(str(actor), permission, f"{role}@local.test")}
++            shop = ObjectId()
++            await db.shops.insert_one({"_id": shop, "owner_id": users["seller"], "status": "approved"})
++
++            async def new_member(name, *, active=False, finding=None):
++                now = server.now_utc()
++                row = {"_id": ObjectId(), "shop_id": str(shop), "owner_id": users["seller"],
++                       "price_paise": 29900, "gateway_payment_id": name, "gateway_order_id": "order_" + name,
++                       "payment_confirmed_at": now, "status": "active" if active else "payment_confirmed"}
++                if active:
++                    row.update(starts_at=now - timedelta(days=5), expires_at=now + timedelta(days=25))
++                if finding:
++                    row.update(suspension_finding=finding, status="suspended")
++                captures[name] = {"id": name, "order_id": row["gateway_order_id"], "amount": 29900,
++                                  "currency": "INR", "status": "captured"}
++                await db.memberships.insert_one(row)
++                return row
++
++            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=server.app), base_url="http://local") as http:
++                root = f"/api/shops/{shop}/membership/refunds"
++                admin = "/api/admin/membership-refunds"
++
++                async def call(method, path, who="admin", body=None):
++                    return await http.request(method, path, headers=headers.get(who), json=body)
++
++                async def request(row, reason="pre_activation", who="seller", **extra):
++                    return await call("POST", root, who, {"membership_id": str(row["_id"]), "reason": reason,
++                                                          "explanation": "Documented test request", **extra})
++
++                async def decide(payment, action="approve", **extra):
++                    return await call("PATCH", f"{admin}/{payment}", body={"action": action, "reason": "Documented local decision", **extra})
++
++                pending = await new_member("pay_pending")
++                assert (await request(pending, who="other")).status_code == 403
++                assert (await call("GET", admin, "seller")).status_code == 403
++                duplicate = await asyncio.gather(request(pending, state="SUCCESSFUL"), request(pending))
++                assert all(r.status_code == 200 and r.json()["state"] == "REQUESTED" for r in duplicate)
++                assert await db.membership_refunds.count_documents({}) == 1
++                assert (await decide("pay_pending", amount_paise=29901)).status_code == 422
++                assert (await decide("pay_pending", amount_paise=500)).status_code == 422
++                approvals = await asyncio.gather(decide("pay_pending"), decide("pay_pending"))
++                assert sorted(r.status_code for r in approvals) == [200, 409]
++                monkeypatch.delenv("MEMBERSHIP_REFUNDS_ENABLED", raising=False)
++                assert (await call("POST", admin + "/pay_pending/process")).status_code == 503
++                monkeypatch.setenv("MEMBERSHIP_REFUNDS_ENABLED", "true")
++                processing = await asyncio.gather(*(call("POST", admin + "/pay_pending/process") for _ in range(2)))
++                assert sorted(r.status_code for r in processing) == [200, 409]
++                assert posts == ["pay_pending"]
++                assert (await db.memberships.find_one({"_id": pending["_id"]}))["refund_hold"]
++                refunds["pay_pending"][0]["status"] = "processed"
++                captures["pay_pending"]["status"] = "refunded"
++                assert (await call("POST", admin + "/pay_pending/reconcile")).json()["state"] == "SUCCESSFUL"
++                assert (await db.memberships.find_one({"_id": pending["_id"]}))["status"] == "cancelled"
++                assert (await call("POST", admin + "/pay_pending/process")).status_code == 409
++
++                original = await new_member("pay_original", active=True)
++                duplicate_entity = {**captures["pay_original"], "id": "pay_duplicate"}
++                captures["pay_duplicate"] = duplicate_entity
++                await asyncio.gather(*(server._confirm_membership_capture(original, duplicate_entity, "pay_duplicate", "local_webhook") for _ in range(2)))
++                assert (await decide("pay_duplicate")).status_code == 200
++                assert (await call("POST", admin + "/pay_duplicate/process")).status_code == 502
++                refunds["pay_duplicate"][0]["status"] = "processed"
++                assert (await call("POST", admin + "/pay_duplicate/reconcile")).json()["state"] == "SUCCESSFUL"
++                assert (await db.memberships.find_one({"_id": original["_id"]}))["status"] == "active"
++                assert posts.count("pay_duplicate") == 1
++
++                assert (await request(original)).status_code == 409
++                assert (await request(original, "change_of_mind")).status_code == 200
++                assert (await decide("pay_original")).status_code == 409
++                assert (await decide("pay_original", "reject")).status_code == 200
++                mistaken = await new_member("pay_mistaken", active=True, finding="mistaken")
++                assert (await request(mistaken, "suspension")).status_code == 200
++                assert (await decide("pay_mistaken", amount_paise=1000)).status_code == 200
++                outcomes["pay_mistaken"] = "failed"
++                assert (await call("POST", admin + "/pay_mistaken/process")).json()["state"] == "FAILED"
++                assert not (await db.memberships.find_one({"_id": mistaken["_id"]})).get("refund_hold")
++
++                outage = {"service": "search", "started_at": (server.now_utc() - timedelta(hours=50)).isoformat(),
++                          "evidence": "Local monitoring fixture"}
++                assert (await call("POST", "/api/admin/membership-outages", "seller", outage)).status_code == 403
++                extension = await new_member("pay_extension", active=True)
++                first = (await call("POST", "/api/admin/membership-outages", body=outage)).json()
++                again = (await call("POST", "/api/admin/membership-outages", body=outage)).json()
++                assert first["id"] == again["id"] and first["verified_duration_seconds"] >= 48 * 3600
++                assert await db.membership_outages.count_documents({}) == 1
++                detail = (await call("GET", admin + "/pay_extension")).json()
++                assert detail["outage"]["id"] == first["id"]
++                await db.memberships.update_one({"_id": original["_id"]}, {"$set": {"expires_at": server.now_utc()}})
++                assert (await decide("pay_extension", "extend", extension_days=2)).json()["remedy"] == "extension"
++                assert (await db.memberships.find_one({"_id": extension["_id"]}))["expires_at"] > extension["expires_at"].replace(tzinfo=None)
++                rollback = await new_member("pay_rollback")
++                await request(rollback)
++                async def fail_audit(*args, **kwargs):
++                    raise RuntimeError("local transaction rollback")
++                with monkeypatch.context() as temporary:
++                    temporary.setattr(server, "_membership_audit", fail_audit)
++                    with pytest.raises(RuntimeError, match="local transaction rollback"):
++                        await decide("pay_rollback")
++                assert (await db.membership_refunds.find_one({"_id": "pay_rollback"}))["state"] == "REQUESTED"
++                assert not (await db.memberships.find_one({"_id": rollback["_id"]})).get("refund_hold")
++                assert await db.notifications.count_documents({"kind": "membership_refund"}) > 0
++                history = (await call("GET", root, "seller")).json()
++                assert all("gateway_order_id" not in item and "history" not in item for item in history)
++        finally:
++            await mongo.drop_database(name)
++            mongo.close()
++
++    asyncio.run(scenario())
+--- a/backend/tests/test_mongo_portability_tool.py
++++ b/backend/tests/test_mongo_portability_tool.py
+@@ -38,19 +38,19 @@
+
+ def test_index_inventory_includes_both_startup_initializers_exactly_once():
+     specs = comein_mongo.index_specs()
+-    assert len(specs) == 81
++    assert len(specs) == 82
+     assert Counter(spec["initializer"] for spec in specs) == {
+-        "_startup": 75,
++        "_startup": 76,
+         "ensure_delivery_partner_indexes": 6,
+     }
+-    assert len({(spec["collection"], tuple(spec["keys"]), repr(sorted(spec["options"].items()))) for spec in specs}) == 81
++    assert len({(spec["collection"], tuple(spec["keys"]), repr(sorted(spec["options"].items()))) for spec in specs}) == 82
+
+
+-def test_spec_and_init_use_complete_81_index_inventory():
++def test_spec_and_init_use_complete_82_index_inventory():
+     db = _Database()
+     result = comein_mongo.init_db(db)
+-    assert result["indexes_ensured"] == 81
+-    assert sum(len(collection.indexes) for collection in db.collections.values()) == 81
++    assert result["indexes_ensured"] == 82
++    assert sum(len(collection.indexes) for collection in db.collections.values()) == 82
+     assert comein_mongo.missing_indexes(db) == []
+
+
+@@ -75,7 +75,7 @@
+     assert any(spec["collection"] in entry for entry in comein_mongo.missing_indexes(db))
+
+
+-def test_health_reports_all_81_indexes_and_index_status(monkeypatch):
++def test_health_reports_all_82_indexes_and_index_status(monkeypatch):
+     db = _Database()
+     comein_mongo.init_db(db)
+
+@@ -102,7 +102,7 @@
+     monkeypatch.setattr(comein_mongo, "client_for", lambda _url: _Client())
+     monkeypatch.setattr(comein_mongo, "verify_transactions", lambda _client, _db: {"ok": True})
+     result = comein_mongo.health("mongodb://localhost:27017", "comein_test")
+-    assert result["indexes_expected"] == 81
++    assert result["indexes_expected"] == 82
+     assert result["indexes_missing"] == []
+     assert result["indexes_ok"] is True
+     assert result["ok"] is True
+@@ -144,13 +144,13 @@
+ def test_index_init_returns_only_after_all_declared_indexes_verify():
+     db = _Database()
+     result = comein_mongo.init_db(db)
+-    assert result["indexes_ensured"] == 81
+-    assert result["indexes_verified"] == 81
++    assert result["indexes_ensured"] == 82
++    assert result["indexes_verified"] == 82
+
+
+ def test_application_collection_inventory_includes_catalogue_audit_and_payment_collections():
+     collections = set(comein_mongo.collections_used())
+-    assert len(collections) == 58
++    assert len(collections) == 60
+     assert {"catalogue_import_jobs", "catalogue_import_audit", "grocery_payments", "restaurant_payments", "financial_ledger", "security_locks", "premium_exposure"} <= collections
+
+
+--- a/frontend/app/admin-memberships.tsx
++++ b/frontend/app/admin-memberships.tsx
+@@ -3,6 +3,7 @@
+ import { useRouter } from "expo-router";
+ import Feather from "@react-native-vector-icons/feather";
+ import { useSafeAreaInsets } from "react-native-safe-area-context";
++import { MembershipRefunds } from "@/src/components/MembershipRefunds";
+ import { api } from "@/src/lib/api";
+ import { useAuth } from "@/src/store/auth";
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
+@@ -15,6 +16,7 @@
+ export default function AdminMembershipsScreen() {
+   const { user } = useAuth(); const router = useRouter(); const insets = useSafeAreaInsets(); const { colors } = useTheme(); const styles = useStyles();
+   const [summary, setSummary] = useState<Summary | null>(null); const [items, setItems] = useState<Membership[]>([]); const [notice, setNotice] = useState(""); const [loading, setLoading] = useState(true);
++  const [suspensionReason, setSuspensionReason] = useState("");
+   const [filters, setFilters] = useState({ shop_id: "", start: "", end: "" });
+   const [applied, setApplied] = useState(filters);
+   const [offset, setOffset] = useState(0);
+@@ -35,6 +37,12 @@
+   }, [applied, offset]);
+   useEffect(() => { if (!user || user.role !== "admin") return; const run = async () => { try { await load(); } catch (e: any) { setNotice(e?.message || "Membership reporting could not be loaded."); } finally { setLoading(false); } }; void run(); }, [load, user]);
+   const decide = async (item: Membership, decision: "activate" | "suspend" | "cancel") => { try { await api.patch(`/admin/memberships/${encodeURIComponent(item.id)}`, { decision, reason: "Admin review" }); await load(); } catch (e: any) { setNotice(e?.message || "Membership could not be updated."); } };
++  const recordFinding = async (item: Membership, finding: string) => {
++    try {
++      await api.patch(`/admin/memberships/${encodeURIComponent(item.id)}`, { decision: "suspend", reason: suspensionReason, suspension_finding: finding });
++      await load();
++    } catch (error) { setNotice((error as { message?: string })?.message || "Finding could not be recorded."); }
++  };
+   if (!user || user.role !== "admin") return <View style={styles.centered}><Text style={styles.message}>Admin access is required.</Text></View>;
+   if (loading) return <View style={styles.centered}><ActivityIndicator color={colors.brandPrimary} /></View>;
+   return <View style={styles.root}><View style={[styles.header, { paddingTop: insets.top + spacing.sm }]}><Pressable accessibilityLabel="Back" style={styles.icon} onPress={() => router.back()}><Feather name="arrow-left" size={19} color={colors.onSurface} /></Pressable><Text style={styles.title}>Membership Management</Text></View><ScrollView contentContainerStyle={styles.content}>
+@@ -55,11 +63,14 @@
+     <Text style={styles.cardTitle}>Exposure by shop</Text>
+     <Text style={styles.meta}>Counts reflect tracked signed-in customer activity. Historical exposure before tracking is unavailable.</Text>
+     {summary?.exposure.by_shop.map(row => <Text key={row.shop_id} style={styles.meta}>{row.shop_id} · {row.metrics.opportunity ?? 0} opportunities · {row.metrics.impression ?? 0} impressions · {row.metrics.click ?? 0} clicks</Text>)}
++    <MembershipRefunds admin />
+     <Text style={styles.cardTitle}>Membership history</Text>
++    {items.some(item => item.status === "suspended") && <TextInput accessibilityLabel="Suspension evidence" value={suspensionReason} onChangeText={setSuspensionReason} placeholder="Document the suspension finding" style={styles.card} />}
+     {items.map(item => <View key={item.id} style={styles.card}>
+       <Text style={styles.cardTitle}>Shop {item.shop_id}</Text>
+       <Text style={styles.meta}>{item.status} · {inr(item.price_paise)}{item.expires_at ? ` · expires ${new Date(item.expires_at).toLocaleDateString()}` : ""}{item.renewal_eligible ? " · renewal eligible" : ""}</Text>
+       {item.status === "payment_confirmed" && <Pressable style={styles.button} onPress={() => void decide(item, "activate")}><Text style={styles.buttonText}>Activate verified membership</Text></Pressable>}
++      {item.status === "suspended" && ["investigating", "mistaken", "verified_misconduct", "technical_or_admin_error"].map(finding => <Pressable key={finding} disabled={!suspensionReason.trim()} onPress={() => void recordFinding(item, finding)} style={styles.secondary}><Text style={styles.secondaryText}>{finding.replaceAll("_", " ")}</Text></Pressable>)}
+       {item.status === "active" && <Pressable style={styles.secondary} onPress={() => void decide(item, "suspend")}><Text style={styles.secondaryText}>Suspend</Text></Pressable>}
+       {["active", "suspended", "payment_pending", "payment_confirmed"].includes(item.status) && <Pressable style={styles.secondary} onPress={() => void decide(item, "cancel")}><Text style={styles.secondaryText}>Cancel membership</Text></Pressable>}
+     </View>)}
+--- a/frontend/app/seller/membership.tsx
++++ b/frontend/app/seller/membership.tsx
+@@ -6,6 +6,7 @@
+
+ import { openRazorpay, RazorpayIntent, razorpaySupported } from "@/src/lib/razorpay";
+ import { usePremiumActive } from "@/src/lib/premium";
++import { MembershipRefunds } from "@/src/components/MembershipRefunds";
+ import { api } from "@/src/lib/api";
+ import { useAuth } from "@/src/store/auth";
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
+@@ -13,7 +14,7 @@
+ type Shop = { id: string; name?: string };
+ type Membership = { id?: string; status?: string; expires_at?: string; starts_at?: string; created_at?: string; remaining_days?: number; renewal_eligible?: boolean; payment_verified?: boolean; price_paise?: number; benefits?: { gold_highlight?: boolean; crown_badge?: boolean; sponsored_placement?: boolean } };
+
+-const statusLabel = (status?: string) => ({ active: "Active", expired: "Expired", payment_pending: "Payment pending", payment_confirmed: "Payment confirmed — activation pending", suspended: "Suspended", cancelled: "Cancelled" }[status || ""] || "No membership request");
++const statusLabel = (status?: string) => ({ refund_hold: "Refund hold", active: "Active", expired: "Expired", payment_pending: "Payment pending", payment_confirmed: "Payment confirmed — activation pending", suspended: "Suspended", cancelled: "Cancelled" }[status || ""] || "No membership request");
+
+ /** Membership purchase never activates benefits locally: the backend verifies a captured payment first. */
+ export default function SellerMembershipScreen() {
+@@ -86,6 +87,7 @@
+     <View style={styles.card}><Text style={styles.cardTitle}>Recent membership requests</Text>
+       {history.length ? history.map(row => <Text key={row.id} style={styles.copy}>{row.created_at ? new Date(row.created_at).toLocaleDateString() : "Date unavailable"} · {statusLabel(row.status)} · {row.payment_verified ? "Verified payment" : "Unverified payment"}</Text>) : <Text style={styles.copy}>No requests yet</Text>}
+     </View>
++    <MembershipRefunds shopId={shop?.id} payments={history} />
+     <Text style={styles.legal}>A request does not charge you or promise activation. A real payment is only accepted after server-side signature and captured-payment verification. Live payment availability depends on configured provider credentials.</Text>
+   </ScrollView></View>;
+ }
+--- /dev/null
++++ b/frontend/src/components/MembershipRefunds.tsx
+@@ -0,0 +1,112 @@
++import { useCallback, useEffect, useState } from "react";
++import { Pressable, Text, TextInput, View } from "react-native";
++
++import { api } from "@/src/lib/api";
++import { makeStyles, radius, spacing } from "@/src/theme";
++
++type Payment = { id?: string; payment_verified?: boolean; created_at?: string };
++type Case = { id?: string; membership_id: string; shop_id: string; state: string; remedy?: string; reason: string; decision_reason?: string; gateway_refund_id?: string; created_at: string };
++const reasons = {
++  pre_activation: "Cancel before activation", wrong_purchase: "Wrong shop or purchase",
++  not_activated: "Paid but not activated", technical: "Technical outage",
++  suspension: "Suspension review", change_of_mind: "Change of mind",
++};
++
++export function MembershipRefunds({ shopId, payments = [], admin = false }: { shopId?: string; payments?: Payment[]; admin?: boolean }) {
++  const styles = useStyles();
++  const root = admin ? "/admin/membership-refunds" : `/shops/${encodeURIComponent(shopId || "")}/membership/refunds`;
++  const [rows, setRows] = useState<Case[]>([]);
++  const [membershipId, setMembershipId] = useState("");
++  const [reason, setReason] = useState<keyof typeof reasons>("pre_activation");
++  const [explanation, setExplanation] = useState("");
++  const [amount, setAmount] = useState("");
++  const [days, setDays] = useState("");
++  const [filter, setFilter] = useState({ shop_id: "", payment_id: "", state: "", start: "", end: "" });
++  const [query, setQuery] = useState("");
++  const [outage, setOutage] = useState({ service: "", started_at: "", recovered_at: "", evidence: "" });
++  const [details, setDetails] = useState("");
++  const [notice, setNotice] = useState("");
++  const [busy, setBusy] = useState(false);
++  const load = useCallback(async () => {
++    if (admin || shopId) setRows(await api.get<Case[]>(root + (query ? `?${query}` : "")));
++  }, [admin, query, root, shopId]);
++  useEffect(() => {
++    const timer = setTimeout(() => void load().catch(() => setNotice("Refund history could not be loaded.")), 0);
++    return () => clearTimeout(timer);
++  }, [load]);
++  const perform = async (work: () => Promise<unknown>) => {
++    if (busy) return;
++    setBusy(true); setNotice("");
++    try { await work(); await load(); }
++    catch (error) { setNotice((error as { message?: string })?.message || "Refund action could not be completed."); }
++    finally { setBusy(false); }
++  };
++  const action = (row: Case, command: string) => void perform(async () => {
++    const target = `${root}/${encodeURIComponent(row.id || "")}`;
++    if (command === "Details") {
++      const data = await api.get<{ membership?: { status: string }; outage?: { service: string; evidence: string }; usage?: number }>(target);
++      setDetails(`Membership: ${data.membership?.status || "Unavailable"} · Impressions: ${data.usage ?? "Unavailable"}${data.outage ? ` · ${data.outage.service}: ${data.outage.evidence}` : ""}`);
++      return;
++    }
++    if (command === "process" || command === "reconcile") {
++      await api.post(`${target}/${command}`, {});
++      return;
++    }
++    if ((amount && !/^\d+$/.test(amount)) || (days && !/^\d+$/.test(days))) throw new Error("Enter whole paise and days.");
++    await api.patch(target, { action: command, reason: explanation, amount_paise: amount ? Number(amount) : undefined, extension_days: days ? Number(days) : undefined });
++  });
++  const button = (label: string, onPress: () => void, disabled = false) => (
++    <Pressable key={label} accessibilityRole="button" disabled={disabled || busy} style={styles.button} onPress={onPress}><Text style={styles.text}>{label}</Text></Pressable>
++  );
++  return <View style={styles.panel}>
++    <Text style={styles.title}>Membership refunds</Text>
++    <Text style={styles.text}>Proposed policy, subject to owner approval and legal review. Approved requests require gateway confirmation.</Text>
++    {notice ? <Text accessibilityRole="alert" style={styles.text}>{notice}</Text> : null}
++    {admin ? <>
++      {(Object.keys(filter) as (keyof typeof filter)[]).map(key => <TextInput key={key} accessibilityLabel={key} placeholder={key === "start" || key === "end" ? `${key} YYYY-MM-DD (UTC)` : key} value={filter[key]} onChangeText={value => setFilter({ ...filter, [key]: value })} style={styles.input} />)}
++      {button("Filter refunds", () => {
++        const params = new URLSearchParams();
++        for (const [key, value] of Object.entries(filter)) if (value.trim()) params.set(key, key === "start" || key === "end" ? `${value.trim()}T00:00:00Z` : value.trim());
++        setQuery(params.toString());
++      })}
++      <Text style={styles.title}>Record a verified outage</Text>
++      <Text style={styles.text}>Service: highlight, search, discovery, or entitlement. Supply UTC timestamps and a monitoring or incident reference.</Text>
++      {(Object.keys(outage) as (keyof typeof outage)[]).map(key => <TextInput key={key} accessibilityLabel={key} placeholder={key} value={outage[key]} onChangeText={value => setOutage({ ...outage, [key]: value })} style={styles.input} />)}
++      {button("Record verified outage", () => void perform(async () => {
++        const result = await api.post<{ eligible_memberships: number }>("/admin/membership-outages", { ...outage, recovered_at: outage.recovered_at || undefined });
++        setNotice(`${result.eligible_memberships} memberships met the outage threshold.`);
++      }), !outage.service || !outage.started_at || outage.evidence.trim().length < 8)}
++      <TextInput accessibilityLabel="Decision reason" placeholder="Decision reason" value={explanation} onChangeText={setExplanation} maxLength={500} style={styles.input} />
++      <TextInput accessibilityLabel="Refund amount in paise" placeholder="Refund amount in paise (optional)" value={amount} onChangeText={setAmount} keyboardType="number-pad" style={styles.input} />
++      <TextInput accessibilityLabel="Extension days" placeholder="Extension days (optional)" value={days} onChangeText={setDays} keyboardType="number-pad" style={styles.input} />
++    </> : <>
++      {payments.filter(row => row.payment_verified && row.id).map(row => <Pressable key={row.id} accessibilityRole="button" accessibilityState={{ selected: membershipId === row.id }} onPress={() => setMembershipId(row.id || "")} style={styles.button}><Text style={styles.text}>{membershipId === row.id ? "Selected · " : ""}{row.created_at ? new Date(row.created_at).toLocaleDateString() : "Verified payment"} · {row.id}</Text></Pressable>)}
++      {membershipId ? <>
++        {(Object.keys(reasons) as (keyof typeof reasons)[]).map(key => button(`${reason === key ? "✓ " : ""}${reasons[key]}`, () => setReason(key)))}
++        <TextInput accessibilityLabel="Refund explanation" placeholder="Short explanation" value={explanation} onChangeText={setExplanation} maxLength={500} style={styles.input} />
++        {button("Request refund review", () => void perform(() => api.post(root, { membership_id: membershipId, reason, explanation })), explanation.trim().length < 3)}
++      </> : null}
++    </>}
++    {details ? <Text style={styles.text}>{details}</Text> : null}
++    {rows.map((row, index) => <View key={row.id || `${row.membership_id}:${index}`} style={styles.panel}>
++      <Text style={styles.title}>{row.state.replaceAll("_", " ")} · {row.reason.replaceAll("_", " ")}</Text>
++      <Text style={styles.text}>{new Date(row.created_at).toLocaleDateString()}{admin ? ` · Shop ${row.shop_id} · Payment ${row.id}` : ""}</Text>
++      {row.decision_reason && <Text style={styles.text}>{row.decision_reason}</Text>}
++      {row.gateway_refund_id && <Text style={styles.text}>Gateway refund {row.gateway_refund_id}</Text>}
++      {admin && <>
++        {button("Details", () => action(row, "Details"))}
++        {["REQUESTED", "UNDER_REVIEW"].includes(row.state) && ["review", "approve", "reject", "extend", ...(row.reason === "not_activated" ? ["activate"] : [])].map(command => button(command, () => action(row, command), explanation.trim().length < 3))}
++        {row.state === "APPROVED" && row.remedy === "refund" && button("Process approved refund", () => action(row, "process"))}
++        {row.state === "PROCESSING" && button("Reconcile gateway status", () => action(row, "reconcile"))}
++      </>}
++    </View>)}
++  </View>;
++}
++
++const useStyles = makeStyles(colors => ({
++  panel: { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.md, padding: spacing.md, gap: spacing.sm },
++  title: { color: colors.onSurface, fontSize: 14, fontWeight: "800" },
++  text: { color: colors.onSurface, fontSize: 12 },
++  input: { color: colors.onSurface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.sm, padding: spacing.sm },
++  button: { backgroundColor: colors.surfaceSecondary, borderRadius: radius.sm, padding: spacing.sm },
++}));

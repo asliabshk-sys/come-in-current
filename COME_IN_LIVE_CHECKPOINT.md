@@ -865,3 +865,7 @@ Starting checkpoint `e4d8f1ea903511b1c1a5f7ad803c24c5dedf1a8b`. Added seller mem
 ## Phase 2 Razorpay local pre-test completion — 2026-11-23 (IST)
 
 Local implementation and verification are complete. Apply `patches/razorpay-pretest.patch` after the Premium completion patch. Hardened capture verification and UI guards and extended disposable-database HTTP and deterministic browser coverage. Focused backend: 94 passed. Full backend: 683 passed, zero failures, five documented skips. Three Chromium fixture flows, five native adapter mocks, TypeScript, targeted ESLint and Expo web export passed. Genuine provider, device and production validation remain deferred. Evidence is in `evidence/phase-2-prelaunch-20261122/razorpay-pretest-20261123/`.
+
+## Premium Membership Balanced Refund Policy — 2026-11-23 IST
+
+Local milestone implemented and verified. Gateway execution remains disabled by default pending owner confirmation and legal review. Added seller requests and history, admin review and verified-outage intake, duplicate capture handling, gateway reconciliation, entitlement holds and remedy audit. Focused backend 19 passed. Full backend 685 passed, zero failed, five skips. Two Chromium fixture checks, TypeScript, targeted ESLint, Expo web and patch application passed. Source is in `patches/membership-balanced-refunds.patch`, with evidence in `evidence/phase-2-prelaunch-20261122/membership-balanced-refunds-20261123/`.
