@@ -19,3 +19,6 @@ GitHub blob `b1e1d2c813185967dde4c979509410a95abd4d30` identified, but binary co
 - No November 22 ZIP bytes, therefore no SHA-256, CRC, manifest or patch inclusion verdict.
 - Safe next method: authorized network-enabled Git/Codex workspace fetches exact Git object `b1e1d2c813185967dde4c979509410a95abd4d30` to isolated directory. If needed, obtain owner authorization to create a temporary GitHub Actions artifact workflow; do not change workflows without approval.
 - After retrieval, compare SHA-256, ZIP CRC, file-level hashes and `patch -p1 --dry-run`/reverse dry-run against isolated copies. Keep Task 3 owner approval pending.
+
+## Workspace blocker update
+Current container Git 2.47.3 exists, but github.com/raw.githubusercontent.com/api.github.com DNS unavailable; cannot clone/fetch. GitHub connector cannot deliver November 22 ZIP binary. No local ZIP. Authentication for terminal GitHub and write permissions from terminal are **NOT VERIFIED**; connector documentation writes are authorized and separately verifiable. Do not claim a network-enabled Codex workspace has been identified/tested. Required: network-enabled authorized workspace with actual `git ls-remote`/clone success, or supported binary-capable GitHub Actions artifact route after owner approval. Then inspect ZIP and Increment 01 patch safely.
