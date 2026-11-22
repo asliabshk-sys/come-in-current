@@ -1052,3 +1052,7 @@ Git checkpoint: final evidence content commit `36436f009e9d9f181f0ddd1f6e07b4f31
 ## Phase 2 Membership integration — 2026-11-22
 
 Status: IN PROGRESS. Seller request UI, payment intent/verified capture adapter, admin lifecycle/reporting UI, and focused contract coverage are implemented. The payment provider remains a live-validation dependency; no payment success is fabricated. Search/Grocery premium visual placement remains pending integration with a shop-bearing discovery result contract. Continue with centralized image moderation and privacy.
+
+## Phase 2 Premium Membership completion — 2026-11-22
+
+**Local implementation and applicable verification: COMPLETE.** Saved as `patches/premium-membership-completion.patch` on top of the sanitized November 22 archive, Task 3 patch and Phase 2 foundation patch. Includes verified membership checkout and lifecycle, exposure rotation and deduplication, Premium-first search with an exact shop override, existing discovery presentation, customer-first offer selection, and seller/admin reporting. Focused backend 61 passed. Full backend 683 passed, 5 skipped and zero failed. TypeScript, targeted ESLint, Expo web and five Chromium smoke checks passed. Genuine Razorpay TEST traffic, native-device acceptance and production rollout remain deferred. See `evidence/phase-2-prelaunch-20261122/premium-completion/IMPLEMENTATION_REPORT.md` for remaining data and refresh limits.

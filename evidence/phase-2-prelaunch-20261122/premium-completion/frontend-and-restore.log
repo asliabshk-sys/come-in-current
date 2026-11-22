@@ -1,0 +1,5 @@
+TypeScript PASS
+Targeted ESLint PASS
+Web Bundled 2906ms ../../COME-IN-COMPLETE-MASTER-SOURCE-20261115/frontend/node_modules/expo-router/entry.js (1620 modules)
+Expo web export succeeded. Generated files were kept outside Git.
+Forward and reverse patch dry runs passed against the restored application.

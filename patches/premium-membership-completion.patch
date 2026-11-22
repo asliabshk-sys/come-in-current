@@ -1,0 +1,2068 @@
+--- /dev/null
++++ b/backend/premium_exposure.py
+@@ -0,0 +1,118 @@
++"""Shared eligibility and explainable discovery ranking."""
++from collections import defaultdict
++from datetime import timezone
++from hashlib import sha256
++from itertools import groupby
++from math import asin, cos, isfinite, radians, sin, sqrt
++
++
++def utc(value):
++    return value.replace(tzinfo=timezone.utc) if value and value.tzinfo is None else value
++
++
++def entitlement_filter(now):
++    return {"status": "active", "starts_at": {"$lte": now}, "expires_at": {"$gt": now}}
++
++
++def entitled(row, now):
++    start, expiry = utc(row.get("starts_at")), utc(row.get("expires_at"))
++    return row.get("status") == "active" and start is not None and expiry is not None and start <= now < expiry
++
++
++def normalized(value):
++    return " ".join(str(value or "").casefold().split())
++
++
++def relevance(row, query):
++    name = normalized(row.get("name"))
++    if name == query:
++        return 0
++    if query in name:
++        return 1
++    fields = " ".join(normalized(row.get(key)) for key in ("name", "brand", "description", "category_id"))
++    if all(word in fields for word in query.split()):
++        return 2
++    return None
++
++
++def finite_price(value):
++    if isinstance(value, (int, float)) and isfinite(value) and value >= 0:
++        return value
++    return float("inf")
++
++
++def listing_price(row):
++    variants = row.get("variants") or []
++    if variants:
++        return min((finite_price(v.get("price")) for v in variants
++                    if v.get("available") and v.get("stock", 0) > 0), default=float("inf"))
++    return finite_price(row.get("price"))
++
++
++def ranked_search(rows, query, impressions, day):
++    groups = ([], [])
++    for row in rows:
++        score = relevance(row, query)
++        if score is not None:
++            groups[0 if row.get("premium_until") else 1].append((score, row))
++
++    def customer_band(pair):
++        score, row = pair
++        distance = row.get("distance_km")
++        return score, listing_price(row) // 10, distance is None, (distance or 0) // 2
++
++    premium = []
++    for _, group in groupby(sorted(groups[0], key=customer_band), key=customer_band):
++        premium.extend(rotate([row for _, row in group], impressions, day))
++    ordinary = sorted(groups[1], key=lambda pair: (pair[0], listing_price(pair[1]), pair[1]["id"]))
++    return premium + [row for _, row in ordinary]
++
++
++def rotate(rows, impressions, day):
++    by_shop = defaultdict(list)
++    for row in sorted(rows, key=lambda row: (listing_price(row), row["id"])):
++        by_shop[row["shop_id"]].append(row)
++    shops = sorted(by_shop, key=lambda shop: (
++        impressions.get(shop, 0), sha256(f"{day}:{shop}".encode()).digest()
++    ))
++    ranked = []
++    for index in range(max(map(len, by_shop.values()), default=0)):
++        ranked.extend(by_shop[shop][index] for shop in shops if index < len(by_shop[shop]))
++    return ranked
++
++
++def featured_feed(rows, impressions, day):
++    featured = rotate([row for row in rows if row.get("premium_until")], impressions, day)
++    selected = []
++    seen = set()
++    for row in featured:
++        if row["shop_id"] not in seen and len(selected) < 2:
++            selected.append(row)
++            seen.add(row["shop_id"])
++    ids = {row["id"] for row in selected}
++    remaining = [row for row in rows if row["id"] not in ids]
++    ordinary = [row for row in remaining if not row.get("premium_until")]
++    first = ordinary[:4]
++    first_ids = {row["id"] for row in first}
++    return selected + first + [row for row in remaining if row["id"] not in first_ids]
++
++
++def shop_distance(shop, origin):
++    latitude, longitude = shop.get("latitude"), shop.get("longitude")
++    if not origin or not isinstance(latitude, (int, float)) or not isinstance(longitude, (int, float)):
++        return None
++    if not (-90 <= latitude <= 90 and -180 <= longitude <= 180):
++        return None
++    a, b = map(radians, origin)
++    c, d = map(radians, (latitude, longitude))
++    haversine = sin((a - c) / 2) ** 2 + cos(a) * cos(c) * sin((b - d) / 2) ** 2
++    return 6371 * 2 * asin(min(1, sqrt(haversine)))
++
++
++def customer_offer_key(offer):
++    # An equivalent pack at lower customer cost always wins. Membership breaks ties.
++    distance = offer.get("distance_km")
++    cost = offer.get("total_cost")
++    return (offer["price"] if cost is None else cost, offer["price"],
++            distance is None, distance or 0, not offer["premium"],
++            normalized(offer["shop_name"]), offer["product_id"])
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -42,6 +42,7 @@
+ import jwt
+ import requests
+ from bson import ObjectId
++from pymongo import UpdateOne
+ from pymongo.errors import DuplicateKeyError
+ from fastapi import (
+     APIRouter,
+@@ -71,6 +72,7 @@
+ from security_config import cors_origins_from_env
+ from payment_config import razorpay_settings
+ from payment_webhook import event_payload
++from premium_exposure import customer_offer_key, entitlement_filter, entitled, featured_feed, normalized, ranked_search, shop_distance, utc
+ from catalogue_import_engine import process_file as process_catalogue_import_file, process_zip as process_catalogue_import_zip, validate_upload_metadata as validate_catalogue_upload_metadata, MAX_BATCH_FILES as CATALOGUE_IMPORT_MAX_FILES, MAX_FILE_BYTES as CATALOGUE_IMPORT_MAX_FILE_BYTES, MAX_BATCH_TOTAL_BYTES as CATALOGUE_IMPORT_MAX_BATCH_BYTES
+ from catalogue_chand_adapter import interpret_records as interpret_catalogue_records
+ from chand_advertisement_adapter import review_advertisement
+@@ -212,6 +214,7 @@
+     d.pop("password_version", None)
+     # Internal Grocery idempotency/session credentials must never reach clients.
+     d.pop("grocery_idempotency_scope", None)
++    d.pop("membership_version", None)
+     return d
+
+
+@@ -1192,7 +1195,7 @@
+     shop_id: str = Field(min_length=1, max_length=40)
+     title: str = Field(min_length=3, max_length=120)
+     business_name: str = Field(min_length=2, max_length=120)
+-    destination: str = Field(min_length=1, max_length=240, pattern=r"^/(?!/)[A-Za-z0-9_?=&/%.-]+$")
++    destination: str = Field(min_length=1, max_length=240, pattern=r"^/[A-Za-z0-9_?=&%.-][A-Za-z0-9_?=&/%.-]*$")
+     placement: Literal["home_banner", "search_sponsored"] = "home_banner"
+     starts_at: datetime
+     ends_at: datetime
+@@ -1544,9 +1547,30 @@
+ MEMBERSHIP_PRICE_PAISE = 29900
+ MEMBERSHIP_DURATION_DAYS = 30
+
+-async def _membership_entitlement(shop_id: str) -> Optional[dict]:
+-    now = now_utc()
+-    return await db.memberships.find_one({"shop_id": shop_id, "status": "active", "starts_at": {"$lte": now}, "expires_at": {"$gt": now}})
++async def _membership_entitlements(shop_ids, now=None, session=None):
++    ids = list(shop_ids)
++    if not ids:
++        return {}
++    now = now or now_utc()
++    query = {"shop_id": {"$in": ids}, **entitlement_filter(now)}
++    rows = db.memberships.find(query, session=session).sort("expires_at", 1)
++    return {row["shop_id"]: row async for row in rows}
++
++
++async def _membership_entitlement(shop_id: str, session=None) -> Optional[dict]:
++    return (await _membership_entitlements([shop_id], session=session)).get(shop_id)
++
++
++async def _membership_lock(shop_id, session):
++    # All request/activation writes for a shop serialize on the same existing document.
++    await db.shops.update_one({"_id": ObjectId(shop_id)}, {"$inc": {"membership_version": 1}}, session=session)
++
++
++async def _membership_audit(row, actor_id, event, session, **details):
++    await db.membership_audit.insert_one({
++        "membership_id": str(row["_id"]), "actor_id": actor_id, "event": event,
++        "created_at": now_utc(), **details,
++    }, session=session)
+
+
+ def _membership_payment_intent_out(row: dict, key_id: str) -> dict:
+@@ -1560,20 +1584,50 @@
+ @api.get("/shops/{shop_id}/membership")
+ async def shop_membership(shop_id: str, user: dict = Depends(get_current_user)):
+     shop = await _get_shop_or_404(shop_id); _assert_shop_owner(shop, user)
+-    return doc_out(await db.memberships.find_one({"shop_id": shop_id}, sort=[("created_at", -1)]))
++    active = await _membership_entitlement(shop_id)
++    latest = active or await db.memberships.find_one({"shop_id": shop_id}, sort=[("created_at", -1)])
++    return _membership_public(latest)
++
++
++@api.get("/shops/{shop_id}/membership/history")
++async def membership_history(
++    shop_id: str, offset: int = Query(0, ge=0, le=10000), limit: int = Query(20, ge=1, le=100),
++    user: dict = Depends(get_current_user),
++):
++    shop = await _get_shop_or_404(shop_id)
++    _assert_shop_owner(shop, user)
++    cursor = db.memberships.find({"shop_id": shop_id}).sort([("created_at", -1), ("_id", -1)]).skip(offset).limit(limit)
++    return [_membership_public(row) async for row in cursor]
++
+
+ @api.post("/shops/{shop_id}/membership/purchase")
+ async def request_membership(shop_id: str, body: MembershipPurchaseIn, user: dict = Depends(require_role("shopkeeper"))):
+-    if body.shop_id != shop_id: raise HTTPException(status_code=422, detail="Shop id does not match membership request")
+-    shop = await _get_shop_or_404(shop_id); _assert_shop_owner(shop, user)
+-    if await _membership_entitlement(shop_id): raise HTTPException(status_code=409, detail="An active membership already exists")
+-    now = now_utc(); doc = {"shop_id": shop_id, "owner_id": user["id"], "price_paise": MEMBERSHIP_PRICE_PAISE, "duration_days": MEMBERSHIP_DURATION_DAYS, "status": "payment_pending", "idempotency_key": body.idempotency_key, "created_at": now, "updated_at": now}
+-    try: result = await db.memberships.insert_one(doc)
+-    except DuplicateKeyError:
+-        existing = await db.memberships.find_one({"shop_id": shop_id, "idempotency_key": body.idempotency_key}); return doc_out(existing)
+-    doc["_id"] = result.inserted_id
+-    await db.membership_audit.insert_one({"membership_id": str(result.inserted_id), "actor_id": user["id"], "event": "purchase_requested", "created_at": now})
+-    return _membership_public(doc)
++    if body.shop_id != shop_id:
++        raise HTTPException(status_code=422, detail="Shop id does not match membership request")
++    shop = await _get_shop_or_404(shop_id)
++    _assert_shop_owner(shop, user)
++
++    async def create(session):
++        await _membership_lock(shop_id, session)
++        existing = await db.memberships.find_one({"shop_id": shop_id, "idempotency_key": body.idempotency_key}, session=session)
++        if existing:
++            return existing
++        if await _membership_entitlement(shop_id, session=session):
++            raise HTTPException(status_code=409, detail="An active membership already exists")
++        existing = await db.memberships.find_one({
++            "shop_id": shop_id, "status": {"$in": ["payment_pending", "payment_confirmed"]},
++        }, sort=[("created_at", -1)], session=session)
++        if existing:
++            return existing
++        now = now_utc()
++        row = {"shop_id": shop_id, "owner_id": user["id"], "price_paise": MEMBERSHIP_PRICE_PAISE,
++               "duration_days": MEMBERSHIP_DURATION_DAYS, "status": "payment_pending",
++               "idempotency_key": body.idempotency_key, "created_at": now, "updated_at": now}
++        row["_id"] = (await db.memberships.insert_one(row, session=session)).inserted_id
++        await _membership_audit(row, user["id"], "purchase_requested", session)
++        return row
++
++    return _membership_public(await run_transaction(client, create))
+
+
+ @api.post("/shops/{shop_id}/membership/payment-intent")
+@@ -1589,6 +1643,13 @@
+         raise HTTPException(status_code=409, detail="Create a pending membership request before starting payment")
+     if row.get("gateway_order_id"):
+         return _membership_payment_intent_out(row, key_id)
++    claimed = await db.memberships.update_one(
++        {"_id": row["_id"], "status": "payment_pending", "razorpay_intent_state": {"$exists": False},
++         "gateway_order_id": {"$exists": False}, "price_paise": MEMBERSHIP_PRICE_PAISE},
++        {"$set": {"razorpay_intent_state": "creating", "updated_at": now_utc()}},
++    )
++    if claimed.modified_count != 1:
++        raise HTTPException(status_code=409, detail="Payment intent is in progress or requires reconciliation")
+     import requests as http_requests
+     receipt = f"MEM-{str(row['_id'])[-12:]}"
+     try:
+@@ -1602,18 +1663,18 @@
+             raise RuntimeError("Gateway membership intent mismatch")
+     except Exception as exc:
+         logger.warning("Membership gateway intent unavailable: %s", type(exc).__name__)
+-        raise HTTPException(status_code=502, detail="Payment gateway is unavailable; no membership payment was created") from exc
++        raise HTTPException(status_code=502, detail="Payment intent needs reconciliation before retrying") from exc
+     written = await db.memberships.update_one(
+         {"_id": row["_id"], "status": "payment_pending", "gateway_order_id": {"$exists": False}},
+-        {"$set": {"gateway": "razorpay", "gateway_order_id": payload["id"], "updated_at": now_utc()}},
++        {"$set": {"gateway": "razorpay", "gateway_order_id": payload["id"], "razorpay_intent_state": "ready", "updated_at": now_utc()}},
+     )
+     if written.modified_count != 1:
+         fresh = await db.memberships.find_one({"_id": row["_id"]})
+         if fresh and fresh.get("gateway_order_id"):
+             return _membership_payment_intent_out(fresh, key_id)
+         raise HTTPException(status_code=409, detail="Membership payment intent changed; refresh and retry")
+-    await db.membership_audit.insert_one({"membership_id": str(row["_id"]), "actor_id": user["id"], "event": "payment_intent_created", "created_at": now_utc()})
+-    return _membership_payment_intent_out(await db.memberships.find_one({"_id": row["_id"]}), key_id)
++    await _membership_audit(row, user["id"], "payment_intent_created", None)
++    return _membership_payment_intent_out({**row, "gateway_order_id": payload["id"]}, key_id)
+
+
+ @api.post("/shops/{shop_id}/membership/payment-verify")
+@@ -1624,14 +1685,13 @@
+     row = await db.memberships.find_one({"shop_id": shop_id, "owner_id": user["id"], "gateway": "razorpay", "gateway_order_id": body.razorpay_order_id}, sort=[("created_at", -1)])
+     if not row:
+         raise HTTPException(status_code=403, detail="Gateway order does not belong to this membership request")
+-    if row.get("status") == "payment_confirmed" and row.get("gateway_payment_id") == body.razorpay_payment_id:
++    expected = hmac.new(secret.encode(), f"{body.razorpay_order_id}|{body.razorpay_payment_id}".encode(), hashlib.sha256).hexdigest()
++    if not hmac.compare_digest(expected, body.razorpay_signature):
++        raise HTTPException(status_code=400, detail="Payment signature verification failed")
++    if row.get("gateway_payment_id") == body.razorpay_payment_id and row.get("payment_confirmed_at"):
+         return _membership_public(row)
+     if row.get("status") != "payment_pending":
+         raise HTTPException(status_code=409, detail="Membership is not awaiting payment verification")
+-    expected = hmac.new(secret.encode(), f"{body.razorpay_order_id}|{body.razorpay_payment_id}".encode(), hashlib.sha256).hexdigest()
+-    if not hmac.compare_digest(expected, body.razorpay_signature):
+-        await db.membership_audit.insert_one({"membership_id": str(row["_id"]), "actor_id": user["id"], "event": "payment_signature_failed", "created_at": now_utc()})
+-        raise HTTPException(status_code=400, detail="Payment signature verification failed")
+     import requests as http_requests
+     try:
+         response = await asyncio.to_thread(lambda: http_requests.get(
+@@ -1642,53 +1702,268 @@
+             raise RuntimeError("Gateway payment lookup failed")
+     except Exception as exc:
+         raise HTTPException(status_code=502, detail="Payment could not be confirmed with the gateway; membership remains unpaid") from exc
+-    if (payment.get("id") != body.razorpay_payment_id or payment.get("order_id") != body.razorpay_order_id
++    return _membership_public(await _confirm_membership_capture(row, payment, body.razorpay_payment_id, user["id"]))
++
++
++async def _confirm_membership_capture(row, payment, payment_id, actor_id):
++    if (not isinstance(payment, dict) or not payment_id or payment.get("id") != payment_id
++            or payment.get("order_id") != row.get("gateway_order_id")
+             or payment.get("status") != "captured" or payment.get("currency") != "INR"
+-            or payment.get("amount") != int(row["price_paise"])):
++            or type(payment.get("amount")) is not int or payment["amount"] != MEMBERSHIP_PRICE_PAISE
++            or row.get("price_paise") != MEMBERSHIP_PRICE_PAISE):
+         raise HTTPException(status_code=409, detail="Gateway payment is not captured for the exact membership amount")
++
++    async def confirm(session):
++        current = await db.memberships.find_one({"_id": row["_id"]}, session=session)
++        if current and current.get("gateway_payment_id") == payment_id and current.get("payment_confirmed_at"):
++            return current
++        now = now_utc()
++        changes = {"status": "payment_confirmed", "gateway_payment_id": payment_id,
++                   "payment_confirmed_at": now, "updated_at": now}
++        updated = await db.memberships.update_one(
++            {"_id": row["_id"], "status": "payment_pending", "gateway_order_id": row["gateway_order_id"]},
++            {"$set": changes}, session=session,
++        )
++        if updated.modified_count != 1:
++            raise HTTPException(status_code=409, detail="Membership payment state changed; refresh before retrying")
++        await _membership_audit(row, actor_id, "payment_confirmed", session)
++        return {**current, **changes}
++
++    return await run_transaction(client, confirm)
++
++
++def _membership_public(row: Optional[dict]) -> Optional[dict]:
++    if not row:
++        return None
++    result = doc_out(row)
++    for field in ("owner_id", "gateway_order_id", "gateway_payment_id", "idempotency_key",
++                  "razorpay_intent_state", "updated_by"):
++        result.pop(field, None)
+     now = now_utc()
+-    updated = await db.memberships.update_one(
+-        {"_id": row["_id"], "status": "payment_pending", "gateway_order_id": body.razorpay_order_id},
+-        {"$set": {"status": "payment_confirmed", "gateway_payment_id": body.razorpay_payment_id, "payment_confirmed_at": now, "updated_at": now}},
+-    )
+-    if updated.modified_count != 1:
+-        raise HTTPException(status_code=409, detail="Membership payment state changed; refresh before retrying")
+-    await db.membership_audit.insert_one({"membership_id": str(row["_id"]), "actor_id": user["id"], "event": "payment_confirmed", "gateway_payment_id": body.razorpay_payment_id, "created_at": now})
+-    return _membership_public(await db.memberships.find_one({"_id": row["_id"]}))
+-
+-def _membership_public(row: Optional[dict]) -> Optional[dict]:
+-    if not row: return None
+-    result = doc_out(row); result["benefits"] = {"gold_highlight": result.get("status") == "active", "crown_badge": result.get("status") == "active", "sponsored_placement": result.get("status") == "active"}; return result
++    active = entitled(row, now)
++    expires_at = utc(row.get("expires_at"))
++    if result["status"] == "active" and expires_at and expires_at <= now:
++        result["status"] = "expired"
++    result["remaining_days"] = math.ceil((expires_at - now).total_seconds() / 86400) if active else 0
++    result["renewal_eligible"] = not active and result["status"] in {"expired", "cancelled", "suspended"}
++    result["payment_verified"] = bool(row.get("payment_confirmed_at") and row.get("gateway_payment_id"))
++    result["benefits"] = {"gold_highlight": active, "crown_badge": active, "sponsored_placement": False}
++    return result
++
+
+ @api.patch("/admin/memberships/{membership_id}")
+ async def admin_membership_decision(membership_id: str, body: MembershipDecisionIn, user: dict = Depends(require_role("admin"))):
+-    try: oid = ObjectId(membership_id)
+-    except Exception as exc: raise HTTPException(status_code=404, detail="Membership not found") from exc
+-    row = await db.memberships.find_one({"_id": oid})
+-    if not row: raise HTTPException(status_code=404, detail="Membership not found")
+-    now = now_utc(); updates = {"updated_at": now, "admin_reason": body.reason, "updated_by": user["id"]}
+-    if body.decision == "activate":
+-        if row.get("status") != "payment_confirmed": raise HTTPException(status_code=409, detail="Membership needs verified payment confirmation before activation")
+-        updates.update({"status": "active", "starts_at": now, "expires_at": now + timedelta(days=MEMBERSHIP_DURATION_DAYS)})
+-    else: updates["status"] = "suspended" if body.decision == "suspend" else "cancelled"
+-    await db.memberships.update_one({"_id": oid}, {"$set": updates}); await db.membership_audit.insert_one({"membership_id": membership_id, "actor_id": user["id"], "event": body.decision, "reason": body.reason, "created_at": now})
+-    return _membership_public(await db.memberships.find_one({"_id": oid}))
++    if not ObjectId.is_valid(membership_id):
++        raise HTTPException(status_code=404, detail="Membership not found")
++    oid = ObjectId(membership_id)
++
++    async def decide(session):
++        row = await db.memberships.find_one({"_id": oid}, session=session)
++        if not row:
++            raise HTTPException(status_code=404, detail="Membership not found")
++        await _membership_lock(row["shop_id"], session)
++        now = now_utc()
++        updates = {"updated_at": now, "admin_reason": body.reason, "updated_by": user["id"]}
++        if body.decision == "activate":
++            if (row.get("status") != "payment_confirmed" or not row.get("payment_confirmed_at")
++                    or not row.get("gateway_payment_id") or row.get("price_paise") != MEMBERSHIP_PRICE_PAISE):
++                raise HTTPException(status_code=409, detail="Membership needs verified payment confirmation before activation")
++            if await _membership_entitlement(row["shop_id"], session=session):
++                raise HTTPException(status_code=409, detail="An active membership already exists")
++            updates.update({"status": "active", "starts_at": now, "expires_at": now + timedelta(days=MEMBERSHIP_DURATION_DAYS)})
++        elif body.decision == "suspend" and entitled(row, now):
++            updates["status"] = "suspended"
++        elif body.decision == "cancel" and row.get("status") in {"active", "suspended", "payment_pending", "payment_confirmed"}:
++            if row.get("status") == "payment_pending" and (row.get("gateway_order_id") or row.get("razorpay_intent_state")):
++                raise HTTPException(status_code=409, detail="Reconcile the payment intent before cancelling")
++            updates["status"] = "cancelled"
++        else:
++            raise HTTPException(status_code=409, detail="Membership cannot transition from its current state")
++        updated = await db.memberships.update_one(
++            {"_id": oid, "status": row["status"]}, {"$set": updates}, session=session,
++        )
++        if updated.modified_count != 1:
++            raise HTTPException(status_code=409, detail="Membership state changed")
++        await _membership_audit(row, user["id"], body.decision, session, reason=body.reason)
++        return {**row, **updates}
++
++    return _membership_public(await run_transaction(client, decide))
+
+
+ @api.get("/admin/memberships")
+-async def admin_memberships(user: dict = Depends(require_role("admin"))):
+-    """Operations view: requests are not activated here without verified payment."""
+-    return [_membership_public(row) async for row in db.memberships.find({}).sort("created_at", -1).limit(500)]
++async def admin_memberships(
++    shop_id: Optional[str] = Query(None, pattern=r"^[0-9a-f]{24}$"),
++    offset: int = Query(0, ge=0, le=10000), limit: int = Query(100, ge=1, le=200),
++    user: dict = Depends(require_role("admin")),
++):
++    query = {"shop_id": shop_id} if shop_id else {}
++    rows = db.memberships.find(query).sort([("created_at", -1), ("_id", -1)]).skip(offset).limit(limit)
++    return [_membership_public(row) async for row in rows]
++
++
++def _premium_period(start, end):
++    now = now_utc()
++    start = utc(start) or now - timedelta(days=30)
++    end = utc(end) or now
++    if end <= start or end - start > timedelta(days=366) or end > now:
++        raise HTTPException(status_code=422, detail="Use an ordered past date range of up to 366 days")
++    return start, end
++
++
++async def _premium_metrics(start, end, shop_id=None, *, breakdown=False, offset=0, limit=50):
++    query = {"created_at": {"$gte": start, "$lt": end}}
++    if shop_id:
++        query["shop_id"] = shop_id
++    counts = {kind: 0 for kind in ("opportunity", "impression", "click", "product_view", "add_to_cart")}
++    group = {"$group": {"_id": "$kind", "count": {"$sum": 1}}}
++    for row in await db.premium_exposure.aggregate([{"$match": query}, group]).to_list(length=5):
++        counts[row["_id"]] = row["count"]
++    counts["ctr"] = counts["click"] / counts["impression"] if counts["impression"] else None
++    search = await db.premium_exposure.aggregate([
++        {"$match": {**query, "surface": "search"}}, group,
++    ]).to_list(length=5)
++    counts["search"] = {row["_id"]: row["count"] for row in search}
++    if breakdown:
++        counts["by_shop"] = await db.premium_exposure.aggregate([
++            {"$match": query},
++            {"$group": {"_id": {"shop_id": "$shop_id", "kind": "$kind"}, "count": {"$sum": 1}}},
++            {"$group": {"_id": "$_id.shop_id", "metrics": {"$push": {"k": "$_id.kind", "v": "$count"}}}},
++            {"$sort": {"_id": 1}}, {"$skip": offset}, {"$limit": limit},
++            {"$project": {"_id": 0, "shop_id": "$_id", "metrics": {"$arrayToObject": "$metrics"}}},
++        ]).to_list(length=limit)
++    return counts
++
++
++@api.get("/shops/{shop_id}/membership/analytics")
++async def seller_membership_analytics(
++    shop_id: str, start: Optional[datetime] = None, end: Optional[datetime] = None,
++    user: dict = Depends(get_current_user),
++):
++    shop = await _get_shop_or_404(shop_id)
++    _assert_shop_owner(shop, user)
++    start, end = _premium_period(start, end)
++    return await _premium_metrics(start, end, shop_id)
+
+
+ @api.get("/admin/memberships/report")
+-async def admin_membership_report(user: dict = Depends(require_role("admin"))):
++async def admin_membership_report(
++    start: Optional[datetime] = None, end: Optional[datetime] = None,
++    shop_id: Optional[str] = Query(None, pattern=r"^[0-9a-f]{24}$"),
++    offset: int = Query(0, ge=0, le=10000), limit: int = Query(50, ge=1, le=100),
++    user: dict = Depends(require_role("admin")),
++):
++    start, end = _premium_period(start, end)
+     now = now_utc()
+-    rows = [row async for row in db.memberships.find({})]
+-    active = [row for row in rows if row.get("status") == "active" and row.get("expires_at") and row["expires_at"] > now]
+-    # Revenue is recognized only for server-verified captured payments, never for requests.
+-    confirmed = [row for row in rows if row.get("status") in {"payment_confirmed", "active", "suspended"}]
+-    return {"total_requests": len(rows), "active": len(active), "payment_pending": sum(row.get("status") == "payment_pending" for row in rows), "payment_confirmed": sum(row.get("status") == "payment_confirmed" for row in rows), "verified_revenue_paise": sum(int(row.get("price_paise", 0)) for row in confirmed), "currency": "INR"}
++    scope = {"shop_id": shop_id} if shop_id else {}
++    active = await db.memberships.distinct("shop_id", {**scope, **entitlement_filter(now)})
++    status_rows = await db.memberships.aggregate([
++        {"$match": scope},
++        {"$group": {"_id": "$status", "count": {"$sum": 1}}},
++    ]).to_list(length=10)
++    states = {row["_id"]: row["count"] for row in status_rows}
++    revenue = await db.memberships.aggregate([
++        {"$match": {**scope, "price_paise": MEMBERSHIP_PRICE_PAISE,
++                    "gateway_payment_id": {"$type": "string", "$ne": ""},
++                    "payment_confirmed_at": {"$gte": start, "$lt": end}}},
++        {"$group": {"_id": "$gateway_payment_id", "paise": {"$max": "$price_paise"}}},
++        {"$group": {"_id": None, "paise": {"$sum": "$paise"}}},
++    ]).to_list(length=1)
++    return {
++        "total_requests": sum(states.values()), "active": len(active),
++        "payment_pending": states.get("payment_pending", 0), "payment_confirmed": states.get("payment_confirmed", 0),
++        "suspended": states.get("suspended", 0),
++        "expired": await db.memberships.count_documents({**scope, "status": "active", "expires_at": {"$lte": now}}),
++        "verified_revenue_paise": revenue[0]["paise"] if revenue else 0, "currency": "INR",
++        "exposure": await _premium_metrics(start, end, shop_id, breakdown=True, offset=offset, limit=limit),
++        "orders": None, "completed_orders": None,
++    }
++
++
++class PremiumDisplayEvent(BaseModel):
++    token: str = Field(min_length=20, max_length=2048)
++    kind: Literal["impression", "click", "product_view", "add_to_cart"]
++
++
++def _premium_viewer(user_id, day):
++    return hmac.new(_jwt_secret().encode(), f"premium:{day}:{user_id}".encode(), hashlib.sha256).hexdigest()
++
++
++def _premium_event_id(viewer, surface, shop_id, kind):
++    return f"{viewer}:{surface}:{shop_id}:{kind}"
++
++
++async def _premium_rank_context(rows, surface, now):
++    day = now.replace(hour=0, minute=0, second=0, microsecond=0)
++    ids = {row["shop_id"] for row in rows if row.get("premium_until")}
++    if not ids:
++        return {}, day.date().isoformat()
++    counts = await db.premium_exposure.aggregate([
++        {"$match": {"shop_id": {"$in": list(ids)}, "kind": "impression", "surface": surface,
++                    "created_at": {"$gte": day - timedelta(days=14), "$lt": day}}},
++        {"$group": {"_id": "$shop_id", "count": {"$sum": 1}}},
++    ]).to_list(length=len(ids))
++    return {row["_id"]: row["count"] for row in counts}, day.date().isoformat()
++
++
++async def _premium_issue(rows, surface, user, day, counts, now):
++    if not user or user.get("role") != "customer":
++        return
++    viewer = _premium_viewer(user["id"], day)
++    writes = {}
++    for position, row in enumerate(rows, 1):
++        until = row.get("premium_until")
++        if not until:
++            continue
++        shop_id = row["shop_id"]
++        key = _premium_event_id(viewer, surface, shop_id, "opportunity")
++        writes.setdefault(key, UpdateOne({"_id": key}, {"$setOnInsert": {
++            "shop_id": shop_id, "surface": surface, "kind": "opportunity",
++            "product_id": row["id"], "position": position,
++            "prior_impressions": counts.get(shop_id, 0), "created_at": now,
++        }}, upsert=True))
++        end_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
++        row["premium_event_token"] = jwt.encode({
++            "type": "premium_display", "viewer": viewer, "day": day, "surface": surface,
++            "shop": shop_id, "product": row["id"], "exp": min(until, now + timedelta(minutes=15), end_of_day),
++        }, _jwt_secret(), algorithm=JWT_ALG)
++    if writes:
++        await db.premium_exposure.bulk_write(list(writes.values()), ordered=False)
++
++
++@api.post("/catalog/premium-events")
++async def premium_display_event(body: PremiumDisplayEvent, user: dict = Depends(require_role("customer"))):
++    try:
++        claim = jwt.decode(body.token, _jwt_secret(), algorithms=[JWT_ALG])
++        now = now_utc()
++        day = now.date().isoformat()
++        viewer = _premium_viewer(user["id"], day)
++        if (claim["type"] != "premium_display" or claim["day"] != day
++                or not hmac.compare_digest(claim["viewer"], viewer)
++                or claim["surface"] not in {"home", "grocery", "category", "search"}):
++            raise ValueError
++        shop_id, surface, product_id = claim["shop"], claim["surface"], claim["product"]
++    except (jwt.InvalidTokenError, KeyError, TypeError, ValueError):
++        raise HTTPException(status_code=403, detail="Display token is invalid or expired")
++    if not ObjectId.is_valid(shop_id) or not ObjectId.is_valid(product_id):
++        raise HTTPException(status_code=403, detail="Display token has invalid identifiers")
++    shop = await db.shops.find_one({"_id": ObjectId(shop_id), "status": "approved"})
++    product = await db.products.find_one({"_id": ObjectId(product_id), "shop_id": shop_id, "available": True})
++    if not shop or not product or not await _membership_entitlement(shop_id):
++        return {"recorded": False}
++    opportunity = _premium_event_id(viewer, surface, shop_id, "opportunity")
++    if not await db.premium_exposure.find_one({"_id": opportunity}):
++        return {"recorded": False}
++    if body.kind != "impression":
++        impression = _premium_event_id(viewer, surface, shop_id, "impression")
++        if not await db.premium_exposure.find_one({"_id": impression}):
++            return {"recorded": False}
++    key = _premium_event_id(viewer, surface, shop_id, body.kind)
++    try:
++        await db.premium_exposure.insert_one({"_id": key, "shop_id": shop_id, "surface": surface,
++                                             "kind": body.kind, "product_id": product_id, "created_at": now})
++    except DuplicateKeyError:
++        return {"recorded": False}
++    return {"recorded": True}
+
+
+ @api.post("/advertisements/{advertisement_id}/events/{event_type}")
+@@ -1825,11 +2100,15 @@
+         filt["online"] = True
+     if online == "false":
+         filt["online"] = False
+-    cursor = db.shops.find(filt).sort("created_at", -1)
++    shops = await db.shops.find(filt).sort("created_at", -1).to_list(length=None)
++    entitlements = await _membership_entitlements(str(row["_id"]) for row in shops)
+     rows = []
+-    async for shop_row in cursor:
++    for shop_row in shops:
+         public_row = doc_out(shop_row)
+         public_row.pop("owner_id", None)
++        membership = entitlements.get(public_row["id"])
++        if membership:
++            public_row["premium_until"] = utc(membership["expires_at"])
+         rows.append(public_row)
+     if q:
+         ql = q.lower()
+@@ -3194,6 +3473,10 @@
+     master_product_id: str = Query(min_length=1, max_length=80),
+     variant_id: str = Query(min_length=1, max_length=80),
+     sell_by: Optional[Literal["pack", "weight", "volume"]] = Query(default=None),
++    fulfillment: Optional[Literal["delivery", "pickup"]] = None,
++    quantity: int = Query(1, gt=0, le=10000),
++    latitude: Optional[float] = Query(None, ge=-90, le=90),
++    longitude: Optional[float] = Query(None, ge=-180, le=180),
+ ):
+     """Compare only offers linked to the exact canonical master product variant and selling mode."""
+     try:
+@@ -3208,18 +3491,37 @@
+         raise HTTPException(status_code=404, detail="Master product variant not found")
+     shop_cursor = db.shops.find({"status": "approved"})
+     shops = {str(shop["_id"]): shop async for shop in shop_cursor}
++    entitlements = await _membership_entitlements(shops)
+     offers = []
+     measured_mode = sell_by in MEASURED_SELL_BY
++    origin = _optional_coordinates(latitude, longitude)
+     # Measured offers (price per kg / L) are never compared against fixed packs.
+     mode_filter = {"sell_by": sell_by} if measured_mode else {"sell_by": {"$nin": list(MEASURED_SELL_BY)}}
+     cursor = db.products.find({"master_product_id": str(master_oid), "master_variant_id": variant_id, "available": True, "stock": {"$gt": 0}, **mode_filter}).sort("price", 1).limit(100)
+     async for product in cursor:
+         shop = shops.get(str(product.get("shop_id", "")))
+-        if not shop:
++        if not shop or product.get("stock", 0) < quantity:
+             continue
+-        offers.append({"product_id": str(product["_id"]), "shop_id": str(product.get("shop_id", "")), "shop_name": shop.get("name", ""), "shop_type": shop.get("shop_type", "offline"), "name": master.get("name", product.get("name", "")), "brand": master.get("brand", ""), "master_product_id": str(master_oid), "variant_id": variant_id, "unit": MEASURED_SELL_BY[sell_by][1] if measured_mode else variant["unit"], "price": float(product.get("price", 0)), "mrp": product.get("mrp"), "stock": int(product.get("stock", 0)), "updated_at": product.get("updated_at"), "sell_by": sell_by if measured_mode else "pack", "price_basis": f"per_{MEASURED_SELL_BY[sell_by][1].lower()}" if measured_mode else "per_pack"})
+-    offers.sort(key=lambda offer: (offer["price"], offer["shop_name"].casefold()))
+-    return {"master_product_id": str(master_oid), "product_name": master.get("name", ""), "brand": master.get("brand", ""), "variant_id": variant_id, "unit": MEASURED_SELL_BY[sell_by][1] if measured_mode else variant["unit"], "sell_by": sell_by if measured_mode else "pack", "offers": offers, "offer_count": len(offers), "lowest_price": offers[0]["price"] if offers else None, "last_updated": max((o["updated_at"] for o in offers if o.get("updated_at")), default=None)}
++        if fulfillment and not shop.get(f"{fulfillment}_available"):
++            continue
++        distance = shop_distance(shop, origin)
++        radius = shop.get("delivery_radius_km")
++        if fulfillment == "delivery" and distance is not None and isinstance(radius, (float, int)) and radius > 0 and distance > radius:
++            continue
++        price = float(product.get("price", 0))
++        line = {"price": price, "qty": quantity}
++        if measured_mode:
++            measure = product.get("measure") or {}
++            minimum = int(measure.get("min_qty", 1))
++            step = max(1, int(measure.get("step", 1)))
++            if quantity != 1 and (quantity < minimum or quantity > int(measure.get("max_qty", 10000)) or (quantity - minimum) % step):
++                continue
++            line["line_total"] = _measured_line_total(price, quantity)
++        cost = _quote_totals([line], fulfillment)["total"] if fulfillment else None
++        offers.append({"total_cost": cost, "distance_km": round(distance, 2) if distance is not None else None,
++                       "premium": str(shop["_id"]) in entitlements, "product_id": str(product["_id"]), "shop_id": str(product.get("shop_id", "")), "shop_name": shop.get("name", ""), "shop_type": shop.get("shop_type", "offline"), "name": master.get("name", product.get("name", "")), "brand": master.get("brand", ""), "master_product_id": str(master_oid), "variant_id": variant_id, "unit": MEASURED_SELL_BY[sell_by][1] if measured_mode else variant["unit"], "price": float(product.get("price", 0)), "mrp": product.get("mrp"), "stock": int(product.get("stock", 0)), "updated_at": product.get("updated_at"), "sell_by": sell_by if measured_mode else "pack", "price_basis": f"per_{MEASURED_SELL_BY[sell_by][1].lower()}" if measured_mode else "per_pack"})
++    offers.sort(key=customer_offer_key)
++    return {"master_product_id": str(master_oid), "product_name": master.get("name", ""), "brand": master.get("brand", ""), "variant_id": variant_id, "unit": MEASURED_SELL_BY[sell_by][1] if measured_mode else variant["unit"], "sell_by": sell_by if measured_mode else "pack", "offers": offers, "offer_count": len(offers), "lowest_price": min((offer["price"] for offer in offers), default=None), "last_updated": max((o["updated_at"] for o in offers if o.get("updated_at")), default=None)}
+
+
+
+@@ -3380,8 +3682,7 @@
+     return rows
+
+
+-@api.get("/catalog/products")
+-async def list_catalog_products():
++async def _catalog_rows(category=None, *, premium=False, now=None, search=None, origin=None):
+     """Public Grocery catalog from eligible products in every approved shop.
+
+     Approved shops are included whether online or offline. Demo products are
+@@ -3393,10 +3694,19 @@
+     if not shops_by_id:
+         return []
+
++    entitlements = await _membership_entitlements(shops_by_id, now=now) if premium else {}
++    # Apply an escaped AND-of-terms filter before ranking in Python. Premium
++    # status cannot make an unrelated product enter this candidate set.
++    words = search.split() if search else []
++    fields = ("name", "brand", "description", "category_id")
++    term_filter = [{"$or": [{field: {"$regex": re.escape(word), "$options": "i"}} for field in fields]}
++                   for word in words]
+     product_cursor = db.products.find(
+         {
++            **({"$and": term_filter} if term_filter else {}),
+             "shop_id": {"$in": list(shops_by_id.keys())},
+             "available": True,
++            **({"category_id": category} if category else {}),
+             "$or": [
+                 {"stock": {"$gt": 0}, "$or": [{"variants": {"$exists": False}}, {"variants": []}]},
+                 {"variants": {"$elemMatch": {"available": True, "stock": {"$gt": 0}}}},
+@@ -3416,8 +3726,73 @@
+         row.pop("owner_id", None)
+         row["shop_name"] = shop.get("name", "")
+         row["shop_type"] = shop.get("shop_type", "offline")
++        if origin:
++            distance = shop_distance(shop, origin)
++            if distance is not None:
++                row["distance_km"] = round(distance, 2)
++        membership = entitlements.get(row["shop_id"])
++        if membership:
++            row["premium_until"] = utc(membership["expires_at"])
+         rows.append(row)
+     return rows
++
++
++@api.get("/catalog/products")
++async def list_catalog_products(
++    response: Response,
++    surface: Optional[Literal["home", "grocery", "category"]] = None,
++    category: Optional[str] = Query(None, max_length=80),
++    user: Optional[dict] = Depends(get_current_user_optional),
++):
++    now = now_utc()
++    rows = await _catalog_rows(category, premium=surface is not None, now=now)
++    if surface:
++        response.headers["Cache-Control"] = "private, no-store"
++        counts, day = await _premium_rank_context(rows, surface, now)
++        rows = featured_feed(rows, counts, day)
++        if surface == "home":
++            await _premium_issue(rows[:6], surface, user, day, counts, now)
++        else:
++            await _premium_issue(rows[:100], surface, user, day, counts, now)
++    return rows
++
++
++def _optional_coordinates(latitude, longitude):
++    if (latitude is None) != (longitude is None):
++        raise HTTPException(status_code=422, detail="Supply both latitude and longitude")
++    return (latitude, longitude) if latitude is not None else None
++
++
++@api.get("/catalog/search")
++async def search_catalog(
++    response: Response,
++    q: str = Query(min_length=1, max_length=120),
++    category: Optional[str] = Query(None, max_length=80),
++    offset: int = Query(0, ge=0, le=10000), limit: int = Query(40, ge=1, le=100),
++    latitude: Optional[float] = Query(None, ge=-90, le=90),
++    longitude: Optional[float] = Query(None, ge=-180, le=180),
++    user: Optional[dict] = Depends(get_current_user_optional),
++):
++    response.headers["Cache-Control"] = "private, no-store"
++    origin = _optional_coordinates(latitude, longitude)
++    query = normalized(q)
++    if not query:
++        raise HTTPException(status_code=422, detail="Search query is empty")
++    exact = [{"id": str(row["_id"]), "name": row["name"], "area": row.get("area", "")}
++             async for row in db.shops.find({"status": "approved"}, {"name": 1, "area": 1}).sort("_id", 1)
++             if normalized(row.get("name")) == query]
++    if exact:
++        return {"shops": exact[offset:offset + limit], "premium": [], "other": [],
++                "next_offset": offset + limit if len(exact) > offset + limit else None}
++    now = now_utc()
++    rows = await _catalog_rows(category, premium=True, now=now, search=query, origin=origin)
++    counts, day = await _premium_rank_context(rows, "search", now)
++    ranked = ranked_search(rows, query, counts, day)
++    page = ranked[offset:offset + limit]
++    await _premium_issue(page, "search", user, day, counts, now)
++    return {"shops": [], "premium": [r for r in page if r.get("premium_until")],
++            "other": [r for r in page if not r.get("premium_until")],
++            "next_offset": offset + limit if len(ranked) > offset + limit else None}
+
+
+ @api.patch("/products/{product_id}")
+@@ -5917,6 +6292,12 @@
+     if event == "payment.captured" and entity.get("order_id") and await _handle_grocery_webhook_capture(entity):
+         await _record_razorpay_event(event_id, event, body_hash, settings.mode, order_kind="grocery")
+         return {"received": True, "order_kind": "grocery"}
++    if event == "payment.captured" and entity.get("order_id"):
++        membership = await db.memberships.find_one({"gateway_order_id": entity["order_id"], "gateway": "razorpay"})
++        if membership:
++            await _confirm_membership_capture(membership, entity, entity.get("id"), "razorpay_webhook")
++            await _record_razorpay_event(event_id, event, body_hash, settings.mode, order_kind="membership")
++            return {"received": True, "order_kind": "membership"}
+     if event=="payment.captured" and entity.get("order_id"):
+         payment=await db.restaurant_payments.find_one({"gateway_order_id":entity["order_id"]})
+         if payment:
+@@ -6428,6 +6809,12 @@
+     await db.advertisement_audit.create_index([("advertisement_id", 1), ("created_at", -1)])
+     await db.memberships.create_index([("shop_id", 1), ("idempotency_key", 1)], unique=True)
+     await db.memberships.create_index([("shop_id", 1), ("status", 1), ("expires_at", 1)])
++    await db.memberships.create_index([("shop_id", 1), ("created_at", -1)])
++    await db.memberships.create_index("gateway_order_id", unique=True, sparse=True)
++    await db.memberships.create_index("gateway_payment_id", unique=True, sparse=True)
++    await db.premium_exposure.create_index([("surface", 1), ("kind", 1), ("created_at", -1), ("shop_id", 1)])
++    await db.premium_exposure.create_index([("shop_id", 1), ("created_at", -1)])
++    await db.premium_exposure.create_index("created_at", expireAfterSeconds=31708800)
+     await db.membership_audit.create_index([("membership_id", 1), ("created_at", -1)])
+     await db.restaurants.create_index("owner_id")
+     await db.restaurants.create_index([("status", 1), ("available", 1), ("city", 1)])
+--- a/backend/tests/test_frontend_contracts.py
++++ b/backend/tests/test_frontend_contracts.py
+@@ -130,7 +130,8 @@
+     shopping_cart = (ROOT / "frontend/src/store/cart.tsx").read_text()
+     restaurant_cart = (ROOT / "frontend/src/restaurant/cart.ts").read_text()
+     assert "export function searchProducts(query: string): Product[]" in catalog
+-    assert 'allProducts.filter' in search
++    assert '/catalog/search?' in search
++    assert '/restaurant/' not in search
+     assert 'useCatalogProducts' in search
+     assert '"@comein_cart_v1"' in shopping_cart
+     assert "'@comein_restaurant_cart_v1'" in restaurant_cart
+--- a/backend/tests/test_image_upload_type_boundary.py
++++ b/backend/tests/test_image_upload_type_boundary.py
+@@ -12,7 +12,9 @@
+
+ def upload_endpoint(content_type, data):
+     path = Path(__file__).parents[1] / "server.py"
+-    node = next(n for n in ast.parse(path.read_text()).body if isinstance(n, ast.AsyncFunctionDef) and n.name == "upload_image")
++    tree = ast.parse(path.read_text())
++    node = next(n for n in tree.body if isinstance(n, ast.AsyncFunctionDef) and n.name == "upload_image")
++    signature = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "_validated_image_signature")
+     node.decorator_list = []; node.args.defaults = []
+     for arg in node.args.args: arg.annotation = None
+     writes = []
+@@ -24,7 +26,7 @@
+            "MAX_UPLOAD_BYTES": 5 * 1024 * 1024, "HTTPException": HTTPException,
+            "mimetypes": mimetypes, "uuid": uuid, "APP_NAME": "local-test",
+            "put_object": put, "db": SimpleNamespace(files=SimpleNamespace(insert_one=insert)), "now_utc": lambda: None}
+-    exec(compile(ast.Module(body=[node], type_ignores=[]), str(path), "exec"), env)
++    exec(compile(ast.Module(body=[signature, node], type_ignores=[]), str(path), "exec"), env)
+     return env["upload_image"](SimpleNamespace(content_type=content_type, filename="upload", read=read), {"id": "local-owner"}), writes
+
+ @pytest.mark.parametrize("mime", ["image/jpeg", "image/png", "image/gif", "image/webp"])
+--- a/backend/tests/test_mongo_portability_tool.py
++++ b/backend/tests/test_mongo_portability_tool.py
+@@ -38,19 +38,19 @@
+
+ def test_index_inventory_includes_both_startup_initializers_exactly_once():
+     specs = comein_mongo.index_specs()
+-    assert len(specs) == 67
++    assert len(specs) == 81
+     assert Counter(spec["initializer"] for spec in specs) == {
+-        "_startup": 61,
++        "_startup": 75,
+         "ensure_delivery_partner_indexes": 6,
+     }
+-    assert len({(spec["collection"], tuple(spec["keys"]), repr(sorted(spec["options"].items()))) for spec in specs}) == 67
++    assert len({(spec["collection"], tuple(spec["keys"]), repr(sorted(spec["options"].items()))) for spec in specs}) == 81
+
+
+-def test_spec_and_init_use_complete_67_index_inventory():
++def test_spec_and_init_use_complete_81_index_inventory():
+     db = _Database()
+     result = comein_mongo.init_db(db)
+-    assert result["indexes_ensured"] == 67
+-    assert sum(len(collection.indexes) for collection in db.collections.values()) == 67
++    assert result["indexes_ensured"] == 81
++    assert sum(len(collection.indexes) for collection in db.collections.values()) == 81
+     assert comein_mongo.missing_indexes(db) == []
+
+
+@@ -75,7 +75,7 @@
+     assert any(spec["collection"] in entry for entry in comein_mongo.missing_indexes(db))
+
+
+-def test_health_reports_all_67_indexes_and_index_status(monkeypatch):
++def test_health_reports_all_81_indexes_and_index_status(monkeypatch):
+     db = _Database()
+     comein_mongo.init_db(db)
+
+@@ -102,7 +102,7 @@
+     monkeypatch.setattr(comein_mongo, "client_for", lambda _url: _Client())
+     monkeypatch.setattr(comein_mongo, "verify_transactions", lambda _client, _db: {"ok": True})
+     result = comein_mongo.health("mongodb://localhost:27017", "comein_test")
+-    assert result["indexes_expected"] == 67
++    assert result["indexes_expected"] == 81
+     assert result["indexes_missing"] == []
+     assert result["indexes_ok"] is True
+     assert result["ok"] is True
+@@ -144,14 +144,14 @@
+ def test_index_init_returns_only_after_all_declared_indexes_verify():
+     db = _Database()
+     result = comein_mongo.init_db(db)
+-    assert result["indexes_ensured"] == 67
+-    assert result["indexes_verified"] == 67
++    assert result["indexes_ensured"] == 81
++    assert result["indexes_verified"] == 81
+
+
+ def test_application_collection_inventory_includes_catalogue_audit_and_payment_collections():
+     collections = set(comein_mongo.collections_used())
+-    assert len(collections) == 52
+-    assert {"catalogue_import_jobs", "catalogue_import_audit", "grocery_payments", "restaurant_payments", "financial_ledger", "security_locks"} <= collections
++    assert len(collections) == 58
++    assert {"catalogue_import_jobs", "catalogue_import_audit", "grocery_payments", "restaurant_payments", "financial_ledger", "security_locks", "premium_exposure"} <= collections
+
+
+ def test_health_never_emits_the_connection_uri(monkeypatch):
+--- a/backend/tests/test_online_shop_product_listing_contract.py
++++ b/backend/tests/test_online_shop_product_listing_contract.py
+@@ -25,7 +25,7 @@
+
+
+ def test_pending_shop_products_are_private_but_owner_can_manage_drafts():
+-    route = SERVER.split('@api.get("/shops/{shop_id}/products")', 1)[1].split('@api.get("/catalog/products")', 1)[0]
++    route = SERVER.split('@api.get("/shops/{shop_id}/products")', 1)[1].split('async def _catalog_rows', 1)[0]
+     assert 'Depends(get_current_user_optional)' in route
+     assert 'shop.get("status") != "approved"' in route
+     assert 'shop.get("owner_id") != user.get("id")' in route
+@@ -33,7 +33,7 @@
+
+
+ def test_public_catalog_only_uses_approved_shop_records_and_eligible_stock():
+-    route = SERVER.split('@api.get("/catalog/products")', 1)[1].split('@api.patch("/products/{product_id}")', 1)[0]
++    route = SERVER.split('async def _catalog_rows', 1)[1].split('@api.patch("/products/{product_id}")', 1)[0]
+     assert 'db.shops.find({"status": "approved"})' in route
+     assert '"available": True' in route
+     assert '"stock": {"$gt": 0}' in route
+--- a/backend/tests/test_phase2_membership_contract.py
++++ b/backend/tests/test_phase2_membership_contract.py
+@@ -11,7 +11,7 @@
+     assert 'MEMBERSHIP_PRICE_PAISE = 29900' in SERVER
+     assert 'MEMBERSHIP_DURATION_DAYS = 30' in SERVER
+     assert '"status": "active"' in SERVER
+-    assert '"expires_at": {"$gt": now}' in SERVER
++    assert '"expires_at": {"$gt": now}' in (ROOT / "premium_exposure.py").read_text()
+     assert 'memberships.create_index([("shop_id", 1), ("idempotency_key", 1)], unique=True)' in SERVER
+
+
+@@ -26,7 +26,7 @@
+
+ def test_membership_admin_reporting_and_seller_ui_keep_status_truthful():
+     assert '@api.get("/admin/memberships/report")' in SERVER
+-    assert 'Revenue is recognized only for server-verified captured payments' in SERVER
++    assert '"payment_confirmed_at": {"$gte": start, "$lt": end}' in SERVER
+     seller_ui = (FRONTEND / "app" / "seller" / "membership.tsx").read_text()
+     assert '₹299' in seller_ui
+     assert 'for 30 days' in seller_ui
+--- /dev/null
++++ b/backend/tests/test_premium_membership_integration.py
+@@ -0,0 +1,240 @@
++"""Local-only behavioral coverage with disposable replica-set data and a mocked gateway."""
++import asyncio
++from datetime import datetime, timedelta, timezone
++import hashlib
++import hmac
++import json
++import os
++from pathlib import Path
++from types import SimpleNamespace
++from uuid import uuid4
++
++import pytest
++
++from premium_exposure import customer_offer_key, entitled, featured_feed, ranked_search
++
++
++def test_entitlement_and_rotation():
++    now = datetime.now(timezone.utc)
++    membership = {"status": "active", "starts_at": now - timedelta(days=1), "expires_at": now + timedelta(days=1)}
++    assert entitled(membership, now)
++    assert not entitled({**membership, "expires_at": now}, now)
++    assert not entitled({**membership, "status": "suspended"}, now)
++    rows = [
++        {"id": "a", "shop_id": "one", "name": "Milk", "price": 40, "premium_until": now},
++        {"id": "b", "shop_id": "one", "name": "Milk", "price": 41, "premium_until": now},
++        {"id": "c", "shop_id": "two", "name": "Milk", "price": 43, "premium_until": now},
++        {"id": "d", "shop_id": "three", "name": "Milk", "price": 30},
++        {"id": "e", "shop_id": "two", "name": "Rice", "price": 12, "premium_until": now},
++        {"id": "f", "shop_id": "two", "name": "Fresh Milk", "price": 30, "premium_until": now},
++    ]
++    assert [r["id"] for r in ranked_search(rows, "milk", {"one": 10}, "today")] == ["c", "a", "b", "f", "d"]
++    assert {featured_feed(rows, {}, f"2026-11-{day:02d}")[0]["shop_id"] for day in range(1, 29)} == {"one", "two"}
++    assert featured_feed(rows, {"one": 10}, "today")[0]["shop_id"] == "two"
++    assert featured_feed(rows, {"one": 10}, "today")[2]["id"] == "d"
++    cheap = {"price": 30, "premium": False, "shop_name": "Normal", "product_id": "1"}
++    paid = {"price": 35, "premium": True, "shop_name": "Premium", "product_id": "2"}
++    assert customer_offer_key(cheap) < customer_offer_key(paid)
++    assert customer_offer_key({**paid, "price": 30}) < customer_offer_key(cheap)
++
++
++def test_premium_frontend_boundary():
++    frontend = Path(__file__).resolve().parents[2] / "frontend"
++    card = (frontend / "src/components/ProductCard.tsx").read_text()
++    assert "★ Premium" in card and "premiumCard" in card
++    assert "rating" not in card.lower()
++    search = (frontend / "app/(tabs)/search.tsx").read_text()
++    assert search.index('sectionRows("Premium results"') < search.index('sectionRows("Other available results"')
++    for screen in ("app/(tabs)/index.tsx", "app/(tabs)/search.tsx", "app/category/[slug].tsx"):
++        assert "onViewableItemsChanged" in (frontend / screen).read_text()
++
++
++def test_membership_http_mongo_and_mock_gateway(monkeypatch):
++    if os.environ.get("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
++        pytest.skip("requires disposable local MongoDB")
++    import httpx
++    from bson import ObjectId
++    from motor.motor_asyncio import AsyncIOMotorClient
++    import server
++
++    secret = uuid4().hex
++    monkeypatch.setenv("JWT_SECRET", secret)
++    monkeypatch.setattr(server, "_razorpay_settings", lambda **kw: SimpleNamespace(
++        mode="test", key_id="local-only", key_secret=secret, webhook_secret=secret,
++    ))
++    payment = {"id": "pay_local", "order_id": "order_local", "amount": 29900, "currency": "INR", "status": "captured"}
++    gateway_calls = []
++
++    def gateway_post(url, **kwargs):
++        assert url.endswith("/v1/orders")
++        assert kwargs["json"]["amount"] == 29900 and kwargs["json"]["currency"] == "INR"
++        gateway_calls.append(url)
++        return SimpleNamespace(status_code=200, json=lambda: {**payment, "id": payment["order_id"]})
++
++    def gateway_get(url, **kwargs):
++        assert url.endswith("/v1/payments/pay_local")
++        return SimpleNamespace(status_code=200, json=lambda: dict(payment))
++
++    monkeypatch.setattr(server.requests, "post", gateway_post)
++    monkeypatch.setattr(server.requests, "get", gateway_get)
++
++    async def scenario():
++        mongo = AsyncIOMotorClient("mongodb://127.0.0.1:27018/?replicaSet=rs0&directConnection=true", serverSelectionTimeoutMS=3000)
++        name = "comein_disposable_test_premium_" + uuid4().hex
++        db = mongo[name]
++        monkeypatch.setattr(server, "db", db)
++        monkeypatch.setattr(server, "client", mongo)
++        try:
++            assert (await mongo.admin.command("hello"))["setName"] == "rs0"
++            await db.memberships.create_index([("shop_id", 1), ("idempotency_key", 1)], unique=True)
++            await db.restaurant_payment_events.create_index("event_id", unique=True)
++            actors = {role: ObjectId() for role in ("admin", "seller", "other", "buyer", "viewer")}
++            headers = {}
++            for alias, oid in actors.items():
++                role = {"seller": "shopkeeper", "other": "shopkeeper", "buyer": "customer", "viewer": "customer"}.get(alias, alias)
++                await db.users.insert_one({"_id": oid, "role": role})
++                headers[alias] = {"Authorization": "Bearer " + server.create_access_token(str(oid), role, "local@example.test")}
++            s1, s2 = ObjectId(), ObjectId()
++            await db.shops.insert_many([
++                {"_id": s1, "name": "Premium Mart", "status": "approved", "owner_id": str(actors["seller"]), "delivery_available": True},
++                {"_id": s2, "name": "Milk", "status": "approved", "owner_id": str(actors["other"]), "pickup_available": True},
++            ])
++            shop = str(s1)
++            root = f"/api/shops/{shop}/membership"
++            admin = "/api/admin/memberships"
++            transport = httpx.ASGITransport(app=server.app)
++            async with httpx.AsyncClient(transport=transport, base_url="http://local") as http:
++                async def request(method, path, role=None, body=None):
++                    return await http.request(method, path, headers=headers.get(role), json=body)
++
++                async def purchase(key):
++                    return await request("POST", root + "/purchase", "seller", {"shop_id": shop, "idempotency_key": "premium-test-" + key})
++
++                assert (await request("GET", root)).status_code == 401
++                assert (await request("GET", root + "/history", "other")).status_code == 403
++                assert (await request("GET", root + "/analytics", "other")).status_code == 403
++                assert (await request("GET", admin + "/report", "seller")).status_code == 403
++                body = {"shop_id": shop, "idempotency_key": "test-key-123456", "price_paise": 1, "duration_days": 999}
++                assert (await request("POST", root + "/purchase", "buyer", body)).status_code == 403
++                requests = await asyncio.gather(purchase("test-key-123456"), purchase("test-key-654321"), purchase("test-key-123456"))
++                assert all(result.status_code == 200 for result in requests), [result.json() for result in requests]
++                ids = {result.json()["id"] for result in requests}
++                assert len(ids) == 1
++                identifier = ids.pop()
++                assert requests[0].json()["price_paise"] == 29900 and requests[0].json()["duration_days"] == 30
++                assert await db.membership_audit.count_documents({"event": "purchase_requested"}) == 1
++                decision = {"decision": "activate", "reason": "local test"}
++                assert (await request("PATCH", f"{admin}/{identifier}", "seller", decision)).status_code == 403
++                assert (await request("PATCH", f"{admin}/{identifier}", "admin", decision)).status_code == 409
++                intents = await asyncio.gather(*(request("POST", root + "/payment-intent", "seller", {}) for _ in range(2)))
++                assert any(result.status_code == 200 for result in intents)
++                assert len(gateway_calls) == 1
++                verify = {"razorpay_order_id": "order_local", "razorpay_payment_id": "pay_local",
++                          "razorpay_signature": "0" * 64}
++                assert (await request("POST", root + "/payment-verify", "seller", verify)).status_code == 400
++                verify["razorpay_signature"] = hmac.new(secret.encode(), b"order_local|pay_local", hashlib.sha256).hexdigest()
++                for field, value in (("amount", 1), ("currency", "USD"), ("id", "pay_wrong"),
++                                     ("order_id", "order_wrong"), ("status", "authorized")):
++                    saved = payment[field]
++                    payment[field] = value
++                    assert (await request("POST", root + "/payment-verify", "seller", verify)).status_code == 409
++                    payment[field] = saved
++                assert (await request("GET", root, "seller")).json()["payment_verified"] is False
++                payload = json.dumps({"event": "payment.captured", "payload": {"payment": {"entity": payment}}}).encode()
++                signature = hmac.new(secret.encode(), payload, hashlib.sha256).hexdigest()
++
++                async def webhook(sig):
++                    return await http.post("/api/restaurant/payments/razorpay-webhook", content=payload,
++                        headers={"X-Razorpay-Signature": sig, "X-Razorpay-Event-Id": "event_local_premium"})
++                assert (await webhook("invalid")).status_code == 400
++                real = (await asyncio.gather(webhook(signature), webhook(signature),
++                                             request("POST", root + "/payment-verify", "seller", verify)))
++                assert [response.status_code for response in real] == [200, 200, 200]
++                assert await db.membership_audit.count_documents({"event": "payment_confirmed"}) == 1
++                assert await db.restaurant_payment_events.count_documents({"event_id": "event_local_premium"}) == 1
++                assert (await request("GET", root, "seller")).json()["payment_verified"]
++                decisions = await asyncio.gather(*(request("PATCH", f"{admin}/{identifier}", "admin", decision) for _ in range(2)))
++                assert sorted(r.status_code for r in decisions) == [200, 409]
++                assert (await purchase("renew-too-early")).status_code == 409
++                await db.products.insert_many([
++                    {"shop_id": shop, "name": "Milk", "available": True, "stock": 3, "price": 42, "category_id": "dairy"},
++                    {"shop_id": shop, "name": "Milk Zero", "available": True, "stock": 0, "price": 32, "category_id": "dairy"},
++                    {"shop_id": shop, "name": "Rice", "available": True, "stock": 3, "price": 20, "category_id": "pantry"},
++                    {"shop_id": str(s2), "name": "Milk carton", "available": True, "stock": 5, "price": 32, "category_id": "dairy"},
++                    {"shop_id": str(s2), "name": "Flour", "available": True, "stock": 5, "price": 30, "category_id": "pantry"},
++                ])
++                exact = (await request("GET", "/api/catalog/search?q=%20MILK%20", "buyer")).json()
++                assert exact["shops"][0]["id"] == str(s2) and not exact["premium"]
++                first = (await request("GET", "/api/catalog/search?q=mil&category=dairy&limit=1", "buyer")).json()
++                assert len(first["premium"]) == 1 and first["next_offset"] == 1 and not first["other"]
++                second = (await request("GET", "/api/catalog/search?q=mil&category=dairy&limit=1&offset=1", "buyer")).json()
++                assert not second["premium"] and len(second["other"]) == 1 and second["next_offset"] is None
++                assert not (await request("GET", "/api/catalog/search?q=flour", "buyer")).json()["premium"]
++                assert not (await request("GET", "/api/catalog/search?q=milk%20zero", "buyer")).json()["premium"]
++                feed = (await request("GET", "/api/catalog/products?surface=home", "buyer")).json()
++                assert any("premium_until" in row for row in feed) and any("premium_until" not in row for row in feed)
++                assert await db.premium_exposure.count_documents({"kind": "impression"}) == 0
++                token = first["premium"][0]["premium_event_token"]
++
++                async def emit(kind, role="buyer", signed=token):
++                    return await request("POST", "/api/catalog/premium-events", role, {"token": signed, "kind": kind})
++
++                assert (await emit("impression", "viewer")).status_code == 403
++                assert (await emit("impression", signed=token + "bad")).status_code == 403
++                assert (await emit("click")).json() == {"recorded": False}
++                emitted = await asyncio.gather(emit("impression"), emit("impression"))
++                assert sum(result.json()["recorded"] for result in emitted) == 1
++                assert (await emit("click")).json()["recorded"]
++                assert not (await emit("click")).json()["recorded"]
++                assert (await emit("product_view")).json()["recorded"]
++                assert (await emit("add_to_cart")).json()["recorded"]
++                report = (await request("GET", f"{admin}/report?shop_id={shop}", "admin")).json()
++                assert report["verified_revenue_paise"] == 29900 and report["active"] == 1
++                assert report["exposure"]["search"] == {"opportunity": 1, "impression": 1, "click": 1, "product_view": 1, "add_to_cart": 1}
++                assert report["exposure"]["ctr"] == 1 and report["orders"] is None
++                assert (await request("GET", f"{admin}/report?start=2000-01-01T00:00:00Z", "admin")).status_code == 422
++                old = (await request("GET", f"{admin}/report?start=2000-01-01T00:00:00Z&end=2000-01-02T00:00:00Z", "admin")).json()
++                assert old["verified_revenue_paise"] == 0 and old["exposure"]["impression"] == 0
++                master = ObjectId()
++                await db.master_products.insert_one({"_id": master, "active": True, "name": "Milk", "variants": [{"id": "pack", "unit": "1 L"}]})
++                await db.products.update_many({"name": {"$in": ["Milk", "Milk carton", "Milk Zero"]}}, {"$set": {
++                    "master_product_id": str(master), "master_variant_id": "pack",
++                }})
++                path = f"/api/catalog/price-comparison?master_product_id={master}&variant_id=pack"
++                offers = (await request("GET", path)).json()["offers"]
++                assert [offer["shop_id"] for offer in offers] == [str(s2), shop]
++                only_delivery = (await request("GET", path + "&fulfillment=delivery&quantity=3")).json()["offers"]
++                assert len(only_delivery) == 1 and only_delivery[0]["shop_id"] == shop
++                assert only_delivery[0]["total_cost"] == 155
++                assert not (await request("GET", path + "&fulfillment=delivery&quantity=4")).json()["offers"]
++                await db.products.update_one({"name": "Milk"}, {"$set": {"price": 32}})
++                assert (await request("GET", path)).json()["offers"][0]["shop_id"] == shop
++                await db.shops.update_one({"_id": s1}, {"$set": {"latitude": 20.0, "longitude": 80.0, "delivery_radius_km": 5}})
++                assert not (await request("GET", path + "&fulfillment=delivery&latitude=21&longitude=80")).json()["offers"]
++                # After expiry, a failed audit must roll back the new request.
++                await db.memberships.update_one({"_id": ObjectId(identifier)}, {"$set": {"expires_at": server.now_utc() - timedelta(seconds=1)}})
++                assert (await request("GET", root, "seller")).json()["status"] == "expired"
++                assert not (await emit("impression")).json()["recorded"]
++                original = server._membership_audit
++                async def fail(*args, **kwargs):
++                    raise RuntimeError("local audit rollback test")
++                monkeypatch.setattr(server, "_membership_audit", fail)
++                with pytest.raises(RuntimeError, match="rollback test"):
++                    await purchase("rollback-local-key")
++                monkeypatch.setattr(server, "_membership_audit", original)
++                assert await db.memberships.count_documents({"shop_id": shop}) == 1
++                renewal = await purchase("renewal-local-key")
++                assert renewal.json()["status"] == "payment_pending" and renewal.json()["id"] != identifier
++                assert (await request("PATCH", f"{admin}/{renewal.json()['id']}", "admin",
++                                      {"decision": "cancel", "reason": "local test"})).status_code == 200
++                assert len((await request("GET", root + "/history", "seller")).json()) == 2
++                await db.memberships.update_one({"_id": ObjectId(identifier)}, {"$set": {
++                    "expires_at": server.now_utc() + timedelta(days=1)}})
++                assert (await request("PATCH", f"{admin}/{identifier}", "admin",
++                                      {"decision": "suspend", "reason": "local test"})).status_code == 200
++                assert not (await request("GET", "/api/catalog/search?q=mil", "buyer")).json()["premium"]
++        finally:
++            await mongo.drop_database(name)
++            mongo.close()
++
++    asyncio.run(scenario())
+--- a/backend/tests/test_shopping_catalog_contract.py
++++ b/backend/tests/test_shopping_catalog_contract.py
+@@ -11,7 +11,7 @@
+ def _catalog_function():
+     fn = copy.deepcopy(next(
+         node for node in TREE.body
+-        if isinstance(node, ast.AsyncFunctionDef) and node.name == "list_catalog_products"
++        if isinstance(node, ast.AsyncFunctionDef) and node.name == "_catalog_rows"
+     ))
+     # Execute the actual route body without importing server.py (which creates a
+     # Mongo client and requires optional runtime dependencies/configuration).
+@@ -76,7 +76,7 @@
+         "doc_out": lambda row: {**row, "id": str(row.get("_id", ""))},
+     }
+     exec(_catalog_function(), namespace)
+-    result = asyncio.run(namespace["list_catalog_products"]())
++    result = asyncio.run(namespace["_catalog_rows"]())
+     return result, db
+
+
+@@ -128,7 +128,7 @@
+     assert routes == [("GET", "/catalog/products")]
+     source = ast.get_source_segment(SERVER.read_text(), next(
+         node for node in TREE.body
+-        if isinstance(node, ast.AsyncFunctionDef) and node.name == "list_catalog_products"
++        if isinstance(node, ast.AsyncFunctionDef) and node.name == "_catalog_rows"
+     ))
+     assert '"status": "approved"' in source
+     assert '"available": True' in source
+--- a/backend/tests/test_targeted_tasks_9_12_15_18_21.py
++++ b/backend/tests/test_targeted_tasks_9_12_15_18_21.py
+@@ -51,7 +51,7 @@
+     assert '"master_variant_id": variant_id' in server
+     assert 'db.shops.find({"status": "approved"})' in server
+     assert '"stock": {"$gt": 0}' in server
+-    assert 'offers.sort(key=lambda offer: (offer["price"], offer["shop_name"].casefold()))' in server
++    assert 'offers.sort(key=customer_offer_key)' in server
+     assert 'testID="price-comparison-panel"' in product
+     assert 'masterProductId' in product and 'masterVariantId' in product
+
+--- a/backend/tests/test_task20_product_catalog_variants_stock_contract.py
++++ b/backend/tests/test_task20_product_catalog_variants_stock_contract.py
+@@ -35,7 +35,7 @@
+
+
+ def test_product_catalog_exposes_only_approved_available_in_stock_products_and_variants():
+-    endpoint = function_source("list_catalog_products")
++    endpoint = function_source("_catalog_rows")
+     assert 'db.shops.find({"status": "approved"})' in endpoint
+     assert '"available": True' in endpoint
+     assert '"stock": {"$gt": 0}' in endpoint
+--- a/frontend/app/(tabs)/index.tsx
++++ b/frontend/app/(tabs)/index.tsx
+@@ -2,7 +2,7 @@
+ import { Image } from "expo-image";
+ import { LinearGradient } from "expo-linear-gradient";
+ import { useFocusEffect, useRouter } from "expo-router";
+-import { useCallback, useEffect, useState } from "react";
++import { useCallback, useEffect, useRef, useState } from "react";
+ import {
+   FlatList,
+   Modal,
+@@ -22,10 +22,12 @@
+ import { useAuth } from "@/src/store/auth";
+ import { api } from "@/src/lib/api";
+
++import { type DisplayToken, premiumViewability, recordVisibleProducts } from "@/src/lib/premium";
+ import { ProductCard } from "@/src/components/ProductCard";
+ import {
+   CATEGORIES,
+   POPULAR_PRODUCTS,
++  type Product,
+   QUICK_DELIVERY_PRODUCTS,
+   SERVICES,
+ } from "@/src/data/catalog";
+@@ -43,7 +45,7 @@
+   const { colors } = useTheme();
+   const { location, setLocation } = useLocationCtx();
+   const { t } = useT();
+-  const { liveProducts } = useCatalogProducts();
++  const { liveProducts } = useCatalogProducts("home");
+   const { user } = useAuth();
+   const [referralClaim, setReferralClaim] = useState<{ userId: string; show: boolean } | null>(null);
+   const showProminentReferral = user?.role === "customer" && referralClaim?.userId === user.id && referralClaim.show;
+@@ -64,6 +66,32 @@
+     }).catch(() => { if (active) setReferralClaim({ userId: user.id, show: false }); });
+     return () => { active = false; };
+   }, [user?.id, user?.role]);
++  // The carousel is nested in a vertical ScrollView. Check both axes before
++  // emitting an impression so off-screen Home cards never count on mount.
++  const homeViewport = useRef({ offset: 0, height: 0, top: 0, carouselHeight: 0 });
++  const carouselItems = useRef<DisplayToken<Product>[]>([]);
++  const impressionTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
++  const verticalVisible = useRef(false);
++  const recordCarousel = useCallback(() => {
++    const { offset, height, top, carouselHeight } = homeViewport.current;
++    const visibleHeight = Math.min(offset + height, top + carouselHeight) - Math.max(offset, top);
++    const visible = carouselHeight > 0 && visibleHeight >= carouselHeight / 2;
++    if (visible === verticalVisible.current) return;
++    verticalVisible.current = visible;
++    clearTimeout(impressionTimer.current);
++    impressionTimer.current = visible ? setTimeout(() => {
++      impressionTimer.current = undefined;
++      recordVisibleProducts({ changed: carouselItems.current });
++    }, premiumViewability.minimumViewTime) : undefined;
++  }, []);
++  const onCarouselItems = useCallback(({ viewableItems }: { viewableItems: DisplayToken<Product>[] }) => {
++    carouselItems.current = viewableItems;
++    if (verticalVisible.current && !impressionTimer.current) recordVisibleProducts({ changed: viewableItems });
++  }, []);
++  useFocusEffect(useCallback(() => {
++    recordCarousel();
++    return () => { verticalVisible.current = false; clearTimeout(impressionTimer.current); };
++  }, [recordCarousel]));
+   const quickProducts = liveProducts.length ? liveProducts.slice(0, 6) : QUICK_DELIVERY_PRODUCTS.slice(0, 6);
+   const livePopular = liveProducts.filter((p) => p.popular);
+   const popularProducts = liveProducts.length ? (livePopular.length ? livePopular.slice(0, 6) : liveProducts.slice(0, 6)) : POPULAR_PRODUCTS.slice(0, 6);
+@@ -133,6 +161,9 @@
+
+       <ScrollView
+         showsVerticalScrollIndicator={false}
++        scrollEventThrottle={32}
++        onLayout={event => { homeViewport.current.height = event.nativeEvent.layout.height; recordCarousel(); }}
++        onScroll={event => { homeViewport.current.offset = event.nativeEvent.contentOffset.y; recordCarousel(); }}
+         contentContainerStyle={{ paddingBottom: spacing.xxl }}
+       >
+         {/* Hero Banner */}
+@@ -252,14 +283,22 @@
+           </View>
+           <Text style={styles.quickTitle}>{t("home.quickDelivery")}</Text>
+         </View>
++        <View onLayout={event => {
++          homeViewport.current.top = event.nativeEvent.layout.y;
++          homeViewport.current.carouselHeight = event.nativeEvent.layout.height;
++          recordCarousel();
++        }}>
+         <FlatList
+           data={quickProducts}
++          viewabilityConfig={premiumViewability}
++          onViewableItemsChanged={onCarouselItems}
+           keyExtractor={(p) => p.id}
+           horizontal
+           showsHorizontalScrollIndicator={false}
+           contentContainerStyle={{ paddingHorizontal: spacing.lg, gap: spacing.md }}
+           renderItem={({ item }) => <ProductCard product={item} width={160} />}
+         />
++        </View>
+
+         {/* Popular Products */}
+         <SectionHeader title={t("home.popular")} onSeeAll={() => router.push("/(tabs)/categories")} />
+--- a/frontend/app/(tabs)/search.tsx
++++ b/frontend/app/(tabs)/search.tsx
+@@ -1,5 +1,6 @@
+ import Feather from "@react-native-vector-icons/feather";
+-import { useMemo, useState } from "react";
++import { useCallback, useMemo, useState } from "react";
++import { useFocusEffect, useRouter } from "expo-router";
+ import {
+   FlatList,
+   Keyboard,
+@@ -14,28 +15,87 @@
+ import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+ import { ProductCard } from "@/src/components/ProductCard";
++import { api } from "@/src/lib/api";
++import { type DisplayToken, premiumViewability, recordVisibleProducts } from "@/src/lib/premium";
+ import { PRODUCTS, Product } from "@/src/data/catalog";
+-import { useCatalogProducts } from "@/src/data/useCatalogProducts";
++import { mapLiveProduct, useCatalogProducts } from "@/src/data/useCatalogProducts";
+ import { useT } from "@/src/i18n";
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
+
+ const SUGGESTIONS = ["Milk", "Atta", "Salt", "Butter", "Bread", "Oil", "Rice", "Apple"];
++
++type ShopMatch = { id: string; name: string; area: string };
++type SearchPage = { shops: ShopMatch[]; premium: unknown[]; other: unknown[]; next_offset: number | null };
++type Results = { query: string; shops: ShopMatch[]; premium: Product[]; other: Product[]; next: number | null };
++type Row = { id: string; title?: string; products?: Product[]; shop?: ShopMatch };
++
++function requestPage(query: string, offset = 0) {
++  return api.get<SearchPage>(`/catalog/search?q=${encodeURIComponent(query)}&offset=${offset}`);
++}
++
++function visibleRows({ changed }: { changed: DisplayToken<Row>[] }) {
++  recordVisibleProducts({ changed: changed.flatMap(row =>
++    (row.item.products || []).map(product => ({ ...row, item: product }))) });
++}
++
++function sectionRows(title: string, products: Product[]): Row[] {
++  if (!products.length) return [];
++  const rows: Row[] = [{ id: title, title }];
++  for (let index = 0; index < products.length; index += 2) {
++    rows.push({ id: products[index].id, products: products.slice(index, index + 2) });
++  }
++  return rows;
++}
+
+ export default function SearchScreen() {
+   const insets = useSafeAreaInsets();
+   const styles = useStyles();
+   const { colors } = useTheme();
+   const { t } = useT();
++  const router = useRouter();
+   const [query, setQuery] = useState("");
++  const [results, setResults] = useState<Results | null>(null);
++  const [error, setError] = useState("");
++  const [loadingMore, setLoadingMore] = useState(false);
+   const { liveProducts } = useCatalogProducts();
+-  const allProducts = useMemo(() => [...liveProducts, ...PRODUCTS], [liveProducts]);
+-
+-  const results = useMemo(() => {
+-    const q = query.trim().toLowerCase();
+-    if (!q) return [];
+-    return allProducts.filter((p: Product) => `${p.name} ${p.brand} ${p.description} ${p.categoryId} ${p.shopName || ""}`.toLowerCase().includes(q));
+-  }, [query, allProducts]);
+-  const hasQuery = query.trim().length > 0;
++  const term = query.trim();
++  const hasQuery = Boolean(term);
++
++  useFocusEffect(useCallback(() => {
++    if (!term) return;
++    let current = true;
++    const refresh = () => {
++      setError("");
++      void requestPage(term).then(page => {
++        if (current) setResults({ query: term, shops: page.shops, premium: page.premium.map(mapLiveProduct), other: page.other.map(mapLiveProduct), next: page.next_offset });
++      }).catch(() => { if (current) { setResults(null); setError("Live search is unavailable. Try again."); } });
++    };
++    const timer = setTimeout(refresh, 250);
++    return () => { current = false; clearTimeout(timer); };
++  }, [term]));
++
++  const current = results?.query === term ? results : null;
++  const loadMore = useCallback(async () => {
++    if (!current || current.next === null || loadingMore) return;
++    setLoadingMore(true);
++    try {
++      const page = await requestPage(current.query, current.next);
++      setResults(previous => {
++        if (previous !== current) return previous;
++        const ids = new Set([...previous.shops, ...previous.premium, ...previous.other].map(row => row.id));
++        return { ...previous, next: page.next_offset,
++          shops: [...previous.shops, ...page.shops.filter(row => !ids.has(row.id))],
++          premium: [...previous.premium, ...page.premium.map(mapLiveProduct).filter(row => !ids.has(row.id))],
++          other: [...previous.other, ...page.other.map(mapLiveProduct).filter(row => !ids.has(row.id))] };
++      });
++    } catch { setError("More results could not be loaded."); }
++    finally { setLoadingMore(false); }
++  }, [current, loadingMore]);
++  const rows = useMemo<Row[]>(() => current ? [
++    ...current.shops.map(shop => ({ id: shop.id, shop })),
++    ...sectionRows("Premium results", current.premium),
++    ...sectionRows("Other available results", current.other),
++  ] : [], [current]);
+
+   return (
+     <KeyboardAvoidingView
+@@ -52,6 +112,7 @@
+             placeholder={t("search.placeholder")}
+             placeholderTextColor={colors.muted}
+             style={styles.input}
++            maxLength={120}
+             autoFocus
+             returnKeyType="search"
+           />
+@@ -88,33 +149,32 @@
+             ))}
+           </View>
+         </View>
+-      ) : results.length === 0 ? (
++      ) : rows.length === 0 ? (
+         <View style={styles.noResults}>
+-          <View style={styles.noResultsIcon}>
+-            <Feather name="search" size={30} color={colors.muted} />
+-          </View>
+-          <Text style={styles.noResultsTitle}>{t("search.noResults", { q: query })}</Text>
+-          <Text style={styles.noResultsSub}>{t("search.noResultsSub")}</Text>
++          <View style={styles.noResultsIcon}><Feather name="search" size={30} color={colors.muted} /></View>
++          <Text style={styles.noResultsTitle}>{error || (current ? t("search.noResults", { q: query }) : "Searching live inventory…")}</Text>
+         </View>
+       ) : (
+         <FlatList
+           testID="search-results"
+-          data={results}
+-          keyExtractor={(p) => p.id}
+-          numColumns={2}
+-          columnWrapperStyle={{ gap: spacing.md, paddingHorizontal: spacing.lg }}
+-          contentContainerStyle={{ paddingVertical: spacing.md, gap: spacing.md }}
++          data={rows}
++          keyExtractor={row => row.id}
++          viewabilityConfig={premiumViewability}
++          onViewableItemsChanged={visibleRows}
++          contentContainerStyle={{ padding: spacing.lg, gap: spacing.md }}
+           onScrollBeginDrag={Keyboard.dismiss}
+-          renderItem={({ item }) => (
+-            <View style={{ flex: 1, maxWidth: "48.5%" }}>
+-              <ProductCard product={item} />
+-            </View>
+-          )}
+-          ListHeaderComponent={
+-            <Text style={[styles.sectionTitle, { paddingHorizontal: spacing.lg }]}>
+-              {results.length} result{results.length === 1 ? "" : "s"}
+-            </Text>
+-          }
++          ListFooterComponent={current && current.next !== null ? <Pressable accessibilityRole="button" disabled={loadingMore} onPress={() => void loadMore()}><Text style={styles.sectionTitle}>{error || (loadingMore ? "Loading…" : "Load more")}</Text></Pressable> : undefined}
++          renderItem={({ item }) => {
++            if (item.title) return <Text style={styles.sectionTitle}>{item.title}</Text>;
++            if (item.shop) {
++              const shop = item.shop;
++              return <Pressable accessibilityRole="button" style={styles.chip} onPress={() => router.push(`/shop/${shop.id}`)}>
++                <Feather name="shopping-bag" size={16} color={colors.brandForest} />
++                <Text style={styles.sectionTitle}>{shop.name}{shop.area ? ` · ${shop.area}` : ""}</Text>
++              </Pressable>;
++            }
++            return <View style={styles.grid}>{item.products?.map(product => <View key={product.id} style={styles.gridItem}><ProductCard product={product} /></View>)}</View>;
++          }}
+         />
+       )}
+     </KeyboardAvoidingView>
+--- a/frontend/app/admin-memberships.tsx
++++ b/frontend/app/admin-memberships.tsx
+@@ -1,5 +1,5 @@
+ import { useCallback, useEffect, useState } from "react";
+-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
++import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+ import { useRouter } from "expo-router";
+ import Feather from "@react-native-vector-icons/feather";
+ import { useSafeAreaInsets } from "react-native-safe-area-context";
+@@ -7,22 +7,64 @@
+ import { useAuth } from "@/src/store/auth";
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
+
+-type Summary = { total_requests: number; active: number; payment_pending: number; payment_confirmed: number; verified_revenue_paise: number };
+-type Membership = { id: string; shop_id: string; status: string; price_paise: number; created_at?: string };
++type Exposure = { opportunity: number; impression: number; click: number; ctr: number | null; product_view: number; add_to_cart: number; search: Record<string, number>; by_shop: { shop_id: string; metrics: Record<string, number> }[] };
++type Summary = { total_requests: number; active: number; payment_pending: number; payment_confirmed: number; suspended: number; expired: number; verified_revenue_paise: number; exposure: Exposure };
++type Membership = { id: string; shop_id: string; status: string; price_paise: number; created_at?: string; expires_at?: string; renewal_eligible?: boolean };
+ const inr = (paise = 0) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(paise / 100);
+
+ export default function AdminMembershipsScreen() {
+   const { user } = useAuth(); const router = useRouter(); const insets = useSafeAreaInsets(); const { colors } = useTheme(); const styles = useStyles();
+   const [summary, setSummary] = useState<Summary | null>(null); const [items, setItems] = useState<Membership[]>([]); const [notice, setNotice] = useState(""); const [loading, setLoading] = useState(true);
+-  const load = useCallback(async () => { const [report, rows] = await Promise.all([api.get<Summary>("/admin/memberships/report"), api.get<Membership[]>("/admin/memberships")]); setSummary(report); setItems(rows); }, []);
++  const [filters, setFilters] = useState({ shop_id: "", start: "", end: "" });
++  const [applied, setApplied] = useState(filters);
++  const [offset, setOffset] = useState(0);
++  const load = useCallback(async () => {
++    const reportQuery = new URLSearchParams({ offset: String(offset), limit: "50" });
++    const listQuery = new URLSearchParams({ offset: String(offset), limit: "50" });
++    const shop = applied.shop_id.trim();
++    if (shop) { reportQuery.set("shop_id", shop); listQuery.set("shop_id", shop); }
++    for (const key of ["start", "end"] as const) {
++      const day = applied[key].trim();
++      if (day) reportQuery.set(key, `${day}T00:00:00Z`);
++    }
++    const [report, rows] = await Promise.all([
++      api.get<Summary>(`/admin/memberships/report?${reportQuery}`),
++      api.get<Membership[]>(`/admin/memberships?${listQuery}`),
++    ]);
++    setSummary(report); setItems(rows); setNotice("");
++  }, [applied, offset]);
+   useEffect(() => { if (!user || user.role !== "admin") return; const run = async () => { try { await load(); } catch (e: any) { setNotice(e?.message || "Membership reporting could not be loaded."); } finally { setLoading(false); } }; void run(); }, [load, user]);
+   const decide = async (item: Membership, decision: "activate" | "suspend" | "cancel") => { try { await api.patch(`/admin/memberships/${encodeURIComponent(item.id)}`, { decision, reason: "Admin review" }); await load(); } catch (e: any) { setNotice(e?.message || "Membership could not be updated."); } };
+   if (!user || user.role !== "admin") return <View style={styles.centered}><Text style={styles.message}>Admin access is required.</Text></View>;
+   if (loading) return <View style={styles.centered}><ActivityIndicator color={colors.brandPrimary} /></View>;
+   return <View style={styles.root}><View style={[styles.header, { paddingTop: insets.top + spacing.sm }]}><Pressable accessibilityLabel="Back" style={styles.icon} onPress={() => router.back()}><Feather name="arrow-left" size={19} color={colors.onSurface} /></Pressable><Text style={styles.title}>Membership Management</Text></View><ScrollView contentContainerStyle={styles.content}>
+     <Text style={styles.notice}>Only server-verified captured payments are counted as revenue. Activation is unavailable until payment confirmation; this screen never fabricates payment success.</Text>{notice ? <Text style={styles.error}>{notice}</Text> : null}
+-    <View style={styles.grid}>{[["Requests", summary?.total_requests], ["Pending", summary?.payment_pending], ["Confirmed", summary?.payment_confirmed], ["Active", summary?.active], ["Verified revenue", inr(summary?.verified_revenue_paise)]].map(([label, value]) => <View key={String(label)} style={styles.metric}><Text style={styles.label}>{label}</Text><Text style={styles.value}>{String(value ?? 0)}</Text></View>)}</View>
+-    {items.map((item) => <View key={item.id} style={styles.card}><Text style={styles.cardTitle}>Shop {item.shop_id}</Text><Text style={styles.meta}>{item.status} · {inr(item.price_paise)}</Text>{item.status === "payment_confirmed" ? <Pressable style={styles.button} onPress={() => void decide(item, "activate")}><Text style={styles.buttonText}>Activate verified membership</Text></Pressable> : null}{item.status === "active" ? <Pressable style={styles.secondary} onPress={() => void decide(item, "suspend")}><Text style={styles.secondaryText}>Suspend</Text></Pressable> : null}</View>)}
++    {(["shop_id", "start", "end"] as const).map(key => <TextInput key={key} style={styles.card} autoCapitalize="none" value={filters[key]} accessibilityLabel={key} onChangeText={value => setFilters({ ...filters, [key]: value })} placeholder={key === "shop_id" ? "Shop ID (optional)" : key === "start" ? "From YYYY-MM-DD (UTC)" : "Before YYYY-MM-DD (UTC)"} />)}
++    <Pressable style={styles.button} onPress={() => { setOffset(0); setApplied({ ...filters }); }}><Text style={styles.buttonText}>Apply filters</Text></Pressable>
++    <Text style={styles.meta}>Lifecycle counts show current status. Date filters apply to revenue and exposure.</Text>
++    {summary && <View style={styles.grid}>{[
++      ["Requests", summary.total_requests], ["Pending", summary.payment_pending], ["Confirmed", summary.payment_confirmed],
++      ["Active shops", summary.active], ["Expired", summary.expired], ["Suspended", summary.suspended],
++      ["Verified captured revenue", inr(summary.verified_revenue_paise)], ["Opportunities", summary.exposure.opportunity],
++      ["Impressions", summary.exposure.impression], ["Clicks", summary.exposure.click],
++      ["CTR", summary.exposure.ctr === null ? "Unavailable" : `${(summary.exposure.ctr * 100).toFixed(1)}%`],
++      ["Product views", summary.exposure.product_view], ["Adds to cart", summary.exposure.add_to_cart],
++      ["Search impressions", summary.exposure.search.impression ?? 0],
++      ["Orders / completed orders", "Attribution unavailable"],
++    ].map(([label, value]) => <View key={String(label)} style={styles.metric}><Text style={styles.label}>{label}</Text><Text style={styles.value}>{value}</Text></View>)}</View>}
++    <Text style={styles.cardTitle}>Exposure by shop</Text>
++    <Text style={styles.meta}>Counts reflect tracked signed-in customer activity. Historical exposure before tracking is unavailable.</Text>
++    {summary?.exposure.by_shop.map(row => <Text key={row.shop_id} style={styles.meta}>{row.shop_id} · {row.metrics.opportunity ?? 0} opportunities · {row.metrics.impression ?? 0} impressions · {row.metrics.click ?? 0} clicks</Text>)}
++    <Text style={styles.cardTitle}>Membership history</Text>
++    {items.map(item => <View key={item.id} style={styles.card}>
++      <Text style={styles.cardTitle}>Shop {item.shop_id}</Text>
++      <Text style={styles.meta}>{item.status} · {inr(item.price_paise)}{item.expires_at ? ` · expires ${new Date(item.expires_at).toLocaleDateString()}` : ""}{item.renewal_eligible ? " · renewal eligible" : ""}</Text>
++      {item.status === "payment_confirmed" && <Pressable style={styles.button} onPress={() => void decide(item, "activate")}><Text style={styles.buttonText}>Activate verified membership</Text></Pressable>}
++      {item.status === "active" && <Pressable style={styles.secondary} onPress={() => void decide(item, "suspend")}><Text style={styles.secondaryText}>Suspend</Text></Pressable>}
++      {["active", "suspended", "payment_pending", "payment_confirmed"].includes(item.status) && <Pressable style={styles.secondary} onPress={() => void decide(item, "cancel")}><Text style={styles.secondaryText}>Cancel membership</Text></Pressable>}
++    </View>)}
++    {offset > 0 && <Pressable style={styles.secondary} onPress={() => setOffset(offset - 50)}><Text style={styles.secondaryText}>Previous page</Text></Pressable>}
++    {(items.length === 50 || summary?.exposure.by_shop.length === 50) && <Pressable style={styles.secondary} onPress={() => setOffset(offset + 50)}><Text style={styles.secondaryText}>Next page</Text></Pressable>}
+   </ScrollView></View>;
+ }
+ const useStyles = makeStyles((colors) => ({ root: { flex: 1, backgroundColor: colors.surfaceSecondary }, header: { flexDirection: "row", alignItems: "center", gap: spacing.sm, paddingHorizontal: spacing.lg, paddingBottom: spacing.md, backgroundColor: colors.surface, borderBottomColor: colors.border, borderBottomWidth: StyleSheet.hairlineWidth }, icon: { width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center", backgroundColor: colors.surfaceTertiary }, title: { color: colors.onSurface, fontSize: 19, fontWeight: "900" }, content: { padding: spacing.lg, gap: spacing.md }, centered: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.surfaceSecondary }, message: { color: colors.onSurface }, notice: { color: colors.muted, fontSize: 12, lineHeight: 18 }, error: { color: colors.error, fontSize: 12 }, grid: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm }, metric: { flexGrow: 1, flexBasis: "40%", backgroundColor: colors.surface, borderRadius: radius.md, borderColor: colors.border, borderWidth: 1, padding: spacing.md }, label: { color: colors.muted, fontSize: 11 }, value: { color: colors.onSurface, fontSize: 16, fontWeight: "900" }, card: { backgroundColor: colors.surface, borderRadius: radius.md, borderColor: colors.border, borderWidth: 1, padding: spacing.md, gap: spacing.sm }, cardTitle: { color: colors.onSurface, fontWeight: "900" }, meta: { color: colors.muted, fontSize: 12 }, button: { alignSelf: "flex-start", backgroundColor: colors.brandPrimary, borderRadius: radius.pill, paddingHorizontal: spacing.md, paddingVertical: 9 }, buttonText: { color: colors.onBrandPrimary, fontWeight: "800" }, secondary: { alignSelf: "flex-start", borderColor: colors.border, borderWidth: 1, borderRadius: radius.pill, paddingHorizontal: spacing.md, paddingVertical: 9 }, secondaryText: { color: colors.onSurface, fontWeight: "800" } }));
+--- a/frontend/app/category/[slug].tsx
++++ b/frontend/app/category/[slug].tsx
+@@ -3,6 +3,7 @@
+ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+ import { useSafeAreaInsets } from "react-native-safe-area-context";
+
++import { premiumViewability, recordVisibleProducts } from "@/src/lib/premium";
+ import { ProductCard } from "@/src/components/ProductCard";
+ import { CATEGORIES, PRODUCTS, getCategoryById } from "@/src/data/catalog";
+ import { useCatalogProducts } from "@/src/data/useCatalogProducts";
+@@ -14,7 +15,7 @@
+   const insets = useSafeAreaInsets();
+   const styles = useStyles();
+   const { colors } = useTheme();
+-  const { liveProducts } = useCatalogProducts();
++  const { liveProducts } = useCatalogProducts("category", slug);
+
+   const category = slug ? getCategoryById(slug) : undefined;
+   const products = slug ? [...liveProducts, ...PRODUCTS].filter((p) => p.categoryId === slug) : [];
+@@ -73,6 +74,8 @@
+       ) : (
+         <FlatList
+           data={products}
++          viewabilityConfig={premiumViewability}
++          onViewableItemsChanged={recordVisibleProducts}
+           keyExtractor={(p) => p.id}
+           numColumns={2}
+           columnWrapperStyle={{ gap: spacing.md, paddingHorizontal: spacing.lg }}
+--- a/frontend/app/product/[id].tsx
++++ b/frontend/app/product/[id].tsx
+@@ -14,10 +14,11 @@
+ import { useCatalogProducts } from "@/src/data/useCatalogProducts";
+ import { useCart } from "@/src/store/cart";
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
++import { trackPremium, usePremiumCartEvent } from "@/src/lib/premium";
+ import { useT } from "@/src/i18n";
+
+ export default function ProductDetailsScreen() {
+-  const { id } = useLocalSearchParams<{ id: string }>();
++  const { id, premiumEvent } = useLocalSearchParams<{ id: string; premiumEvent?: string }>();
+   const insets = useSafeAreaInsets();
+   const router = useRouter();
+   const styles = useStyles();
+@@ -27,11 +28,16 @@
+   const { liveProducts } = useCatalogProducts();
+   const [selectedVariantId, setSelectedVariantId] = useState<string | undefined>(undefined);
+   const [imageFailed, setImageFailed] = useState(false);
++  const [fulfillment, setFulfillment] = useState<"delivery" | "pickup" | undefined>();
+   const [comparison, setComparison] = useState<any | null>(null);
+   const [comparisonMessage, setComparisonMessage] = useState("");
+   const [cartMessage, setCartMessage] = useState("");
+
+   const product = id ? (liveProducts.find((p) => p.id === id) ?? getProductById(id)) : undefined;
++
++  useEffect(() => {
++    if (product?.source === "live") trackPremium(premiumEvent, "product_view");
++  }, [premiumEvent, product?.id, product?.source]);
+
+   const productKey = `${product?.id || ""}:${product?.image || ""}`;
+   const [previousProductKey, setPreviousProductKey] = useState(productKey);
+@@ -39,7 +45,7 @@
+     setPreviousProductKey(productKey);
+     setImageFailed(false); setSelectedVariantId(undefined); setCartMessage("");
+   }
+-  const comparisonKey = `${product?.masterProductId || ""}:${product?.masterVariantId || ""}:${product?.sellBy || ""}`;
++  const comparisonKey = `${product?.masterProductId || ""}:${product?.masterVariantId || ""}:${product?.sellBy || ""}:${fulfillment || ""}`;
+   const [previousComparisonKey, setPreviousComparisonKey] = useState<string | null>(null);
+   if (previousComparisonKey !== comparisonKey) {
+     setPreviousComparisonKey(comparisonKey);
+@@ -52,11 +58,15 @@
+     if (!product?.masterProductId || !product?.masterVariantId) {
+       return () => { active = false; };
+     }
+-    api.get<any>(`/catalog/price-comparison?master_product_id=${encodeURIComponent(product.masterProductId)}&variant_id=${encodeURIComponent(product.masterVariantId)}${product.sellBy === "weight" || product.sellBy === "volume" ? `&sell_by=${product.sellBy}` : ""}`, false)
++    api.get<any>(`/catalog/price-comparison?master_product_id=${encodeURIComponent(product.masterProductId)}&variant_id=${encodeURIComponent(product.masterVariantId)}${product.sellBy === "weight" || product.sellBy === "volume" ? `&sell_by=${product.sellBy}` : ""}${fulfillment ? `&fulfillment=${fulfillment}` : ""}`, false)
+       .then((result) => { if (active) { setComparison(result); setComparisonMessage(""); } })
+       .catch(() => { if (active) { setComparison(null); setComparisonMessage("Price comparison is currently unavailable. This offer's displayed price is from its own shop listing."); } });
+     return () => { active = false; };
+-  }, [product?.masterProductId, product?.masterVariantId, product?.sellBy]);
++  }, [product?.masterProductId, product?.masterVariantId, product?.sellBy, fulfillment]);
++
++  const availableVariantId = selectedVariantId ?? product?.variants?.find(variant => variant.available !== false && (variant.stock === undefined || variant.stock > 0))?.id;
++  usePremiumCartEvent(product ? `${product.id}:${availableVariantId || ""}` : undefined, premiumEvent,
++    product ? getQty(product.id, availableVariantId) : 0);
+
+   if (!product) {
+     return (
+@@ -211,11 +221,14 @@
+
+           {(comparisonMessage || comparison) && <View style={styles.comparisonCard} testID="price-comparison-panel">
+             <Text style={styles.sectionTitle}>Compare verified shop prices · {comparison?.unit || displayedProduct.unit}</Text>
++            <View style={styles.variantOptions}>
++              {([undefined, "delivery", "pickup"] as const).map(option => <Pressable key={option || "all"} accessibilityRole="button" accessibilityState={{ selected: fulfillment === option }} onPress={() => setFulfillment(option)} style={[styles.variantOption, fulfillment === option && styles.variantOptionSelected]}><Text style={styles.variantUnit}>{option === "delivery" ? "Delivery" : option === "pickup" ? "Pickup" : "All offers"}</Text></Pressable>)}
++            </View>
+             {comparisonMessage ? <Text style={styles.comparisonMeta}>{comparisonMessage}</Text> : null}
+-            {comparison?.offers?.length ? comparison.offers.map((offer: any, index: number) => <View key={offer.product_id} style={styles.comparisonRow}>
+-              <View style={{ flex: 1 }}><Text style={styles.comparisonShop}>{offer.shop_name || "Approved shop"}{index === 0 ? " · Lowest" : ""}</Text><Text style={styles.comparisonMeta}>Stock: {offer.stock} · Updated: {offer.updated_at ? new Date(offer.updated_at).toLocaleDateString() : "not provided"}</Text></View>
++            {comparison?.offers?.length ? comparison.offers.map((offer: any, index: number) => <Pressable accessibilityRole="button" key={offer.product_id} style={styles.comparisonRow} onPress={() => router.push(`/product/${offer.product_id}`)}>
++              <View style={{ flex: 1 }}><Text style={styles.comparisonShop}>{offer.shop_name || "Approved shop"}{index === 0 ? " · Ranked first" : ""}{offer.premium ? " · Premium" : ""}</Text><Text style={styles.comparisonMeta}>Stock: {offer.stock} · Updated: {offer.updated_at ? new Date(offer.updated_at).toLocaleDateString() : "not provided"}</Text></View>
+               <Text style={styles.comparisonPrice}>₹{Number(offer.price).toFixed(2)}{offer.sell_by && offer.sell_by !== "pack" ? `/${offer.unit}` : ""}</Text>
+-            </View>) : null}
++            </Pressable>) : null}
+             {comparison && comparison.offer_count === 0 ? <Text style={styles.comparisonMeta}>No other verified available offers for this exact master variant.</Text> : null}
+           </View>}
+
+--- a/frontend/app/seller/membership.tsx
++++ b/frontend/app/seller/membership.tsx
+@@ -4,22 +4,32 @@
+ import { useSafeAreaInsets } from "react-native-safe-area-context";
+ import { useRouter } from "expo-router";
+
++import { openRazorpay, RazorpayIntent, razorpaySupported } from "@/src/lib/razorpay";
++import { usePremiumActive } from "@/src/lib/premium";
+ import { api } from "@/src/lib/api";
+ import { useAuth } from "@/src/store/auth";
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
+
+ type Shop = { id: string; name?: string };
+-type Membership = { id?: string; status?: string; expires_at?: string; price_paise?: number; benefits?: { gold_highlight?: boolean; crown_badge?: boolean; sponsored_placement?: boolean } };
++type Membership = { id?: string; status?: string; expires_at?: string; starts_at?: string; created_at?: string; remaining_days?: number; renewal_eligible?: boolean; payment_verified?: boolean; price_paise?: number; benefits?: { gold_highlight?: boolean; crown_badge?: boolean; sponsored_placement?: boolean } };
+
+-const statusLabel = (status?: string) => ({ active: "Active", payment_pending: "Payment pending", payment_confirmed: "Payment confirmed — activation pending", suspended: "Suspended", cancelled: "Cancelled" }[status || ""] || "No membership request");
++const statusLabel = (status?: string) => ({ active: "Active", expired: "Expired", payment_pending: "Payment pending", payment_confirmed: "Payment confirmed — activation pending", suspended: "Suspended", cancelled: "Cancelled" }[status || ""] || "No membership request");
+
+ /** Membership purchase never activates benefits locally: the backend verifies a captured payment first. */
+ export default function SellerMembershipScreen() {
+   const router = useRouter(); const insets = useSafeAreaInsets(); const { user } = useAuth(); const { colors } = useTheme(); const styles = useStyles();
+   const [shop, setShop] = useState<Shop | null>(null); const [membership, setMembership] = useState<Membership | null>(null); const [loading, setLoading] = useState(true); const [busy, setBusy] = useState(false); const [message, setMessage] = useState("");
++  const [history, setHistory] = useState<Membership[]>([]);
++  const [metrics, setMetrics] = useState<{ opportunity: number; impression: number; click: number; ctr: number | null } | null>(null);
+   const load = useCallback(async () => {
+     const mine = await api.get<Shop | null>("/shops/mine"); setShop(mine);
+-    setMembership(mine ? await api.get<Membership | null>(`/shops/${encodeURIComponent(mine.id)}/membership`) : null);
++    if (!mine) { setMembership(null); setHistory([]); setMetrics(null); return; }
++    const root = `/shops/${encodeURIComponent(mine.id)}/membership`;
++    const [current, records, analytics] = await Promise.all([
++      api.get<Membership | null>(root), api.get<Membership[]>(`${root}/history`),
++      api.get<NonNullable<typeof metrics>>(`${root}/analytics`).catch(() => null),
++    ]);
++    setMembership(current); setHistory(records); setMetrics(analytics);
+   }, []);
+   useEffect(() => { if (!user || user.role !== "shopkeeper") return; const run = async () => { try { await load(); } catch (e: any) { setMessage(e?.message || "Membership details could not be loaded."); } finally { setLoading(false); } }; void run(); }, [load, user]);
+   const request = async () => {
+@@ -28,18 +38,45 @@
+       const idempotencyKey = `membership-${shop.id}-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+       const result = await api.post<Membership>(`/shops/${encodeURIComponent(shop.id)}/membership/purchase`, { shop_id: shop.id, idempotency_key: idempotencyKey });
+       setMembership(result);
++      await load();
+       setMessage("Purchase request saved. Payment is not complete and benefits are not active until a configured gateway verifies a captured payment.");
+     } catch (e: any) { setMessage(e?.message || "Membership request could not be saved."); } finally { setBusy(false); }
+   };
++  const pay = async () => {
++    if (!shop || busy) return;
++    setBusy(true); setMessage("");
++    try {
++      if (!razorpaySupported()) throw new Error("Razorpay is unavailable in this app build.");
++      const root = `/shops/${encodeURIComponent(shop.id)}/membership`;
++      const intent = await api.post<Omit<RazorpayIntent, "order_ref"> & { membership_id: string }>(`${root}/payment-intent`, {});
++      const result = await openRazorpay({ ...intent, order_ref: intent.membership_id });
++      setMembership(await api.post<Membership>(`${root}/payment-verify`, result));
++      await load();
++    } catch (e: any) {
++      setMessage(e?.message || "Payment could not be verified. Refresh the status before retrying.");
++    } finally { setBusy(false); }
++  };
++  const unexpired = usePremiumActive(membership?.expires_at);
+   if (!user || user.role !== "shopkeeper") return <View style={styles.centered}><Text style={styles.message}>Seller access is required for Premium Membership.</Text><Pressable style={styles.button} onPress={() => router.replace("/(tabs)/account")}><Text style={styles.buttonText}>Back to Account</Text></Pressable></View>;
+   if (loading) return <View style={styles.centered}><ActivityIndicator color={colors.brandPrimary} /><Text style={styles.message}>Loading membership…</Text></View>;
+-  const active = membership?.status === "active";
++  const active = membership?.benefits?.gold_highlight === true && unexpired;
++  const pending = membership?.status === "payment_pending";
+   return <View style={styles.root}><View style={[styles.header, { paddingTop: insets.top + spacing.sm }]}><Pressable accessibilityLabel="Back" style={styles.icon} onPress={() => router.back()}><Feather name="arrow-left" size={19} color={colors.onSurface} /></Pressable><View><Text style={styles.title}>Premium Membership</Text><Text style={styles.subtitle}>{shop?.name || "My shop"}</Text></View></View><ScrollView contentContainerStyle={styles.content}>
+-    <View style={styles.hero}><Feather name="award" size={28} color={colors.brandPrimary} /><Text style={styles.price}>₹299 <Text style={styles.period}>for 30 days</Text></Text><Text style={styles.copy}>Eligible shops receive a crown badge, gold Grocery highlight, and clearly labelled sponsored placement. Relevance and availability still apply.</Text></View>
+-    <View style={styles.card}><Text style={styles.cardTitle}>Current status</Text><Text style={styles.status}>{statusLabel(membership?.status)}</Text>{membership?.expires_at ? <Text style={styles.copy}>Expiry: {new Date(membership.expires_at).toLocaleDateString()}</Text> : null}</View>
+-    <View style={styles.card}><Text style={styles.cardTitle}>Benefits</Text>{[["award", "Crown badge"], ["star", "Gold Grocery highlight"], ["map-pin", "Sponsored placement, clearly labelled"]].map(([icon, label]) => <View key={label} style={styles.benefit}><Feather name={icon as any} size={16} color={active ? colors.brandPrimary : colors.muted} /><Text style={styles.copy}>{label}{active ? " active" : " available after activation"}</Text></View>)}</View>
++    <View style={styles.hero}><Feather name="award" size={28} color={colors.brandPrimary} /><Text style={styles.price}>₹299 <Text style={styles.period}>for 30 days</Text></Text><Text style={styles.copy}>Eligible shops can receive a Premium badge and discovery highlighting. Exposure does not guarantee orders.</Text></View>
++    <View style={styles.card}><Text style={styles.cardTitle}>Current status</Text><Text style={styles.status}>{statusLabel(!active && membership?.status === "active" ? "expired" : membership?.status)}</Text>
++      {membership?.starts_at ? <Text style={styles.copy}>Started {new Date(membership.starts_at).toLocaleDateString()} · {active ? membership.remaining_days : 0} days remaining</Text> : null}
++      {membership ? <Text style={styles.copy}>{membership.payment_verified ? "Payment verified" : "Payment unverified"} · {membership.renewal_eligible ? "Eligible to renew" : "Renewal unavailable"}</Text> : null}{membership?.expires_at ? <Text style={styles.copy}>Expiry: {new Date(membership.expires_at).toLocaleDateString()}</Text> : null}</View>
++    <View style={styles.card}><Text style={styles.cardTitle}>Benefits</Text>{[["award", "Crown badge"], ["star", "Gold Grocery highlight"], ["map-pin", "Fair discovery opportunities"]].map(([icon, label]) => <View key={label} style={styles.benefit}><Feather name={icon as any} size={16} color={active ? colors.brandPrimary : colors.muted} /><Text style={styles.copy}>{label}{active ? " active" : " available after activation"}</Text></View>)}</View>
+     {message ? <Text style={styles.notice}>{message}</Text> : null}
+-    {!active ? <Pressable accessibilityRole="button" disabled={busy || !shop} style={[styles.button, (busy || !shop) && styles.disabled]} onPress={() => void request()}>{busy ? <ActivityIndicator color={colors.onBrandPrimary} /> : <Text style={styles.buttonText}>{membership?.status === "payment_pending" ? "Refresh payment status" : "Request Premium Membership"}</Text>}</Pressable> : null}
++    {pending && <Pressable accessibilityRole="button" disabled={busy} style={styles.button} onPress={() => void pay()}><Text style={styles.buttonText}>Pay ₹299</Text></Pressable>}
++    {pending && <Pressable accessibilityRole="button" disabled={busy} style={styles.button} onPress={() => void load().catch(() => setMessage("Could not refresh payment status."))}><Text style={styles.buttonText}>Refresh payment status</Text></Pressable>}
++    {!active && !pending && membership?.status !== "payment_confirmed" ? <Pressable accessibilityRole="button" disabled={busy || !shop} style={[styles.button, (busy || !shop) && styles.disabled]} onPress={() => void request()}>{busy ? <ActivityIndicator color={colors.onBrandPrimary} /> : <Text style={styles.buttonText}>{membership?.renewal_eligible ? "Request renewal" : "Request Premium Membership"}</Text>}</Pressable> : null}
++    <View style={styles.card}><Text style={styles.cardTitle}>Exposure in the last 30 days</Text>
++      <Text style={styles.copy}>{metrics ? `${metrics.opportunity} opportunities · ${metrics.impression} impressions · ${metrics.click} clicks · ${metrics.ctr === null ? "CTR unavailable" : `${(metrics.ctr * 100).toFixed(1)}% CTR`}` : "Exposure statistics unavailable"}</Text>
++    </View>
++    <View style={styles.card}><Text style={styles.cardTitle}>Recent membership requests</Text>
++      {history.length ? history.map(row => <Text key={row.id} style={styles.copy}>{row.created_at ? new Date(row.created_at).toLocaleDateString() : "Date unavailable"} · {statusLabel(row.status)} · {row.payment_verified ? "Verified payment" : "Unverified payment"}</Text>) : <Text style={styles.copy}>No requests yet</Text>}
++    </View>
+     <Text style={styles.legal}>A request does not charge you or promise activation. A real payment is only accepted after server-side signature and captured-payment verification. Live payment availability depends on configured provider credentials.</Text>
+   </ScrollView></View>;
+ }
+--- a/frontend/app/shops.tsx
++++ b/frontend/app/shops.tsx
+@@ -1,7 +1,7 @@
+ import Feather from "@react-native-vector-icons/feather";
+ import { Image } from "expo-image";
+-import { useLocalSearchParams, useRouter } from "expo-router";
+-import { useEffect, useMemo, useState } from "react";
++import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
++import { useCallback, useMemo, useState } from "react";
+ import {
+   FlatList,
+   Platform,
+@@ -15,6 +15,7 @@
+
+ import { useT } from "@/src/i18n";
+ import { OfflineShopType, Shop, ShopType, SHOPS } from "@/src/data/shops";
++import { usePremiumActive } from "@/src/lib/premium";
+ import { api, resolveImage } from "@/src/lib/api";
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
+
+@@ -42,10 +43,13 @@
+   // Pull approved shops from the backend and normalize them into the same
+   // shape as the seed demo shops so the existing filter + render pipeline
+   // works unchanged. Live shops always sort to the top.
+-  useEffect(() => {
+-    api.get<any[]>("/shops").then((rows) => {
++  useFocusEffect(useCallback(() => {
++    let active = true;
++    const refresh = () => api.get<any[]>("/shops").then((rows) => {
++      if (!active) return;
+       const normalized: Shop[] = rows.map((s) => ({
+         id: s.id,
++        premiumUntil: s.premium_until,
+         name: s.name,
+         tagline: s.tagline || "",
+         type: (s.shop_type as ShopType) || "offline",
+@@ -62,8 +66,11 @@
+         productIds: [],
+       }));
+       setLiveShops(normalized);
+-    }).catch(() => setLiveShops([]));
+-  }, []);
++    }).catch(() => { if (active) setLiveShops([]); });
++    void refresh();
++    const timer = setInterval(() => void refresh(), 30_000);
++    return () => { active = false; clearInterval(timer); };
++  }, []));
+
+   const shops = useMemo(() => {
+     // Merge live + seed; dedupe by id in case of overlap.
+@@ -234,6 +241,7 @@
+   const styles = useStyles();
+   const { colors } = useTheme();
+   const { t } = useT();
++  const premium = usePremiumActive(shop.premiumUntil);
+   const typeTag =
+     shop.type === "online"
+       ? t("shops.type.online")
+@@ -242,12 +250,12 @@
+       : t("shops.type.both");
+
+   return (
+-    <Pressable testID={`shop-row-${shop.id}`} onPress={onPress} style={styles.card}>
++    <Pressable testID={`shop-row-${shop.id}`} onPress={onPress} style={[styles.card, premium && styles.premiumCard]}>
+       <Image source={shop.image} style={styles.img} contentFit="cover" />
+       <View style={styles.info}>
+         <View style={styles.rowBetween}>
+           <Text style={styles.name} numberOfLines={1}>
+-            {shop.name}
++            {shop.name}{premium ? " · ★ Premium" : ""}
+           </Text>
+           <View
+             style={[
+@@ -362,6 +370,7 @@
+     backgroundColor: colors.surface,
+   },
+   chipText: { fontSize: 11, fontWeight: "700", color: colors.muted },
++  premiumCard: { borderColor: "#bf913a", borderWidth: 1 },
+   card: {
+     flexDirection: "row",
+     gap: spacing.md,
+--- a/frontend/src/components/ProductCard.tsx
++++ b/frontend/src/components/ProductCard.tsx
+@@ -6,6 +6,7 @@
+ import { QuantityStepper } from "@/src/components/QuantityStepper";
+ import { getProductPlaceholder, Product } from "@/src/data/catalog";
+ import { bigUnit, formatAmount, isMeasured, soldByLabel } from "@/src/lib/measure";
++import { trackPremium, usePremiumActive, usePremiumCartEvent } from "@/src/lib/premium";
+ import { useT } from "@/src/i18n";
+ import { useCart } from "@/src/store/cart";
+ import { makeStyles, radius, spacing } from "@/src/theme";
+@@ -26,9 +27,16 @@
+     setImageSource({ id: product.id, image: product.image });
+     setImageFailed(!product.image);
+   }
++  const premium = usePremiumActive(product.premiumUntil);
++  const openProduct = () => {
++    const token = premium ? product.premiumEventToken : undefined;
++    trackPremium(token, "click");
++    router.push({ pathname: "/product/[id]", params: { id: product.id, ...(token ? { premiumEvent: token } : {}) } });
++  };
+   const hasVariants = Boolean(product.variants?.length);
+   const measured = isMeasured(product);
+   const qty = getQty(product.id);
++  usePremiumCartEvent(product.id, product.premiumEventToken, qty);
+   const canBuyThisNow = product.source === "live" && Boolean(product.shopId) && !hasVariants && !measured && (product.stock === undefined || product.stock >= Math.max(1, qty));
+   const buyNow = () => {
+     if (product.source !== "live" || hasVariants || measured) { router.push(`/product/${product.id}`); return; }
+@@ -43,8 +51,8 @@
+   return (
+     <Pressable
+       testID={`product-card-${product.id}`}
+-      onPress={() => router.push(`/product/${product.id}`)}
+-      style={[styles.card, width ? { width } : undefined]}
++      onPress={openProduct}
++      style={[styles.card, premium && styles.premiumCard, width ? { width } : undefined]}
+     >
+       <View style={styles.imageWrap}>
+         <Image source={imageFailed ? getProductPlaceholder(product.categoryId) : product.image} onError={() => setImageFailed(true)} style={styles.image} contentFit="cover" transition={150} />
+@@ -55,6 +63,7 @@
+         )}
+       </View>
+       <View style={styles.info}>
++        {premium && <Text style={styles.premiumBadge}>★ Premium</Text>}
+         <Text style={styles.name} numberOfLines={2}>
+           {product.name}
+         </Text>
+@@ -76,7 +85,7 @@
+             <Pressable
+               testID={`choose-variant-${product.id}`}
+               accessibilityRole="button"
+-              onPress={() => router.push(`/product/${product.id}`)}
++              onPress={openProduct}
+               style={styles.chooseBtn}
+             >
+               <Text style={styles.chooseText}>OPTIONS</Text>
+@@ -106,6 +115,8 @@
+     borderColor: colors.border,
+     overflow: "hidden",
+   },
++  premiumCard: { borderColor: "#bf913a" },
++  premiumBadge: { color: colors.onSurface, fontSize: 11, fontWeight: "800", backgroundColor: "#f1d792", paddingHorizontal: 5, alignSelf: "flex-start" },
+   imageWrap: {
+     width: "100%",
+     aspectRatio: 1,
+--- a/frontend/src/data/catalog.ts
++++ b/frontend/src/data/catalog.ts
+@@ -28,6 +28,8 @@
+   stock?: number;
+   source?: "demo" | "catalog" | "live";
+   shopId?: string;
++  premiumUntil?: string;
++  premiumEventToken?: string;
+   shopName?: string;
+   shopType?: string;
+   shopDeliveryAvailable?: boolean;
+--- a/frontend/src/data/shops.ts
++++ b/frontend/src/data/shops.ts
+@@ -15,6 +15,7 @@
+
+ export type Shop = {
+   id: string;
++  premiumUntil?: string;
+   name: string;
+   tagline: string;
+   type: ShopType;
+--- a/frontend/src/data/useCatalogProducts.ts
++++ b/frontend/src/data/useCatalogProducts.ts
+@@ -1,11 +1,12 @@
+-import { useEffect, useState } from "react";
++import { useCallback, useState } from "react";
++import { useFocusEffect } from "expo-router";
+
+ import { Product, ProductVariant } from "@/src/data/catalog";
+ import { api, resolveImage } from "@/src/lib/api";
+
+ export type CatalogState = { liveProducts: Product[]; loading: boolean; error: string | null };
+
+-function mapLiveProduct(row: any): Product {
++export function mapLiveProduct(row: any): Product {
+   const variants: ProductVariant[] = Array.isArray(row.variants)
+     ? row.variants.map((v: any) => ({ id: String(v.id), unit: String(v.unit || ""), price: Number(v.price), mrp: v.mrp == null ? undefined : Number(v.mrp), stock: Number(v.stock ?? 0), available: v.available !== false }))
+       .filter((v: ProductVariant) => v.available !== false && Number(v.stock ?? 0) > 0)
+@@ -16,6 +17,7 @@
+     price: Number(variants[0]?.price ?? row.price ?? 0), mrp: variants[0]?.mrp ?? row.mrp,
+     image: resolveImage(row.image_url) || "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80",
+     categoryId: String(row.category_id || "uncategorized"), description: String(row.description || ""),
++    premiumUntil: row.premium_until, premiumEventToken: row.premium_event_token,
+     variants, stock: Number(row.stock ?? 0), source: "live", shopId: String(row.shop_id || ""),
+     shopName: String(row.shop_name || ""), shopType: String(row.shop_type || "offline"),
+     ...(row.master_product_id && row.master_variant_id ? { masterProductId: String(row.master_product_id), masterVariantId: String(row.master_variant_id) } : {}),
+@@ -26,13 +28,16 @@
+   };
+ }
+
+-export function useCatalogProducts(): CatalogState {
++export function useCatalogProducts(surface?: "home" | "grocery" | "category", category?: string): CatalogState {
+   const [liveProducts, setLiveProducts] = useState<Product[]>([]);
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState<string | null>(null);
+-  useEffect(() => {
++  useFocusEffect(useCallback(() => {
+     let active = true;
+-    api.get<any[]>("/catalog/products", false).then((rows) => {
++    const query = new URLSearchParams();
++    if (surface) query.set("surface", surface);
++    if (category) query.set("category", category);
++    const refresh = () => api.get<any[]>(`/catalog/products${query.size ? `?${query}` : ""}`, Boolean(surface)).then((rows) => {
+       if (!active) return;
+       setLiveProducts(rows.map(mapLiveProduct).filter((p) => p.id && p.shopId && p.source === "live"));
+       setError(null);
+@@ -41,7 +46,9 @@
+       setLiveProducts([]);
+       setError(e?.message || "Live catalog is unavailable. Demo previews remain separate.");
+     }).finally(() => { if (active) setLoading(false); });
+-    return () => { active = false; };
+-  }, []);
++    void refresh();
++    const interval = surface ? setInterval(() => void refresh(), 30_000) : undefined;
++    return () => { active = false; clearInterval(interval); };
++  }, [surface, category]));
+   return { liveProducts, loading, error };
+ }
+--- /dev/null
++++ b/frontend/src/lib/premium.ts
+@@ -0,0 +1,44 @@
++import { useEffect, useRef, useState } from "react";
++import type { Product } from "@/src/data/catalog";
++import { api } from "@/src/lib/api";
++
++export type DisplayToken<T> = { item: T; isViewable: boolean };
++
++type EventKind = "impression" | "click" | "product_view" | "add_to_cart";
++
++export function trackPremium(token: string | undefined, kind: EventKind) {
++  if (token) void api.post("/catalog/premium-events", { token, kind }).catch(() => {});
++}
++
++export const premiumViewability = { itemVisiblePercentThreshold: 50, minimumViewTime: 750 };
++
++export function recordVisibleProducts({ changed }: { changed: DisplayToken<Product>[] }) {
++  for (const row of changed) {
++    if (row.isViewable) trackPremium(row.item.premiumEventToken, "impression");
++  }
++}
++
++export function usePremiumActive(until?: string) {
++  const expiry = until ? Date.parse(until) : 0;
++  const [clock, setClock] = useState(Date.now);
++  useEffect(() => {
++    const now = Date.now();
++    const remaining = expiry - now;
++    if (!(remaining > 0)) return;
++    // A membership can last more than the maximum supported JS timer delay.
++    const timer = setTimeout(() => setClock(Date.now()), Math.min(remaining, 2_147_000_000));
++    return () => clearTimeout(timer);
++  }, [expiry, clock]);
++  return expiry > clock;
++}
++
++
++export function usePremiumCartEvent(productId: string | undefined, token: string | undefined, quantity: number) {
++  const previous = useRef({ productId, quantity });
++  useEffect(() => {
++    if (productId && previous.current.productId === productId && quantity > previous.current.quantity) {
++      trackPremium(token, "add_to_cart");
++    }
++    previous.current = { productId, quantity };
++  }, [productId, token, quantity]);
++}
+--- a/frontend/src/store/cart.tsx
++++ b/frontend/src/store/cart.tsx
+@@ -118,7 +118,8 @@
+   useEffect(() => {
+     if (!hydrated) return;
+     storage.setItem(STORAGE_KEY, JSON.stringify(items));
+-    storage.setItem(SNAPSHOTS_KEY, JSON.stringify(snapshots));
++    storage.setItem(SNAPSHOTS_KEY, JSON.stringify(snapshots, (key, value) =>
++      key === "premiumEventToken" || key === "premiumUntil" ? undefined : value));
+   }, [items, snapshots, hydrated]);
+
+   const getQty = useCallback((id: string, variantId?: string) => items[getCartItemKey(id, variantId)] ?? 0, [items]);

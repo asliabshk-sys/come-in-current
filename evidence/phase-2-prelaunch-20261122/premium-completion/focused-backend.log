@@ -1,0 +1,50 @@
+bringing up nodes...
+bringing up nodes...
+
+.............................................................            [100%]
+=============================== warnings summary ===============================
+../COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/starlette/formparsers.py:12
+../COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/starlette/formparsers.py:12
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+tests/test_premium_membership_integration.py::test_membership_http_mongo_and_mock_gateway
+  /workspace/premium-source/backend/server.py:6728: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+tests/test_premium_membership_integration.py::test_membership_http_mongo_and_mock_gateway
+tests/test_premium_membership_integration.py::test_membership_http_mongo_and_mock_gateway
+tests/test_premium_membership_integration.py::test_membership_http_mongo_and_mock_gateway
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/fastapi/applications.py:4495: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    return self.router.on_event(event_type)
+
+tests/test_premium_membership_integration.py::test_membership_http_mongo_and_mock_gateway
+  /workspace/premium-source/backend/server.py:6874: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("shutdown")
+
+tests/test_premium_membership_integration.py::test_membership_http_mongo_and_mock_gateway
+  /workspace/premium-source/backend/server.py:7942: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+61 passed, 8 warnings in 12.70s
