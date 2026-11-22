@@ -1,0 +1,362 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -145,52 +145,52 @@
+         resp.raise_for_status()
+         _storage_key = resp.json()["storage_key"]
+         return _storage_key
+-    except Exception as e:
+-        logger.error("Object storage init failed: %s", e)
++    except (requests.RequestException, ValueError, KeyError, TypeError) as exc:
++        logger.error("Object storage init failed: %s", type(exc).__name__)
+         return None
+
+
+-def put_object(path: str, data: bytes, content_type: str) -> dict:
++def _storage_object_request(method, path, *, data=None, content_type=None, timeout):
+     key = init_storage()
+     if not key:
+         raise HTTPException(status_code=503, detail="Object storage unavailable")
+-    resp = requests.put(
+-        f"{STORAGE_URL}/objects/{path}",
+-        headers={"X-Storage-Key": key, "Content-Type": content_type},
+-        data=data,
+-        timeout=120,
+-    )
+-    if resp.status_code == 404:
+-        # Stale key — mint a new one and retry once
+-        key = init_storage(force=True)
+-        if not key:
+-            raise HTTPException(status_code=503, detail="Object storage unavailable")
+-        resp = requests.put(
+-            f"{STORAGE_URL}/objects/{path}",
+-            headers={"X-Storage-Key": key, "Content-Type": content_type},
+-            data=data,
+-            timeout=120,
+-        )
+-    resp.raise_for_status()
+-    return resp.json()
++
++    def send(storage_key):
++        headers = {"X-Storage-Key": storage_key}
++        if content_type:
++            headers["Content-Type"] = content_type
++            return method(f"{STORAGE_URL}/objects/{path}", headers=headers, data=data, timeout=timeout)
++        return method(f"{STORAGE_URL}/objects/{path}", headers=headers, timeout=timeout)
++
++    try:
++        response = send(key)
++        if response.status_code == 404:
++            key = init_storage(force=True)
++            if not key:
++                raise HTTPException(status_code=503, detail="Object storage unavailable")
++            response = send(key)
++        if response.status_code == 404 and content_type is None:
++            raise HTTPException(status_code=404, detail="File not found")
++        response.raise_for_status()
++        return response
++    except requests.RequestException as exc:
++        raise HTTPException(status_code=502, detail="Object storage request failed") from exc
++
++
++def put_object(path: str, data: bytes, content_type: str) -> dict:
++    response = _storage_object_request(requests.put, path, data=data, content_type=content_type, timeout=120)
++    try:
++        result = response.json()
++        if not isinstance(result, dict) or result.get("path") != path:
++            raise ValueError("Unexpected storage object reference")
++        return result
++    except (ValueError, TypeError) as exc:
++        raise HTTPException(status_code=502, detail="Object storage returned an invalid reference") from exc
+
+
+ def get_object(path: str) -> tuple[bytes, str]:
+-    key = init_storage()
+-    if not key:
+-        raise HTTPException(status_code=503, detail="Object storage unavailable")
+-    resp = requests.get(
+-        f"{STORAGE_URL}/objects/{path}", headers={"X-Storage-Key": key}, timeout=60
+-    )
+-    if resp.status_code == 404:
+-        key = init_storage(force=True)
+-        if not key:
+-            raise HTTPException(status_code=503, detail="Object storage unavailable")
+-        resp = requests.get(
+-            f"{STORAGE_URL}/objects/{path}", headers={"X-Storage-Key": key}, timeout=60
+-        )
+-    resp.raise_for_status()
+-    return resp.content, resp.headers.get("Content-Type", "application/octet-stream")
++    response = _storage_object_request(requests.get, path, timeout=60)
++    return response.content, response.headers.get("Content-Type", "application/octet-stream")
+
+ # ---------------------------------------------------------------------------
+ # Shared model helpers (BaseDocument pattern)
+@@ -1497,7 +1497,11 @@
+     stored = put_object(path, data, content_type)
+     now = now_utc()
+     poster_sha256 = hashlib.sha256(data).hexdigest()
+-    await db.advertisements.update_one({"_id": advertisement["_id"]}, {"$set": {"poster_url": f"/api/uploads/{stored['path']}", "poster_storage_path": stored["path"], "poster_dimensions": {"width": width, "height": height}, "poster_sha256": poster_sha256, "status": "draft", "ai_review": {"status": "NOT_RUN"}, "owner_approval": None, "updated_at": now}})
++    updated = await db.advertisements.update_one({
++        "_id": advertisement["_id"], "status": advertisement["status"], "updated_at": advertisement.get("updated_at"),
++    }, {"$set": {"poster_content_type": content_type, "poster_url": f"/api/uploads/{stored['path']}", "poster_storage_path": stored["path"], "poster_dimensions": {"width": width, "height": height}, "poster_sha256": poster_sha256, "status": "draft", "ai_review": {"status": "NOT_RUN"}, "owner_approval": None, "updated_at": now}})
++    if updated.matched_count != 1:
++        raise HTTPException(status_code=409, detail="Campaign changed before the poster could be saved")
+     await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id, "actor_id": user["id"], "event": "poster_uploaded", "dimensions": {"width": width, "height": height}, "created_at": now})
+     return {"poster_url": f"/api/uploads/{stored['path']}", "dimensions": {"width": width, "height": height}, "poster_sha256": poster_sha256, "status": "draft"}
+
+@@ -1506,12 +1510,21 @@
+ async def review_advertisement_with_chand(advertisement_id: str, user: dict = Depends(get_current_user)):
+     advertisement = await _advertisement_or_404(advertisement_id)
+     _assert_advertisement_owner(advertisement, user)
+-    if not advertisement.get("poster_storage_path"):
++    if advertisement.get("status") not in {"draft", "rejected", "pending_owner_approval"}:
++        raise HTTPException(status_code=409, detail="Campaign is not open for CHAND review")
++    poster_sha256 = advertisement.get("poster_sha256")
++    if not advertisement.get("poster_storage_path") or not poster_sha256:
+         raise HTTPException(status_code=422, detail="Upload a verified advertisement poster before requesting CHAND review")
+     review = await asyncio.to_thread(review_advertisement, advertisement)
+     status_value = "pending_owner_approval" if review.get("status") == "COMPLETED" else "draft"
+     now = now_utc()
+-    await db.advertisements.update_one({"_id": advertisement["_id"]}, {"$set": {"ai_review": review, "status": status_value, "updated_at": now}})
++    review = {**review, "poster_sha256": poster_sha256}
++    updated = await db.advertisements.update_one({
++        "_id": advertisement["_id"], "status": advertisement["status"], "poster_sha256": poster_sha256,
++        "updated_at": advertisement.get("updated_at"),
++    }, {"$set": {"ai_review": review, "status": status_value, "owner_approval": None, "updated_at": now}})
++    if updated.matched_count != 1:
++        raise HTTPException(status_code=409, detail="Poster or campaign changed during CHAND review")
+     await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id, "actor_id": user["id"], "event": "chand_review", "review_status": review.get("status"), "created_at": now})
+     return {"status": status_value, "ai_review": review, "owner_approval_required": True}
+
+@@ -1537,16 +1550,18 @@
+     advertisement = await _advertisement_or_404(advertisement_id)
+     review = advertisement.get("ai_review") or {}
+     poster_sha256 = advertisement.get("poster_sha256")
+-    if (advertisement.get("status") != "pending_owner_approval" or review.get("status") != "COMPLETED" or review.get("decision") != "safe" or not isinstance(poster_sha256, str)):
++    if (advertisement.get("status") != "pending_owner_approval" or review.get("status") != "COMPLETED" or review.get("decision") != "safe" or not isinstance(poster_sha256, str) or review.get("poster_sha256") != poster_sha256):
+         raise HTTPException(status_code=409, detail="A safe CHAND review and unchanged poster are required before owner publication")
+     now = now_utc()
+     approval = {"owner_id": user["id"], "poster_sha256": poster_sha256, "approved_at": now}
+-    await db.advertisements.update_one({"_id": advertisement["_id"], "status": "pending_owner_approval", "poster_sha256": poster_sha256}, {"$set": {"status": "approved", "owner_approval": approval, "updated_at": now}})
+-    fresh = await db.advertisements.find_one({"_id": advertisement["_id"]})
+-    if fresh.get("status") != "approved":
++    updated = await db.advertisements.update_one({
++        "_id": advertisement["_id"], "status": "pending_owner_approval", "poster_sha256": poster_sha256,
++        "ai_review": review, "updated_at": advertisement.get("updated_at"),
++    }, {"$set": {"status": "approved", "owner_approval": approval, "updated_at": now}})
++    if updated.matched_count != 1:
+         raise HTTPException(status_code=409, detail="Campaign changed before owner approval; submit it for review again")
+     await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id, "actor_id": user["id"], "event": "owner_published", "poster_sha256": poster_sha256, "created_at": now})
+-    return _advertisement_out(fresh)
++    return _advertisement_out(await db.advertisements.find_one({"_id": advertisement["_id"]}))
+
+
+ @api.get("/advertisements/active")
+@@ -2356,9 +2371,30 @@
+
+
+ @api.get("/uploads/{storage_path:path}")
+-async def serve_upload(storage_path: str):
++async def serve_upload(storage_path: str, user: Optional[dict] = Depends(get_current_user_optional)):
+     if ".." in storage_path:
+         raise HTTPException(status_code=400, detail="Invalid path")
++    if storage_path.startswith(f"{APP_NAME}/advertisements/"):
++        campaign = await db.advertisements.find_one({"poster_storage_path": storage_path})
++        if not campaign or campaign.get("status") == "removed":
++            raise HTTPException(status_code=404, detail="File not found")
++        digest = campaign.get("poster_sha256")
++        approved = campaign.get("owner_approval") or {}
++        now = now_utc()
++        public = (campaign.get("status") == "approved" and isinstance(digest, str)
++                  and approved.get("poster_sha256") == digest and campaign.get("starts_at") and campaign.get("ends_at")
++                  and utc(campaign["starts_at"]) <= now < utc(campaign["ends_at"]))
++        can_preview = user and (user.get("role") == "admin"
++                                or (user.get("role") == "shopkeeper" and user.get("id") == campaign.get("owner_id")))
++        if not public and not can_preview:
++            raise HTTPException(status_code=404, detail="File not found")
++        data, ct = await asyncio.to_thread(get_object, storage_path)
++        if not isinstance(digest, str) or hashlib.sha256(data).hexdigest() != digest:
++            raise HTTPException(status_code=502, detail="Stored poster does not match the campaign")
++        content_type = campaign.get("poster_content_type") or ct
++        if content_type not in ALLOWED_IMAGE or not _validated_image_signature(data, content_type):
++            raise HTTPException(status_code=502, detail="Stored poster is invalid")
++        return Response(content=data, media_type=content_type, headers={"Cache-Control": "private, no-store"})
+     record = await db.files.find_one({"storage_path": storage_path, "is_deleted": False})
+     if not record:
+         raise HTTPException(status_code=404, detail="File not found")
+--- /dev/null
++++ b/backend/tests/test_task4_storage_advertisement_integration.py
+@@ -0,0 +1,174 @@
++"""HTTP storage and advertisement contracts with a disposable database and no external calls."""
++import asyncio
++from collections import Counter
++from datetime import timedelta
++import hashlib
++import os
++import struct
++import threading
++from types import SimpleNamespace
++from uuid import uuid4
++
++import pytest
++
++
++def test_storage_and_advertisement_http(monkeypatch):
++    if os.getenv("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
++        pytest.skip("requires disposable loopback MongoDB replica set")
++
++    import httpx
++    from bson import ObjectId
++    from motor.motor_asyncio import AsyncIOMotorClient
++    import requests
++    import server
++
++    monkeypatch.setenv("JWT_SECRET", uuid4().hex)
++    monkeypatch.setenv("ADVERTISEMENT_OWNER_EMAIL", "owner@fixture.example")
++    monkeypatch.setattr(server, "EMERGENT_KEY", "local-storage-fixture")
++    monkeypatch.setattr(server, "_storage_key", None)
++    objects, calls = {}, Counter()
++    provider = {"fault": None, "retry_key": False}
++
++    def response(status=200, *, payload=None, data=b"", content_type="image/png"):
++        def check():
++            if status >= 400:
++                raise requests.HTTPError("fixture provider failure")
++        return SimpleNamespace(status_code=status, json=lambda: payload, content=data,
++                               headers={"Content-Type": content_type}, raise_for_status=check)
++
++    def init(url, **kwargs):
++        assert url == server.STORAGE_URL + "/init"
++        calls["init"] += 1
++        return response(payload={"storage_key": f"fixture-key-{calls['init']}"})
++
++    def put(url, *, headers, data, **kwargs):
++        calls["put"] += 1
++        assert url.startswith(server.STORAGE_URL + "/objects/")
++        path = url.split("/objects/", 1)[1]
++        if provider["retry_key"]:
++            provider["retry_key"] = False
++            return response(404)
++        if provider["fault"] == "timeout":
++            raise requests.Timeout("fixture")
++        if provider["fault"] == "reference":
++            return response(payload={"path": "incorrect-object"})
++        objects[path] = (data, headers["Content-Type"])
++        return response(payload={"path": path, "size": len(data)})
++
++    def get(url, **kwargs):
++        calls["get"] += 1
++        assert url.startswith(server.STORAGE_URL + "/objects/")
++        path = url.split("/objects/", 1)[1]
++        if path not in objects:
++            return response(404)
++        data, content_type = objects[path]
++        return response(data=data, content_type=content_type)
++
++    monkeypatch.setattr(server.requests, "post", init)
++    monkeypatch.setattr(server.requests, "put", put)
++    monkeypatch.setattr(server.requests, "get", get)
++
++    def png(width=400, height=200, suffix=b"x"):
++        return b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR" + struct.pack(">II", width, height) + suffix
++
++    async def exercise():
++        mongo = AsyncIOMotorClient("mongodb://127.0.0.1:27018/?replicaSet=rs0", serverSelectionTimeoutMS=3000)
++        name = "comein_disposable_media_" + uuid4().hex[:16]
++        db = mongo[name]
++        monkeypatch.setattr(server, "db", db)
++        headers, ids = {}, {}
++        try:
++            for label in ("seller", "other", "admin", "owner", "customer"):
++                oid = ObjectId()
++                role = "shopkeeper" if label in {"seller", "other"} else "admin" if label in {"admin", "owner"} else "customer"
++                email = f"{label}@fixture.example"
++                ids[label] = str(oid)
++                await db.users.insert_one({"_id": oid, "role": role, "email": email})
++                headers[label] = {"Authorization": "Bearer " + server.create_access_token(str(oid), role, email)}
++            await db.advertisement_events.create_index([("advertisement_id", 1), ("user_id", 1), ("event_type", 1), ("day", 1)], unique=True)
++            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=server.app), base_url="http://local") as http:
++                async def req(method, path, who=None, **kwargs):
++                    return await http.request(method, path, headers=headers.get(who), **kwargs)
++
++                async def upload(path, who, data, mime="image/png"):
++                    return await req("POST", path, who, files={"file": ("fixture.png", data, mime)})
++
++                general = "/api/uploads/image"
++                assert (await upload(general, None, png())).status_code == 401
++                assert (await upload(general, "customer", b"not an image")).status_code == 400
++                assert calls["put"] == 0
++                provider["retry_key"] = True
++                uploaded = await upload(general, "customer", png())
++                assert uploaded.status_code == 200 and calls["put"] == 2 and calls["init"] == 2
++                url = uploaded.json()["url"]
++                assert (await req("GET", url)).content == png()
++                path = uploaded.json()["storage_path"]
++                assert (await db.files.find_one({"storage_path": path}))["owner_id"] == ids["customer"]
++                objects.pop(path)
++                assert (await req("GET", url)).status_code == 404
++                objects[path] = (png(), "image/png")
++                await db.files.update_one({"storage_path": path}, {"$set": {"is_deleted": True}})
++                before = calls["get"]
++                assert (await req("GET", url)).status_code == 404 and calls["get"] == before
++                for fault in ("timeout", "reference"):
++                    provider["fault"] = fault
++                    assert (await upload(general, "customer", png())).status_code == 502
++                provider["fault"] = None
++
++                ad = ObjectId()
++                now = server.now_utc()
++                await db.advertisements.insert_one({"_id": ad, "owner_id": ids["seller"], "status": "draft",
++                    "placement": "home_banner", "starts_at": now - timedelta(hours=1), "ends_at": now + timedelta(hours=1)})
++                poster = f"/api/advertisements/{ad}/poster"
++                review = f"/api/advertisements/{ad}/chand-review"
++                publish = f"/api/owner/advertisements/{ad}/publish"
++                assert (await upload(poster, "other", png())).status_code == 403
++                assert (await upload(poster, "seller", png(30, 10))).status_code == 400
++                assert (await upload(poster, "seller", png(), "application/pdf")).status_code == 400
++                assert (await upload(poster, "seller", png(suffix=b"x" * server.AD_POSTER_MAX_BYTES))).status_code == 413
++                first = (await upload(poster, "seller", png())).json()["poster_url"]
++                assert (await req("GET", first)).status_code == 404
++                assert (await req("GET", first, "other")).status_code == 404
++                assert (await req("GET", first, "seller")).content == png()
++                assert (await req("GET", first, "admin")).content == png()
++                assert (await req("POST", publish, "admin")).status_code == 403
++                assert (await req("POST", publish, "owner")).status_code == 409
++
++                started, resume = threading.Event(), threading.Event()
++                def delayed(_):
++                    started.set()
++                    assert resume.wait(5)
++                    return {"status": "COMPLETED", "decision": "safe"}
++
++                monkeypatch.setattr(server, "review_advertisement", delayed)
++                in_review = asyncio.create_task(req("POST", review, "seller"))
++                try:
++                    assert await asyncio.to_thread(started.wait, 5)
++                    second_data = png(suffix=b"replacement")
++                    second = (await upload(poster, "seller", second_data)).json()["poster_url"]
++                finally:
++                    resume.set()
++                assert (await in_review).status_code == 409
++                assert (await req("GET", first, "seller")).status_code == 404
++                assert (await req("POST", publish, "owner")).status_code == 409
++                assert (await req("POST", review, "seller")).status_code == 200
++                assert (await db.advertisements.find_one({"_id": ad}))["status"] == "pending_owner_approval"
++                assert (await req("GET", second)).status_code == 404
++                assert (await req("POST", publish, "owner")).status_code == 200
++                assert (await req("POST", review, "seller")).status_code == 409
++                assert (await req("GET", second)).content == second_data
++                active = (await req("GET", "/api/advertisements/active")).json()
++                assert active[0]["poster_url"] == second and "poster_storage_path" not in active[0]
++                assert active[0]["poster_sha256"] == hashlib.sha256(second_data).hexdigest()
++                event = f"/api/advertisements/{ad}/events/impression"
++                for _ in range(2):
++                    assert (await req("POST", event, "customer")).status_code == 200
++                assert await db.advertisement_events.count_documents({}) == 1
++                assert (await req("PATCH", f"/api/admin/advertisements/{ad}", "admin",
++                                  json={"decision": "remove", "reason": "fixture removal"})).status_code == 200
++                assert (await req("GET", second, "seller")).status_code == 404
++        finally:
++            await mongo.drop_database(name)
++            mongo.close()
++
++    asyncio.run(exercise())

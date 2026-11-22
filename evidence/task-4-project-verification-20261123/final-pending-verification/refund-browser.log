@@ -1,0 +1,2 @@
+PASS Chromium seller selects verified payment, supplies reason, and sees submitted case
+PASS Chromium admin reviews and approves without displaying gateway success

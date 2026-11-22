@@ -16,3 +16,7 @@
 | Operations | IMPLEMENTED — VERIFICATION INCOMPLETE | In-app notices, audit trails and documented admin reconciliation exist. Storage, monitoring, incident intake, recovery drills and provider acceptance remain open. |
 
 Use only approved test configuration. No deployment, production data or genuine gateway operation occurred during Task 4.
+
+## Follow-up gate decision
+
+The local storage and advertisement contracts have passed. The original external object-storage acceptance test remains blocked by a missing authorized provider binding. Genuine Razorpay, signed device builds, policy/legal decisions and production infrastructure retain their separate gates. Production rollout remains blocked. [Final pending dispositions](final-pending-verification/PENDING_ITEMS.md)

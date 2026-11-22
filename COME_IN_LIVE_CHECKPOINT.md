@@ -878,3 +878,7 @@ Task 3 implementation is **COMPLETE**. Security and regression checks **PASSED**
 ## Task 4 project-wide verification — 2026-11-23 IST
 
 **COMPLETED & VERIFIED for this authorized local cycle.** Verified GitHub baseline `784dd21fa7395029a8a78674b1fe8327d9318dcb` and preserved Task 1–3 governance. Restored exact public templates through `patches/task4-restore-public-templates.patch`. Full backend 685 passed, zero failed and five initial skips; four optional parser cases passed in a separate 21-test rerun and object storage remains blocked. Targeted retest 52 passed. Expo/web and local browser verification passed. Production remains blocked; native-device and genuine Razorpay validations remain deferred. See `evidence/task-4-project-verification-20261123/AUDIT_REPORT.md`.
+
+## Task 4 final pending-work verification — 2026-11-23 IST
+
+The authorized local fixes and fresh verification are complete. Apply `patches/task4-storage-advertisement-verification.patch` after template restoration. The full backend run recorded 686 passes, zero failures and five skips; four parser cases passed in the optional suite and the external object-storage skip remains blocked. The project-wide closure and separate external dispositions are in `evidence/task-4-project-verification-20261123/final-pending-verification/`. Canonical Task 4 remains separately tracked and production rollout remains blocked.

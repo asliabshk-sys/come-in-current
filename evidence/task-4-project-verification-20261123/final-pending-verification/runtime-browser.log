@@ -1,0 +1,5 @@
+PASS Chromium item search shows Premium first, truthful badge, and ordinary results
+PASS Chromium exact shop name replaces product-result sections
+PASS Chromium Grocery category preserves ordinary listings and renders Premium badge
+PASS Chromium seller Membership screen renders status, history and exposure
+PASS Chromium admin analytics renders metrics and unavailable attribution

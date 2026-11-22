@@ -956,3 +956,7 @@ Task 3 implementation is **COMPLETE**. Security and regression checks **PASSED**
 ## Task 4 verification handover — 2026-11-23 IST
 
 Apply `patches/task4-restore-public-templates.patch` last in the verified application restoration chain. The local verification cycle is complete. See `evidence/task-4-project-verification-20261123/` for the audit, canonical/task-wise status matrix, fresh run logs and release decision. Local development may proceed. Production rollout is blocked, and native/device and genuine external Razorpay testing remain deferred. Task 3 remains owner-approved and closed.
+
+## Task 4 final pending-work verification — 2026-11-23 IST
+
+The authorized local fixes and fresh verification are complete. Apply `patches/task4-storage-advertisement-verification.patch` after template restoration. The full backend run recorded 686 passes, zero failures and five skips; four parser cases passed in the optional suite and the external object-storage skip remains blocked. The project-wide closure and separate external dispositions are in `evidence/task-4-project-verification-20261123/final-pending-verification/`. Canonical Task 4 remains separately tracked and production rollout remains blocked.

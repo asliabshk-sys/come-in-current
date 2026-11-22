@@ -41,3 +41,7 @@ Existing defensive suites exercised authentication, role boundaries, seller owne
 | Roadmap/runtime gaps | Coupons, expanded loyalty, standalone customer trust and delivery performance lack a complete verified workflow. They remain identified in the matrix and require separate approved scope. |
 
 The release assessment records authorized continuation and [release blockers and deferred gates](RELEASE_READINESS.md). No original source archive, prior evidence or application logic was overwritten.
+
+## Follow-up verification
+
+The [final pending-work report](final-pending-verification/REPORT.md) records the storage and advertisement fixes, exact tests, and updated results. Earlier run outputs and governance records are preserved.
