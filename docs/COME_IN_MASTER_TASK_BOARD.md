@@ -18,6 +18,7 @@ The recovered roadmap contains **22 canonical tasks**. Report labels such as Tas
 | Task 1 — Existing Project Audit | **APPROVED** | Owner approval recorded 22 November 2026 in `docs/TASK_1_OWNER_APPROVAL_RECORD_20261122.md`; final package manifest: 189/189 hashes verified. |
 | Task 2 execution | **APPROVED** | Owner approved completed local scope on 22 November 2026; record: `docs/TASK_2_OWNER_APPROVAL_RECORD_20261122.md`. Deferred native/runtime testing remains visible. |
 | Task 3 execution | **REVIEW PENDING** | Seller Dashboard final local package is in `evidence/task-3-seller-implementation-20261122/final-completion-20261122/`; 91 recovered-source contracts, TypeScript, targeted lint, web export, patch and archive checks passed. Owner decision required; Task 4 remains locked. |
+| Phase 2 pre-launch business systems | **IN PROGRESS** | Authorized implementation began with the advertisement foundation in `evidence/phase-2-prelaunch-20261122/advertisement-foundation/`. It is not an owner approval or production-readiness claim. |
 | Android / iOS native validation | **DEFERRED** | Separate authorized native/device phase required. |
 | Razorpay TEST payment, webhook, refund | **DEFERRED** | Separate authorized provider phase with TEST credentials and webhook endpoint required. |
 | Production configuration / infrastructure validation | **BLOCKED** | Requires approved non-production-equivalent deployment evidence and owner-controlled configuration; no production action is authorized. |

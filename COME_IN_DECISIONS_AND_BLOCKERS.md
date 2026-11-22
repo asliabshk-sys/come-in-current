@@ -1,5 +1,9 @@
 # COME-IN — Decisions and Blockers
 
+## Phase 2 — Advertisement-only image policy (22 November 2026)
+
+The new advertisement foundation provides the only newly introduced image-upload path and validates image signature, size and dimensions. Legacy general image upload and customer CHAND vision/photo-shopping predate Phase 2. Their removal has retained-behaviour compatibility impact and requires an explicit migration decision; they were not silently disabled. CHAND advertisement review remains non-publishing when its provider is not configured. No credential was requested, logged, or used.
+
 ## Task 3 Seller Dashboard implementation decision — 22 November 2026 (Asia/Kolkata)
 
 The owner authorized Task 3 Seller Dashboard implementation. Existing workflows must be extended rather than duplicated. The first safe increment is a real-data seller overview plus a bounded Help Center/human-support entry; no unconfigured AI provider is represented as live. Advertisement, membership, staff/branches, review moderation, provider-backed OCR/push/bank/payment operations and production activation require separate policy/configuration decisions. Android/iOS device testing remains deferred. Task 4 remains locked.

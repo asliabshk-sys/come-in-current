@@ -2,6 +2,10 @@
 
 Repository `asliabshk-sys/come-in-current`, path `/workspace/come-in-current`; branch `work`. Before this documentation checkpoint, `HEAD` and `origin/work` both resolved to `0ecfbd08cc999d7106efbb0e28a6a9d3d56b114f`, with `0 0` ahead/behind and a clean tree. No application source, database, service, UI, configuration, test or external provider operation was performed.
 
+## Phase 2 advertisement foundation — 22 November 2026
+
+Phase 2 is **IN PROGRESS**. The first implemented slice is captured in `patches/phase2-advertisement-foundation.patch` and `evidence/phase-2-prelaunch-20261122/advertisement-foundation/IMPLEMENTATION_REPORT.md`: seller-owned drafts, strict poster validation, CHAND-gated review, admin-only publication, audit/event records and seller UI. Fresh focused tests: 10 PASS; TypeScript PASS; targeted ESLint PASS; forward/reverse patch dry-run PASS. Expo web export is BLOCKED by the sandbox inability to create `/home/agent/.expo`; never report it as passed. No real CHAND provider, native/device, payment or production operation was used. Legacy general image/CHAND vision functionality conflicts with Phase 2's advertisement-only image policy and needs a separately approved compatibility migration.
+
 Completed: fetched and verified `origin/work`; read handover, five checkpoints, Task 1 final owner-approval record, external validation and release-readiness records; reconciled the recovered 22-task canonical roadmap into `docs/COME_IN_MASTER_TASK_BOARD.md`; prepared `docs/TASK_2_PREPARATION_PROMPT.md`. The owner explicitly approved Task 1 on 22 November 2026; `docs/TASK_1_OWNER_APPROVAL_RECORD_20261122.md` is the durable decision record. Task 2 has not started.
 
 Pending/blocked: Task 2 requires separate owner authorization. Android/iOS native validation, actual Razorpay TEST payment/webhook/refund and production configuration/infrastructure validation remain DEFERRED/BLOCKED.

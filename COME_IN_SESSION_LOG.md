@@ -1,3 +1,7 @@
+## 22 November 2026 (Asia/Kolkata) — Phase 2 advertisement foundation
+
+Implemented the first Phase 2 vertical slice in the isolated restored source and captured it in `patches/phase2-advertisement-foundation.patch`. Fresh results: 10 focused Python tests PASS; TypeScript PASS; targeted ESLint PASS; forward/reverse patch dry-run PASS. Expo web export was attempted and BLOCKED because sandboxed Expo cannot create `/home/agent/.expo`; it is not a passed export. Evidence is `evidence/phase-2-prelaunch-20261122/advertisement-foundation/IMPLEMENTATION_REPORT.md`.
+
 ## 22 November 2026 (Asia/Kolkata) — Task 3 Seller Dashboard implementation start
 
 Fetched and verified `origin/work`: local and remote matched at `87c6c3631e4660cec32aff622dd5870d49d9eee4`, zero ahead/behind, clean tree. Read the Task 3 reports, Task 2 approval, master board, root checkpoints and retained source handoff. Source inspection confirms seller surfaces are distributed across registration/profile, products/imports, orders, support and earnings routes. Created the implementation checklist and evidence location before code changes. No source, database, provider, native/device, production or payment operation has run yet.
