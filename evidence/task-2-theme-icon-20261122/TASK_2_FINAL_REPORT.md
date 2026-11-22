@@ -2,7 +2,7 @@
 
 **Date:** 22 November 2026 (Asia/Kolkata)
 **Repository / branch:** `asliabshk-sys/come-in-current` / `work`
-**Task status:** **REVIEW PENDING** — completed audit scope awaits owner review; not approved or closed.
+**Task status:** **APPROVED** — owner approved completed local scope on 22 November 2026; deferred validation remains separate.
 **Starting commit:** `3aa855ac9913a1b7c1b3c8c535c569f477c42f01`
 
 ## A. Official application icon integration
@@ -68,7 +68,7 @@ The configured Yarn executable was unavailable in the shell; installed local bin
 
 ## L/M. GitHub checkpoint
 
-This report is included in the Task 2 final documentation checkpoint. The committing/pushing session must record the resulting commit SHA and remote equality in the five root checkpoints before handover.
+This report was included in the Task 2 final documentation checkpoint, commit `e738824b9cce398623d854739c49f0c7f5420aa9`, which was remotely verified before the owner decision. The owner-approval checkpoint records its own commit SHA and remote equality in the five root checkpoints.
 
 ## N. Owner review checklist
 
@@ -77,7 +77,7 @@ This report is included in the Task 2 final documentation checkpoint. The commit
 - [x] UI/theme static audit completed without discretionary redesign.
 - [x] Relevant local TypeScript, ESLint, web export, static inventory and CHAND regression checks run.
 - [x] Native/device limitations and existing warnings disclosed.
-- [ ] Owner reviews this Task 2 final report.
-- [ ] Owner explicitly approves or requests corrections for Task 2.
+- [x] Owner reviewed and explicitly approved the completed local scope on 22 November 2026; see `docs/TASK_2_OWNER_APPROVAL_RECORD_20261122.md`.
+- [ ] Native Android/iOS and full runtime visual validation are explicitly deferred to final project-wide testing.
 
-**Exact next action:** owner reviews this report and either approves Task 2, rejects it, or requests specific corrections. Do not start Task 3 automatically.
+**Exact next action:** wait for separate owner authorization before Task 3. Do not start Task 3 automatically.

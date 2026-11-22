@@ -24,6 +24,12 @@
 
 **Blockers:** Android/iOS native build/device verification remains deferred. This milestone verified source/config only and must not be presented as physical-device validation. The completed Task 2 audit is REVIEW PENDING owner review; Task 3 is locked.
 
+## 22 November 2026 — Task 2 explicit owner approval
+
+**Decision:** The owner approved Task 2’s completed local scope. The durable decision is `docs/TASK_2_OWNER_APPROVAL_RECORD_20261122.md`. The approval preserves existing implementation and evidence; no source change is authorized or needed.
+
+**Deferred final-stage testing:** native Android device/build, native iOS device/build, full runtime visual testing and final native release validation are DEFERRED, not failures or passes. Task 3 remains locked pending separate owner authorization.
+
 ## Approved decisions (preserved from history, plus BATCH-02)
 | # | Decision | Source |
 |---|---|---|
