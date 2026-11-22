@@ -15,3 +15,6 @@ Date: 2026-11-22. Status: **IN PROGRESS**. Owner approval: **PENDING**. Task 4: 
 
 ## Non-negotiable restrictions
 Preserve Expo/React Native, FastAPI, MongoDB, authentication, APIs, Restaurant Mode, theme and navigation. No fabricated financial data; no unapproved image uploads (only approved advertisement poster/banner), CHAND customer text/voice only. No Task 4, unrelated monetization, destructive migrations, production payment changes or secret storage.
+
+## 2026-11-22 follow-up: November 22 archive verification BLOCKED
+GitHub work HEAD verified at start as `6e4d9e93a2567bf9115204d34be2f32c68b59c6a`. November 22 sanitized ZIP Git blob is `b1e1d2c813185967dde4c979509410a95abd4d30`, but binary bytes unavailable through GitHub connector or direct network. No source authority determination, patch application or new implementation. Task 3 IN PROGRESS; approval PENDING.
