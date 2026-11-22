@@ -1,0 +1,440 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -88,9 +88,21 @@
+         raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+
+-async def _claim_payment_intent(orders, oid):
++def _valid_gateway_order(payload, amount_paise):
++    return (
++        isinstance(payload, dict)
++        and isinstance(payload.get("id"), str)
++        and bool(re.fullmatch(r"[A-Za-z0-9_-]{1,128}", payload["id"]))
++        and payload.get("currency") == "INR"
++        and type(payload.get("amount")) is int
++        and payload["amount"] == amount_paise
++    )
++
++
++async def _claim_payment_intent(orders, oid, payment_status):
+     claim = await orders.update_one(
+-        {"_id": oid, "razorpay_intent_state": {"$exists": False}},
++        {"_id": oid, "status": "pending_payment", "payment_status": payment_status,
++         "razorpay_intent_state": {"$exists": False}},
+         {"$set": {"razorpay_intent_state": "creating", "updated_at": now_utc()}},
+     )
+     if claim.modified_count != 1:
+@@ -1233,8 +1245,8 @@
+
+
+ class MembershipPaymentVerifyIn(BaseModel):
+-    razorpay_order_id: str = Field(min_length=1, max_length=128)
+-    razorpay_payment_id: str = Field(min_length=1, max_length=128)
++    razorpay_order_id: str = Field(pattern=r"^[A-Za-z0-9_-]{1,128}$")
++    razorpay_payment_id: str = Field(pattern=r"^[A-Za-z0-9_-]{1,128}$")
+     razorpay_signature: str = Field(min_length=1, max_length=256)
+
+
+@@ -1659,7 +1671,7 @@
+                   "notes": {"comein_membership_id": str(row["_id"]), "shop_id": shop_id}},
+         ))
+         payload = response.json()
+-        if response.status_code >= 400 or not payload.get("id") or payload.get("amount") != int(row["price_paise"]) or payload.get("currency") != "INR":
++        if response.status_code >= 400 or not _valid_gateway_order(payload, MEMBERSHIP_PRICE_PAISE):
+             raise RuntimeError("Gateway membership intent mismatch")
+     except Exception as exc:
+         logger.warning("Membership gateway intent unavailable: %s", type(exc).__name__)
+@@ -1686,7 +1698,7 @@
+     if not row:
+         raise HTTPException(status_code=403, detail="Gateway order does not belong to this membership request")
+     expected = hmac.new(secret.encode(), f"{body.razorpay_order_id}|{body.razorpay_payment_id}".encode(), hashlib.sha256).hexdigest()
+-    if not hmac.compare_digest(expected, body.razorpay_signature):
++    if not body.razorpay_signature.isascii() or not hmac.compare_digest(expected, body.razorpay_signature):
+         raise HTTPException(status_code=400, detail="Payment signature verification failed")
+     if row.get("gateway_payment_id") == body.razorpay_payment_id and row.get("payment_confirmed_at"):
+         return _membership_public(row)
+@@ -5503,10 +5515,10 @@
+     note: str = Field(default="", max_length=300)
+
+ class PaymentVerifyIn(BaseModel):
+-    order_id: str
+-    razorpay_order_id: str
+-    razorpay_payment_id: str
+-    razorpay_signature: str
++    order_id: str = Field(min_length=1, max_length=40)
++    razorpay_order_id: str = Field(pattern=r"^[A-Za-z0-9_-]{1,128}$")
++    razorpay_payment_id: str = Field(pattern=r"^[A-Za-z0-9_-]{1,128}$")
++    razorpay_signature: str = Field(min_length=1, max_length=256)
+
+ class RestaurantReviewIn(BaseModel):
+     rating: int = Field(ge=1, le=5)
+@@ -5896,14 +5908,13 @@
+                 or existing.get("currency", "INR") != "INR"):
+             raise HTTPException(status_code=409,detail="Existing payment intent does not match the current order total")
+         return {"gateway":"razorpay","key_id":key_id,"gateway_order_id":existing["gateway_order_id"],"amount":int(round(float(existing["amount"])*100)),"currency":existing.get("currency","INR"),"order_ref":order["ref"]}
+-    await _claim_payment_intent(db.restaurant_orders, oid)
++    await _claim_payment_intent(db.restaurant_orders, oid, "pending")
+     import requests as http_requests
+     try:
+         resp=await asyncio.to_thread(lambda: http_requests.post("https://api.razorpay.com/v1/orders",auth=(key_id,key_secret),json={"amount":int(round(order["total"]*100)),"currency":"INR","receipt":order["ref"],"notes":{"comein_order_id":str(order["_id"])}},timeout=15))
+         if resp.status_code>=400: raise RuntimeError("Gateway rejected request")
+         payload=resp.json()
+-        if (not payload.get("id") or payload.get("currency")!="INR" or
+-                payload.get("amount") != int(round(float(order["total"])*100))):
++        if not _valid_gateway_order(payload, int(round(float(order["total"]) * 100))):
+             raise RuntimeError("Gateway order amount/currency mismatch")
+     except Exception:
+         await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"razorpay_intent_state": "uncertain"}})
+@@ -5942,19 +5953,15 @@
+     if not payment_record: raise HTTPException(status_code=403,detail="Gateway order does not belong to this Come-In order")
+     if round(float(payment_record.get("amount", -1)), 2) != round(float(order.get("total", -2)), 2):
+         raise HTTPException(status_code=409, detail="Payment amount does not match the order total")
++    expected = hmac.new(secret.encode(), f"{body.razorpay_order_id}|{body.razorpay_payment_id}".encode(), hashlib.sha256).hexdigest()
++    if not body.razorpay_signature.isascii() or not hmac.compare_digest(expected, body.razorpay_signature):
++        raise HTTPException(status_code=400, detail="Payment signature verification failed")
+     if payment_record.get("status") == "paid":
+         if payment_record.get("gateway_payment_id") == body.razorpay_payment_id and order.get("payment_status") == "paid":
+             return {"verified": True, "order": doc_out(order)}
+         raise HTTPException(status_code=409, detail="This payment order has already been completed")
+     if order.get("status") != "pending_payment" or order.get("payment_status") not in {"pending", "failed"}:
+         raise HTTPException(status_code=409,detail="Order is not awaiting online payment verification")
+-    expected=hmac.new(secret.encode(),f"{body.razorpay_order_id}|{body.razorpay_payment_id}".encode(),hashlib.sha256).hexdigest()
+-    if not hmac.compare_digest(expected,body.razorpay_signature):
+-        await db.restaurant_payments.update_one({"gateway_order_id":body.razorpay_order_id},{"$set":{"status":"verification_failed","updated_at":now_utc()}})
+-        raise HTTPException(status_code=400,detail="Payment signature verification failed")
+-    # Signature alone is not enough to claim a captured payment. Confirm the
+-    # payment entity directly with Razorpay using server-only credentials and
+-    # match its payment/order IDs, captured status, INR currency and exact amount.
+     import requests as http_requests
+     try:
+         gateway_resp=await asyncio.to_thread(lambda: http_requests.get(
+@@ -5966,12 +5973,8 @@
+         gateway_payment=gateway_resp.json()
+     except Exception:
+         raise HTTPException(status_code=502,detail="Payment status could not be confirmed with the gateway; the order remains unpaid")
+-    expected_paise=int(round(float(order["total"])*100))
+-    if (gateway_payment.get("id") != body.razorpay_payment_id or
+-            gateway_payment.get("order_id") != body.razorpay_order_id or
+-            gateway_payment.get("status") != "captured" or
+-            gateway_payment.get("currency") != "INR" or
+-            gateway_payment.get("amount") != expected_paise):
++    if (not isinstance(gateway_payment, dict) or gateway_payment.get("id") != body.razorpay_payment_id
++            or not _captured_payment_matches_order(payment_record, order, gateway_payment)):
+         raise HTTPException(status_code=409,detail="Gateway payment is not captured for the exact order amount and currency")
+     fresh_order = await _commit_restaurant_capture(
+         oid, payment_record, body.razorpay_payment_id, "Payment verified server-side"
+@@ -6275,7 +6278,8 @@
+     raw = bytes(raw_buffer)
+     signature=request.headers.get("X-Razorpay-Signature","")
+     expected=hmac.new(secret.encode(),raw,hashlib.sha256).hexdigest()
+-    if not hmac.compare_digest(expected,signature): raise HTTPException(status_code=400,detail="Invalid webhook signature")
++    if not signature.isascii() or not hmac.compare_digest(expected,signature):
++        raise HTTPException(status_code=400, detail="Invalid webhook signature")
+     event_id = request.headers.get("X-Razorpay-Event-Id", "")
+     try:
+         payload = event_payload(raw, event_id)
+@@ -7297,17 +7301,18 @@
+     prefill = {"name": order.get("customer_name") or "", "contact": order.get("customer_phone") or ""}
+     existing = await db.grocery_payments.find_one({"order_id": str(oid), "gateway": "razorpay", "status": {"$in": ["created", "failed", "verification_failed"]}})
+     if existing:
+-        if round(float(existing.get("amount", -1)), 2) != round(float(order["total"]), 2):
++        if (round(float(existing.get("amount", -1)), 2) != round(float(order["total"]), 2)
++                or existing.get("currency", "INR") != "INR"):
+             raise HTTPException(status_code=409, detail="Existing payment intent does not match the current order total")
+         return {"gateway": "razorpay", "key_id": key_id, "gateway_order_id": existing["gateway_order_id"], "amount": amount_paise, "currency": "INR", "order_ref": order["ref"], "prefill": prefill}
+-    await _claim_payment_intent(db.orders, oid)
++    await _claim_payment_intent(db.orders, oid, "razorpay_pending")
+     import requests as http_requests
+     try:
+         resp = await asyncio.to_thread(lambda: http_requests.post("https://api.razorpay.com/v1/orders", auth=(key_id, key_secret), json={"amount": amount_paise, "currency": "INR", "receipt": order["ref"], "notes": {"comein_order_id": str(oid), "order_kind": "grocery"}}, timeout=15))
+         if resp.status_code >= 400:
+             raise RuntimeError("Gateway rejected request")
+         payload = resp.json()
+-        if not payload.get("id") or payload.get("currency") != "INR" or payload.get("amount") != amount_paise:
++        if not _valid_gateway_order(payload, amount_paise):
+             raise RuntimeError("Gateway order amount/currency mismatch")
+     except Exception:
+         await db.orders.update_one({"_id": oid}, {"$set": {"razorpay_intent_state": "uncertain"}})
+@@ -7412,16 +7417,15 @@
+         raise HTTPException(status_code=403, detail="Gateway order does not belong to this Come-In order")
+     if round(float(record.get("amount", -1)), 2) != round(float(order.get("total", -2)), 2):
+         raise HTTPException(status_code=409, detail="Payment amount does not match the order total")
++    expected = hmac.new(secret.encode(), f"{body.razorpay_order_id}|{body.razorpay_payment_id}".encode(), hashlib.sha256).hexdigest()
++    if not body.razorpay_signature.isascii() or not hmac.compare_digest(expected, body.razorpay_signature):
++        raise HTTPException(status_code=400, detail="Payment signature verification failed")
+     if record.get("status") == "paid":
+         if record.get("gateway_payment_id") == body.razorpay_payment_id and order.get("payment_status") == "paid":
+             return {"verified": True, "order": doc_out(order)}
+         raise HTTPException(status_code=409, detail="This payment order has already been completed")
+     if order.get("status") != "pending_payment" or order.get("payment_status") != "razorpay_pending":
+         raise HTTPException(status_code=409, detail="Order is not awaiting online payment verification")
+-    expected = hmac.new(secret.encode(), f"{body.razorpay_order_id}|{body.razorpay_payment_id}".encode(), hashlib.sha256).hexdigest()
+-    if not hmac.compare_digest(expected, body.razorpay_signature):
+-        await db.grocery_payments.update_one({"_id": record["_id"]}, {"$set": {"status": "verification_failed", "updated_at": now_utc()}})
+-        raise HTTPException(status_code=400, detail="Payment signature verification failed")
+     import requests as http_requests
+     try:
+         gateway_resp = await asyncio.to_thread(lambda: http_requests.get(f"https://api.razorpay.com/v1/payments/{body.razorpay_payment_id}", auth=(key_id, secret), timeout=15))
+@@ -7430,9 +7434,8 @@
+         gateway_payment = gateway_resp.json()
+     except Exception:
+         raise HTTPException(status_code=502, detail="Payment status could not be confirmed with the gateway; the order remains unpaid")
+-    if (gateway_payment.get("id") != body.razorpay_payment_id or gateway_payment.get("order_id") != body.razorpay_order_id
+-            or gateway_payment.get("status") != "captured" or gateway_payment.get("currency") != "INR"
+-            or gateway_payment.get("amount") != int(round(float(order["total"]) * 100))):
++    if (not isinstance(gateway_payment, dict) or gateway_payment.get("id") != body.razorpay_payment_id
++            or not _captured_payment_matches_order(record, order, gateway_payment)):
+         raise HTTPException(status_code=409, detail="Gateway payment is not captured for the exact order amount and currency")
+     fresh = await _mark_grocery_paid(oid, record, body.razorpay_payment_id, "Payment verified server-side")
+     if not fresh:
+--- a/backend/tests/test_functional_blockers_regression.py
++++ b/backend/tests/test_functional_blockers_regression.py
+@@ -69,8 +69,10 @@
+     assert ("POST", "/restaurant/payments/razorpay-webhook") in known
+     intent, verify, webhook, retry = (fn("create_restaurant_payment_intent"), fn("verify_restaurant_payment"), fn("razorpay_webhook"), fn("retry_restaurant_payment"))
+     assert "Existing payment intent does not match the current order total" in intent
+-    assert '"status") != "captured"' in verify and '"currency") != "INR"' in verify
+-    assert '"status") != "captured"' in verify and '"gateway_payment_id"' in verify
++    assert '_captured_payment_matches_order(payment_record, order, gateway_payment)' in verify
++    capture_validator = fn("_captured_payment_matches_order")
++    assert 'entity.get("status") == "captured"' in capture_validator and 'entity.get("currency") != "INR"' in capture_validator
++    assert verify.index("hmac.compare_digest") < verify.index('payment_record.get("status") == "paid"')
+     assert '"duplicate": True' in webhook
+     capture = fn("_commit_restaurant_capture")
+     assert 'await _commit_restaurant_capture(' in webhook
+--- a/backend/tests/test_payment_webhook_local_integration.py
++++ b/backend/tests/test_payment_webhook_local_integration.py
+@@ -59,6 +59,8 @@
+                     "id": "pay_" + uuid4().hex, "order_id": order_id, "amount": 2000, "currency": "INR", "status": "captured"}}}}
+                 return oid, pid, orders, payments, payload
+
++            assert (await http.post("/api/restaurant/payments/razorpay-webhook", content=b"{}",
++                                   headers={"X-Razorpay-Event-Id": "evt_unsigned"})).status_code == 400
+             assert (await post([], "evt_invalid")).status_code == 400
+             oid, pid, orders, payments, payload = await seed("restaurant")
+             assert (await post(payload, "evt_bad_signature", valid=False)).status_code == 400
+@@ -119,13 +121,20 @@
+             assert (await post(refunded("rf_local_remaining", 1500), "evt_refund_remaining")).json()["duplicate"] is True
+             assert (await post(refunded("rf_local_remaining", 1500, "failed"), "evt_refund_late_failed")).status_code == 200
+             assert (await orders.find_one({"_id": oid}))["refund_status"] == "refunded"
++            monkeypatch.setenv("JWT_SECRET", secret)
++            customer, unrelated = ObjectId(), ObjectId()
++            headers = {}
++            for actor in (customer, unrelated):
++                email = f"{actor}@local.example"
++                await db.users.insert_one({"_id": actor, "role": "customer", "email": email})
++                headers[actor] = {"Authorization": "Bearer " + server.create_access_token(str(actor), "customer", email)}
+             # Concurrent intent requests must not issue two provider orders.
+             # The provider here is an in-process mock; no credential/API call.
+             for kind in ["grocery", "restaurant"]:
+                 collection = db.orders if kind == "grocery" else db.restaurant_orders
+                 payment_collection = db.grocery_payments if kind == "grocery" else db.restaurant_payments
+                 new_oid = ObjectId()
+-                await collection.insert_one({"_id": new_oid, "customer_id": "local-only",
++                await collection.insert_one({"_id": new_oid, "customer_id": str(customer),
+                     "idempotency_key": str(new_oid), "ref": "LOCAL_" + str(new_oid), "total": 20,
+                     "payment_method": "online_razorpay" if kind == "grocery" else "razorpay",
+                     "payment_status": "razorpay_pending" if kind == "grocery" else "pending",
+@@ -140,12 +149,65 @@
+                     fake.setattr(server.requests, "post", provider_order)
+                     fake.setattr(server, "_grocery_razorpay_keys", lambda: ("local-noncredential-id", secret))
+                     create = server.create_grocery_payment_intent if kind == "grocery" else server.create_restaurant_payment_intent
+-                    replies = await asyncio.gather(*[create(str(new_oid), {"id": "local-only"}) for _ in range(2)], return_exceptions=True)
++                    replies = await asyncio.gather(*[create(str(new_oid), {"id": str(customer)}) for _ in range(2)], return_exceptions=True)
+                     assert any(isinstance(reply, dict) for reply in replies)
+                     assert len(calls) == 1
+                     await payment_collection.update_one({"order_id": str(new_oid)}, {"$set": {"status": "failed"}})
+-                    retried = await create(str(new_oid), {"id": "local-only"})
++                    retried = await create(str(new_oid), {"id": str(customer)})
+                     assert retried["gateway_order_id"] == "order_mock_" + str(new_oid)
+                     assert len(calls) == 1
++                    original = {"order_id": str(new_oid), "razorpay_order_id": retried["gateway_order_id"],
++                                "razorpay_payment_id": "pay_mock_" + str(new_oid)}
++                    message = f"{original['razorpay_order_id']}|{original['razorpay_payment_id']}"
++                    signature = hmac.new(secret.encode(), message.encode(), hashlib.sha256).hexdigest()
++                    signed = {**original, "razorpay_signature": signature}
++                    path = "/api/" + ("grocery" if kind == "grocery" else "restaurant") + "/payments/verify"
++                    entity = {"id": original["razorpay_payment_id"], "order_id": original["razorpay_order_id"],
++                              "status": "captured", "currency": "INR", "amount": 2000}
++
++                    def lookup(url, **kwargs):
++                        assert url == "https://api.razorpay.com/v1/payments/" + original["razorpay_payment_id"]
++                        return SimpleNamespace(status_code=200, json=lambda: dict(entity))
++
++                    fake.setattr(server.requests, "get", lookup)
++                    async def verify(body, actor=customer):
++                        return await http.post(path, json=body, headers=headers.get(actor))
++
++                    assert (await verify(signed, None)).status_code == 401
++                    assert (await verify(signed, unrelated)).status_code == 404
++                    assert (await verify(original)).status_code == 422
++                    assert (await verify({**signed, "razorpay_order_id": "order_other"})).status_code == 403
++                    invalid = {**signed, "razorpay_signature": "0" * 64}
++                    assert (await verify(invalid)).status_code == 400
++                    assert (await verify({**signed, "razorpay_signature": "é"})).status_code == 400
++                    for field, wrong in (("amount", 2000.0), ("amount", 1999), ("currency", "USD"),
++                                         ("status", "authorized"), ("status", "failed"),
++                                         ("order_id", "order_other"), ("id", "pay_other")):
++                        prior = entity[field]
++                        entity[field] = wrong
++                        assert (await verify(signed)).status_code == 409
++                        entity[field] = prior
++
++                    def interrupted(*args, **kwargs):
++                        raise TimeoutError("local gateway timeout")
++
++                    fake.setattr(server.requests, "get", interrupted)
++                    assert (await verify(signed)).status_code == 502
++                    assert (await collection.find_one({"_id": new_oid}))["status"] == "pending_payment"
++                    fake.setattr(server.requests, "get", lookup)
++                    outcomes = await asyncio.gather(verify(signed), verify(signed), verify(invalid))
++                    assert [reply.status_code for reply in outcomes] == [200, 200, 400]
++                    assert (await verify(invalid)).status_code == 400
++                    paid = await payment_collection.find_one({"order_id": str(new_oid)})
++                    assert paid["status"] == "paid" and paid["gateway_payment_id"] == original["razorpay_payment_id"]
++                    paid_order = await collection.find_one({"_id": new_oid})
++                    assert paid_order["payment_status"] == "paid" and len(paid_order["status_history"]) == 1
++
++            for invalid_order in ({"amount": 2000, "currency": "INR"},
++                                  {"id": "order_wong", "amount": 1999, "currency": "INR"},
++                                  {"id": "order_wrong", "amount": 2000.0, "currency": "INR"},
++                                  {"id": "order_wrong", "amount": 2000, "currency": "USD"},
++                                  {"id": ["order_wrong"], "amount": 2000, "currency": "INR"}, []):
++                assert not server._valid_gateway_order(invalid_order, 2000)
+         mongo.close()
+     asyncio.run(run())
+--- a/backend/tests/test_shared_system_integration_contract.py
++++ b/backend/tests/test_shared_system_integration_contract.py
+@@ -103,7 +103,9 @@
+     component = (ROOT / 'frontend/src/components/GroceryOnlinePayment.tsx').read_text()
+     assert 'const result = await openRazorpay(intent)' in component
+     assert '`/${kind}/payments/verify`' in component
+-    assert 'if (verified.verified) { onChange(verified.order)' in component
++    assert 'verified.order?.id !== order.id' in component
++    assert 'verified.order?.payment_status !== "paid"' in component
++    assert component.index('if (!verified.verified') < component.index('onChange(verified.order)')
+     detail = (ROOT / 'frontend/app/restaurant/orders/[id].tsx').read_text()
+     assert '<GroceryOnlinePayment kind="restaurant"' in detail
+     assert route_exists("POST", "/restaurant/orders/{order_id}/payment-intent")
+@@ -148,9 +150,10 @@
+ def test_restaurant_payment_verification_requires_gateway_captured_payment_lookup():
+     verify = function_source("verify_restaurant_payment")
+     assert 'http_requests.get(' in verify
+-    assert '"status") != "captured"' in verify
+-    assert '"currency") != "INR"' in verify
+-    assert '"order_id") != body.razorpay_order_id' in verify
++    assert '_captured_payment_matches_order(payment_record, order, gateway_payment)' in verify
++    validator = function_source("_captured_payment_matches_order")
++    assert 'entity.get("currency") != "INR"' in validator
++    assert 'entity.get("order_id") == payment.get("gateway_order_id")' in validator
+     assert "Payment status could not be confirmed with the gateway" in verify
+     assert 'await _commit_restaurant_capture(' in verify
+     capture = function_source("_commit_restaurant_capture")
+--- a/backend/tests/test_task10_payment_refund_notification_contract.py
++++ b/backend/tests/test_task10_payment_refund_notification_contract.py
+@@ -45,9 +45,11 @@
+ def test_payment_verification_and_webhook_still_require_server_confirmation():
+     verify = fn("verify_restaurant_payment")
+     webhook = fn("razorpay_webhook")
+-    assert 'hmac.compare_digest(expected,body.razorpay_signature)' in verify
+-    assert 'gateway_payment.get("status") != "captured"' in verify
+-    assert 'gateway_payment.get("amount") != expected_paise' in verify
++    assert 'hmac.compare_digest(expected, body.razorpay_signature)' in verify
++    assert '_captured_payment_matches_order(payment_record, order, gateway_payment)' in verify
++    capture = fn("_captured_payment_matches_order")
++    assert 'entity.get("status") == "captured"' in capture
++    assert 'entity.get("amount") == expected_paise' in capture
+     assert 'hmac.compare_digest(expected,signature)' in webhook
+     assert '"duplicate": True' in webhook
+
+--- a/frontend/app/seller/membership.tsx
++++ b/frontend/app/seller/membership.tsx
+@@ -1,5 +1,5 @@
+ import Feather from "@react-native-vector-icons/feather";
+-import { useCallback, useEffect, useState } from "react";
++import { useCallback, useEffect, useRef, useState } from "react";
+ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+ import { useSafeAreaInsets } from "react-native-safe-area-context";
+ import { useRouter } from "expo-router";
+@@ -19,6 +19,7 @@
+ export default function SellerMembershipScreen() {
+   const router = useRouter(); const insets = useSafeAreaInsets(); const { user } = useAuth(); const { colors } = useTheme(); const styles = useStyles();
+   const [shop, setShop] = useState<Shop | null>(null); const [membership, setMembership] = useState<Membership | null>(null); const [loading, setLoading] = useState(true); const [busy, setBusy] = useState(false); const [message, setMessage] = useState("");
++  const busyRef = useRef(false);
+   const [history, setHistory] = useState<Membership[]>([]);
+   const [metrics, setMetrics] = useState<{ opportunity: number; impression: number; click: number; ctr: number | null } | null>(null);
+   const load = useCallback(async () => {
+@@ -33,28 +34,36 @@
+   }, []);
+   useEffect(() => { if (!user || user.role !== "shopkeeper") return; const run = async () => { try { await load(); } catch (e: any) { setMessage(e?.message || "Membership details could not be loaded."); } finally { setLoading(false); } }; void run(); }, [load, user]);
+   const request = async () => {
+-    if (!shop) return; setBusy(true); setMessage("");
++    if (!shop || busyRef.current) return;
++    busyRef.current = true;
++    setBusy(true); setMessage("");
+     try {
+       const idempotencyKey = `membership-${shop.id}-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+       const result = await api.post<Membership>(`/shops/${encodeURIComponent(shop.id)}/membership/purchase`, { shop_id: shop.id, idempotency_key: idempotencyKey });
+       setMembership(result);
+       await load();
+       setMessage("Purchase request saved. Payment is not complete and benefits are not active until a configured gateway verifies a captured payment.");
+-    } catch (e: any) { setMessage(e?.message || "Membership request could not be saved."); } finally { setBusy(false); }
++    } catch (e: any) { setMessage(e?.message || "Membership request could not be saved."); } finally { busyRef.current = false; setBusy(false); }
+   };
+   const pay = async () => {
+-    if (!shop || busy) return;
++    if (!shop || busyRef.current) return;
++    busyRef.current = true;
+     setBusy(true); setMessage("");
+     try {
+       if (!razorpaySupported()) throw new Error("Razorpay is unavailable in this app build.");
+       const root = `/shops/${encodeURIComponent(shop.id)}/membership`;
+       const intent = await api.post<Omit<RazorpayIntent, "order_ref"> & { membership_id: string }>(`${root}/payment-intent`, {});
+       const result = await openRazorpay({ ...intent, order_ref: intent.membership_id });
+-      setMembership(await api.post<Membership>(`${root}/payment-verify`, result));
++      const confirmed = await api.post<Membership>(`${root}/payment-verify`, result);
++      if (confirmed.id !== intent.membership_id || !confirmed.payment_verified) {
++        throw new Error("Payment was not confirmed. Refresh the membership before retrying.");
++      }
++      setMembership(confirmed);
+       await load();
+     } catch (e: any) {
+       setMessage(e?.message || "Payment could not be verified. Refresh the status before retrying.");
+-    } finally { setBusy(false); }
++      try { await load(); } catch { /* Preserve the checkout error when status is unavailable. */ }
++    } finally { busyRef.current = false; setBusy(false); }
+   };
+   const unexpired = usePremiumActive(membership?.expires_at);
+   if (!user || user.role !== "shopkeeper") return <View style={styles.centered}><Text style={styles.message}>Seller access is required for Premium Membership.</Text><Pressable style={styles.button} onPress={() => router.replace("/(tabs)/account")}><Text style={styles.buttonText}>Back to Account</Text></Pressable></View>;
+--- a/frontend/src/components/GroceryOnlinePayment.tsx
++++ b/frontend/src/components/GroceryOnlinePayment.tsx
+@@ -31,14 +31,18 @@
+     busyRef.current = true;
+     setBusy(true); setMessage("");
+     try {
+-            const current = await refresh();
++      const current = await refresh();
+       if (!current || current.status !== "pending_payment" || current.payment_status === "paid") return;
+       if (kind === "restaurant" && current.payment_status === "failed") await api.post(`/restaurant/orders/${order.id}/payment-retry`, {});
+       const intent = await api.post<RazorpayIntent>(`${kind === "restaurant" ? "/restaurant" : ""}/orders/${order.id}/payment-intent`, {});
+       const result = await openRazorpay(intent);
+       setMessage("Confirming payment with the server…");
+       const verified = await api.post<{ verified: boolean; order: any }>(`/${kind}/payments/verify`, { order_id: order.id, ...result });
+-      if (verified.verified) { onChange(verified.order); setMessage("Payment confirmed."); }
++      if (!verified.verified || verified.order?.id !== order.id || verified.order?.payment_status !== "paid") {
++        throw new Error("Payment was not confirmed. Check order history before retrying.");
++      }
++      onChange(verified.order);
++      setMessage("Payment confirmed.");
+     } catch (e: any) {
+       setMessage(e?.message || "Payment was not confirmed. Check order history before retrying.");
+       try { await refresh(); } catch { /* Preserve original error; never infer payment success. */ }
+@@ -46,6 +50,8 @@
+     finally { busyRef.current = false; setBusy(false); }
+   };
+   const cancel = async () => {
++    if (busyRef.current) return;
++    busyRef.current = true;
+     setBusy(true); setMessage("");
+     try { onChange(await api.post<any>(`${kind === "restaurant" ? "/restaurant" : ""}/orders/${order.id}/cancel`, {})); setMessage("Order cancellation saved. Any late payment will require reconciliation."); }
+     catch (e: any) { setMessage(e?.message || "Could not cancel the order."); }

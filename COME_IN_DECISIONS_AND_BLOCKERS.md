@@ -939,3 +939,7 @@ Checkpoint decision: `36436f009e9d9f181f0ddd1f6e07b4f315c33c83` is the remotely 
 ## Phase 2 Premium Membership verification — 2026-11-22
 
 Local checks passed on a disposable MongoDB replica set with mocked provider calls. Authorized Razorpay TEST credentials and genuine provider/webhook delivery, native-device acceptance and production rollout remain deferred. Missing attribution and historical exposure are disclosed in the Premium completion report.
+
+## Razorpay external acceptance — 2026-11-23 (IST)
+
+Genuine TEST payment, external webhook and refund, production payments/webhook/rollout, financial settlement and Android/iOS device acceptance are deferred until authorized external environments are available. Membership refund policy is a business decision. See the Razorpay pre-test implementation report for the exact required access and configuration.

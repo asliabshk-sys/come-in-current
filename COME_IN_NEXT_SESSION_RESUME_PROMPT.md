@@ -87,3 +87,7 @@ Verified evidence content commit: `36436f009e9d9f181f0ddd1f6e07b4f315c33c83`; it
 ## Phase 2 Premium Membership resume — 2026-11-22
 
 Verify the live GitHub `work` tip and read `evidence/phase-2-prelaunch-20261122/premium-completion/IMPLEMENTATION_REPORT.md`. Restore the November 22 sanitized archive and apply Task 3, Phase 2 foundation and Premium completion patches in that order. The local Premium implementation and final regression checks passed. Real TEST gateway delivery and native/device acceptance remain external validation steps.
+
+## Razorpay resume point — 2026-11-23 (IST)
+
+Verify the current GitHub `work` tip, restore the previous source and apply `patches/razorpay-pretest.patch` last. Read the Razorpay pre-test implementation report and its final results before any later authorized external validation.

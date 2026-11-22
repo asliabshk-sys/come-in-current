@@ -867,3 +867,7 @@ Restored the verified archive into `/workspace/come-in-task3-restore.PVa4xA`, ap
 ## Phase 2 Premium Membership completion — 2026-11-22
 
 Continued from verified GitHub `work` at `e536f52e08bbe760ba7750b19f6f4e6b293d5976`. Restored the archived app and previous patches, implemented and validated the Premium completion patch, and saved run-specific logs in `evidence/phase-2-prelaunch-20261122/premium-completion/`. No previous evidence was replaced. Full backend regression 683 passed and five skipped, focused 61 passed, five Chromium smoke checks passed.
+
+## Razorpay local pre-test — 2026-11-23 (IST)
+
+Continued from verified GitHub `work` at `ee627805b7f0c102f935315c242a11884a61a4fb`. Verified the Razorpay pre-test patch, local HTTP/mock gateway/refund/transaction tests, browser fixtures and full regression. Persisted sanitized evidence in `evidence/phase-2-prelaunch-20261122/razorpay-pretest-20261123/`. No external gateway or production operation occurred.
