@@ -12,3 +12,10 @@ Blocked/deferred: standard pytest config requires unavailable `pytest-xdist`; is
 
 ## Added blocker — November 22 sanitized source inaccessible
 GitHub blob `b1e1d2c813185967dde4c979509410a95abd4d30` identified, but binary contents unavailable through connector; Git blob endpoint UTF-8-only; local Git HTTPS DNS blocked. Do not infer completeness, duplicate patch state, latest source authority, or compatibility. Require exact archive bytes before Task 3 implementation continues. No new source conflicts independently confirmed in this session.
+
+## Binary retrieval blockers and safe alternatives
+- Direct raw HTTPS and repository archive download: container DNS blocked.
+- Connector contents/blob API: UTF-8-only; `fetch_blob` UnicodeDecodeError.
+- No November 22 ZIP bytes, therefore no SHA-256, CRC, manifest or patch inclusion verdict.
+- Safe next method: authorized network-enabled Git/Codex workspace fetches exact Git object `b1e1d2c813185967dde4c979509410a95abd4d30` to isolated directory. If needed, obtain owner authorization to create a temporary GitHub Actions artifact workflow; do not change workflows without approval.
+- After retrieval, compare SHA-256, ZIP CRC, file-level hashes and `patch -p1 --dry-run`/reverse dry-run against isolated copies. Keep Task 3 owner approval pending.
