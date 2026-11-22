@@ -10,6 +10,10 @@ The canonical 22-task roadmap is reconciled in [COME_IN_MASTER_TASK_BOARD.md](CO
 
 **Future checkpoint requirement:** after each meaningful session, update all five checkpoints plus relevant handover/decision records; review for secrets; commit and non-force push; fetch `origin/work`; verify exact HEAD equality, zero ahead/behind and a clean tree. If pushing fails, preserve the local checkpoint and document recovery rather than claiming synchronization.
 
+## Task 2 status — 22 November 2026
+
+Task 2 (Theme and Design / official app icon integration) is **IN PROGRESS** with an owner-authorized first milestone. The official owner-reference icon was found already configured in Expo, Android adaptive-icon and web favicon paths; no source/artwork change was needed. Direct local TypeScript passed with 0 errors, ESLint passed with 0 errors and 7 warnings, and controlled Expo configuration resolved correctly. Native Android/iOS verification remains deferred. Resume from `docs/TASK_2_EXECUTION_CHECKLIST.md` and `evidence/task-2-theme-icon-20261122/TASK_2_ICON_AND_UI_AUDIT_REPORT.md`; do not start Task 3.
+
 Date: 22 November 2026 (Asia/Kolkata)  
 Repository: `https://github.com/asliabshk-sys/come-in-current`  
 Working branch at handover preparation: `work`  

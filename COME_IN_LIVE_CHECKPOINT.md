@@ -10,6 +10,14 @@ Files changed: this checkpoint, `COME_IN_MASTER_TASK_TRACKER.md`, `COME_IN_DECIS
 
 Next precise action: commit/push this approval record and remotely verify it. After that, wait for separate owner authorization to execute Task 2; no native/provider/production validation or deployment is authorized.
 
+## Task 2 milestone — 22 November 2026 (Asia/Kolkata)
+
+Task 2 was explicitly owner-authorized. Starting repository SHA: `3aa855ac9913a1b7c1b3c8c535c569f477c42f01`; `work` and `origin/work` matched with a clean tree. Official reference app-icon artwork was located in retained application source and was already configured correctly: the 1024×1024 reference, Android adaptive foreground and web favicon have identical SHA-256 `9373ba8487c00eedd3bfa5a449fbc803582ca5663165aad85f88172baf6ca72f`. Expo primary/iOS icon, Android adaptive background `#FFE84D`, web favicon and splash logo configuration were statically verified. No source or artwork was changed.
+
+Actual checks: direct local TypeScript PASS (0 errors); direct local ESLint PASS (0 errors, 7 existing warnings); controlled Expo public config PASS. Android/iOS native build/device checks are DEFERRED. Task 2 static route/theme audit covers 53 route/layout files and `src/theme.ts`; no confirmed UI defect was found, so no discretionary visual change was made. Evidence: `evidence/task-2-theme-icon-20261122/TASK_2_ICON_AND_UI_AUDIT_REPORT.md`; checklist: `docs/TASK_2_EXECUTION_CHECKLIST.md`.
+
+Next action: review available frontend test/visual evidence and run only safe Task-2-relevant checks. Then finalize the Task 2 audit/report as REVIEW PENDING; do not start Task 3 or claim native validation.
+
 ## READ-ONLY release audit — 2026-11-17T01:41:36.643661-08:00
 
 Project COME-IN, repository asliabshk-sys/come-in-current at /workspace/come-in-current; application /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115.

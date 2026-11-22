@@ -8,6 +8,10 @@ Created `docs/COME_IN_MASTER_TASK_BOARD.md` and `docs/TASK_2_PREPARATION_PROMPT.
 
 Received the owner’s explicit decision: `APPROVE TASK 1 — FINAL APPROVAL AND GITHUB PUSH VERIFICATION`. Before recording it, fetched `origin/work`; local and remote were both `7ec03175dba34e364f29a94738bb6dec9b17dd03`, zero ahead/behind, with a clean tree. Verified the Task 1 manifest directly: 189 entries, 0 missing, 0 hash mismatches. No test suite was rerun and no application source/configuration/service/provider action occurred. Approval documentation is pending normal diff/secrets review, commit, non-force push and remote verification. Task 2 remains prepared and unstarted; separate owner authorization is required.
 
+## 22 November 2026 (Asia/Kolkata) — Task 2 first milestone
+
+Owner authorized Task 2. Fetched `origin/work`; starting SHA `3aa855ac9913a1b7c1b3c8c535c569f477c42f01` matched local `work` and the tree was clean. Located the official 1024×1024 reference icon and verified exact SHA identity for configured adaptive/favicon copies. Direct local TypeScript passed; ESLint passed with 0 errors/7 warnings; controlled Expo public config passed. No application source or artwork was changed. Created Task 2 audit evidence and checklist, and updated the five checkpoint/tracker/decision records. Next: inspect safe frontend test/visual evidence; do not start Task 3 or make an unverified visual change.
+
 ## Continuation recovery 2026-11-17T00:33:14.410608-08:00
 # COME-IN live checkpoint
 

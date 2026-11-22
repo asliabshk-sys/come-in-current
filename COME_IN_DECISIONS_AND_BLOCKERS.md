@@ -16,6 +16,14 @@
 
 **Continuing constraints:** Task 2 is prepared but may not start until separately authorized. Android/iOS native validation, genuine Razorpay TEST payment/webhook/refund, and production infrastructure/configuration validation remain deferred or blocked.
 
+## 22 November 2026 — Task 2 icon and UI/theme audit decision
+
+**Decision:** Task 2 is authorized and in progress. The supplied owner-reference icon is the existing `frontend/assets/branding/come-in-official-app-icon-from-reference.png`; exact byte-identical copies are already configured for Android adaptive foreground and web favicon. Do not replace, redraw or modify this artwork because no icon defect was found.
+
+**Decision:** No static UI/theme finding justified a discretionary source change. Preserve the existing light-theme fallback and Restaurant Mode. Seven ESLint hook-dependency/generated-file warnings are recorded; no warning is suppressed or automatically refactored without a confirmed Task 2 defect.
+
+**Blockers:** Android/iOS native build/device verification remains deferred. This milestone verified source/config only and must not be presented as physical-device validation.
+
 ## Approved decisions (preserved from history, plus BATCH-02)
 | # | Decision | Source |
 |---|---|---|
