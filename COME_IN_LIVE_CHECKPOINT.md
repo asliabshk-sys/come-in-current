@@ -853,3 +853,7 @@ Handover synchronization: COMPLETE. First content commit `831481f456fe758c4bb15a
 ## Task 1 final reconciliation — 2026-11-22
 
 Completed: all handover/checkpoint/readiness documents and final evidence package read; `work` and `origin/work` matched `e44c04c142942d9ead7ba83c27819ebb474504d0` before this checkpoint update; final manifest verified 189/189 hashes; source archive SHA/CRC verified. No source/test rerun was needed because source was unchanged and fresh final evidence exists. Remaining: owner approval/rejection only. Deferred/BLOCKED: Android/iOS native, actual Razorpay TEST payment/webhook/refund, production infra/config. Task 2 locked. Next: verify current remote SHA, read `docs/TASK_1_FINAL_OWNER_APPROVAL_REPORT_20261122.md`, then obtain explicit owner decision.
+
+## Phase 2 Membership integration — 2026-11-22
+
+Starting checkpoint `e4d8f1ea903511b1c1a5f7ad803c24c5dedf1a8b`. Added seller membership UI, persisted request flow, Razorpay payment intent and server-verified captured-payment adapter, and admin reporting/activation UI. Live Razorpay execution is deferred: missing credentials never activate a membership. Focused membership + advertisement contracts: 8 PASS; Python compilation, TypeScript, and targeted ESLint PASS. Evidence: `evidence/phase-2-prelaunch-20261122/membership-integration/IMPLEMENTATION_REPORT.md`. Next: complete centralized image moderation/privacy without changing existing uploads.
