@@ -21,3 +21,6 @@ GitHub work HEAD verified at start as `6e4d9e93a2567bf9115204d34be2f32c68b59c6a`
 
 ## 2026-11-22 — Alternative binary retrieval investigation
 Remote work branch initially verified at `7515e35afc2f1adeea7c6db6b8f85a482d3cfe9c`. November 22 archive remains **UNVERIFIED**: no bytes obtained, SHA-256/CRC and patch inclusion unknown. Task 3 IN PROGRESS, owner approval PENDING, Task 4 locked. No app code changes.
+
+## 2026-11-22 — Workspace network verification
+Git 2.47.3 available but direct GitHub DNS fails. Connector can read branch metadata but not November 22 ZIP binary. November 15 historical archive SHA-256 and 646-entry CRC reverified. No Task 3 application implementation or tests performed. Task 3 IN PROGRESS, owner approval PENDING, Task 4 NOT STARTED.
