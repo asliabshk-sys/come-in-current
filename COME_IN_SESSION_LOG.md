@@ -1,3 +1,9 @@
+## 22 November 2026 (Asia/Kolkata) — Task 3 Seller Dashboard implementation start
+
+Fetched and verified `origin/work`: local and remote matched at `87c6c3631e4660cec32aff622dd5870d49d9eee4`, zero ahead/behind, clean tree. Read the Task 3 reports, Task 2 approval, master board, root checkpoints and retained source handoff. Source inspection confirms seller surfaces are distributed across registration/profile, products/imports, orders, support and earnings routes. Created the implementation checklist and evidence location before code changes. No source, database, provider, native/device, production or payment operation has run yet.
+
+Exact next action: implement the bounded first increment (truthful seller overview and Help Center/human-support foundation), create focused tests/evidence and a reviewable source patch, then checkpoint, commit, non-force push and remotely verify.
+
 ## 22 November 2026 (Asia/Kolkata) — master task-board reconciliation
 
 Documentation-only reconciliation: fetched `origin/work`, verified branch `work`, local/remote SHA `0ecfbd08cc999d7106efbb0e28a6a9d3d56b114f`, `0 0` ahead/behind, and an initially clean tree. Read handover, five checkpoints, Task 1 final owner-approval record, external validation/release-readiness material, recovered roadmap and Task 1 final package references.

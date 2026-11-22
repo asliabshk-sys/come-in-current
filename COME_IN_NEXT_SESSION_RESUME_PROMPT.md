@@ -1,5 +1,9 @@
 # NEXT_SESSION_RESUME_PROMPT
 
+## Task 3 implementation resume instruction — 22 November 2026 (Asia/Kolkata)
+
+Continue Task 3 Seller Dashboard implementation from `/workspace/come-in-current` and retained source `/workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115`. First read `docs/TASK_3_IMPLEMENTATION_CHECKLIST.md`, the audit reports in `evidence/task-3-home-category-seller-20261122/`, all five root checkpoints, then inspect Git status/branch/HEAD/origin/work. Starting checkpoint is `87c6c3631e4660cec32aff622dd5870d49d9eee4`. Reuse existing seller flows; current authorized increment is a database-backed seller overview and bounded Help Center/human support. Do not invent commercial policy, enable providers, use credentials/production data, alter Restaurant Mode, start Task 4, or claim device/provider validation. Save source changes as a reviewable patch in the repository; update checkpoints and push/remote-verify after each meaningful milestone.
+
 ## Current resume instruction — 22 November 2026 (Asia/Kolkata)
 
 Continue COME-IN in `/workspace/come-in-current`. First read `docs/COME_IN_MASTER_TASK_BOARD.md`, `docs/ACCOUNT_HANDOVER_MASTER.md`, all five root checkpoint files, `docs/TASK_1_FINAL_OWNER_APPROVAL_REPORT_20261122.md`, `EXTERNAL_VALIDATION_REPORT.md`, and `COME_IN_RELEASE_READINESS.md`. Inspect Git status, branch, local `HEAD`, `origin/work`, and the last recorded operation. Do not repeat completed tests or start Task 2.

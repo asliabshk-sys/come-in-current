@@ -1,5 +1,9 @@
 # COME-IN — Decisions and Blockers
 
+## Task 3 Seller Dashboard implementation decision — 22 November 2026 (Asia/Kolkata)
+
+The owner authorized Task 3 Seller Dashboard implementation. Existing workflows must be extended rather than duplicated. The first safe increment is a real-data seller overview plus a bounded Help Center/human-support entry; no unconfigured AI provider is represented as live. Advertisement, membership, staff/branches, review moderation, provider-backed OCR/push/bank/payment operations and production activation require separate policy/configuration decisions. Android/iOS device testing remains deferred. Task 4 remains locked.
+
 ## 22 November 2026 — master task-board reconciliation
 
 **Decision:** The recovered original roadmap has 22 canonical tasks. Later document labels (including Task 23–25 and Task 26–30) are report/work labels and must not invent a second task order. The reconciled board is `docs/COME_IN_MASTER_TASK_BOARD.md`.

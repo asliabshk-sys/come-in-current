@@ -1,5 +1,9 @@
 # COME-IN account handover master
 
+## Current Task 3 implementation state — 22 November 2026
+
+Task 3 changed from audit-only review to **IN PROGRESS** under explicit owner authorization for Seller Dashboard implementation. Read `docs/TASK_3_IMPLEMENTATION_CHECKLIST.md` and the Task 3 audit package first. Existing seller flows are retained; the first implementation increment is a real-data overview plus bounded Help Center/human support. External/provider/device and commercial-policy work remains deferred or requires a separate owner decision. Task 4 remains locked.
+
 ## 22 November 2026 — master task-board checkpoint
 
 The canonical 22-task roadmap is reconciled in [COME_IN_MASTER_TASK_BOARD.md](COME_IN_MASTER_TASK_BOARD.md). At the start of that reconciliation, branch `work` and `origin/work` were equal at `0ecfbd08cc999d7106efbb0e28a6a9d3d56b114f` (zero ahead/behind; clean tree). This documentation-only session did not modify application source or run tests.

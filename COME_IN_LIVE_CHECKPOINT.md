@@ -44,6 +44,14 @@ Task 3 is **REVIEW PENDING**, not approved/closed. All ten requested reports are
 
 Fresh test result: 13 safe focused frontend/catalog/shop/import/role/seller source-contract modules — **84 PASS, 0 FAIL**. Runtime/device/deep-link/responsive visual workflows remain NOT TESTED; Android/iOS and final native validation remain DEFERRED; real settlement/provider validation remains outside scope. Exact next action: review/commit/push/remote-verify this final Task 3 package, then wait for owner decisions in Report 10. Do not start Task 4.
 
+## Task 3 Seller Dashboard implementation start — 22 November 2026 (Asia/Kolkata)
+
+The owner authorized Seller Dashboard implementation. Starting Git state: `work` and `origin/work` both at `87c6c3631e4660cec32aff622dd5870d49d9eee4`, zero ahead/behind, clean tree. Re-read the Task 3 audit package and inspected the retained source. Existing registration, product CRUD, imports, order transitions, support and earnings/settlement paths must be reused; no duplicate dashboard stack is permitted.
+
+Current scoped increment: implement a seller overview using existing authorized server data and bounded seller Help Center/human-support paths. Provider-backed AI, OCR, push, real payment/settlement operations, membership/advertisement business rules, staff/multi-branch policy and device tests remain deferred or require dedicated owner policy. No production data/credentials may be used.
+
+Next precise action: implement the minimum source changes in the retained source, add focused tests, generate a reviewable patch in this repository, update all checkpoints/evidence, then commit/push and remote-verify. Task 3 remains IN PROGRESS; Task 4 is locked.
+
 ## READ-ONLY release audit — 2026-11-17T01:41:36.643661-08:00
 
 Project COME-IN, repository asliabshk-sys/come-in-current at /workspace/come-in-current; application /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115.

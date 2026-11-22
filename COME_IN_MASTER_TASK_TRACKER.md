@@ -6,7 +6,7 @@
 
 > **Task 3 execution update — 22 November 2026:** Task 3 is **IN PROGRESS** under explicit owner authorization as a discovery/audit-only phase. Home/navigation, category and Seller Dashboard evidence is being collected under `evidence/task-3-home-category-seller-20261122/`. No source/category/API/database/auth/Restaurant Mode change or Task 4 work is authorized.
 
-> **Task 3 final audit — 22 November 2026:** Task 3 is **REVIEW PENDING**. Ten reports are saved under `evidence/task-3-home-category-seller-20261122/`; 13 selected safe source-contract modules passed **84/84**. No source implementation changed. Owner category/policy/priority decisions are pending; runtime/device/native/provider claims remain unmade; Task 4 is locked.
+> **Task 3 implementation update — 22 November 2026:** The owner authorized Seller Dashboard implementation after the audit. Task 3 is **IN PROGRESS**; checklist: `docs/TASK_3_IMPLEMENTATION_CHECKLIST.md`. Existing seller registration/products/orders/imports/support/earnings must be reused. Initial scope is a truthful overview and bounded Help Center/human support, with focused tests and a reviewable source patch. Provider-backed AI/OCR/push/payment, commercial membership/advertising policy and native/device work remain deferred or policy-gated. Task 4 is locked.
 
 **Updated:** 2026-11-12 — Chand AI Phase 5 deterministic party planner added; 128 focused Chand/Task 5/Restaurant/Cart/Checkout/Support regression tests pass; native dependency lock, live provider, MongoDB and device verification remain blocked  
 **Primary source:** `COME-IN-MASTER-COMPLETE-TASK5-MONGODB_2026-11-11 2.zip` (SHA-256 `9d871f9f04551017a5322a275ddbd63a353f2ed24d13be9cd57831d9c27738f6`)  
