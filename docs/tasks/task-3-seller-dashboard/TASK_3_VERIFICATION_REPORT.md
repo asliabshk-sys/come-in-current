@@ -17,3 +17,15 @@ Date: 2026-11-22. Historical source: uploaded November 15 ZIP, extracted only to
 | Android/iOS physical-device and Razorpay TEST | DEFERRED | Separate authorized phase |
 
 Earlier Increment 01 report records 44 PASS, TypeScript/ESLint/web export PASS **historically**, not rerun in this session. Do not upgrade historical claims to current validation.
+
+## 2026-11-22 follow-up checks
+| Command/check | Result | Details |
+|---|---|---|
+| GitHub compare `6e4d9e93...` vs `work` | PASS | identical, ahead 0, behind 0 before writes |
+| GitHub fetch_file sanitized ZIP with base64 encoding | BLOCKED | blob `b1e1d2c813185967dde4c979509410a95abd4d30`, zero binary bytes returned |
+| GitHub git/blobs endpoint | BLOCKED | HTTP 400, UTF-8 text only |
+| `git ls-remote https://github.com/asliabshk-sys/come-in-current.git refs/heads/work` | BLOCKED | DNS resolution failure |
+| Python requests GitHub blob endpoint | BLOCKED | DNS resolution failure |
+| `sha256sum '/mnt/data/COME-IN-COMPLETE-MASTER-SOURCE-20261115 (1).zip'` | PASS | `3233dcd9c8f1997b06035fd5cd7b458ab511658faf25e184044b17aec624d28c` |
+| November 22 ZIP SHA-256, ZIP CRC, inventory, patch inclusion | NOT RUN | Actual ZIP bytes unavailable |
+| Fresh frontend/backend/QA tests | NOT RUN | No verified newer source to test; no new implementation |
