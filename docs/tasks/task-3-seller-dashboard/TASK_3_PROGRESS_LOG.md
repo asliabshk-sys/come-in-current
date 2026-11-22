@@ -19,3 +19,13 @@
 - GitHub Git blob API through connector rejected binary as non-UTF-8 (HTTP 400); direct GitHub HTTPS and `git ls-remote` from container failed DNS (`Could not resolve host`).
 - Local `/mnt/data` holds November 15 historical ZIP only; rehashed SHA-256 `3233dcd9c8f1997b06035fd5cd7b458ab511658faf25e184044b17aec624d28c`; historical seller routes present: `orders.tsx`, `products.tsx`, `support.tsx`; dashboard/help absent.
 - No November 22 ZIP bytes, CRC test, SHA-256, inventory or patch applicability verification; no application code edits or tests rerun. Evidence-only handoff update.
+
+## 2026-11-22 — Alternative GitHub binary download methods
+- Raw GitHub HTTPS: DNS failure (`raw.githubusercontent.com`).
+- GitHub REST contents and Git blob endpoints via connector: HTTP 400 / UTF-8-only restriction.
+- GitHub connector `fetch_blob` for `b1e1d2c813185967dde4c979509410a95abd4d30`: UnicodeDecodeError (byte 0xd3, position 10).
+- GitHub connector `fetch_file` for ZIP: no binary content.
+- Repository ZIP download endpoint via terminal: DNS failure (`api.github.com`).
+- GitHub commit-history query scoped to archive returned empty result; cannot infer ZIP creation time from this query.
+- Inspected existing `patches/task3-seller-dashboard-overview.patch` and `evidence/task-3-seller-implementation-20261122/increment-01-review/NOV15_MASTER_SOURCE_RECOVERY_REPORT.md`. Patch records seller dashboard/help, account navigation and backend contract test changes. Does not prove archive inclusion.
+- No actual ZIP bytes, no source comparison, no patch application, no application changes or fresh QA.
