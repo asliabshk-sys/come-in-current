@@ -18,3 +18,6 @@ Preserve Expo/React Native, FastAPI, MongoDB, authentication, APIs, Restaurant M
 
 ## 2026-11-22 follow-up: November 22 archive verification BLOCKED
 GitHub work HEAD verified at start as `6e4d9e93a2567bf9115204d34be2f32c68b59c6a`. November 22 sanitized ZIP Git blob is `b1e1d2c813185967dde4c979509410a95abd4d30`, but binary bytes unavailable through GitHub connector or direct network. No source authority determination, patch application or new implementation. Task 3 IN PROGRESS; approval PENDING.
+
+## 2026-11-22 — Alternative binary retrieval investigation
+Remote work branch initially verified at `7515e35afc2f1adeea7c6db6b8f85a482d3cfe9c`. November 22 archive remains **UNVERIFIED**: no bytes obtained, SHA-256/CRC and patch inclusion unknown. Task 3 IN PROGRESS, owner approval PENDING, Task 4 locked. No app code changes.
