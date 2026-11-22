@@ -1,10 +1,10 @@
 # COME-IN account handover master
 
-## Current Task 3 implementation state — 22 November 2026
+## Current Task 3 implementation state — 23 November 2026
 
-Task 3 has completed its authorized local Seller Dashboard scope and is **REVIEW PENDING** for the owner. Read `docs/TASK_3_IMPLEMENTATION_CHECKLIST.md` and `evidence/task-3-seller-implementation-20261122/final-completion-20261122/` first. Existing seller flows are retained; the implementation is a real-data overview plus bounded Help Center/human support, verified from an isolated archive restoration. External/provider/device and commercial-policy work remains deferred or requires a separate owner decision. Task 4 remains locked.
+Task 3 has completed its authorized Seller Dashboard scope and is **APPROVED and CLOSED**. See the [final owner approval record](TASK_3_OWNER_APPROVAL_RECORD_20261123.md). Read `docs/TASK_3_IMPLEMENTATION_CHECKLIST.md` and `evidence/task-3-seller-implementation-20261122/final-completion-20261122/` first. Existing seller flows are retained; the implementation is a real-data overview plus bounded Help Center/human support, verified from an isolated archive restoration. External/provider/device and commercial-policy work remains deferred or requires a separate owner decision. Task 4 remains locked.
 
-Final Task 3 evidence content commit: `36436f009e9d9f181f0ddd1f6e07b4f315c33c83`, pushed and verified at `origin/work` with zero ahead/behind. This record does not approve Task 3.
+Final Task 3 evidence content commit: `36436f009e9d9f181f0ddd1f6e07b4f315c33c83`, pushed and verified at `origin/work` with zero ahead/behind. The final owner decision is recorded separately in the approval record above.
 
 Increment 01 implementation is recorded in `evidence/task-3-seller-implementation-20261122/SELLER_DASHBOARD_INCREMENT_01_REPORT.md` and `patches/task3-seller-dashboard-overview.patch`. It adds no credentials, provider connection, database migration or production operation. Before further work, verify the patch and its recorded focused PASS evidence, then fetch/verify Git state.
 
@@ -22,11 +22,11 @@ The canonical 22-task roadmap is reconciled in [COME_IN_MASTER_TASK_BOARD.md](CO
 
 Task 2 (Theme and Design / official app icon integration) is **APPROVED** for its completed local scope by explicit owner decision; see `docs/TASK_2_OWNER_APPROVAL_RECORD_20261122.md`. The official owner-reference icon was already configured in Expo, Android adaptive-icon and web favicon paths; no source/artwork change was needed. Fresh local evidence: TypeScript 0 errors, ESLint 0 errors/7 warnings, Expo config PASS, web export PASS, static inventory 95 modules/53 route-layout files/0 parse diagnostics, and CHAND planner 11 assertions PASS. Native Android/iOS verification, full runtime visual testing and final native release validation remain deferred. Do not start Task 3 without separate owner authorization.
 
-## Task 3 status — 22 November 2026
+## Historical Task 3 implementation checkpoint — 22 November 2026
 
 Task 3 is **REVIEW PENDING** after authorized Seller Dashboard implementation and final local verification. The final package is `evidence/task-3-seller-implementation-20261122/final-completion-20261122/`: recovered-source contract union 91 PASS, TypeScript 0 errors, targeted ESLint 0 errors/warnings, Expo web export PASS, patch reversibility PASS, and archive integrity PASS. No additional application source was changed in the final verification session. The sanitized archive excludes public `.env.example` templates, which is a documented restoration gap. Do not start Task 4; wait for an owner decision.
 
-## Task 3 final status — 22 November 2026
+## Historical Task 3 audit checkpoint — 22 November 2026
 
 Task 3 is **REVIEW PENDING** after its audit-only scope. Ten reports are saved under `evidence/task-3-home-category-seller-20261122/`; 13 selected safe source-contract test modules passed 84/84. No application implementation changed. Owner discussion is required before any category reorganization, seller feature work or Task 4 authorization. Native/device/runtime/provider limitations remain deferred or untested as classified in the reports.
 

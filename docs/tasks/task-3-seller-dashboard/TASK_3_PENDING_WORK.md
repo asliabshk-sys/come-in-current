@@ -1,5 +1,7 @@
 # COME-IN Task 3 — Pending Work and Blockers
 
+**Current status (23 November 2026 IST): Task 3 is APPROVED and CLOSED.** See the [owner approval and final completion record](../../TASK_3_OWNER_APPROVAL_RECORD_20261123.md). The entries below are historical. Live seller runtime, native Android/iOS, external provider and production-only validation remain deferred. Task 4 requires separate authorization.
+
 1. **Source authority:** verify whether November 22 sanitized archive is later than and compatible with November 15 source and Increment 01. GitHub `work` has no standalone `frontend/` or `backend/` tree. Do not overwrite current source.
 2. **Patch reconciliation:** compare/apply `patches/task3-seller-dashboard-overview.patch` only in isolated disposable source, verify no duplicate or regression. Missing in historical ZIP: seller dashboard/help routes and dashboard contract test.
 3. **Seller Dashboard:** verify role guard, shop ownership, order counts, real earnings and settlement semantics, inventory calculations, refresh race/stale values, error/empty/loading states, mobile/responsive layout.

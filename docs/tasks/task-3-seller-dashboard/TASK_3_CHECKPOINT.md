@@ -1,5 +1,7 @@
 # COME-IN Task 3 — Checkpoint
 
+**Current status (23 November 2026 IST): Task 3 is APPROVED and CLOSED.** See the [owner approval and final completion record](../../TASK_3_OWNER_APPROVAL_RECORD_20261123.md). The entries below are historical. Live seller runtime, native Android/iOS, external provider and production-only validation remain deferred. Task 4 requires separate authorization.
+
 **Task 3 IN PROGRESS — owner approval PENDING.**
 
 - Repository: https://github.com/asliabshk-sys/come-in-current

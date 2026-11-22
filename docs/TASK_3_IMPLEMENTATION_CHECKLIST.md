@@ -33,4 +33,4 @@
 
 ## Completion state
 
-The currently approved local Task 3 Seller Dashboard scope is **REVIEW PENDING** for owner decision. Do not start Task 4. Advertisement, membership commerce, staff/branch roles, reviews/moderation and policy-driven analytics are not silently included: they require separate owner policy/acceptance authorization.
+The Task 3 Seller Dashboard implementation is **COMPLETE**. Its security and regression checks **PASSED** as recorded in the final evidence. Owner approval is **APPROVED** and the final status is **CLOSED**. See [the owner approval record](TASK_3_OWNER_APPROVAL_RECORD_20261123.md). Live seller runtime, native Android/iOS, external provider and production-only checks remain **DEFERRED**. Do not start Task 4. Advertisement, membership commerce, staff/branch roles, reviews/moderation and policy-driven analytics are not silently included: they require separate owner policy/acceptance authorization.
