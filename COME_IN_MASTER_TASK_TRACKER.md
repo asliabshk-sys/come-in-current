@@ -8,6 +8,8 @@
 
 > **Task 3 implementation update — 22 November 2026:** The owner authorized Seller Dashboard implementation after the audit. Task 3 is **IN PROGRESS**; checklist: `docs/TASK_3_IMPLEMENTATION_CHECKLIST.md`. Existing seller registration/products/orders/imports/support/earnings must be reused. Initial scope is a truthful overview and bounded Help Center/human support, with focused tests and a reviewable source patch. Provider-backed AI/OCR/push/payment, commercial membership/advertising policy and native/device work remain deferred or policy-gated. Task 4 is locked.
 
+> **Task 3 Increment 01 — 22 November 2026:** Implemented Seller Overview and bounded Seller Help as retained-source changes, captured in `patches/task3-seller-dashboard-overview.patch`. Fresh checks: 44 focused contracts PASS; TypeScript 0 errors; targeted ESLint 0 errors/warnings; web export PASS. The new surfaces reuse existing authorized APIs and do not claim configured AI/provider or live money operations. See `evidence/task-3-seller-implementation-20261122/SELLER_DASHBOARD_INCREMENT_01_REPORT.md`.
+
 **Updated:** 2026-11-12 — Chand AI Phase 5 deterministic party planner added; 128 focused Chand/Task 5/Restaurant/Cart/Checkout/Support regression tests pass; native dependency lock, live provider, MongoDB and device verification remain blocked  
 **Primary source:** `COME-IN-MASTER-COMPLETE-TASK5-MONGODB_2026-11-11 2.zip` (SHA-256 `9d871f9f04551017a5322a275ddbd63a353f2ed24d13be9cd57831d9c27738f6`)  
 **Machine-readable tracker:** `COME_IN_MASTER_TASK_TRACKER.json`  

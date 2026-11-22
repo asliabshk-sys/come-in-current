@@ -52,6 +52,16 @@ Current scoped increment: implement a seller overview using existing authorized 
 
 Next precise action: implement the minimum source changes in the retained source, add focused tests, generate a reviewable patch in this repository, update all checkpoints/evidence, then commit/push and remote-verify. Task 3 remains IN PROGRESS; Task 4 is locked.
 
+## Task 3 Seller Dashboard implementation — Increment 01 — 22 November 2026 (Asia/Kolkata)
+
+Completed: added a Shopkeeper-only Seller Overview and bounded Seller Help routes in retained source, with Account and Shop Profile links. Overview composes existing seller-authorized shop, order, earnings/stock/settlement and support-ticket APIs; it does not add a duplicate backend, create demo metrics, or execute a financial/inventory action. Seller Help is an in-app guide and human-support entry only; no provider-backed AI is claimed.
+
+Modified retained-source files: `frontend/app/seller/dashboard.tsx`, `frontend/app/seller/help.tsx`, `frontend/app/(tabs)/account.tsx`, `frontend/app/become-seller.tsx`, and `backend/tests/test_task3_seller_dashboard_contract.py`. Durable patch: `patches/task3-seller-dashboard-overview.patch`, SHA-256 `d02c50b2cd559f8a77049b8ec31f90194c827c193cb815931fb46d892b6816f9`; reverse dry-run passed. No database, API, authentication, Restaurant Mode, provider, credential or production change was made.
+
+Tests actually executed: 44 focused seller/frontend contracts PASS (0 failures); web export PASS (1,632 modules); TypeScript PASS (0 errors) after route generation; targeted ESLint PASS (0 errors/warnings). No native/device, live seller, real-money/provider, OCR or push test occurred. Evidence: `evidence/task-3-seller-implementation-20261122/SELLER_DASHBOARD_INCREMENT_01_REPORT.md`.
+
+Pending: broader seller features whose requirements are commercial/policy dependent (ads, membership, staff/branches, review moderation), real configured AI/provider validation, and final runtime/native testing. Exact next action: review this source patch and checkpoint, commit/push/remote-verify Increment 01, then continue only with independently authorized/data-safe seller work. Task 3 remains IN PROGRESS; Task 4 locked.
+
 ## READ-ONLY release audit — 2026-11-17T01:41:36.643661-08:00
 
 Project COME-IN, repository asliabshk-sys/come-in-current at /workspace/come-in-current; application /workspace/come-in-dev/COME-IN-COMPLETE-MASTER-SOURCE-20261115.

@@ -15,10 +15,10 @@
 ## First implementation increment
 
 - [x] Recover Task 3 audit and inspect current seller source/API/data evidence.
-- [ ] Add an authenticated seller overview that uses existing authorized data only; no fabricated metrics.
-- [ ] Add bounded Help Center/human-support entry points without requiring an unconfigured AI provider.
-- [ ] Add focused source/contract tests and regression checks.
-- [ ] Record source patch, evidence, updated checkpoints, commit/push, and remote verification.
+- [x] Add an authenticated seller overview that uses existing authorized data only; no fabricated metrics.
+- [x] Add bounded Help Center/human-support entry points without requiring an unconfigured AI provider.
+- [x] Add focused source/contract tests and regression checks (44 PASS; TypeScript/targeted ESLint/web export PASS).
+- [x] Record the Increment 01 source patch and evidence; commit/push/remote verification follows this checkpoint.
 
 ## Explicitly deferred or policy-gated
 

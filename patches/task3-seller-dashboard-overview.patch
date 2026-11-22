@@ -1,0 +1,245 @@
+---
+# Task 3 seller-dashboard first implementation increment.
+# Apply from the retained source root with: patch -p1 < this file
+# Baseline: 87c6c3631e4660cec32aff622dd5870d49d9eee4 (source state before this increment).
+
+--- a/frontend/app/(tabs)/account.tsx
++++ b/frontend/app/(tabs)/account.tsx
+@@ -47,9 +47,11 @@
+           ]),
+       ...(user?.role === "shopkeeper"
+         ? [
++            { icon: "grid" as const, label: "Seller overview", onPress: () => router.push("/seller/dashboard") },
+             { icon: "package" as const, label: "My products", onPress: () => router.push("/seller/products") },
+             { icon: "clipboard" as const, label: "Shop orders", onPress: () => router.push("/seller/orders") },
+             { icon: "life-buoy" as const, label: "Seller Support", onPress: () => router.push("/seller/support") },
++            { icon: "help-circle" as const, label: "Seller Help", onPress: () => router.push("/seller/help") },
+             { icon: "trending-up" as const, label: "My Shop Earnings", onPress: () => router.push("/seller-earnings") },
+           ]
+         : SELLER_SUPPORT_ROLES.includes(user?.role || "")
+--- a/frontend/app/become-seller.tsx
++++ b/frontend/app/become-seller.tsx
+@@ -393,8 +393,10 @@
+
+         {existingId && (
+           <View style={{ gap: spacing.sm, marginTop: spacing.lg }}>
++            <SmallLink label="Seller overview" icon="grid" onPress={() => router.push("/seller/dashboard")} />
+             <SmallLink label="Add item / manage products" icon="package" onPress={() => router.push("/seller/products")} />
+             <SmallLink label="Shop orders" icon="shopping-bag" onPress={() => router.push("/seller/orders")} />
++            <SmallLink label="Seller Help" icon="help-circle" onPress={() => router.push("/seller/help")} />
+           </View>
+         )}
+       </ScrollView>
+--- a/frontend/app/seller/dashboard.tsx
++++ b/frontend/app/seller/dashboard.tsx
+@@ -0,0 +1,130 @@
++import Feather from "@react-native-vector-icons/feather";
++import { useRouter } from "expo-router";
++import { useCallback, useEffect, useMemo, useState } from "react";
++import { ActivityIndicator, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
++import { useSafeAreaInsets } from "react-native-safe-area-context";
++
++import { api } from "@/src/lib/api";
++import { useAuth } from "@/src/store/auth";
++import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
++
++type Order = { status?: string };
++type StockRow = { stock?: number; low_stock?: boolean; out_of_stock?: boolean };
++type DashboardData = {
++  periods?: { today?: { gross_order_sales?: number } };
++  summary?: { orders_total?: number; pending_orders?: number; processing_orders?: number; delivered_orders?: number; cancelled_orders?: number };
++  stock?: StockRow[];
++  settlement_summary?: { awaiting_count?: number; awaiting_settlement_inr?: number };
++};
++type Shop = { id: string; name?: string; status?: string; online?: boolean };
++type SupportTicket = { status?: string };
++
++const inr = (value?: number) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(Number(value || 0));
++
++/** Seller overview deliberately composes existing, seller-authorized APIs. */
++export default function SellerDashboardScreen() {
++  const router = useRouter();
++  const insets = useSafeAreaInsets();
++  const { user } = useAuth();
++  const { colors } = useTheme();
++  const styles = useStyles();
++  const [shop, setShop] = useState<Shop | null>(null);
++  const [data, setData] = useState<DashboardData | null>(null);
++  const [orders, setOrders] = useState<Order[]>([]);
++  const [tickets, setTickets] = useState<SupportTicket[]>([]);
++  const [loading, setLoading] = useState(true);
++  const [refreshing, setRefreshing] = useState(false);
++  const [error, setError] = useState("");
++
++  const load = useCallback(async () => {
++    const current = await api.get<Shop | null>("/shops/mine");
++    setShop(current);
++    if (!current) {
++      setData(null); setOrders([]); setTickets([]); setError(""); return;
++    }
++    const [financial, shopOrders, support] = await Promise.all([
++      api.get<DashboardData>(`/earnings/mine?shop_id=${encodeURIComponent(current.id)}`),
++      api.get<Order[]>(`/shops/${encodeURIComponent(current.id)}/orders`),
++      api.get<SupportTicket[]>("/seller/support"),
++    ]);
++    setData(financial);
++    setOrders(Array.isArray(shopOrders) ? shopOrders : []);
++    setTickets(Array.isArray(support) ? support : []);
++    setError("");
++  }, []);
++
++  useEffect(() => {
++    if (!user || user.role !== "shopkeeper") return;
++    const run = async () => {
++      try { await load(); } catch (e: any) { setError(e?.message || "Seller overview could not be loaded."); } finally { setLoading(false); }
++    };
++    void run();
++  }, [load, user]);
++
++  const refresh = async () => {
++    setRefreshing(true);
++    try { await load(); } catch (e: any) { setError(e?.message || "Seller overview could not be refreshed."); } finally { setRefreshing(false); }
++  };
++
++  const metrics = useMemo(() => {
++    const pending = orders.filter((order) => ["pending", "pending_payment", "accepted"].includes(String(order.status))).length;
++    const processing = orders.filter((order) => ["preparing", "ready", "out_for_delivery"].includes(String(order.status))).length;
++    const low = (data?.stock || []).filter((row) => row.low_stock).length;
++    const out = (data?.stock || []).filter((row) => row.out_of_stock).length;
++    const openTickets = tickets.filter((ticket) => !["resolved", "closed"].includes(String(ticket.status))).length;
++    return { pending, processing, low, out, openTickets };
++  }, [data?.stock, orders, tickets]);
++
++  if (!user) return <Guard text="Please sign in to open your seller overview." onPress={() => router.push("/auth")} />;
++  if (user.role !== "shopkeeper") return <Guard text="Seller access is required for this overview." onPress={() => router.replace("/(tabs)/account")} />;
++  if (loading) return <View style={styles.centered}><ActivityIndicator color={colors.brandPrimary} /><Text style={styles.muted}>Loading your authorized shop data…</Text></View>;
++  if (!shop) return <Guard text="No shop is linked to this account yet." onPress={() => router.push("/become-seller")} cta="Set up my shop" />;
++
++  const rows = [
++    ["Today’s sales", inr(data?.periods?.today?.gross_order_sales), "Gross order sales; not a payout."],
++    ["New / pending orders", String(metrics.pending), "Review and accept orders."],
++    ["In progress", String(metrics.processing), "Preparing, ready or out for delivery."],
++    ["Completed orders", String(data?.summary?.delivered_orders || 0), "From authorized order records."],
++    ["Cancelled orders", String(data?.summary?.cancelled_orders || 0), "Cancellation status only."],
++    ["Active products", String((data?.stock || []).filter((row) => Number(row.stock || 0) > 0).length), "Current listed inventory records."],
++    ["Low / out of stock", `${metrics.low} / ${metrics.out}`, "Update stock before accepting more orders."],
++    ["Pending settlements", `${data?.settlement_summary?.awaiting_count || 0} · ${inr(data?.settlement_summary?.awaiting_settlement_inr)}`, "Requests only; no bank transfer is implied."],
++    ["Open support tickets", String(metrics.openTickets), "Only tickets linked to your orders."],
++  ];
++
++  return <View style={styles.root}>
++    <View style={[styles.header, { paddingTop: insets.top + spacing.sm }]}>
++      <Pressable accessibilityLabel="Back" onPress={() => router.back()} style={styles.icon}><Feather name="arrow-left" size={19} color={colors.onSurface} /></Pressable>
++      <View style={{ flex: 1 }}><Text style={styles.title}>Seller Overview</Text><Text style={styles.subtitle}>{shop.name || "My shop"} · {shop.status || "status unavailable"}{shop.online ? " · Open" : " · Offline"}</Text></View>
++      <Pressable accessibilityLabel="Refresh seller overview" onPress={() => void refresh()} style={styles.icon}><Feather name="refresh-cw" size={18} color={colors.brandPrimary} /></Pressable>
++    </View>
++    <ScrollView contentContainerStyle={styles.content} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void refresh()} />}>
++      {error ? <View style={styles.error}><Text style={styles.errorText}>{error}</Text><Pressable onPress={() => void refresh()}><Text style={styles.link}>Retry</Text></Pressable></View> : null}
++      <Text style={styles.note}>Figures are calculated from your authorized existing records. They are never demo values and do not initiate settlement, payment, refund or stock changes.</Text>
++      <View style={styles.grid}>{rows.map(([label, value, hint]) => <View key={label} style={styles.metric}><Text style={styles.metricLabel}>{label}</Text><Text style={styles.metricValue}>{value}</Text><Text style={styles.metricHint}>{hint}</Text></View>)}</View>
++      <Text style={styles.sectionTitle}>Manage your shop</Text>
++      <View style={styles.actions}>
++        <Action icon="clipboard" label="Orders" hint="Accept and update valid order states" onPress={() => router.push("/seller/orders")} />
++        <Action icon="package" label="Products & stock" hint="Products, variants and catalogue imports" onPress={() => router.push("/seller/products")} />
++        <Action icon="trending-up" label="Earnings" hint="Sales, settlement records and bank details" onPress={() => router.push("/seller-earnings")} />
++        <Action icon="life-buoy" label="Support tickets" hint="Order-linked customer support" onPress={() => router.push("/seller/support")} />
++        <Action icon="help-circle" label="Seller Help" hint="Guides, safe next steps and human support" onPress={() => router.push("/seller/help")} />
++        <Action icon="settings" label="Shop profile" hint="Hours, contact, availability and settings" onPress={() => router.push("/become-seller")} />
++      </View>
++    </ScrollView>
++  </View>;
++}
++
++function Action({ icon, label, hint, onPress }: { icon: React.ComponentProps<typeof Feather>["name"]; label: string; hint: string; onPress: () => void }) {
++  const { colors } = useTheme(); const styles = useStyles();
++  return <Pressable accessibilityRole="button" onPress={onPress} style={styles.action}><Feather name={icon} size={19} color={colors.brandPrimary} /><View style={{ flex: 1 }}><Text style={styles.actionTitle}>{label}</Text><Text style={styles.actionHint}>{hint}</Text></View><Feather name="chevron-right" size={18} color={colors.muted} /></Pressable>;
++}
++
++function Guard({ text, onPress, cta = "Back to Account" }: { text: string; onPress: () => void; cta?: string }) {
++  const { colors } = useTheme(); const styles = useStyles();
++  return <View style={styles.centered}><Feather name="briefcase" size={30} color={colors.muted} /><Text style={styles.guard}>{text}</Text><Pressable style={styles.primary} onPress={onPress}><Text style={styles.primaryText}>{cta}</Text></Pressable></View>;
++}
++
++const useStyles = makeStyles((colors) => ({
++  root: { flex: 1, backgroundColor: colors.surfaceSecondary }, header: { flexDirection: "row", gap: spacing.sm, alignItems: "center", paddingHorizontal: spacing.lg, paddingBottom: spacing.md, backgroundColor: colors.surface, borderBottomColor: colors.border, borderBottomWidth: StyleSheet.hairlineWidth }, icon: { width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center", backgroundColor: colors.surfaceTertiary }, title: { color: colors.onSurface, fontSize: 19, fontWeight: "900" }, subtitle: { color: colors.muted, fontSize: 11 }, content: { padding: spacing.lg, gap: spacing.md }, centered: { flex: 1, backgroundColor: colors.surfaceSecondary, alignItems: "center", justifyContent: "center", padding: spacing.xl, gap: spacing.md }, guard: { color: colors.onSurface, textAlign: "center", fontSize: 14 }, primary: { backgroundColor: colors.brandPrimary, borderRadius: radius.pill, paddingHorizontal: spacing.lg, paddingVertical: 10 }, primaryText: { color: colors.onBrandPrimary, fontWeight: "800" }, note: { color: colors.muted, fontSize: 12, lineHeight: 18 }, grid: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm }, metric: { flexGrow: 1, flexBasis: "42%", minWidth: 145, padding: spacing.md, gap: 4, backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.md }, metricLabel: { color: colors.muted, fontSize: 11, fontWeight: "700" }, metricValue: { color: colors.onSurface, fontSize: 17, fontWeight: "900" }, metricHint: { color: colors.muted, fontSize: 10, lineHeight: 14 }, sectionTitle: { color: colors.onSurface, fontSize: 16, fontWeight: "900", marginTop: spacing.sm }, actions: { gap: spacing.sm }, action: { flexDirection: "row", gap: spacing.sm, alignItems: "center", backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.md, padding: spacing.md }, actionTitle: { color: colors.onSurface, fontSize: 13, fontWeight: "900" }, actionHint: { color: colors.muted, fontSize: 10, marginTop: 2 }, error: { backgroundColor: colors.surface, borderColor: colors.error, borderWidth: 1, borderRadius: radius.md, padding: spacing.md, gap: spacing.xs }, errorText: { color: colors.error, fontSize: 12 }, link: { color: colors.brandPrimary, fontWeight: "800", fontSize: 12 }, muted: { color: colors.muted, fontSize: 12 },
++}));
+--- a/frontend/app/seller/help.tsx
++++ b/frontend/app/seller/help.tsx
+@@ -0,0 +1,34 @@
++import Feather from "@react-native-vector-icons/feather";
++import { useRouter } from "expo-router";
++import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
++import { useSafeAreaInsets } from "react-native-safe-area-context";
++
++import { useAuth } from "@/src/store/auth";
++import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
++
++const GUIDES = [
++  ["Add or update a product", "Use Products to add real names, price, unit, stock and category. Prices and stock are checked again during checkout.", "/seller/products"],
++  ["Import a catalogue", "Use Products → Import. Review every staged record, correct missing information, and approve only valid products before applying.", "/seller/products"],
++  ["Manage orders", "Use Orders to accept or decline new orders and progress only the status actions offered by the dashboard.", "/seller/orders"],
++  ["Understand earnings", "Earnings shows authorized sales, settlement records and masked bank details. A settlement request does not transfer money.", "/seller-earnings"],
++  ["Handle order issues", "Support Tickets contains only tickets for your own Grocery or Restaurant orders. Do not request customer passwords, OTPs or bank details.", "/seller/support"],
++] as const;
++
++/** A bounded help center. It intentionally does not impersonate CHAND or claim an AI provider is configured. */
++export default function SellerHelpScreen() {
++  const router = useRouter(); const insets = useSafeAreaInsets(); const { user } = useAuth(); const { colors } = useTheme(); const styles = useStyles();
++  if (!user || user.role !== "shopkeeper") return <View style={styles.centered}><Text style={styles.message}>Seller access is required for Seller Help.</Text><Pressable style={styles.button} onPress={() => router.replace("/(tabs)/account")}><Text style={styles.buttonText}>Back to Account</Text></Pressable></View>;
++  return <View style={styles.root}>
++    <View style={[styles.header, { paddingTop: insets.top + spacing.sm }]}><Pressable accessibilityLabel="Back" style={styles.icon} onPress={() => router.back()}><Feather name="arrow-left" size={19} color={colors.onSurface} /></Pressable><View style={{ flex: 1 }}><Text style={styles.title}>Seller Help</Text><Text style={styles.subtitle}>Guidance for Come-In seller operations</Text></View></View>
++    <ScrollView contentContainerStyle={styles.content}>
++      <View style={styles.notice}><Feather name="shield" size={18} color={colors.brandPrimary} /><Text style={styles.noticeText}>This Help Center uses approved in-app guidance. An AI provider is not configured or claimed here. It cannot make refunds, change bank details, publish ads, or perform actions for you.</Text></View>
++      <Text style={styles.sectionTitle}>Common tasks</Text>
++      {GUIDES.map(([title, detail, route]) => <Pressable key={title} style={styles.card} onPress={() => router.push(route)}><View style={{ flex: 1 }}><Text style={styles.cardTitle}>{title}</Text><Text style={styles.cardText}>{detail}</Text></View><Feather name="chevron-right" size={18} color={colors.muted} /></Pressable>)}
++      <Text style={styles.sectionTitle}>Need human support?</Text>
++      <View style={styles.card}><View style={{ flex: 1 }}><Text style={styles.cardTitle}>Order-linked support tickets</Text><Text style={styles.cardText}>Use Seller Support to view and update authorized customer/order tickets. For product setup, imports or account questions, keep details in the authorized support path and never send passwords, OTPs, API keys or full bank numbers.</Text></View></View>
++      <Pressable style={styles.button} onPress={() => router.push("/seller/support")}><Text style={styles.buttonText}>Open Seller Support</Text></Pressable>
++    </ScrollView>
++  </View>;
++}
++
++const useStyles = makeStyles((colors) => ({ root: { flex: 1, backgroundColor: colors.surfaceSecondary }, header: { flexDirection: "row", alignItems: "center", gap: spacing.sm, paddingHorizontal: spacing.lg, paddingBottom: spacing.md, backgroundColor: colors.surface, borderBottomColor: colors.border, borderBottomWidth: StyleSheet.hairlineWidth }, icon: { width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center", backgroundColor: colors.surfaceTertiary }, title: { color: colors.onSurface, fontSize: 19, fontWeight: "900" }, subtitle: { color: colors.muted, fontSize: 11 }, content: { padding: spacing.lg, gap: spacing.md }, centered: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.surfaceSecondary, padding: spacing.xl, gap: spacing.md }, message: { color: colors.onSurface, textAlign: "center" }, notice: { flexDirection: "row", gap: spacing.sm, backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.md, padding: spacing.md }, noticeText: { flex: 1, color: colors.onSurface, fontSize: 12, lineHeight: 18 }, sectionTitle: { color: colors.onSurface, fontSize: 16, fontWeight: "900", marginTop: spacing.sm }, card: { flexDirection: "row", alignItems: "center", gap: spacing.sm, backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1, borderRadius: radius.md, padding: spacing.md }, cardTitle: { color: colors.onSurface, fontSize: 13, fontWeight: "900" }, cardText: { color: colors.muted, fontSize: 11, lineHeight: 16, marginTop: 4 }, button: { alignSelf: "flex-start", backgroundColor: colors.brandPrimary, borderRadius: radius.pill, paddingHorizontal: spacing.lg, paddingVertical: 10 }, buttonText: { color: colors.onBrandPrimary, fontWeight: "800" } }));
+--- a/backend/tests/test_task3_seller_dashboard_contract.py
++++ b/backend/tests/test_task3_seller_dashboard_contract.py
+@@ -0,0 +1,40 @@
++"""Static contracts for the Task 3 seller-dashboard increment.
++
++These tests prove route wiring and privacy boundaries only. They do not claim
++an Expo/device session, provider-backed AI, bank verification, or a transfer.
++"""
++from pathlib import Path
++
++
++ROOT = Path(__file__).parents[2]
++
++
++def test_seller_overview_reuses_authorized_existing_apis_without_demo_metrics():
++    dashboard = (ROOT / "frontend/app/seller/dashboard.tsx").read_text()
++    assert 'api.get<Shop | null>("/shops/mine")' in dashboard
++    assert 'api.get<DashboardData>(`/earnings/mine?shop_id=${encodeURIComponent(current.id)}`)' in dashboard
++    assert 'api.get<Order[]>(`/shops/${encodeURIComponent(current.id)}/orders`)' in dashboard
++    assert 'api.get<SupportTicket[]>("/seller/support")' in dashboard
++    assert "They are never demo values" in dashboard
++    assert "do not initiate settlement, payment, refund or stock changes" in dashboard
++    assert 'user.role !== "shopkeeper"' in dashboard
++
++
++def test_seller_dashboard_navigation_reuses_existing_seller_surfaces():
++    dashboard = (ROOT / "frontend/app/seller/dashboard.tsx").read_text()
++    account = (ROOT / "frontend/app/(tabs)/account.tsx").read_text()
++    profile = (ROOT / "frontend/app/become-seller.tsx").read_text()
++    for route in ('"/seller/orders"', '"/seller/products"', '"/seller-earnings"', '"/seller/support"', '"/seller/help"', '"/become-seller"'):
++        assert route in dashboard
++    assert 'router.push("/seller/dashboard")' in account
++    assert 'router.push("/seller/help")' in account
++    assert 'router.push("/seller/dashboard")' in profile
++
++
++def test_seller_help_is_bounded_and_does_not_claim_unconfigured_ai():
++    help_screen = (ROOT / "frontend/app/seller/help.tsx").read_text()
++    assert "An AI provider is not configured or claimed here." in help_screen
++    assert "It cannot make refunds, change bank details, publish ads, or perform actions for you." in help_screen
++    assert "never send passwords, OTPs, API keys or full bank numbers" in help_screen
++    assert 'router.push("/seller/support")' in help_screen
++    assert 'user.role !== "shopkeeper"' in help_screen

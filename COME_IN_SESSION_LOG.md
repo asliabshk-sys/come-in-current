@@ -4,6 +4,12 @@ Fetched and verified `origin/work`: local and remote matched at `87c6c3631e4660c
 
 Exact next action: implement the bounded first increment (truthful seller overview and Help Center/human-support foundation), create focused tests/evidence and a reviewable source patch, then checkpoint, commit, non-force push and remotely verify.
 
+## 22 November 2026 (Asia/Kolkata) — Task 3 Seller Dashboard Increment 01
+
+Implemented retained-source Seller Overview (`seller/dashboard.tsx`) and bounded Seller Help (`seller/help.tsx`) with links from Account and Shop Profile. Added a focused static seller-dashboard contract file. No backend/database/API/provider/authentication/Restaurant Mode change occurred. Actual checks: 44 focused contracts PASS; Expo web export PASS (1,632 modules); TypeScript 0 errors; targeted ESLint 0 errors/warnings; reverse patch dry-run PASS. An initial TypeScript run exposed stale generated Expo route types; a brief offline Expo start regenerated only ignored tooling metadata, after which typecheck passed. A DevTools cache warning was non-fatal and source-independent.
+
+Created `patches/task3-seller-dashboard-overview.patch` and Increment 01 report. Next: inspect all changes for secrets, commit/push/remote-verify the checkpoint, then continue only safe independently authorized seller work. Task 3 IN PROGRESS; Task 4 locked.
+
 ## 22 November 2026 (Asia/Kolkata) — master task-board reconciliation
 
 Documentation-only reconciliation: fetched `origin/work`, verified branch `work`, local/remote SHA `0ecfbd08cc999d7106efbb0e28a6a9d3d56b114f`, `0 0` ahead/behind, and an initially clean tree. Read handover, five checkpoints, Task 1 final owner-approval record, external validation/release-readiness material, recovered roadmap and Task 1 final package references.
