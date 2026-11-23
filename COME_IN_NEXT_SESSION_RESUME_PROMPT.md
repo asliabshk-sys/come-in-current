@@ -184,3 +184,7 @@ Task 9 remains **PARTIALLY VERIFIED**. Reward release eligibility checks, Admin 
 ### 23 November 2026 — Task 9 review consistency
 
 Task 9 remains **PARTIALLY VERIFIED**. Apply `patches/task9-review-consistency.patch` after the local financial reconciliation patch. It adds expiry-safe promotion and advertisement replay, recorded payment checks, reward rejection messaging and invoice snapshot validation. Provider execution, partner adjustments without approved allocation, compensating rewards without approved policy, statutory issuance and deferred device checks remain pending. GST Engine is excluded. [Implementation and evidence](evidence/task-9-final/review-consistency-20261123/IMPLEMENTATION.md)
+
+### 23 November 2026 — Task 9 seven-area reconciliation
+
+Task 9 remains **PARTIALLY VERIFIED**. Apply `patches/task9-reconciliation-controls.patch` after the review consistency patch. The existing 50 IDs remain intact. The change adds coupon funding and advertisement reconciliation, order-specific delivery and reward evidence, disabled collection/refund audit contracts and invoice readiness reporting. [Implementation and outstanding approvals](evidence/task-9-final/reconciliation-controls-20261123/IMPLEMENTATION.md)

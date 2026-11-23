@@ -72,3 +72,7 @@ No whole-policy status changed in the 50-row register.
 ### Review consistency evidence — 23 November 2026
 
 T9-41 and T9-42 gained expiry-safe activation replay evidence. T9-20 and T9-23 gained local order/payment consistency evidence without execution. T9-26 and T9-35 gained review status and customer notification safeguards. T9-46 and T9-48 retain their prior statuses with first-draft snapshot validation. Advertisement replay and payout schedule evidence are tracked in the same run. All 50 IDs and existing classifications remain accounted for. [Implementation and limits](review-consistency-20261123/IMPLEMENTATION.md)
+
+### Reconciliation controls — 23 November 2026
+
+All 50 policy IDs and their classifications remain intact. T9-19, T9-20, T9-22–24 and T9-26 gain recorded capture, refund balance and execution-disabled audit contract evidence. T9-29–31 gain local delivery accounting or advertising booking evidence. T9-32–35 gain customer/order-scoped reward review evidence. T9-41–43 gain a funding reconciliation report and tests within the approved Grocery cash scope. T9-46–48 gain readiness reporting based on the actual approval audit and preserved invoice snapshot. Existing owner authorization covers the local controls. Broader status depends on the exact remaining action per row. [Seven-area report](reconciliation-controls-20261123/IMPLEMENTATION.md)

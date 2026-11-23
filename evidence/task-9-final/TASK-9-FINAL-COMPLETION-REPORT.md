@@ -63,3 +63,7 @@ The 50-policy classification is unchanged at **31 verified and owner-approved, 1
 ## Review consistency — 23 November 2026
 
 Task 9 remains **PARTIALLY VERIFIED**. The follow-up adds coupon and advertiser replay safeguards, stored payment/refund consistency checks before replacement review approval, explicit reward rejection notice, and original financial snapshot validation before creating an invoice correction draft. Existing seller and partner rules stay in force. [Seven-area implementation and remaining work](review-consistency-20261123/IMPLEMENTATION.md)
+
+## Seven-area reconciliation campaign — 23 November 2026
+
+Task 9 remains **PARTIALLY VERIFIED**. Cash coupon reconciliation, closed advertisement delivery review, replacement accounting evidence, disabled payment/refund review contracts and invoice readiness checks extend existing flows. The exact scope and open approvals are recorded in the [implementation report](reconciliation-controls-20261123/IMPLEMENTATION.md).

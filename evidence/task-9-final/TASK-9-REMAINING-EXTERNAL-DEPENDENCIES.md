@@ -46,3 +46,7 @@ The internal correction draft leaves tax values and the original invoice untouch
 ### Review consistency follow-up
 
 Recorded capture and refund checks are local approval safeguards. They do not replace the missing T9-20 linked execution protocol, T9-23 partial-refund policy or T9-24 COD verification rail. The internal draft validates the original order snapshot and does not supply the professional guidance, numbering or issuance procedures for T9-48. [Implementation and remaining work](review-consistency-20261123/IMPLEMENTATION.md)
+
+### Seven-area reconciliation campaign
+
+Coupon funding comparisons, ad shortfall review, recorded delivery fees and reward evidence, execution-disabled payment/refund contracts, and invoice readiness are locally available. Policy decisions and external integration required for real execution remain listed above and in the [seven-area report](reconciliation-controls-20261123/IMPLEMENTATION.md).

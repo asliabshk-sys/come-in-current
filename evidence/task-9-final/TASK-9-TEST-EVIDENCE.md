@@ -79,3 +79,7 @@ Coupon and ad milestone focused result was **3 passed, 0 failed, 0 skipped** usi
 | FastAPI restart and replay | Three passed | [Restart](review-consistency-20261123/restart.log) |
 
 Full backend skipped external object storage at `backend/tests/backend_test.py:397`. Python warnings are FastAPI event-hook and catalogue dependency deprecations. Chromium and restart were executed separately using disposable databases. [Commands](review-consistency-20261123/COMMANDS.md)
+
+### Seven-area reconciliation
+
+Task 9 focused HTTP and MongoDB suite recorded **17 passed, 0 failed, 0 skipped, 7 warnings**. Coverage includes coupon reconciliation after concurrent spending and cancellation, canonical advertisement event identity, closed campaign review concurrency and permissions, linked payment review evidence, reward ledger isolation and invoice readiness. [Focused log](reconciliation-controls-20261123/focused.log) · [Commands](reconciliation-controls-20261123/COMMANDS.md)

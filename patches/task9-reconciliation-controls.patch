@@ -1,0 +1,589 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -1444,7 +1444,7 @@
+ def _advertisement_out(advertisement: dict, *, public: bool = False) -> dict:
+     result = doc_out(advertisement)
+     if public:
+-        for field in ("owner_id", "shop_id", "ai_review", "admin_reason", "poster_storage_path", "commercial_terms", "commercial_budget"):
++        for field in ("owner_id", "shop_id", "ai_review", "admin_reason", "poster_storage_path", "commercial_terms", "commercial_budget", "delivery_review_recorded_at"):
+             result.pop(field, None)
+     return result
+
+@@ -1577,18 +1577,24 @@
+         raise HTTPException(409, "Advertiser acceptance of a fixed-duration price is required before publication")
+     review = advertisement.get("ai_review") or {}
+     poster_sha256 = advertisement.get("poster_sha256")
+-    if (advertisement.get("status") != "pending_owner_approval" or review.get("status") != "COMPLETED" or review.get("decision") != "safe" or not isinstance(poster_sha256, str) or review.get("poster_sha256") != poster_sha256):
++    status = advertisement.get("status")
++    now = now_utc()
++    resuming = (status == "paused" and utc(advertisement["ends_at"]) > now
++                and (advertisement.get("owner_approval") or {}).get("poster_sha256") == poster_sha256)
++    if ((status != "pending_owner_approval" and not resuming) or review.get("status") != "COMPLETED"
++            or review.get("decision") != "safe" or not isinstance(poster_sha256, str)
++            or review.get("poster_sha256") != poster_sha256):
+         raise HTTPException(status_code=409, detail="A safe CHAND review and unchanged poster are required before owner publication")
+-    now = now_utc()
+-    approval = {"owner_id": user["id"], "poster_sha256": poster_sha256, "approved_at": now}
++    approval = (advertisement["owner_approval"] if resuming else
++                {"owner_id": user["id"], "poster_sha256": poster_sha256, "approved_at": now})
+     updated = await db.advertisements.update_one({
+-        "_id": advertisement["_id"], "status": "pending_owner_approval", "poster_sha256": poster_sha256,
++        "_id": advertisement["_id"], "status": status, "poster_sha256": poster_sha256,
+         "ai_review": review, "updated_at": advertisement.get("updated_at"),
+         "commercial_terms": terms,
+     }, {"$set": {"status": "approved", "owner_approval": approval, "updated_at": now}})
+     if updated.matched_count != 1:
+         raise HTTPException(status_code=409, detail="Campaign changed before owner approval; submit it for review again")
+-    await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id, "actor_id": user["id"], "event": "owner_published", "poster_sha256": poster_sha256, "created_at": now})
++    await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id, "actor_id": user["id"], "event": "owner_resumed" if resuming else "owner_published", "poster_sha256": poster_sha256, "created_at": now})
+     return _advertisement_out(await db.advertisements.find_one({"_id": advertisement["_id"]}))
+
+
+@@ -1752,11 +1758,23 @@
+ async def advertisement_delivery_report(advertisement_id: str, user: dict = Depends(get_current_user)):
+     ad = await _advertisement_or_404(advertisement_id)
+     _assert_advertisement_owner(ad, user)
++    report = await _advertisement_delivery_metrics(ad)
++    review = await db.advertisement_audit.find_one(
++        {"_id": f"delivery-review:{ad['_id']}"}, {"status": 1, "created_at": 1})
++    if review:
++        report["delivery_review"] = {
++            "status": review["status"], "recorded_at": review["created_at"],
++        }
++    return report
++
++
++async def _advertisement_delivery_metrics(ad, session=None):
++    advertisement_id = str(ad["_id"])
+     counts = {"impression": 0, "click": 0}
+     async for row in db.advertisement_events.aggregate([
+         {"$match": {"advertisement_id": advertisement_id, "created_at": {"$gte": ad["starts_at"], "$lt": ad["ends_at"]}}},
+         {"$group": {"_id": "$event_type", "count": {"$sum": 1}}},
+-    ]):
++    ], session=session):
+         if row["_id"] in counts:
+             counts[row["_id"]] = row["count"]
+     terms = ad.get("commercial_terms") or {}
+@@ -1775,6 +1793,57 @@
+             "starts_at": ad["starts_at"], "ends_at": ad["ends_at"], "budget": ad.get("commercial_budget"),
+             "delivery_reconciliation": "manual_review_required", "contract_delivery": delivery,
+             "attributed_orders": None}
++
++
++class AdvertisementDeliveryReviewIn(BaseModel):
++    reason: str = Field(min_length=5, max_length=500)
++
++
++@api.post("/admin/advertisements/{advertisement_id}/delivery-review")
++async def record_advertisement_delivery_review(advertisement_id: str, body: AdvertisementDeliveryReviewIn,
++                                               user: dict = Depends(require_role("admin"))):
++    oid = _object_id_or_404(advertisement_id, "Advertisement")
++    reason = body.reason.strip()
++    if len(reason) < 5:
++        raise HTTPException(422, "A review reason is required")
++
++    async def apply(session):
++        ad = await db.advertisements.find_one({"_id": oid}, session=session)
++        if not ad:
++            raise HTTPException(404, "Advertisement not found")
++        key = f"delivery-review:{oid}"
++        previous = await db.advertisement_audit.find_one({"_id": key}, session=session)
++        if previous:
++            if previous["reason"] != reason:
++                raise HTTPException(409, "A delivery review snapshot is already recorded")
++            return doc_out(previous)
++        terms = ad.get("commercial_terms") or {}
++        now = now_utc()
++        if (terms.get("model") != "fixed_duration" or not terms.get("accepted_at")
++                or not terms.get("delivery_target_impressions") or utc(ad["ends_at"]) > now
++                or not ad.get("poster_sha256")
++                or (ad.get("owner_approval") or {}).get("poster_sha256") != ad["poster_sha256"]):
++            raise HTTPException(409, "An ended campaign with an accepted fixed-duration target is required")
++        metrics = await _advertisement_delivery_metrics(ad, session=session)
++        budget = ad.get("commercial_budget") or {}
++        expected = terms["rate_paise"]
++        booked = budget.get("amount_paise") if budget.get("status") == "spent" else None
++        status = ("pending_compensation_policy" if metrics["contract_delivery"]["status"] != "target_met"
++                  else "target_met")
++        record = {"_id": key, "advertisement_id": str(oid), "event": "delivery_review_recorded",
++                  "actor_id": user["id"], "reason": reason, "created_at": now, "status": status,
++                  "terms_version": terms["version"], "starts_at": ad["starts_at"], "ends_at": ad["ends_at"],
++                  "delivery": metrics["contract_delivery"], "impressions": metrics["impressions"],
++                  "clicks": metrics["clicks"], "accepted_fixed_fee_paise": expected, "booked_paise": booked,
++                  "booking_difference_paise": booked - expected if booked is not None else None,
++                  "evidence_reference": budget.get("evidence_reference"),
++                  "financial_action_confirmed": False}
++        # Serialize with the existing fixed-fee and campaign lifecycle writes.
++        await db.advertisements.update_one({"_id": oid}, {"$set": {"delivery_review_recorded_at": now}}, session=session)
++        await db.advertisement_audit.insert_one(record, session=session)
++        return doc_out(await db.advertisement_audit.find_one({"_id": key}, session=session))
++
++    return await _run_replacement_transaction(apply)
+
+
+ # Membership: payment confirmation is intentionally separate from the request.
+@@ -2575,7 +2644,7 @@
+         return {"recorded": False}
+     now = now_utc(); day = now.date().isoformat()
+     try:
+-        await db.advertisement_events.insert_one({"advertisement_id": advertisement_id, "user_id": user["id"], "event_type": event_type, "day": day, "created_at": now})
++        await db.advertisement_events.insert_one({"advertisement_id": str(advertisement["_id"]), "user_id": user["id"], "event_type": event_type, "day": day, "created_at": now})
+         recorded = True
+     except DuplicateKeyError:
+         recorded = False
+@@ -4728,6 +4797,40 @@
+         {"_id": 1, "activation.code": 1, "status": 1, "budget_paise": 1, "spent_paise": 1,
+          "redemptions": 1, "starts_at": 1, "expires_at": 1},
+     ).sort("activated_at", -1).limit(100)]
++
++
++@api.get("/admin/financial/grocery-coupons/{code}/reconciliation")
++async def grocery_coupon_reconciliation(code: str, _: dict = Depends(require_role("admin"))):
++    if not re.fullmatch(r"[A-Z0-9][A-Z0-9_-]{2,31}", code):
++        raise HTTPException(404, "Coupon campaign not found")
++
++    async def read(session):
++        campaign = await db.financial_policy_drafts.find_one({"_id": f"coupon:{code}"}, session=session)
++        if not campaign:
++            raise HTTPException(404, "Coupon campaign not found")
++        audit = {row["_id"]: row async for row in db.financial_audit.aggregate([
++            {"$match": {"coupon_code": code, "action": {"$in": ["grocery_coupon_spent", "grocery_coupon_released"]}}},
++            {"$group": {"_id": "$action", "paise": {"$sum": "$amount_paise"}, "count": {"$sum": 1}}},
++        ], session=session)}
++        spend = audit.get("grocery_coupon_spent", {"paise": 0, "count": 0})
++        release = audit.get("grocery_coupon_released", {"paise": 0, "count": 0})
++        receipts = await db.orders.aggregate([
++            {"$match": {"coupon_redemption.code": code, "coupon_redemption.state": "spent"}},
++            {"$group": {"_id": None, "paise": {"$sum": "$coupon_redemption.discount_paise"}, "count": {"$sum": 1}}},
++        ], session=session).to_list(1)
++        active = receipts[0] if receipts else {"paise": 0, "count": 0}
++        spent, count = campaign["spent_paise"], campaign["redemptions"]
++        reconciled = (0 <= spent <= campaign["budget_paise"] and 0 <= count <= campaign["max_redemptions"]
++                      and spent == spend["paise"] - release["paise"] == active["paise"]
++                      and count == spend["count"] - release["count"] == active["count"])
++        return {"code": code, "status": "balanced" if reconciled else "review_required",
++                "funding_allocation_basis_points": campaign["funding_allocation_basis_points"],
++                "budget_paise": campaign["budget_paise"], "spent_paise": spent,
++                "remaining_paise": campaign["budget_paise"] - spent,
++                "active_redemptions": count, "receipt_paise": active["paise"], "receipt_count": active["count"],
++                "audit_spent_paise": spend["paise"], "audit_released_paise": release["paise"]}
++
++    return await _run_replacement_transaction(read)
+
+
+ @api.patch("/admin/financial/grocery-coupons/{code}")
+@@ -8396,6 +8499,39 @@
+     return await _replacement_financial_review_details(ticket_id, user)
+
+
++async def _replacement_capture_evidence(order, kind, session=None):
++    payments = db.grocery_payments if kind == "grocery" else db.restaurant_payments
++    captures = await payments.find({"order_id": str(order["_id"]), "status": "paid"}, session=session).limit(2).to_list(2)
++    if not captures:
++        return {"status": "capture_unavailable"}
++    try:
++        capture, = captures
++        captured = amount_to_paise(capture.get("amount"))
++        if (captured != amount_to_paise(order["total"]) or capture.get("currency", "INR") != "INR"
++                or capture.get("customer_id", order["customer_id"]) != order["customer_id"]):
++            raise ValueError("Capture differs from original order")
++        refunds = capture.get("provider_refunds", {})
++        if not isinstance(refunds, dict):
++            raise ValueError("Invalid refund history")
++        summary = summarize_provider_refunds(list(refunds.values()), captured)
++        for field, computed in (("refunded_amount_paise", summary["completed_paise"]),
++                                ("refund_pending_amount_paise", summary["pending_paise"])):
++            recorded = capture.get(field, computed)
++            if type(recorded) is not int or recorded != computed:
++                raise ValueError("Refund totals disagree")
++        if capture.get("refund_status") not in (None, "", "not_refunded", "refund_failed", summary["status"]):
++            raise ValueError("Refund state is unresolved")
++    except (KeyError, ValueError, TypeError):
++        return {"status": "reconciliation_required"}
++    has_provider_link = (capture.get("gateway") == "razorpay" and capture.get("currency") == "INR"
++                         and capture.get("customer_id") == order["customer_id"]
++                         and bool(capture.get("gateway_payment_id") and capture.get("gateway_order_id")))
++    return {"status": "refund_conflict" if summary["consumed_paise"] else
++            ("linked_capture_recorded" if has_provider_link else "capture_link_incomplete"),
++            "captured_paise": captured, "refunded_paise": summary["completed_paise"],
++            "pending_refund_paise": summary["pending_paise"], "remaining_paise": summary["remaining_paise"]}
++
++
+ async def _replacement_financial_review_details(ticket_id: str, user: dict):
+     ticket = await db.restaurant_support.find_one({"_id": _object_id_or_404(ticket_id, "Support ticket")})
+     review = (ticket or {}).get("financial_review")
+@@ -8421,7 +8557,8 @@
+                 "historical_tax_details": order.get("tax_details"), "replacement_actions": [entry["action"] for entry in case.get("decision_history", [])]}
+     order_filter = {"order_id": ticket["order_id"], "order_kind": ticket["order_kind"]}
+     ledger = [doc_out(row) async for row in db.financial_ledger.find(
+-        order_filter, {"order_id": 1, "event_type": 1, "shopkeeper_payable": 1, "platform_earnings": 1, "recorded_at": 1},
++        order_filter, {"order_id": 1, "event_type": 1, "shopkeeper_payable": 1, "platform_earnings": 1,
++                       "platform_retained_delivery_fee": 1, "recorded_at": 1},
+     ).sort("recorded_at", -1).limit(20)]
+     payment_collection = db.grocery_payments if ticket["order_kind"] == "grocery" else db.restaurant_payments
+     captured = await payment_collection.find_one({"order_id": ticket["order_id"], "status": "paid"},
+@@ -8431,16 +8568,55 @@
+                       "replacement_execution_status": "pending_authorized_execution"}
+     if captured:
+         reconciliation["captured_payment"] = doc_out(captured)
++    if order.get("payment_status") == "paid":
++        reconciliation["capture_evidence"] = await _replacement_capture_evidence(order, ticket["order_kind"])
++    if order.get("payment_method") == "cod":
++        reconciliation["cod_evidence"] = {
++            "collection_recorded": (order.get("payment_status") == "cash_collected"
++                                    and bool(order.get("cash_collection_confirmed_at") and order.get("cash_collection_confirmed_by"))),
++            "delivery_recorded": order.get("status") == "delivered",
++            "payout_status": "pending_authorized_cod_rail",
++        }
++    if order.get("fulfillment", "delivery") == "delivery":
++        reconciliation["delivery_fee_evidence"] = {
++            "original_fee_inr": review["original"].get("delivery_fee"),
++            "current_fee_inr": order.get("delivery_fee"),
++            "partner_payable_inr": None,
++            "status": "pending_approved_allocation",
++        }
++    reward_evidence = None
++    if "reward_review" in review["reasons"]:
++        reward_evidence = {
++            "recorded_discounts": {key: review["original"][key] for key in
++                                   ("reward_discount", "coupon_discount", "loyalty_discount") if key in review["original"]},
++            "redemption_entries": [doc_out(row) async for row in db.referral_ledger.find(
++                {"user_id": ticket["user_id"], "order_id": ticket["order_id"], "reason": "shopping_reward_redemption"},
++                {"entry_type": 1, "amount": 1, "currency": 1, "status": 1},
++            ).limit(20)],
++            "adjustment_status": "pending_approved_compensating_policy",
++        }
+     draft = await db.financial_audit.find_one({"action": "replacement_invoice_correction_drafted",
+         "ticket_id": ticket_id, "replacement_id": review["replacement_id"]})
++    decisions = [doc_out(row) async for row in audit]
++    approved = {row["stage"]: row["actor_id"] for row in decisions if row["decision"] == "approve"}
++    independent_tax_approvals = ("professional_tax" in approved and "admin_tax" in approved
++                                 and approved["professional_tax"] != approved["admin_tax"])
+     return {
+         "customer_id": ticket["user_id"], "merchant_id": order.get("shop_id") or order.get("restaurant_id"),
+         "shopping_reward_balance": await _available_shopping_reward_balance(ticket["user_id"]) if "reward_review" in review["reasons"] else None,
+         "original_invoice_reference": order.get("invoice_number") or order.get("invoice_id"),
+         "historical_tax_details": order.get("tax_details"), "replacement_history": case.get("decision_history", []),
+-        "audit": [doc_out(row) async for row in audit],
++        "audit": decisions,
+         "reconciliation": reconciliation,
+         "invoice_correction_draft": doc_out(draft) if draft else None,
++        "invoice_readiness": {
++            "status": "pending_statutory_guidance",
++            "has_original_reference": bool(order.get("invoice_number") or order.get("invoice_id")),
++            "original_snapshot_matches": _replacement_original_financials(order) == review["original"],
++            "has_independent_approvals": independent_tax_approvals,
++            "has_internal_draft": draft is not None,
++        } if "historical_tax_review" in review["reasons"] else None,
++        "reward_evidence": reward_evidence,
+         "tax_reviewer_id": review.get("tax_reviewer_id"),
+     }
+
+@@ -8553,26 +8729,16 @@
+         if _replacement_payment_quotes(order, totals, kind).get(quote_key) != review[quote_key]:
+             raise HTTPException(409, "The replacement total changed.")
+     if order.get("payment_status") == "paid":
+-        payments = db.grocery_payments if grocery else db.restaurant_payments
+-        captures = await payments.find({"order_id": str(oid), "status": "paid"}, session=session).limit(2).to_list(2)
+-        if captures:
+-            try:
+-                capture, = captures
+-                captured = amount_to_paise(capture.get("amount"))
+-                if captured != amount_to_paise(order["total"]) or capture.get("currency", "INR") != "INR":
+-                    raise ValueError("Capture differs from original order")
+-                refunds = capture.get("provider_refunds", {})
+-                if not isinstance(refunds, dict):
+-                    raise ValueError("Invalid refund history")
+-                refund_summary = summarize_provider_refunds(list(refunds.values()), captured)
+-                if (refund_summary["consumed_paise"] or capture.get("refunded_amount_paise")
+-                        or capture.get("refund_pending_amount_paise") or capture.get("refund_status")):
+-                    raise ValueError("An existing refund requires reconciliation")
+-            except (ValueError, TypeError):
+-                raise HTTPException(409, "The recorded payment or refund history requires reconciliation.") from None
++        evidence = await _replacement_capture_evidence(order, kind, session=session)
++        if evidence["status"] in {"refund_conflict", "reconciliation_required"}:
++            raise HTTPException(409, "The recorded payment or refund history requires reconciliation.")
++    else:
++        evidence = {"status": "pending_authorized_cod_rail" if order.get("payment_method") == "cod"
++                    else "payment_evidence_unavailable"}
+     # Write to the same order inside the approval transaction to serialize
+     # approval with order cancellation, repricing, or refund state changes.
+     await collection.update_one({"_id": oid}, {"$set": {"replacement_financial_reviewed_at": now_utc()}}, session=session)
++    return evidence
+
+
+ async def _decide_replacement_financial_review(ticket_id: str, body: ReplacementFinancialReviewIn, user: dict):
+@@ -8615,6 +8781,7 @@
+             if professional["actor_id"] == user["id"]:
+                 raise HTTPException(403, "A different Admin must decide after professional review.")
+         amount_paise = None
++        payment_contract = None
+         if body.stage in {"refund", "collection"}:
+             quote_key, amount_key, required_decision = (
+                 (("removal_quote", "potential_refund_paise", "keep_unavailable") if review.get("decision") == "keep_unavailable"
+@@ -8625,7 +8792,15 @@
+             if review.get("decision") != required_decision or not isinstance(amount_paise, int) or amount_paise <= 0:
+                 raise HTTPException(409, "A positive server quote and matching customer decision are required.")
+             if body.decision == "approve":
+-                await _validate_pending_payment_review(session, ticket, review, body.stage)
++                evidence = await _validate_pending_payment_review(session, ticket, review, body.stage)
++                if body.stage == "refund" and amount_paise > evidence.get("remaining_paise", amount_paise):
++                    raise HTTPException(409, "The refund amount exceeds the recorded refundable balance.")
++                payment_contract = {
++                    "reference": f"replacement:{ticket['order_kind']}:{ticket['order_id']}:{body.replacement_id}:{body.stage}",
++                    "kind": body.stage, "currency": "INR", "amount_paise": amount_paise,
++                    "consent_recorded_at": review["decision_at"], "original_payment_evidence": evidence,
++                    "status": "execution_disabled",
++                }
+         status = "rejected" if body.decision == "reject" else {
+             "reward": "ledger_preservation_approved",
+             "professional_tax": "pending_admin_tax_approval",
+@@ -8644,6 +8819,7 @@
+             "ticket_id": ticket_id, "replacement_id": body.replacement_id,
+             "order_kind": ticket["order_kind"], "order_id": ticket["order_id"], "customer_id": ticket["user_id"],
+             "created_at": now, "amount_paise": amount_paise, "previous_status": "under_review",
++            **({"payment_contract": payment_contract} if payment_contract else {}),
+         }, session=session)
+         if body.stage != "professional_tax":
+             message = (
+--- a/backend/tests/test_task9_business_policy.py
++++ b/backend/tests/test_task9_business_policy.py
+@@ -132,8 +132,26 @@
+                 public = (await request("GET", "/advertisements/active?area=Fixture")).json()
+                 event = f"/advertisements/{ad_id}/events/impression"
+                 assert not (await request("POST", event + "?area=Wrong", {}, "other")).json()["recorded"]
+-                assert (await request("POST", event + "?area=Fixture", {}, "other")).json()["recorded"]
++                await db.advertisement_events.create_index(
++                    [("advertisement_id", 1), ("user_id", 1), ("event_type", 1), ("day", 1)], unique=True)
++                case_variant = f"/advertisements/{str(ad_id).upper()}/events/impression"
++                assert (await request("POST", case_variant + "?area=Fixture", {}, "other")).json()["recorded"]
++                assert not (await request("POST", event + "?area=Fixture", {}, "other")).json()["recorded"]
+                 report = f"/advertisements/{ad_id}/delivery-report"
++                review_path = f"/admin/advertisements/{ad_id}/delivery-review"
++                review_body = {"reason": "Fixture measured delivery reconciliation"}
++                assert (await request("POST", review_path, review_body, "seller")).status_code == 403
++                assert (await request("POST", review_path, review_body)).status_code == 409
++                owner_publish = f"/owner/advertisements/{ad_id}/publish"
++                await db.advertisements.update_one({"_id": ad_id}, {"$set": {
++                    "ai_review": {"status": "COMPLETED", "decision": "safe", "poster_sha256": "fixture-hash"}}})
++                assert (await request("PATCH", f"/admin/advertisements/{ad_id}",
++                                      {"decision": "pause", "reason": "Fixture pause"})).status_code == 200
++                assert (await request("POST", owner_publish, {}, "seller")).status_code == 403
++                with monkeypatch.context() as owner_config:
++                    owner_config.setenv("ADVERTISEMENT_OWNER_EMAIL", "admin@fixture.example")
++                    assert (await request("POST", owner_publish, {})).json()["status"] == "approved"
++                assert await db.advertisement_audit.count_documents({"event": "owner_resumed"}) == 1
+                 assert (await request("GET", report, actor="other")).status_code == 403
+                 measured = (await request("GET", report, actor="seller")).json()
+                 assert measured["impressions"] == 1 and measured["attributed_orders"] is None
+@@ -146,9 +164,21 @@
+                 measured = (await request("GET", report, actor="seller")).json()
+                 assert measured["contract_delivery"]["shortfall_impressions"] == 1
+                 assert measured["contract_delivery"]["status"] == "under_delivery"
++                snapshots = await asyncio.gather(*(request("POST", review_path, review_body) for _ in range(2)))
++                assert [row.status_code for row in snapshots] == [200, 200]
++                assert snapshots[0].json() == snapshots[1].json()
++                snapshot = snapshots[0].json()
++                assert snapshot["status"] == "pending_compensation_policy"
++                assert snapshot["delivery"]["shortfall_impressions"] == 1
++                assert snapshot["booking_difference_paise"] == 0 and snapshot["evidence_reference"] == "fixture-invoice"
++                assert not snapshot["financial_action_confirmed"]
++                assert (await request("POST", review_path, {"reason": "Different review reason"})).status_code == 409
++                assert await db.advertisement_audit.count_documents({"event": "delivery_review_recorded"}) == 1
++                disclosed = (await request("GET", report, actor="seller")).json()["delivery_review"]
++                assert disclosed["status"] == snapshot["status"] and "evidence_reference" not in disclosed
+                 for _ in range(2):
+                     await db.advertisement_events.insert_one({"advertisement_id": str(ad_id), "event_type": "impression",
+-                                                             "created_at": now})
++                                                             "created_at": now, "user_id": str(ObjectId()), "day": now.date().isoformat()})
+                 measured = (await request("GET", report, actor="seller")).json()
+                 assert measured["contract_delivery"]["excess_impressions"] == 1
+                 assert measured["contract_delivery"]["status"] == "over_delivery"
+--- a/backend/tests/test_task9_coupon_checkout.py
++++ b/backend/tests/test_task9_coupon_checkout.py
+@@ -90,11 +90,22 @@
+                 order = results[winner].json()
+                 assert (await place(actor, winner, tokens[winner])).json()["id"] == order["id"]
+                 assert await db.financial_audit.count_documents({"action": "grocery_coupon_spent"}) == 1
++                recon = campaign_path + "/reconciliation"
++                assert (await http.get(recon, headers=auth["first"])).status_code == 403
++                funded = (await http.get(recon, headers=auth["admin"])).json()
++                assert funded["status"] == "balanced" and funded["receipt_paise"] == 2000
++                assert funded["remaining_paise"] == 0 and funded["funding_allocation_basis_points"] == {"come_in": 10000}
+                 assert (await quote("second", 1)).status_code == 409
+                 cancelled = await post(f"/orders/{order['id']}/cancel", {}, actor)
+                 assert cancelled.status_code == 200 and cancelled.json()["coupon_redemption"]["state"] == "released"
+                 assert (await post(f"/orders/{order['id']}/cancel", {}, actor)).status_code == 200
+                 assert await db.financial_audit.count_documents({"action": "grocery_coupon_released"}) == 1
++                released = (await http.get(recon, headers=auth["admin"])).json()
++                assert released["status"] == "balanced" and released["receipt_paise"] == 0
++                assert released["audit_released_paise"] == 2000
++                await db.financial_policy_drafts.update_one({"_id": "coupon:TEST20"}, {"$inc": {"spent_paise": 1}})
++                assert (await http.get(recon, headers=auth["admin"])).json()["status"] == "review_required"
++                await db.financial_policy_drafts.update_one({"_id": "coupon:TEST20"}, {"$inc": {"spent_paise": -1}})
+                 assert (await quote("second", 1)).status_code == 200
+                 await db.financial_policy_drafts.update_one({"_id": "coupon:TEST20"}, {"$set": {"expires_at": now}})
+                 assert (await quote("second", 1)).status_code == 409
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -179,7 +179,16 @@
+                 assert (await review("reward", "approve")).status_code == 200
+                 assert (await review("reward", "reject")).status_code == 409
+                 assert (await request("GET", path, actor="buyer")).status_code == 403
++                await db.referral_ledger.insert_many([
++                    {"user_id": ids["buyer"], "order_id": str(oid), "reason": "shopping_reward_redemption",
++                     "entry_type": "debit", "amount": 10, "currency": "INR", "status": "posted"},
++                    {"user_id": ids["other"], "order_id": str(oid), "reason": "shopping_reward_redemption",
++                     "entry_type": "debit", "amount": 999, "currency": "INR", "status": "posted"},
++                ])
+                 details = (await request("GET", path, actor="admin")).json()
++                assert [row["amount"] for row in details["reward_evidence"]["redemption_entries"]] == [10]
++                assert details["invoice_readiness"]["has_independent_approvals"]
++                assert not details["invoice_readiness"]["has_internal_draft"]
+                 assert len(details["audit"]) == 3 and details["original_invoice_reference"] == "original-invoice"
+                 await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"total": 153}})
+                 assert (await request("POST", correction, correction_body, "admin")).status_code == 409
+@@ -192,6 +201,8 @@
+                 details = (await request("GET", path, actor="admin")).json()
+                 assert details["reconciliation"]["delivery_partner_adjustment_status"] == "pending_approved_allocation"
+                 assert details["reconciliation"]["seller_platform_ledger"] == []
++                assert details["reconciliation"]["delivery_fee_evidence"]["partner_payable_inr"] is None
++                assert details["invoice_readiness"]["has_internal_draft"]
+                 linked = details["invoice_correction_draft"]
+                 assert linked["original_invoice_reference"] == "original-invoice" and linked["version"] == 1
+                 assert linked["professional_review_id"] != linked["admin_approval_id"]
+@@ -200,7 +211,7 @@
+
+                 tickets = (await request("GET", "/restaurant/support/mine")).json()
+                 assert all("audit" not in ticket and "guidance_reference" not in ticket.get("financial_review", {}) for ticket in tickets)
+-                assert await db.referral_ledger.count_documents({}) == 0
++                assert await db.referral_ledger.count_documents({}) == 2
+
+                 draft = {"name": "Synthetic draft", "kind": "welcome", "starts_at": "2026-11-01T00:00:00Z",
+                          "expires_at": "2026-12-01T00:00:00Z", "budget_paise": 10000, "max_benefit_paise": 100,
+@@ -233,6 +244,12 @@
+                 assert (await request("POST", path, approval, "admin")).json()["status"] == "approved_pending_execution"
+                 assert (await request("POST", path, approval, "admin")).json()["financial_action_confirmed"] is False
+                 assert await db.restaurant_payments.count_documents({}) == 0
++                audit = (await request("GET", path, actor="admin")).json()["audit"]
++                assert len(audit) == 1
++                contract = audit[0]["payment_contract"]
++                assert contract["reference"] == f"replacement:restaurant:{oid}:{paid_case['id']}:collection"
++                assert contract["amount_paise"] == 15400 and contract["status"] == "execution_disabled"
++                assert contract["original_payment_evidence"]["status"] == "capture_unavailable"
+
+                 cheaper = (await db.restaurant_menu.insert_one({"restaurant_id": str(restaurant), "name": "Budget Soup", "price": 30})).inserted_id
+                 oid = await order(payment_method="razorpay", payment_status="paid")
+@@ -246,6 +263,9 @@
+                     "provider_refunds": {"fixture": {"id": "fixture", "status": "pending", "amount": 1000}},
+                 })).inserted_id
+                 assert (await request("POST", path, approval, "admin")).status_code == 409
++                evidence = (await request("GET", path, actor="admin")).json()["reconciliation"]["capture_evidence"]
++                assert evidence == {"status": "refund_conflict", "captured_paise": 15250,
++                                    "refunded_paise": 0, "pending_refund_paise": 1000, "remaining_paise": 14250}
+                 await db.restaurant_payments.update_one({"_id": capture}, {"$set": {"provider_refunds.fixture.status": "failed", "amount": 150}})
+                 assert (await request("POST", path, approval, "admin")).status_code == 409
+                 await db.restaurant_payments.update_one({"_id": capture}, {"$set": {"amount": 152.5}})
+@@ -276,6 +296,12 @@
+                         assert await db.restaurant_payments.count_documents({}) == 0
+                     else:
+                         assert saved["total"] == 42.5 and saved["items"] == [unaffected]
++                oid = await order(payment_method="cod", payment_status="cash_collected")
++                cod_case = (await report(oid, alternatives=[{"menu_item_id": str(cheaper), "quantity": 2}])).json()
++                assert (await decide(oid, cod_case)).status_code == 200
++                cod_path = f"/admin/restaurant/support/{cod_case['support_id']}/financial-review"
++                cod = (await request("GET", cod_path, actor="admin")).json()["reconciliation"]["cod_evidence"]
++                assert cod == {"collection_recorded": False, "delivery_recorded": False, "payout_status": "pending_authorized_cod_rail"}
+                 await db.restaurant_menu.update_one({"_id": ObjectId(unaffected["menu_item_id"])}, {"$set": {"available": False}})
+                 oid = await order()
+                 remove_case = (await report(oid)).json()
+--- a/frontend/app/admin-earnings.tsx
++++ b/frontend/app/admin-earnings.tsx
+@@ -19,6 +19,7 @@
+   const [adId, setAdId] = useState("");
+   const [commercial, setCommercial] = useState("");
+   const [campaignReference, setCampaignReference] = useState("");
++  const [deliveryReviewReason, setDeliveryReviewReason] = useState("");
+   const [policyEntities, setPolicyEntities] = useState<any[]>([]); const [policyKind, setPolicyKind] = useState<"shop"|"restaurant">("shop"); const [policyId, setPolicyId] = useState("");
+   const [commissionRate, setCommissionRate] = useState(""); const [serviceFee, setServiceFee] = useState("0"); const [deliveryBeneficiary, setDeliveryBeneficiary] = useState("not_applicable");
+   const styles = StyleSheet.create({ root:{flex:1,backgroundColor:colors.background}, header:{paddingHorizontal:spacing.lg,paddingBottom:spacing.md,backgroundColor:colors.surface,flexDirection:"row",alignItems:"center",gap:spacing.sm,borderBottomWidth:StyleSheet.hairlineWidth,borderBottomColor:colors.border}, title:{fontSize:20,fontWeight:"800",color:colors.onSurface}, sub:{fontSize:12,color:colors.muted}, section:{backgroundColor:colors.surface,borderColor:colors.border,borderWidth:1,borderRadius:radius.md,padding:spacing.md,gap:spacing.sm}, sectionTitle:{fontSize:15,fontWeight:"800",color:colors.onSurface}, text:{fontSize:12,color:colors.onSurface}, muted:{fontSize:11,color:colors.muted}, input:{minHeight:40,borderWidth:1,borderColor:colors.border,borderRadius:radius.sm,paddingHorizontal:spacing.sm,color:colors.onSurface,backgroundColor:colors.surfaceSecondary}, btn:{paddingHorizontal:spacing.md,paddingVertical:10,borderRadius:radius.sm,backgroundColor:colors.brandPrimary,alignItems:"center"}, btnText:{color:colors.onBrandPrimary,fontWeight:"800",fontSize:12}, row:{paddingVertical:spacing.sm,borderTopWidth:StyleSheet.hairlineWidth,borderTopColor:colors.border,gap:4}, metric:{fontSize:18,fontWeight:"800",color:colors.onSurface}, wrap:{flexDirection:"row",flexWrap:"wrap",gap:spacing.sm}, chip:{flexGrow:1,minWidth:140,padding:spacing.sm,borderWidth:1,borderColor:colors.border,borderRadius:radius.sm,gap:3} });
+@@ -81,6 +82,14 @@
+           setNotice(`Budget ${budget.status}. Remaining ₹${(budget.remaining_paise / 100).toFixed(2)}.`); }
+         catch (error: any) { setNotice(error?.message || "Campaign budget action failed."); }
+       }}><Text style={styles.btnText}>{action.replaceAll("_", " ")}</Text></Pressable>)}
++      <TextInput accessibilityLabel="Delivery review reason" value={deliveryReviewReason} onChangeText={setDeliveryReviewReason} style={styles.input} />
++      <Pressable style={styles.btn} onPress={async () => {
++        try {
++          const result = await api.post<{ status: string; delivery: { shortfall_impressions: number; excess_impressions: number } }>(
++            `/admin/advertisements/${encodeURIComponent(adId)}/delivery-review`, { reason: deliveryReviewReason.trim() });
++          setNotice(`Delivery review ${result.status.replaceAll("_", " ")} · shortfall ${result.delivery.shortfall_impressions} · excess ${result.delivery.excess_impressions}`);
++        } catch (error: any) { setNotice(error?.message || "Could not record campaign delivery review."); }
++      }}><Text style={styles.btnText}>Record final delivery review</Text></Pressable>
+     </View>
+     <View style={styles.section}><Text style={styles.sectionTitle}>Settlement review</Text>{settlements.length===0?<Text style={styles.muted}>No settlement requests.</Text>:settlements.map((s:any)=><View key={s.id} style={styles.row}><Text style={styles.text}>{inr(s.amount)} · {s.status} · {s.beneficiary_type}</Text><Text style={styles.muted}>Beneficiary: {s.beneficiary_user_id} · settlement {s.id} · orders: {(s.order_ids||[]).length}</Text>{s.status==="pending_review"?<View style={styles.wrap}><Pressable style={styles.btn} onPress={()=>decision(s.id,"approve")}><Text style={styles.btnText}>Approve</Text></Pressable><Pressable style={[styles.btn,{backgroundColor:colors.brandPrimary}]} onPress={()=>decision(s.id,"reject")}><Text style={styles.btnText}>Reject</Text></Pressable></View>:null}{["approved","processing"].includes(s.status)?<><TextInput value={payoutRef} onChangeText={setPayoutRef} placeholder="Actual manual transfer reference" placeholderTextColor={colors.muted} style={styles.input}/><View style={styles.wrap}>{s.status==="approved"?<Pressable style={styles.btn} onPress={()=>decision(s.id,"processing")}><Text style={styles.btnText}>Mark processing</Text></Pressable>:null}<Pressable style={styles.btn} onPress={()=>Alert.alert("Confirm actual transfer", "Only continue after a real bank transfer has been completed and its reference checked.",[{text:"Cancel",style:"cancel"},{text:"Confirm transfer",onPress:()=>decision(s.id,"paid")}])}><Text style={styles.btnText}>Mark paid (manual)</Text></Pressable></View></>:null}</View>)}</View>
+   </ScrollView></View>;
+--- a/frontend/app/admin.tsx
++++ b/frontend/app/admin.tsx
+@@ -391,8 +391,13 @@
+                 {reviewDetails.data.reconciliation ? <View>
+                   <Text style={styles.cardMeta}>Order payment {reviewDetails.data.reconciliation.order_payment_status || "unavailable"} · Partner adjustment pending approved allocation</Text>
+                   {reviewDetails.data.reconciliation.captured_payment ? <Text style={styles.cardMeta}>Recorded capture ₹{reviewDetails.data.reconciliation.captured_payment.amount} · Refund {reviewDetails.data.reconciliation.captured_payment.refund_status || "none recorded"}</Text> : null}
++                  {reviewDetails.data.reconciliation.capture_evidence ? <Text style={styles.cardMeta}>Capture evidence: {reviewDetails.data.reconciliation.capture_evidence.status.replaceAll("_", " ")}{reviewDetails.data.reconciliation.capture_evidence.remaining_paise != null ? ` · Unconsumed recorded balance ₹${(reviewDetails.data.reconciliation.capture_evidence.remaining_paise / 100).toFixed(2)}` : ""}</Text> : null}
++                  {reviewDetails.data.reconciliation.cod_evidence ? <Text style={styles.cardMeta}>COD collection evidence {reviewDetails.data.reconciliation.cod_evidence.collection_recorded ? "recorded" : "unavailable"} · Payout rail pending</Text> : null}
++                  {reviewDetails.data.reconciliation.delivery_fee_evidence ? <Text style={styles.cardMeta}>Original delivery fee ₹{reviewDetails.data.reconciliation.delivery_fee_evidence.original_fee_inr ?? "unavailable"} · Current fee ₹{reviewDetails.data.reconciliation.delivery_fee_evidence.current_fee_inr ?? "unavailable"}</Text> : null}
+                   {reviewDetails.data.reconciliation.seller_platform_ledger.map((entry: any) => <Text key={entry.id} style={styles.cardMeta}>{entry.event_type} · Seller ₹{entry.shopkeeper_payable ?? "unavailable"} · Platform ₹{entry.platform_earnings ?? "unavailable"}</Text>)}
+                 </View> : null}
++                {reviewDetails.data.reward_evidence ? <Text style={styles.cardMeta}>Recorded reward redemptions: {reviewDetails.data.reward_evidence.redemption_entries.length} · Compensating policy pending</Text> : null}
++                {reviewDetails.data.invoice_readiness ? <Text style={styles.cardMeta}>Invoice reference {reviewDetails.data.invoice_readiness.has_original_reference ? "available" : "missing"} · Original snapshot {reviewDetails.data.invoice_readiness.original_snapshot_matches ? "matches" : "changed"} · Independent approvals {reviewDetails.data.invoice_readiness.has_independent_approvals ? "recorded" : "pending"}</Text> : null}
+                 {reviewDetails.data.invoice_correction_draft ? <Text style={styles.cardMeta}>Internal correction draft · pending statutory issuance</Text>
+                   : r.financial_review.admin_tax_status === "approved_pending_accounting_procedure" ? <ActionBtn label="Record internal invoice correction draft" onPress={async () => {
+                     try {
+@@ -621,6 +626,12 @@
+         onChangeText={setCampaignReason} placeholder="Reason for changing campaign status" style={{ color: colors.onSurface }} /> : null}
+       {campaigns.map((campaign) => <View key={campaign.id}>
+         <Text style={styles.cardMeta}>{campaign.activation.code} · {campaign.status} · ₹{(campaign.spent_paise / 100).toFixed(2)} of ₹{(campaign.budget_paise / 100).toFixed(2)} spent</Text>
++        <ActionBtn label={`Reconcile ${campaign.activation.code}`} onPress={async () => {
++          try {
++            const result = await api.get<{ status: string; receipt_paise: number; audit_released_paise: number }>(`/admin/financial/grocery-coupons/${campaign.activation.code}/reconciliation`);
++            setNotice(`${campaign.activation.code}: ${result.status.replaceAll("_", " ")} · ₹${(result.receipt_paise / 100).toFixed(2)} in active receipts · ₹${(result.audit_released_paise / 100).toFixed(2)} released`);
++          } catch (error: any) { setNotice(error?.message || "Could not reconcile campaign."); }
++        }} />
+         {campaign.status !== "closed" ? (campaign.status === "active" ? ["paused", "closed"] : ["active", "closed"]).map((status) =>
+           <ActionBtn key={status} label={`Set ${campaign.activation.code} ${status}`} onPress={async () => {
+             try {
+--- a/frontend/app/seller/advertisements.tsx
++++ b/frontend/app/seller/advertisements.tsx
+@@ -12,11 +12,18 @@
+ type Shop = { id: string; name: string };
+ type Advertisement = { id: string; title: string; status: string; ai_review?: { status?: string; reason?: string }; starts_at: string; ends_at: string; poster_url?: string; commercial_terms?: { version: number; model: string; rate_paise: number; accepted_at?: string; target_area: string; daily_budget_paise: number; total_budget_paise: number; delivery_target_impressions?: number | null }; commercial_budget?: { status: string; remaining_paise: number } };
+
++type AdvertisementDeliveryReport = {
++  impressions: number;
++  clicks: number;
++  contract_delivery?: { target_impressions: number; excess_impressions: number; shortfall_impressions?: number | null } | null;
++  delivery_review?: { status: string };
++};
++
+ export default function SellerAdvertisements() {
+   const router = useRouter(); const insets = useSafeAreaInsets(); const styles = useStyles(); const { colors } = useTheme(); const { user } = useAuth();
+   const [shop, setShop] = useState<Shop | null>(null); const [rows, setRows] = useState<Advertisement[]>([]); const [title, setTitle] = useState("");
+   const [startsAt, setStartsAt] = useState(""); const [endsAt, setEndsAt] = useState(""); const [notice, setNotice] = useState(""); const [busy, setBusy] = useState(false); const [loading, setLoading] = useState(true);
+-  const [deliveryReport, setDeliveryReport] = useState<{ id: string; impressions: number; clicks: number; contract_delivery?: { target_impressions: number; excess_impressions: number; shortfall_impressions?: number | null } | null } | null>(null);
++  const [deliveryReport, setDeliveryReport] = useState<(AdvertisementDeliveryReport & { id: string }) | null>(null);
+   const load = useCallback(async () => { if (user?.role !== "shopkeeper") return; const current = await api.get<Shop | null>("/shops/mine"); setShop(current); const campaigns = await api.get<Advertisement[]>("/advertisements/mine"); setRows(campaigns); }, [user?.role]);
+   useEffect(() => { let active = true; void Promise.resolve().then(load).catch((e: any) => { if (active) setNotice(e?.message || "Could not load advertisement campaigns."); }).finally(() => { if (active) setLoading(false); }); return () => { active = false; }; }, [load]);
+   const chooseAndSubmit = async () => {
+@@ -43,11 +50,11 @@
+       {!!notice && <Text style={notice.includes("Could not") || notice.includes("Enter ") ? styles.error : styles.muted}>{notice}</Text>}</View>
+     <Text style={styles.section}>Campaign history</Text>{rows.length ? rows.map((row) => <View key={row.id} style={styles.card}><Text style={styles.title}>{row.title}</Text><Text style={styles.muted}>Status: {row.status} · CHAND: {row.ai_review?.status || "NOT_RUN"}</Text>{row.ai_review?.reason ? <Text style={styles.muted}>{row.ai_review.reason}</Text> : null}<Pressable style={styles.primary} onPress={async () => {
+       try {
+-        const report = await api.get<{ impressions: number; clicks: number; contract_delivery?: { target_impressions: number; excess_impressions: number; shortfall_impressions?: number | null } | null }>(`/advertisements/${row.id}/delivery-report`);
++        const report = await api.get<AdvertisementDeliveryReport>(`/advertisements/${row.id}/delivery-report`);
+         setDeliveryReport({ id: row.id, ...report });
+       } catch (error: any) { setNotice(error?.message || "Could not load campaign delivery."); }
+     }}><Text style={styles.primaryText}>Load measured delivery</Text></Pressable>
+-    {deliveryReport?.id === row.id ? <Text style={styles.muted}>{deliveryReport?.impressions} measured impressions · {deliveryReport?.clicks} measured clicks · Reconciliation requires review</Text> : null}{deliveryReport?.id === row.id && deliveryReport?.contract_delivery ? <Text style={styles.muted}>Accepted target {deliveryReport.contract_delivery.target_impressions} · Excess {deliveryReport.contract_delivery.excess_impressions}{deliveryReport.contract_delivery.shortfall_impressions != null ? ` · Final shortfall ${deliveryReport.contract_delivery.shortfall_impressions}` : ""}</Text> : null}{row.commercial_terms ? <View>
++    {deliveryReport?.id === row.id ? <Text style={styles.muted}>{deliveryReport?.impressions} measured impressions · {deliveryReport?.clicks} measured clicks · {deliveryReport.delivery_review ? deliveryReport.delivery_review.status.replaceAll("_", " ") : "Reconciliation requires review"}</Text> : null}{deliveryReport?.id === row.id && deliveryReport?.contract_delivery ? <Text style={styles.muted}>Accepted target {deliveryReport.contract_delivery.target_impressions} · Excess {deliveryReport.contract_delivery.excess_impressions}{deliveryReport.contract_delivery.shortfall_impressions != null ? ` · Final shortfall ${deliveryReport.contract_delivery.shortfall_impressions}` : ""}</Text> : null}{row.commercial_terms ? <View>
+       <Text style={styles.muted}>{row.commercial_terms.model.replaceAll("_", " ")} · ₹{(row.commercial_terms.rate_paise / 100).toFixed(2)} · {row.commercial_terms.target_area}</Text>
+       <Text style={styles.muted}>{new Date(row.starts_at).toLocaleString()} to {new Date(row.ends_at).toLocaleString()}</Text>
+       <Text style={styles.muted}>Daily cap ₹{(row.commercial_terms.daily_budget_paise / 100).toFixed(2)} · Total cap ₹{(row.commercial_terms.total_budget_paise / 100).toFixed(2)}</Text>
