@@ -50,3 +50,7 @@ Recorded capture and refund checks are local approval safeguards. They do not re
 ### Seven-area reconciliation campaign
 
 Coupon funding comparisons, ad shortfall review, recorded delivery fees and reward evidence, execution-disabled payment/refund contracts, and invoice readiness are locally available. Policy decisions and external integration required for real execution remain listed above and in the [seven-area report](reconciliation-controls-20261123/IMPLEMENTATION.md).
+
+### Closure evidence gates
+
+The replacement collection adapter now implements the network-free Razorpay wire contract, validated with fixture records, signatures and restart persistence. Genuine transports and verified payment, refund or payout execution are still blocked. Closure adds more evidence for reviewing the remaining financial decisions without posting changes. [Required decisions, authorizers and next integration steps](closure-evidence-20261123/APPROVAL-HANDOFF.md)

@@ -1,0 +1,712 @@
+--- /dev/null
++++ b/backend/integrations/replacement_collection.py
+@@ -0,0 +1,68 @@
++"""Razorpay wire contract for replacement collections, with no network calls."""
++import hashlib
++import re
++
++from payment_webhook import verified_event
++
++_PROVIDER_ID = re.compile(r"[A-Za-z0-9_-]{1,128}")
++_OPERATION = re.compile(r"replacement:(grocery|restaurant):[a-f0-9]{24}:[A-Za-z0-9_-]{1,40}:collection")
++
++
++def collection_order_request(reference: str, amount_paise: int, original_payment_id: str) -> dict:
++    """Prepare a distinct provider order, bound to the existing capture."""
++    if (not isinstance(reference, str) or not _OPERATION.fullmatch(reference)
++            or type(amount_paise) is not int or amount_paise <= 0):
++        raise ValueError("Invalid replacement collection operation")
++    if not isinstance(original_payment_id, str) or not _PROVIDER_ID.fullmatch(original_payment_id):
++        raise ValueError("Invalid original capture identifier")
++    return {
++        "amount": amount_paise,
++        "currency": "INR",
++        "receipt": "repl_" + hashlib.sha256(reference.encode()).hexdigest()[:35],
++        "notes": {"replacement_reference": reference, "original_payment_id": original_payment_id},
++    }
++
++
++def reconcile_collection(request: dict, order: dict, payment: dict | None = None) -> str:
++    """Compare server-fetched provider entities, without mutating local state."""
++    if (not isinstance(order, dict) or not isinstance(order.get("id"), str) or not _PROVIDER_ID.fullmatch(order["id"])
++            or order.get("receipt") != request["receipt"] or order.get("notes") != request["notes"]
++            or type(order.get("amount")) is not int or order["amount"] != request["amount"]
++            or order.get("currency") != request["currency"]):
++        raise ValueError("Provider order does not match the replacement operation")
++    order_status = order.get("status")
++    amount_paid = order.get("amount_paid")
++    if (order_status not in {"created", "attempted", "paid"} or type(amount_paid) is not int
++            or amount_paid != (request["amount"] if order_status == "paid" else 0)):
++        raise ValueError("Inconsistent provider order balance")
++    if payment is None:
++        return "reconciliation_required" if order_status == "paid" else "awaiting_payment"
++    if not isinstance(payment, dict):
++        raise ValueError("Invalid provider payment")
++    payment_id = payment.get("id")
++    if (not isinstance(payment_id, str) or not _PROVIDER_ID.fullmatch(payment_id)
++            or payment_id == request["notes"]["original_payment_id"] or payment.get("order_id") != order["id"]
++            or type(payment.get("amount")) is not int or payment["amount"] != request["amount"]
++            or payment.get("currency") != request["currency"]):
++        raise ValueError("Provider payment does not match the replacement order")
++    if payment.get("status") == "captured" and order_status == "paid":
++        return "capture_observed"
++    if payment.get("status") == "failed" and order_status != "paid":
++        return "payment_failed"
++    if payment.get("status") in {"created", "authorized"} and order_status != "paid":
++        return "awaiting_payment"
++    return "reconciliation_required"
++
++
++def reconcile_collection_event(request: dict, order: dict, payment: dict, *, raw: bytes,
++                               signature: str, secret: str, event_id: str) -> str:
++    """Require both signed event identity and matching independently fetched data."""
++    event = verified_event(raw, signature, secret, event_id)
++    if event["event"] not in {"payment.captured", "payment.failed"}:
++        raise ValueError("Event is outside the replacement collection contract")
++    if not isinstance(payment, dict):
++        raise ValueError("Invalid provider payment")
++    entity = event["payload"]["payment"]["entity"]
++    if any(entity.get(field) != payment.get(field) for field in ("id", "order_id", "amount", "currency", "status")):
++        raise ValueError("Webhook and provider payment disagree")
++    return reconcile_collection(request, order, payment)
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -73,6 +73,7 @@
+ from payment_config import razorpay_settings
+ import membership_refund_policy
+ from payment_webhook import event_payload
++from integrations.replacement_collection import collection_order_request
+ from premium_exposure import customer_offer_key, entitlement_filter, entitled, featured_feed, normalized, ranked_search, shop_distance, utc
+ from catalogue_import_engine import process_file as process_catalogue_import_file, process_zip as process_catalogue_import_zip, validate_upload_metadata as validate_catalogue_upload_metadata, MAX_BATCH_FILES as CATALOGUE_IMPORT_MAX_FILES, MAX_FILE_BYTES as CATALOGUE_IMPORT_MAX_FILE_BYTES, MAX_BATCH_TOTAL_BYTES as CATALOGUE_IMPORT_MAX_BATCH_BYTES
+ from catalogue_chand_adapter import interpret_records as interpret_catalogue_records
+@@ -1760,10 +1761,11 @@
+     _assert_advertisement_owner(ad, user)
+     report = await _advertisement_delivery_metrics(ad)
+     review = await db.advertisement_audit.find_one(
+-        {"_id": f"delivery-review:{ad['_id']}"}, {"status": 1, "created_at": 1})
++        {"_id": f"delivery-review:{ad['_id']}"}, {"status": 1, "created_at": 1, "booking_evidence_status": 1})
+     if review:
+         report["delivery_review"] = {
+             "status": review["status"], "recorded_at": review["created_at"],
++            "booking_evidence_status": review.get("booking_evidence_status", "legacy_review"),
+         }
+     return report
+
+@@ -1828,6 +1830,18 @@
+         budget = ad.get("commercial_budget") or {}
+         expected = terms["rate_paise"]
+         booked = budget.get("amount_paise") if budget.get("status") == "spent" else None
++        reference = budget.get("evidence_reference")
++        evidence_status = "booking_unavailable"
++        if booked is not None:
++            evidence_status = "booking_requires_reconciliation"
++            if isinstance(reference, str) and reference.strip():
++                hash_key = hashlib.sha256(reference.strip().casefold().encode()).hexdigest()
++                claimed = await db.advertisement_audit.find_one(
++                    {"_id": f"campaign-evidence:{hash_key}", "event": "commercial_evidence_claimed"}, session=session)
++                if (claimed and str(claimed["advertisement_id"]).lower() == str(oid)
++                        and budget.get("version") == terms["version"] and type(booked) is int
++                        and booked == expected <= min(terms["daily_budget_paise"], terms["total_budget_paise"])):
++                    evidence_status = "booking_link_matched"
+         status = ("pending_compensation_policy" if metrics["contract_delivery"]["status"] != "target_met"
+                   else "target_met")
+         record = {"_id": key, "advertisement_id": str(oid), "event": "delivery_review_recorded",
+@@ -1835,8 +1849,8 @@
+                   "terms_version": terms["version"], "starts_at": ad["starts_at"], "ends_at": ad["ends_at"],
+                   "delivery": metrics["contract_delivery"], "impressions": metrics["impressions"],
+                   "clicks": metrics["clicks"], "accepted_fixed_fee_paise": expected, "booked_paise": booked,
+-                  "booking_difference_paise": booked - expected if booked is not None else None,
+-                  "evidence_reference": budget.get("evidence_reference"),
++                  "booking_difference_paise": booked - expected if type(booked) is int else None,
++                  "booking_evidence_status": evidence_status, "evidence_reference": reference,
+                   "financial_action_confirmed": False}
+         # Serialize with the existing fixed-fee and campaign lifecycle writes.
+         await db.advertisements.update_one({"_id": oid}, {"$set": {"delivery_review_recorded_at": now}}, session=session)
+@@ -4814,20 +4828,55 @@
+         ], session=session)}
+         spend = audit.get("grocery_coupon_spent", {"paise": 0, "count": 0})
+         release = audit.get("grocery_coupon_released", {"paise": 0, "count": 0})
+-        receipts = await db.orders.aggregate([
+-            {"$match": {"coupon_redemption.code": code, "coupon_redemption.state": "spent"}},
+-            {"$group": {"_id": None, "paise": {"$sum": "$coupon_redemption.discount_paise"}, "count": {"$sum": 1}}},
++        receipts = {row["_id"]: row async for row in db.orders.aggregate([
++            {"$match": {"coupon_redemption.code": code, "coupon_redemption.state": {"$in": ["spent", "released"]}}},
++            {"$group": {"_id": "$coupon_redemption.state", "paise": {"$sum": "$coupon_redemption.discount_paise"},
++                        "count": {"$sum": 1}, "refund_review_count": {"$sum": {"$cond": [
++                            {"$or": [{"$in": ["$payment_status", ["refunded", "refund_pending"]]},
++                                     {"$not": [{"$in": [{"$ifNull": ["$refund_status", ""]}, ["", "none", "not_refunded"]]}]}]},
++                            1, 0,
++                        ]}}}},
++        ], session=session)}
++        active = receipts.get("spent", {"paise": 0, "count": 0, "refund_review_count": 0})
++        released = receipts.get("released", {"paise": 0, "count": 0})
++        mismatches = await db.financial_audit.aggregate([
++            {"$match": {"coupon_code": code, "action": {"$in": ["grocery_coupon_spent", "grocery_coupon_released"]}}},
++            {"$group": {"_id": "$order_id", "spent": {"$sum": {"$cond": [
++                {"$eq": ["$action", "grocery_coupon_spent"]}, 1, 0]}},
++                "released": {"$sum": {"$cond": [{"$eq": ["$action", "grocery_coupon_released"]}, 1, 0]}},
++                "gross_paise": {"$sum": {"$cond": [
++                    {"$eq": ["$action", "grocery_coupon_spent"]}, "$amount_paise", 0]}},
++                "released_paise": {"$sum": {"$cond": [
++                    {"$eq": ["$action", "grocery_coupon_released"]}, "$amount_paise", 0]}},
++            }},
++            {"$set": {"order_oid": {"$convert": {"input": "$_id", "to": "objectId", "onError": None}}}},
++            {"$lookup": {"from": "orders", "localField": "order_oid", "foreignField": "_id", "as": "orders"}},
++            {"$set": {"receipt": {"$arrayElemAt": ["$orders.coupon_redemption", 0]}}},
++            {"$match": {"$expr": {"$not": [{"$and": [
++                {"$eq": ["$spent", 1]},
++                {"$eq": ["$receipt.code", code]},
++                {"$eq": ["$gross_paise", "$receipt.discount_paise"]},
++                {"$or": [
++                    {"$and": [{"$eq": ["$receipt.state", "spent"]}, {"$eq": ["$released", 0]}]},
++                    {"$and": [{"$eq": ["$receipt.state", "released"]}, {"$eq": ["$released", 1]},
++                              {"$eq": ["$gross_paise", "$released_paise"]}]},
++                ]},
++            ]}]}}},
++            {"$count": "orders"},
+         ], session=session).to_list(1)
+-        active = receipts[0] if receipts else {"paise": 0, "count": 0}
++        unmatched_orders = mismatches[0]["orders"] if mismatches else 0
+         spent, count = campaign["spent_paise"], campaign["redemptions"]
+-        reconciled = (0 <= spent <= campaign["budget_paise"] and 0 <= count <= campaign["max_redemptions"]
++        reconciled = (unmatched_orders == 0 and 0 <= spent <= campaign["budget_paise"] and 0 <= count <= campaign["max_redemptions"]
+                       and spent == spend["paise"] - release["paise"] == active["paise"]
+-                      and count == spend["count"] - release["count"] == active["count"])
++                      and count == spend["count"] - release["count"] == active["count"]
++                      and release["paise"] == released["paise"] and release["count"] == released["count"])
+         return {"code": code, "status": "balanced" if reconciled else "review_required",
+                 "funding_allocation_basis_points": campaign["funding_allocation_basis_points"],
+                 "budget_paise": campaign["budget_paise"], "spent_paise": spent,
+                 "remaining_paise": campaign["budget_paise"] - spent,
+                 "active_redemptions": count, "receipt_paise": active["paise"], "receipt_count": active["count"],
++                "unmatched_audit_orders": unmatched_orders,
++                "refund_review_orders": active["refund_review_count"],
+                 "audit_spent_paise": spend["paise"], "audit_released_paise": release["paise"]}
+
+     return await _run_replacement_transaction(read)
+@@ -6255,6 +6304,7 @@
+               "beneficiary_user_id": entity.get("owner_id"), "currency": "INR", "gross_merchandise": split["gross_merchandise"],
+               "gross_order_value": float(money(order.get("total", order.get("subtotal", 0)))), "commission_amount": split["commission"],
+               "platform_service_fee": split["platform_service_fee"], "platform_retained_delivery_fee": split["platform_delivery_fee"],
++              "source_delivery_fee_inr": split["delivery_fee"],
+               "platform_earnings": split["platform_earnings"], "shopkeeper_payable": split["shopkeeper_payable"],
+               "commission_rate_percent": split["commission_rate_percent"], "financial_policy_updated_at": entity.get("financial_policy_updated_at"),
+               "source_order_created_at": order.get("created_at"), "recorded_at": now, "status": "recorded"}
+@@ -8499,7 +8549,7 @@
+     return await _replacement_financial_review_details(ticket_id, user)
+
+
+-async def _replacement_capture_evidence(order, kind, session=None):
++async def _replacement_capture_evidence(order, kind, session=None, *, include_provider_link=False):
+     payments = db.grocery_payments if kind == "grocery" else db.restaurant_payments
+     captures = await payments.find({"order_id": str(order["_id"]), "status": "paid"}, session=session).limit(2).to_list(2)
+     if not captures:
+@@ -8529,7 +8579,13 @@
+     return {"status": "refund_conflict" if summary["consumed_paise"] else
+             ("linked_capture_recorded" if has_provider_link else "capture_link_incomplete"),
+             "captured_paise": captured, "refunded_paise": summary["completed_paise"],
+-            "pending_refund_paise": summary["pending_paise"], "remaining_paise": summary["remaining_paise"]}
++            "pending_refund_paise": summary["pending_paise"], "remaining_paise": summary["remaining_paise"],
++            **({"source_payment_id": capture["gateway_payment_id"]} if include_provider_link and has_provider_link else {})}
++
++
++def _invoice_review_snapshot(order):
++    return {"reference": order.get("invoice_number") or order.get("invoice_id"),
++            "tax_details": order.get("tax_details"), "financials": _replacement_original_financials(order)}
+
+
+ async def _replacement_financial_review_details(ticket_id: str, user: dict):
+@@ -8558,7 +8614,7 @@
+     order_filter = {"order_id": ticket["order_id"], "order_kind": ticket["order_kind"]}
+     ledger = [doc_out(row) async for row in db.financial_ledger.find(
+         order_filter, {"order_id": 1, "event_type": 1, "shopkeeper_payable": 1, "platform_earnings": 1,
+-                       "platform_retained_delivery_fee": 1, "recorded_at": 1},
++                       "platform_retained_delivery_fee": 1, "source_delivery_fee_inr": 1, "recorded_at": 1},
+     ).sort("recorded_at", -1).limit(20)]
+     payment_collection = db.grocery_payments if ticket["order_kind"] == "grocery" else db.restaurant_payments
+     captured = await payment_collection.find_one({"order_id": ticket["order_id"], "status": "paid"},
+@@ -8571,16 +8627,26 @@
+     if order.get("payment_status") == "paid":
+         reconciliation["capture_evidence"] = await _replacement_capture_evidence(order, ticket["order_kind"])
+     if order.get("payment_method") == "cod":
++        cash_audit = await db.financial_audit.find_one({
++            **order_filter, "action": "manual_cash_collection_confirmed",
++            "actor_id": order.get("cash_collection_confirmed_by"), "created_at": order.get("cash_collection_confirmed_at"),
++        }, {"_id": 1}) if order.get("cash_collection_confirmed_at") and order.get("cash_collection_confirmed_by") else None
+         reconciliation["cod_evidence"] = {
+             "collection_recorded": (order.get("payment_status") == "cash_collected"
+                                     and bool(order.get("cash_collection_confirmed_at") and order.get("cash_collection_confirmed_by"))),
+             "delivery_recorded": order.get("status") == "delivered",
++            "collection_audit_matched": cash_audit is not None,
+             "payout_status": "pending_authorized_cod_rail",
+         }
+     if order.get("fulfillment", "delivery") == "delivery":
++        finalized = next((entry for entry in ledger if entry["event_type"] == "order_finalized"), {})
++        recorded_fee = finalized.get("source_delivery_fee_inr")
++        current_fee = order.get("delivery_fee")
+         reconciliation["delivery_fee_evidence"] = {
+             "original_fee_inr": review["original"].get("delivery_fee"),
+-            "current_fee_inr": order.get("delivery_fee"),
++            "current_fee_inr": current_fee, "recorded_fee_inr": recorded_fee,
++            "ledger_fee_matches": money(recorded_fee) == money(current_fee)
++            if recorded_fee is not None and current_fee is not None else None,
+             "partner_payable_inr": None,
+             "status": "pending_approved_allocation",
+         }
+@@ -8595,12 +8661,30 @@
+             ).limit(20)],
+             "adjustment_status": "pending_approved_compensating_policy",
+         }
++    attribution = await db.referrals.find_one({
++        "qualifying_order_id": ticket["order_id"], "qualifying_order_kind": ticket["order_kind"],
++        "referred_user_id": ticket["user_id"], "status": "qualified",
++    }, {"referrer_id": 1})
++    if attribution:
++        award = await db.referral_rewards.find_one({
++            "referrer_id": attribution["referrer_id"], "qualifying_referral_ids": str(attribution["_id"]),
++            "qualifying_orders": {"$elemMatch": {"kind": ticket["order_kind"], "order_id": ticket["order_id"]}},
++        }, {"status": 1})
++        still_qualifies = order_is_referral_candidate(order)
++        reconciliation["referral_evidence"] = {
++            "qualifying_order_eligible": still_qualifies, "award_status": award["status"] if award else None,
++            "reversal_review_required": bool(award and not still_qualifies
++                                             and award["status"] in {"approved", "available", "processing", "paid"}),
++        }
+     draft = await db.financial_audit.find_one({"action": "replacement_invoice_correction_drafted",
+         "ticket_id": ticket_id, "replacement_id": review["replacement_id"]})
+     decisions = [doc_out(row) async for row in audit]
+     approved = {row["stage"]: row["actor_id"] for row in decisions if row["decision"] == "approve"}
+     independent_tax_approvals = ("professional_tax" in approved and "admin_tax" in approved
+                                  and approved["professional_tax"] != approved["admin_tax"])
++    professional_snapshot = next((row.get("invoice_review_snapshot") for row in decisions
++                                  if row["stage"] == "professional_tax" and row["decision"] == "approve"), None)
++    reference = order.get("invoice_number") or order.get("invoice_id")
+     return {
+         "customer_id": ticket["user_id"], "merchant_id": order.get("shop_id") or order.get("restaurant_id"),
+         "shopping_reward_balance": await _available_shopping_reward_balance(ticket["user_id"]) if "reward_review" in review["reasons"] else None,
+@@ -8611,7 +8695,9 @@
+         "invoice_correction_draft": doc_out(draft) if draft else None,
+         "invoice_readiness": {
+             "status": "pending_statutory_guidance",
+-            "has_original_reference": bool(order.get("invoice_number") or order.get("invoice_id")),
++            "has_original_reference": isinstance(reference, str) and bool(reference.strip()),
++            "reviewed_invoice_matches": professional_snapshot == _invoice_review_snapshot(order)
++            if professional_snapshot is not None else None,
+             "original_snapshot_matches": _replacement_original_financials(order) == review["original"],
+             "has_independent_approvals": independent_tax_approvals,
+             "has_internal_draft": draft is not None,
+@@ -8650,6 +8736,9 @@
+         case = next((row for row in (order or {}).get("replacements", []) if row["id"] == body.replacement_id), None)
+         if not isinstance(reference, str) or not reference.strip() or not case or case["state"] == "superseded":
+             raise HTTPException(409, "A current replacement case and original invoice reference are required")
++        reviewed_invoice = professional.get("invoice_review_snapshot")
++        if reviewed_invoice is not None and reviewed_invoice != _invoice_review_snapshot(order):
++            raise HTTPException(409, "The invoice or tax details changed after professional review.")
+         key = f"invoice-review-draft:{ticket['order_kind']}:{ticket['order_id']}:{body.replacement_id}"
+         existing = await db.financial_audit.find_one({"_id": key}, session=session)
+         if existing:
+@@ -8664,6 +8753,7 @@
+                   "replacement_id": body.replacement_id, "original_invoice_reference": reference,
+                   "original_financials": review["original"], "professional_review_id": str(professional["_id"]),
+                   "admin_approval_id": str(admin["_id"]), "actor_id": user["id"], "reason": body.reason, "created_at": now}
++        await collection.update_one({"_id": order["_id"]}, {"$inc": {"replacement_invoice_review_version": 1}}, session=session)
+         await db.restaurant_support.update_one({"_id": oid}, {"$set": {"financial_review.invoice_draft_status": record["status"],
+             "financial_review.updated_at": now}}, session=session)
+         await db.financial_audit.insert_one(record, session=session)
+@@ -8684,7 +8774,43 @@
+     return await _decide_replacement_financial_review(ticket_id, body, user)
+
+
+-async def _validate_pending_payment_review(session, ticket, review, stage):
++@api.get("/admin/restaurant/support/{ticket_id}/payment-readiness/{stage}")
++async def replacement_payment_readiness(ticket_id: str, stage: Literal["collection", "refund"],
++                                        _: dict = Depends(require_role("admin"))):
++    oid = _object_id_or_404(ticket_id, "Support ticket")
++
++    async def read(session):
++        ticket = await db.restaurant_support.find_one({"_id": oid}, session=session)
++        review = (ticket or {}).get("financial_review")
++        if not review:
++            raise HTTPException(404, "Financial review not found")
++        approval = await db.financial_audit.find_one({
++            "ticket_id": str(oid), "replacement_id": review["replacement_id"],
++            "action": "replacement_financial_review", "stage": stage, "decision": "approve",
++        }, session=session)
++        contract = (approval or {}).get("payment_contract")
++        if not contract:
++            raise HTTPException(409, "An approved payment review contract is required.")
++        if contract["consent_recorded_at"] != review.get("decision_at"):
++            raise HTTPException(409, "The recorded customer consent changed.")
++        evidence = await _validate_pending_payment_review(session, ticket, review, stage, lock_order=False)
++        source_payment = evidence.pop("source_payment_id", None)
++        if evidence != contract["original_payment_evidence"]:
++            raise HTTPException(409, "The original payment evidence changed.")
++        if source_payment:
++            try:
++                preview = collection_order_request(contract["reference"], contract["amount_paise"], source_payment)
++            except ValueError:
++                raise HTTPException(409, "The original provider link requires reconciliation.") from None
++            if preview != contract.get("provider_order_preview"):
++                raise HTTPException(409, "The original provider link changed.")
++        return {"status": "execution_disabled", "reference": contract["reference"],
++                "amount_paise": contract["amount_paise"], "payment_evidence_status": evidence["status"]}
++
++    return await _run_replacement_transaction(read)
++
++
++async def _validate_pending_payment_review(session, ticket, review, stage, *, lock_order=True):
+     """Reconcile a proposed review with the current order before recording approval."""
+     kind = ticket["order_kind"]
+     grocery = kind == "grocery"
+@@ -8694,11 +8820,14 @@
+     states = GROCERY_REPLACEMENT_ORDER_STATES if grocery else RESTAURANT_REPLACEMENT_ORDER_STATES
+     case = next((row for row in (order or {}).get("replacements", [])
+                  if row["id"] == review["replacement_id"]), None)
++    decision = (case or {}).get("decision") or {}
+     if (not order or not case or case["state"] != "assist_required"
+             or order["status"] not in states or order.get("refund_status")
+             or _replacement_adjustment_reasons(order, kind) != ["payment_review"]
+             or _replacement_original_financials(order) != review["original"]
+-            or (case.get("decision") or {}).get("action") != review["decision"]):
++            or decision.get("action") != review["decision"] or decision.get("at") != review.get("decision_at")
++            or decision.get("customer_id") != ticket["user_id"]
++            or (review["decision"] == "accept" and decision.get("option_id") != review.get("option_id"))):
+         raise HTTPException(409, "The order or financial terms changed. Refresh the review.")
+     index = case["line_index"]
+     if stage == "refund" and review["decision"] == "keep_unavailable":
+@@ -8729,7 +8858,7 @@
+         if _replacement_payment_quotes(order, totals, kind).get(quote_key) != review[quote_key]:
+             raise HTTPException(409, "The replacement total changed.")
+     if order.get("payment_status") == "paid":
+-        evidence = await _replacement_capture_evidence(order, kind, session=session)
++        evidence = await _replacement_capture_evidence(order, kind, session=session, include_provider_link=stage == "collection")
+         if evidence["status"] in {"refund_conflict", "reconciliation_required"}:
+             raise HTTPException(409, "The recorded payment or refund history requires reconciliation.")
+     else:
+@@ -8737,7 +8866,8 @@
+                     else "payment_evidence_unavailable"}
+     # Write to the same order inside the approval transaction to serialize
+     # approval with order cancellation, repricing, or refund state changes.
+-    await collection.update_one({"_id": oid}, {"$set": {"replacement_financial_reviewed_at": now_utc()}}, session=session)
++    if lock_order:
++        await collection.update_one({"_id": oid}, {"$set": {"replacement_financial_reviewed_at": now_utc()}}, session=session)
+     return evidence
+
+
+@@ -8771,6 +8901,7 @@
+             ):
+                 return {"status": prior["status"], "financial_action_confirmed": False}
+             raise HTTPException(409, "This review stage already has a recorded decision.")
++        professional = None
+         if body.stage == "admin_tax":
+             professional = await db.financial_audit.find_one({
+                 "action": "replacement_financial_review", "ticket_id": ticket_id,
+@@ -8780,6 +8911,19 @@
+                 raise HTTPException(409, "A verified professional review is required before Admin approval.")
+             if professional["actor_id"] == user["id"]:
+                 raise HTTPException(403, "A different Admin must decide after professional review.")
++        invoice_snapshot = None
++        if body.stage in {"professional_tax", "admin_tax"} and body.decision == "approve":
++            collection = db.orders if ticket["order_kind"] == "grocery" else db.restaurant_orders
++            order = await collection.find_one({"_id": _object_id_or_404(ticket["order_id"], "Order"),
++                                               "customer_id": ticket["user_id"]}, session=session)
++            if (not order or _replacement_original_financials(order) != review["original"]
++                    or not any(row["id"] == body.replacement_id and row["state"] != "superseded"
++                               for row in order.get("replacements", []))):
++                raise HTTPException(409, "The invoice or replacement snapshot changed.")
++            invoice_snapshot = _invoice_review_snapshot(order)
++            if professional and professional.get("invoice_review_snapshot") not in (None, invoice_snapshot):
++                raise HTTPException(409, "The invoice or tax details changed after professional review.")
++            await collection.update_one({"_id": order["_id"]}, {"$inc": {"replacement_invoice_review_version": 1}}, session=session)
+         amount_paise = None
+         payment_contract = None
+         if body.stage in {"refund", "collection"}:
+@@ -8801,6 +8945,13 @@
+                     "consent_recorded_at": review["decision_at"], "original_payment_evidence": evidence,
+                     "status": "execution_disabled",
+                 }
++                source_payment = evidence.pop("source_payment_id", None)
++                if source_payment:
++                    try:
++                        payment_contract["provider_order_preview"] = collection_order_request(
++                            payment_contract["reference"], amount_paise, source_payment)
++                    except ValueError:
++                        raise HTTPException(409, "The original provider link requires reconciliation.") from None
+         status = "rejected" if body.decision == "reject" else {
+             "reward": "ledger_preservation_approved",
+             "professional_tax": "pending_admin_tax_approval",
+@@ -8820,6 +8971,7 @@
+             "order_kind": ticket["order_kind"], "order_id": ticket["order_id"], "customer_id": ticket["user_id"],
+             "created_at": now, "amount_paise": amount_paise, "previous_status": "under_review",
+             **({"payment_contract": payment_contract} if payment_contract else {}),
++            **({"invoice_review_snapshot": invoice_snapshot} if invoice_snapshot else {}),
+         }, session=session)
+         if body.stage != "professional_tax":
+             message = (
+--- a/backend/tests/test_task9_business_policy.py
++++ b/backend/tests/test_task9_business_policy.py
+@@ -171,6 +171,7 @@
+                 assert snapshot["status"] == "pending_compensation_policy"
+                 assert snapshot["delivery"]["shortfall_impressions"] == 1
+                 assert snapshot["booking_difference_paise"] == 0 and snapshot["evidence_reference"] == "fixture-invoice"
++                assert snapshot["booking_evidence_status"] == "booking_link_matched"
+                 assert not snapshot["financial_action_confirmed"]
+                 assert (await request("POST", review_path, {"reason": "Different review reason"})).status_code == 409
+                 assert await db.advertisement_audit.count_documents({"event": "delivery_review_recorded"}) == 1
+@@ -183,6 +184,12 @@
+                 assert measured["contract_delivery"]["excess_impressions"] == 1
+                 assert measured["contract_delivery"]["status"] == "over_delivery"
+                 assert measured["budget"]["amount_paise"] == 1000
++                refunded_fixture = await db.advertisements.find_one({"_id": ad_id})
++                del refunded_fixture["_id"]
++                unmatched = (await db.advertisements.insert_one(refunded_fixture)).inserted_id
++                unlinked = (await request("POST", f"/admin/advertisements/{unmatched}/delivery-review", review_body)).json()
++                assert unlinked["booking_evidence_status"] == "booking_requires_reconciliation"
++                assert not unlinked["financial_action_confirmed"]
+
+                 assert len(public) == 1 and "commercial_terms" not in public[0] and "commercial_budget" not in public[0]
+         finally:
+--- /dev/null
++++ b/backend/tests/test_task9_collection_adapter.py
+@@ -0,0 +1,67 @@
++"""Offline Razorpay request and independently fetched response fixtures."""
++import hashlib
++import hmac
++import json
++
++import pytest
++
++from integrations.replacement_collection import (
++    collection_order_request,
++    reconcile_collection,
++    reconcile_collection_event,
++)
++
++
++@pytest.fixture
++def provider_records():
++    operation = "replacement:restaurant:" + "a" * 24 + ":fixture:collection"
++    intent = collection_order_request(operation, 15400, "pay_original")
++    order = dict(intent, id="order_replacement", status="paid", amount_paid=15400)
++    payment = {"id": "pay_replacement", "order_id": order["id"], "amount": 15400,
++               "currency": "INR", "status": "captured"}
++    return operation, intent, order, payment
++
++
++def test_collection_pending_failure_and_capture(provider_records):
++    operation, intent, order, payment = provider_records
++    assert intent == collection_order_request(operation, 15400, "pay_original")
++    assert len(intent["receipt"]) == 40
++    assert intent["receipt"] != collection_order_request(operation.replace(":fixture:", ":second:"), 15400, "pay_original")["receipt"]
++    pending = dict(order, status="attempted", amount_paid=0)
++    assert reconcile_collection(intent, pending) == "awaiting_payment"
++    assert reconcile_collection(intent, pending, dict(payment, status="failed")) == "payment_failed"
++    assert reconcile_collection(intent, pending, dict(payment, status="authorized")) == "awaiting_payment"
++    assert reconcile_collection(intent, pending, payment) == "reconciliation_required"
++    assert reconcile_collection(intent, order) == "reconciliation_required"
++    assert reconcile_collection(intent, order, payment) == "capture_observed"
++
++
++@pytest.mark.parametrize("field,value", [
++    ("id", "pay_original"), ("order_id", "order_other"), ("amount", 15401), ("currency", "USD"),
++])
++def test_collection_refuses_wrong_payment(provider_records, field, value):
++    _, intent, order, payment = provider_records
++    with pytest.raises(ValueError, match="does not match"):
++        reconcile_collection(intent, order, dict(payment, **{field: value}))
++
++
++def test_collection_requires_exact_order_balance_and_reference(provider_records):
++    _, intent, order, payment = provider_records
++    for bad_order in (dict(order, amount_paid=15500), dict(order, notes={}), dict(order, receipt="foreign")):
++        with pytest.raises(ValueError):
++            reconcile_collection(intent, bad_order, payment)
++
++
++def test_signed_event_matches_fetched_entities_and_replays_without_mutation(provider_records):
++    _, intent, order, payment = provider_records
++    raw = json.dumps({"event": "payment.captured", "payload": {"payment": {"entity": payment}}}).encode()
++    secret = "fixture-only-key"
++    signature = hmac.new(secret.encode(), raw, hashlib.sha256).hexdigest()
++    args = dict(raw=raw, signature=signature, secret=secret, event_id="evt_fixture")
++    for _ in range(2):
++        assert reconcile_collection_event(intent, order, payment, **args) == "capture_observed"
++    with pytest.raises(ValueError, match="signature"):
++        reconcile_collection_event(intent, order, payment, **dict(args, signature="bad"))
++    with pytest.raises(ValueError, match="disagree"):
++        reconcile_collection_event(intent, order, dict(payment, id="pay_other"), **args)
++    assert order["status"] == "paid" and payment["id"] == "pay_replacement"
+--- a/backend/tests/test_task9_coupon_checkout.py
++++ b/backend/tests/test_task9_coupon_checkout.py
+@@ -95,6 +95,18 @@
+                 funded = (await http.get(recon, headers=auth["admin"])).json()
+                 assert funded["status"] == "balanced" and funded["receipt_paise"] == 2000
+                 assert funded["remaining_paise"] == 0 and funded["funding_allocation_basis_points"] == {"come_in": 10000}
++                assert funded["unmatched_audit_orders"] == funded["refund_review_orders"] == 0
++                wrong_order = str(ObjectId())
++                await db.financial_audit.update_one({"action": "grocery_coupon_spent"}, {"$set": {"order_id": wrong_order}})
++                mismatch = (await http.get(recon, headers=auth["admin"])).json()
++                assert mismatch["status"] == "review_required" and mismatch["unmatched_audit_orders"] == 1
++                assert mismatch["audit_spent_paise"] == mismatch["receipt_paise"] == 2000
++                await db.financial_audit.update_one({"action": "grocery_coupon_spent"}, {"$set": {"order_id": order["id"]}})
++                await db.orders.update_one({"_id": ObjectId(order["id"])}, {"$set": {"refund_status": "refund_pending"}})
++                pending_refund = (await http.get(recon, headers=auth["admin"])).json()
++                assert pending_refund["refund_review_orders"] == 1
++                assert pending_refund["audit_released_paise"] == 0
++                await db.orders.update_one({"_id": ObjectId(order["id"])}, {"$unset": {"refund_status": ""}})
+                 assert (await quote("second", 1)).status_code == 409
+                 cancelled = await post(f"/orders/{order['id']}/cancel", {}, actor)
+                 assert cancelled.status_code == 200 and cancelled.json()["coupon_redemption"]["state"] == "released"
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -174,6 +174,9 @@
+                     assert (await review("professional_tax", "approve", "professional")).status_code == 422
+                     assert (await review("professional_tax", "approve", "professional", guidance_reference="CA fixture")).status_code == 200
+                     assert (await review("admin_tax", "approve", "professional")).status_code == 403
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"invoice_id": "different-invoice"}})
++                assert (await review("admin_tax", "approve")).status_code == 409
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"invoice_id": "original-invoice"}})
+                 assert (await review("admin_tax", "approve")).json()["status"] == "approved_pending_accounting_procedure"
+                 assert (await review("reward", "approve")).json()["status"] == "ledger_preservation_approved"
+                 assert (await review("reward", "approve")).status_code == 200
+@@ -188,6 +191,10 @@
+                 details = (await request("GET", path, actor="admin")).json()
+                 assert [row["amount"] for row in details["reward_evidence"]["redemption_entries"]] == [10]
+                 assert details["invoice_readiness"]["has_independent_approvals"]
++                assert details["invoice_readiness"]["reviewed_invoice_matches"]
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"tax_details": {"source": "different"}}})
++                assert (await request("POST", correction, correction_body, "admin")).status_code == 409
++                await db.restaurant_orders.update_one({"_id": oid}, {"$unset": {"tax_details": ""}})
+                 assert not details["invoice_readiness"]["has_internal_draft"]
+                 assert len(details["audit"]) == 3 and details["original_invoice_reference"] == "original-invoice"
+                 await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"total": 153}})
+@@ -250,6 +257,38 @@
+                 assert contract["reference"] == f"replacement:restaurant:{oid}:{paid_case['id']}:collection"
+                 assert contract["amount_paise"] == 15400 and contract["status"] == "execution_disabled"
+                 assert contract["original_payment_evidence"]["status"] == "capture_unavailable"
++
++                linked_order = await order(payment_method="razorpay", payment_status="paid")
++                linked_case = (await report(linked_order)).json()
++                assert (await decide(linked_order, linked_case)).status_code == 200
++                captured = (await db.restaurant_payments.insert_one({
++                    "order_id": str(linked_order), "status": "paid", "amount": 152.5, "currency": "INR",
++                    "customer_id": ids["buyer"], "gateway": "razorpay", "gateway_payment_id": "pay_fixture",
++                    "gateway_order_id": "order_fixture",
++                })).inserted_id
++                linked_path = f"/admin/restaurant/support/{linked_case['support_id']}/financial-review"
++                linked_approval = {**approval, "replacement_id": linked_case["id"]}
++                approve_requests = await asyncio.gather(*(request("POST", linked_path, linked_approval, "admin") for _ in range(2)))
++                assert all(result.json() == {"status": "approved_pending_execution", "financial_action_confirmed": False}
++                           for result in approve_requests)
++                approved_audit = (await request("GET", linked_path, actor="admin")).json()["audit"]
++                assert len(approved_audit) == 1
++                preview = approved_audit[0]["payment_contract"]["provider_order_preview"]
++                assert preview["amount"] == 15400 and preview["notes"]["original_payment_id"] == "pay_fixture"
++                readiness = linked_path.replace("/financial-review", "/payment-readiness/collection")
++                assert (await request("GET", readiness, actor="seller")).status_code == 403
++                assert (await request("GET", readiness, actor=None)).status_code == 401
++                assert (await request("GET", readiness, actor="admin")).json() == {
++                    "status": "execution_disabled", "reference": approved_audit[0]["payment_contract"]["reference"],
++                    "amount_paise": 15400, "payment_evidence_status": "linked_capture_recorded",
++                }
++                await db.restaurant_payments.update_one({"_id": captured}, {"$set": {"gateway_payment_id": "pay_changed"}})
++                assert (await request("GET", readiness, actor="admin")).status_code == 409
++                await db.restaurant_payments.update_one({"_id": captured}, {"$set": {"gateway_payment_id": "pay_fixture",
++                    "provider_refunds": {"fixture": {"id": "fixture", "status": "pending", "amount": 500}}}})
++                assert (await request("GET", readiness, actor="admin")).status_code == 409
++                assert await db.restaurant_payments.count_documents({"order_id": str(linked_order)}) == 1
++                await db.restaurant_payments.delete_one({"_id": captured})
+
+                 cheaper = (await db.restaurant_menu.insert_one({"restaurant_id": str(restaurant), "name": "Budget Soup", "price": 30})).inserted_id
+                 oid = await order(payment_method="razorpay", payment_status="paid")
+@@ -301,7 +340,24 @@
+                 assert (await decide(oid, cod_case)).status_code == 200
+                 cod_path = f"/admin/restaurant/support/{cod_case['support_id']}/financial-review"
+                 cod = (await request("GET", cod_path, actor="admin")).json()["reconciliation"]["cod_evidence"]
+-                assert cod == {"collection_recorded": False, "delivery_recorded": False, "payout_status": "pending_authorized_cod_rail"}
++                assert cod == {"collection_recorded": False, "delivery_recorded": False,
++                               "collection_audit_matched": False, "payout_status": "pending_authorized_cod_rail"}
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"status": "delivered", "payment_status": "cod_pending"}})
++                assert (await request("POST", f"/earnings/orders/restaurant/{oid}/cash-collected",
++                                      {"confirmed": True, "note": "Fixture cash collection"}, "seller")).status_code == 200
++                cod = (await request("GET", cod_path, actor="admin")).json()["reconciliation"]["cod_evidence"]
++                assert cod == {"collection_recorded": True, "delivery_recorded": True,
++                               "collection_audit_matched": True, "payout_status": "pending_authorized_cod_rail"}
++                referral = (await db.referrals.insert_one({"qualifying_order_id": str(oid), "qualifying_order_kind": "restaurant",
++                    "referred_user_id": ids["buyer"], "referrer_id": ids["other"], "status": "qualified"})).inserted_id
++                await db.referral_rewards.insert_one({"referrer_id": ids["other"], "status": "available",
++                    "qualifying_referral_ids": [str(referral)], "qualifying_orders": [{"order_id": str(oid), "kind": "restaurant"}]})
++                state = (await request("GET", cod_path, actor="admin")).json()["reconciliation"]["referral_evidence"]
++                assert state["qualifying_order_eligible"] and not state["reversal_review_required"]
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"refund_status": "refunded"}})
++                state = (await request("GET", cod_path, actor="admin")).json()["reconciliation"]["referral_evidence"]
++                assert state == {"qualifying_order_eligible": False, "award_status": "available", "reversal_review_required": True}
++                assert await db.referral_ledger.count_documents({}) == 2
+                 await db.restaurant_menu.update_one({"_id": ObjectId(unaffected["menu_item_id"])}, {"$set": {"available": False}})
+                 oid = await order()
+                 remove_case = (await report(oid)).json()
+@@ -326,6 +382,7 @@
+                 assert first_record["replacement_ids"] == [case["id"]]
+                 assert first_record["gross_order_value"] == 306.5
+                 assert first_record["shopkeeper_payable"] == 251.5
++                assert first_record["source_delivery_fee_inr"] == 15
+
+                 oid = await order()
+                 case = (await report(oid)).json()
+--- a/frontend/app/admin-earnings.tsx
++++ b/frontend/app/admin-earnings.tsx
+@@ -85,9 +85,9 @@
+       <TextInput accessibilityLabel="Delivery review reason" value={deliveryReviewReason} onChangeText={setDeliveryReviewReason} style={styles.input} />
+       <Pressable style={styles.btn} onPress={async () => {
+         try {
+-          const result = await api.post<{ status: string; delivery: { shortfall_impressions: number; excess_impressions: number } }>(
++          const result = await api.post<{ status: string; booking_evidence_status: string; delivery: { shortfall_impressions: number; excess_impressions: number } }>(
+             `/admin/advertisements/${encodeURIComponent(adId)}/delivery-review`, { reason: deliveryReviewReason.trim() });
+-          setNotice(`Delivery review ${result.status.replaceAll("_", " ")} · shortfall ${result.delivery.shortfall_impressions} · excess ${result.delivery.excess_impressions}`);
++          setNotice(`Delivery review ${result.status.replaceAll("_", " ")} · shortfall ${result.delivery.shortfall_impressions} · excess ${result.delivery.excess_impressions} · ${result.booking_evidence_status.replaceAll("_", " ")}`);
+         } catch (error: any) { setNotice(error?.message || "Could not record campaign delivery review."); }
+       }}><Text style={styles.btnText}>Record final delivery review</Text></Pressable>
+     </View>
+--- a/frontend/app/admin.tsx
++++ b/frontend/app/admin.tsx
+@@ -374,6 +374,12 @@
+                   if (!quote) return null;
+                   return <View key={stage}>
+                     <Text style={styles.cardMeta}>{stage === "refund" ? "Refund" : "Additional payment"} review · {state?.replaceAll("_", " ") || "under review"}</Text>
++                    {state === "approved_pending_execution" ? <ActionBtn label={`Recheck ${stage} readiness`} onPress={async () => {
++                      try {
++                        const check = await api.get<{ payment_evidence_status: string }>(`/admin/restaurant/support/${r.id}/payment-readiness/${stage}`);
++                        setReviewError(`Execution disabled · ${check.payment_evidence_status.replaceAll("_", " ")}`);
++                      } catch (error: any) { setReviewError(error?.message || "Could not recheck payment readiness."); }
++                    }} /> : null}
+                     {!state ? <>
+                       <ActionBtn label={`Approve ${stage} for pending execution`} onPress={() => submitReview(r, stage, "approve")} />
+                       <ActionBtn label={`Reject ${stage} request`} onPress={() => submitReview(r, stage, "reject")} />
+@@ -392,12 +398,15 @@
+                   <Text style={styles.cardMeta}>Order payment {reviewDetails.data.reconciliation.order_payment_status || "unavailable"} · Partner adjustment pending approved allocation</Text>
+                   {reviewDetails.data.reconciliation.captured_payment ? <Text style={styles.cardMeta}>Recorded capture ₹{reviewDetails.data.reconciliation.captured_payment.amount} · Refund {reviewDetails.data.reconciliation.captured_payment.refund_status || "none recorded"}</Text> : null}
+                   {reviewDetails.data.reconciliation.capture_evidence ? <Text style={styles.cardMeta}>Capture evidence: {reviewDetails.data.reconciliation.capture_evidence.status.replaceAll("_", " ")}{reviewDetails.data.reconciliation.capture_evidence.remaining_paise != null ? ` · Unconsumed recorded balance ₹${(reviewDetails.data.reconciliation.capture_evidence.remaining_paise / 100).toFixed(2)}` : ""}</Text> : null}
+-                  {reviewDetails.data.reconciliation.cod_evidence ? <Text style={styles.cardMeta}>COD collection evidence {reviewDetails.data.reconciliation.cod_evidence.collection_recorded ? "recorded" : "unavailable"} · Payout rail pending</Text> : null}
++                  {reviewDetails.data.reconciliation.cod_evidence ? <Text style={styles.cardMeta}>COD collection evidence {reviewDetails.data.reconciliation.cod_evidence.collection_recorded ? "recorded" : "unavailable"} · Audit {reviewDetails.data.reconciliation.cod_evidence.collection_audit_matched ? "matched" : "unconfirmed"} · Payout rail pending</Text> : null}
+                   {reviewDetails.data.reconciliation.delivery_fee_evidence ? <Text style={styles.cardMeta}>Original delivery fee ₹{reviewDetails.data.reconciliation.delivery_fee_evidence.original_fee_inr ?? "unavailable"} · Current fee ₹{reviewDetails.data.reconciliation.delivery_fee_evidence.current_fee_inr ?? "unavailable"}</Text> : null}
+                   {reviewDetails.data.reconciliation.seller_platform_ledger.map((entry: any) => <Text key={entry.id} style={styles.cardMeta}>{entry.event_type} · Seller ₹{entry.shopkeeper_payable ?? "unavailable"} · Platform ₹{entry.platform_earnings ?? "unavailable"}</Text>)}
++                  {reviewDetails.data.reconciliation.delivery_fee_evidence?.ledger_fee_matches === false ? <Text style={styles.cardMeta}>Recorded delivery ledger fee differs from the current order fee.</Text> : null}
++                  {reviewDetails.data.reconciliation.referral_evidence?.reversal_review_required ? <Text style={styles.cardMeta}>Referral award requires reversal review. The qualifying order is no longer eligible.</Text> : null}
+                 </View> : null}
+                 {reviewDetails.data.reward_evidence ? <Text style={styles.cardMeta}>Recorded reward redemptions: {reviewDetails.data.reward_evidence.redemption_entries.length} · Compensating policy pending</Text> : null}
+                 {reviewDetails.data.invoice_readiness ? <Text style={styles.cardMeta}>Invoice reference {reviewDetails.data.invoice_readiness.has_original_reference ? "available" : "missing"} · Original snapshot {reviewDetails.data.invoice_readiness.original_snapshot_matches ? "matches" : "changed"} · Independent approvals {reviewDetails.data.invoice_readiness.has_independent_approvals ? "recorded" : "pending"}</Text> : null}
++                {reviewDetails.data.invoice_readiness?.reviewed_invoice_matches === false ? <Text style={styles.cardMeta}>Invoice or tax details changed after professional review.</Text> : null}
+                 {reviewDetails.data.invoice_correction_draft ? <Text style={styles.cardMeta}>Internal correction draft · pending statutory issuance</Text>
+                   : r.financial_review.admin_tax_status === "approved_pending_accounting_procedure" ? <ActionBtn label="Record internal invoice correction draft" onPress={async () => {
+                     try {
+@@ -628,8 +637,8 @@
+         <Text style={styles.cardMeta}>{campaign.activation.code} · {campaign.status} · ₹{(campaign.spent_paise / 100).toFixed(2)} of ₹{(campaign.budget_paise / 100).toFixed(2)} spent</Text>
+         <ActionBtn label={`Reconcile ${campaign.activation.code}`} onPress={async () => {
+           try {
+-            const result = await api.get<{ status: string; receipt_paise: number; audit_released_paise: number }>(`/admin/financial/grocery-coupons/${campaign.activation.code}/reconciliation`);
+-            setNotice(`${campaign.activation.code}: ${result.status.replaceAll("_", " ")} · ₹${(result.receipt_paise / 100).toFixed(2)} in active receipts · ₹${(result.audit_released_paise / 100).toFixed(2)} released`);
++            const result = await api.get<{ status: string; receipt_paise: number; audit_released_paise: number; unmatched_audit_orders: number; refund_review_orders: number }>(`/admin/financial/grocery-coupons/${campaign.activation.code}/reconciliation`);
++            setNotice(`${campaign.activation.code}: ${result.status.replaceAll("_", " ")} · ₹${(result.receipt_paise / 100).toFixed(2)} in active receipts · ₹${(result.audit_released_paise / 100).toFixed(2)} released · ${result.unmatched_audit_orders} unmatched · ${result.refund_review_orders} refund reviews`);
+           } catch (error: any) { setNotice(error?.message || "Could not reconcile campaign."); }
+         }} />
+         {campaign.status !== "closed" ? (campaign.status === "active" ? ["paused", "closed"] : ["active", "closed"]).map((status) =>

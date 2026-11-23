@@ -95,3 +95,18 @@ Task 9 focused HTTP and MongoDB suite recorded **17 passed, 0 failed, 0 skipped,
 The full-suite skip at `backend/tests/backend_test.py:397` was unavailable external object storage. Warnings cover FastAPI lifecycle hooks and catalogue dependencies. The initial focused run had two failures. The advertisement review now returns the canonical persisted timestamp consistently and the reward fixture assertion counts entries at the correct stage. Both were resolved in the final focused and full runs. [Initial focused log](reconciliation-controls-20261123/focused-initial.log)
 
 The release gate continues to defer physical Android/iOS, genuine Razorpay TEST payments, webhooks and refunds, authentic settlement confirmation, and statutory issuance.
+
+### Closure evidence gates
+
+The focused HTTP, MongoDB and local provider adapter run recorded **24 passed, 0 failed, 0 skipped, 7 warnings**. It covers misattributed coupon audit data, concurrent ad and payment reviews, provider-link and refund conflicts, unsigned/invalid events, customer-scoped reward evidence, matched COD confirmation audit, and changed invoice snapshots. [Focused output](closure-evidence-20261123/focused.log) · [Commands](closure-evidence-20261123/COMMANDS.md)
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Expanded local integration and mock suite | 82 passed, 0 failed, 0 skipped, 7 warnings | [Expanded](closure-evidence-20261123/integrated.log) |
+| Full backend regression | 707 passed, 0 failed, 1 skipped, 9 warnings | [Full](closure-evidence-20261123/full.log) |
+| TypeScript, targeted ESLint and Expo export | Passed | [Types](closure-evidence-20261123/typescript.log) · [Lint](closure-evidence-20261123/eslint.log) · [Expo](closure-evidence-20261123/expo.log) |
+| Chromium | Seven scenarios passed | [Browser](closure-evidence-20261123/browser.log) |
+| FastAPI restart and replay | Five assertion groups passed, including revalidating the same persisted provider preview with execution disabled | [Restart](closure-evidence-20261123/restart.log) |
+| Source checkpoint | Forward dry-run and reverse apply check passed | [Patch](../../patches/task9-closure-evidence-gates.patch) |
+
+The only regression skip was external object storage at `backend/tests/backend_test.py:397`. Warnings were Python framework and catalogue dependency deprecations. All payment records and signatures used for the new adapter tests were fixtures. Real payments, provider transport, native device testing, and statutory issuance remain deferred or blocked.

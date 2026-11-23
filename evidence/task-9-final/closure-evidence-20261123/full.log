@@ -1,0 +1,65 @@
+.......................................................................s [ 10%]
+........................................................................ [ 20%]
+........................................................................ [ 30%]
+........................................................................ [ 40%]
+........................................................................ [ 50%]
+........................................................................ [ 61%]
+........................................................................ [ 71%]
+........................................................................ [ 81%]
+........................................................................ [ 91%]
+............................................................             [100%]
+=============================== warnings summary ===============================
+../COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/starlette/formparsers.py:12
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+  /workspace/task4-source/backend/server.py:9218: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/fastapi/applications.py:4495: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    return self.router.on_event(event_type)
+
+tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+  /workspace/task4-source/backend/server.py:9365: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("shutdown")
+
+tests/test_grocery_refund_local_integration.py::test_local_grocery_refund_authorization_accounting_and_retry
+  /workspace/task4-source/backend/server.py:10432: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+tests/test_universal_catalogue_import_engine.py::test_pdf_text_adapter_preserves_page_provenance
+  /tmp/task4-verification/catalogue-deps/fitz/__init__.py:17: FutureWarning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.
+    warnings.warn(
+
+tests/test_universal_catalogue_import_engine.py::test_xls_signature_is_recognized_but_missing_xlrd_is_reported_cleanly
+  /workspace/task4-source/backend/catalogue_import_engine.py:221: Pandas4Warning: The xlrd engine is deprecated and will be removed in a future version. Use the calamine engine instead, by setting engine='calamine'.
+    sheets = pd.read_excel(io.BytesIO(raw), sheet_name=None, dtype=object, engine="xlrd")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] backend/tests/backend_test.py:397: Object storage unavailable
+707 passed, 1 skipped, 9 warnings in 105.54s (0:01:45)

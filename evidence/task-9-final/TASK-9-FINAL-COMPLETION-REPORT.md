@@ -69,3 +69,7 @@ Task 9 remains **PARTIALLY VERIFIED**. The follow-up adds coupon and advertiser 
 Task 9 remains **PARTIALLY VERIFIED**. Cash coupon reconciliation, closed advertisement delivery review, replacement accounting evidence, disabled payment/refund review contracts and invoice readiness checks extend existing flows. The exact scope and open approvals are recorded in the [implementation report](reconciliation-controls-20261123/IMPLEMENTATION.md).
 
 Implementation checkpoint `dfc65425f7864076c2f161ac49e348109f199de2` was verified on GitHub `work`. Full backend rerun recorded 700 passes and one external object-storage skip. The final evidence also includes 75 expanded passes, seven Chromium scenarios and four restart checks. [Test evidence](TASK-9-TEST-EVIDENCE.md)
+
+## Closure evidence gates — 23 November 2026
+
+The closure increment implements receipt-level coupon checks, verified booking linkage, delivery and referral discrepancy evidence, a network-free incremental collection adapter and read-only preflight, COD cash audit linkage and invoice approval binding. Task 9 is **PARTIALLY VERIFIED**. [Implementation](closure-evidence-20261123/IMPLEMENTATION.md) · [Exact approval and integration handoff](closure-evidence-20261123/APPROVAL-HANDOFF.md)

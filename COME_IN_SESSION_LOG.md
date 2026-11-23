@@ -950,3 +950,7 @@ Task 9 remains **PARTIALLY VERIFIED**. Apply `patches/task9-review-consistency.p
 ### 23 November 2026 — Task 9 seven-area reconciliation
 
 Task 9 remains **PARTIALLY VERIFIED**. Apply `patches/task9-reconciliation-controls.patch` after the review consistency patch. The existing 50 IDs remain intact. The change adds coupon funding and advertisement reconciliation, order-specific delivery and reward evidence, disabled collection/refund audit contracts and invoice readiness reporting. [Implementation and outstanding approvals](evidence/task-9-final/reconciliation-controls-20261123/IMPLEMENTATION.md)
+
+### 23 November 2026 — Task 9 closure evidence gates
+
+Task 9 stays **PARTIALLY VERIFIED** with all 50 policy IDs preserved. Apply `patches/task9-closure-evidence-gates.patch` after the seven-area reconciliation patch. The new increment adds receipt-level coupon reconciliation, booking proof, delivery and reward discrepancy review, an offline collection adapter and preflight, COD audit linkage and invoice approval snapshots. [Implementation](evidence/task-9-final/closure-evidence-20261123/IMPLEMENTATION.md) · [Approval requirements](evidence/task-9-final/closure-evidence-20261123/APPROVAL-HANDOFF.md)
