@@ -46,7 +46,7 @@
 | 6 | Search and Filters | **COMPLETED** | Earlier Task 6 implementation and test reports preserved. | Not rerun in this batch. |
 | 7 | Cart and Checkout | **COMPLETED** | Checkout quote/idempotency source; historical COD/pickup UI/API tests; Iteration 3 fixes empty-cart and unavailable-fulfillment messaging. | No Expo runtime in current environment. |
 | 8 | Repeat Order | **COMPLETED** | Earlier TASK24 report and existing repeat-order source. | Measured repeat-order extension not fully verified. |
-| 9 | Out-of-Stock Replacement | **PARTIALLY COMPLETE** | Grocery and Restaurant replacement, accounting linkage and Admin financial review. [Evidence](evidence/task-9-financial-review-20261123/IMPLEMENTATION_REPORT.md) | Captured-payment adjustment, reward amendment and historical invoice policy awaiting approval. |
+| 9 | Out-of-Stock Replacement | **PARTIALLY COMPLETE** | Eligible removals, reward preservation review and two-stage tax review. [Evidence](evidence/task-9-approved-financial-policies-20261123/IMPLEMENTATION_REPORT.md) | Financial execution awaits approved procedures. |
 | 10 | Live Tracking | **COMPLETED** | Historical /api/orders/{id}/tracking runtime E2E report. | Not rerun in this batch. |
 | 11 | Order Help and Refund Status | **PARTIAL** | Restaurant Admin refund safeguards retained; Grocery refund summary states and in-app notification routes have offline coverage. | Automatic Grocery refunds, refund-specific notifications and live customer/seller/admin status synchronization remain pending. |
 | 12 | Excel/CSV Price and Stock Import | **COMPLETED** | Earlier reports; import confirmation dialog source fix; Task 5 measured CSV parser/model now has offline coverage. | Transaction-backed measured import apply remains pending with disposable MongoDB verification. |
@@ -1097,3 +1097,7 @@ Task 9 is **PARTIALLY COMPLETE**. Eligible unpaid Restaurant orders now support 
 ## Task 9 — Financial audit linkage — 2026-11-23 IST
 
 Task 9 is **PARTIALLY COMPLETE**. Applied replacements are linked to eligible finalized cash accounting. Assist records all financial blockers, the customer decision and its timestamp. Admin can distinguish pending review from confirmed execution. Captured-payment settlement, reward amendments and historical invoice corrections remain pending the approvals in the decision register. Native and genuine Razorpay TEST validation remain deferred. [Implementation and pending approvals](evidence/task-9-financial-review-20261123/IMPLEMENTATION_REPORT.md)
+
+## Task 9 — Approved financial policy workflows — 2026-11-23 IST
+
+Task 9 is **PARTIALLY COMPLETE**. Eligible unpaid removal, protected reward decisions and two-stage historical tax review are implemented. Paid removal estimates remain in Assist pending a partial-refund policy. Reward ledger movement and tax correction issuance remain pending approved procedures. Native and genuine Razorpay TEST validation remain deferred. [Evidence and decisions](evidence/task-9-approved-financial-policies-20261123/IMPLEMENTATION_REPORT.md)

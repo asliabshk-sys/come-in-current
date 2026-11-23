@@ -1,0 +1,482 @@
+diff --git a/backend/server.py b/backend/server.py
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -4867,8 +4867,13 @@
+         "decision_at": decision["at"] if decision else None,
+         "option_id": selected["id"] if selected else None,
+         "line_difference": selected["line_difference"] if selected else None,
++        "removal_quote": case.get("removal_quote"),
+         "updated_at": now_utc(),
+     }
++    linked_ticket = await db.restaurant_support.find_one({"_id": ObjectId(case["support_id"])}, session=session)
++    prior_review = (linked_ticket or {}).get("financial_review") or {}
++    if prior_review.get("replacement_id") == case["id"]:
++        review.update({key: prior_review[key] for key in ("reward_status", "professional_tax_status", "admin_tax_status") if key in prior_review})
+     result = await db.restaurant_support.update_one(
+         {"_id": ObjectId(case["support_id"]), "user_id": order["customer_id"],
+          "order_id": str(order["_id"]), "order_kind": kind},
+@@ -5080,6 +5085,72 @@
+     return await _run_replacement_transaction(apply)
+
+
++async def _replacement_removal_totals(session, order, index, kind):
++    """Price from reserved order lines and recheck that remaining lines can be supplied."""
++    remaining = _replacement_items(order, index)
++    if not remaining:
++        return None
++    try:
++        if kind == "grocery":
++            lines, shop_id = await _resolve_grocery_lines(
++                [QuoteLineIn(product_id=line["product_id"], qty=line["qty"], variant_id=line.get("variant_id")) for line in remaining],
++                check_stock=False, session=session,
++            )
++            # Existing Grocery units have already been reserved at checkout.
++            if not lines or shop_id != order["shop_id"]:
++                return None
++            return _quote_totals(remaining, order.get("fulfillment", "delivery"))
++        restaurant = await _restaurant_replacement_context(order, session)
++        for line in remaining:
++            current = await _restaurant_resolve_line(order["restaurant_id"], RestaurantOrderLineIn(
++                menu_item_id=line["menu_item_id"], quantity=line["quantity"],
++                variant_id=(line.get("variant") or {}).get("id"),
++                add_on_ids=[option["id"] for option in line.get("add_ons") or []],
++            ), session=session)
++            await db.restaurant_menu.update_one({"_id": ObjectId(current["menu_item_id"])},
++                                               {"$set": {"replacement_checked_at": now_utc()}}, session=session)
++        totals = _restaurant_replacement_totals(order, restaurant, remaining)
++        if not totals or totals["subtotal"] < float(restaurant.get("min_order", 0)):
++            return None
++        await db.restaurants.update_one({"_id": restaurant["_id"]},
++                                        {"$set": {"replacement_checked_at": now_utc()}}, session=session)
++        return totals
++    except (HTTPException, ValueError, KeyError, TypeError):
++        return None
++
++
++async def _decide_rejected_removal(session, order, case, kind, body, user):
++    if (case.get("decision") or {}).get("action") != "reject":
++        raise HTTPException(409, "Reject the replacement offer before requesting removal.")
++    collection = db.orders if kind == "grocery" else db.restaurant_orders
++    now = now_utc()
++    reasons = _replacement_adjustment_reasons(order, kind)
++    totals = None if {"historical_tax_review", "reward_review"}.intersection(reasons) else await _replacement_removal_totals(
++        session, order, case["line_index"], kind,
++    )
++    reason = next(iter(reasons), None) or case.get("assist_reason")
++    updates = {"replacements": order["replacements"], "updated_at": now}
++    if totals and not reason and totals == case.get("keep_totals") and order["total"] == case["original_total"]:
++        case.update({"state": "kept_unavailable", "final_totals": totals})
++        updates.update({"items": _replacement_items(order, case["line_index"]), **totals})
++        await _replacement_notify(session, order, case, "Unavailable item removed",
++                                  f"Your order will continue. New total ₹{totals['total']:.2f}.", kind)
++    else:
++        case.update({"state": "assist_required", "assist_reason": reason or "no_alternative"})
++        if totals and reason == "payment_review" and order.get("payment_status") in {"paid", "cash_collected"}:
++            # A quote is evidence for review only. Existing provider routes do
++            # not authorize a partial refund on a continuing order.
++            case["removal_quote"] = {
++                **totals, "potential_refund_paise": max(0, int((money(order["total"]) - money(totals["total"])) * 100)),
++            }
++        await _replacement_escalate(session, order, case, kind, case)
++    _replacement_decision(case, order, body, user, now)
++    if case["state"] == "assist_required":
++        await _replacement_financial_review(session, order, case, kind)
++    await collection.update_one({"_id": order["_id"]}, {"$set": updates}, session=session)
++    return case
++
++
+ @api.post("/orders/{order_id}/replacements/{case_id}/decision")
+ async def decide_grocery_replacement(order_id: str, case_id: str, body: GroceryReplacementDecisionIn, user: dict = Depends(get_current_user)):
+     if user.get("role") != "customer":
+@@ -5101,6 +5172,8 @@
+             raise HTTPException(status_code=422, detail="Select one offered replacement to accept")
+         if case["state"] == "rejected" and body.action != "keep_unavailable" and not case.get("assist_reason"):
+             raise HTTPException(status_code=409, detail="Wait for new options or choose to continue without the item")
++        if body.action == "keep_unavailable" and decision.get("action") == "reject":
++            return await _decide_rejected_removal(session, order, case, "grocery", body, user)
+         index = case["line_index"]
+         now = now_utc()
+         updates = {"replacements": cases, "updated_at": now}
+@@ -6864,12 +6937,14 @@
+                 "line_difference": round(proposed["line_total"] - display["line_total"], 2),
+                 "totals": None if reason else _restaurant_replacement_totals(order, restaurant, _replacement_items(order, index, line)),
+             })
++        remaining = _replacement_items(order, index)
++        keep_totals = _restaurant_replacement_totals(order, restaurant, remaining) if remaining and not reason else None
+         reason = reason or ("no_alternative" if not options else None)
+         now = now_utc()
+         case = {
+             "id": uuid.uuid4().hex, "line_index": index, "original": display, "original_item": original,
+             "original_line_total": display["line_total"], "original_total": order["total"], "options": options,
+-            "keep_totals": None, "state": "assist_required" if reason else "awaiting_customer",
++            "keep_totals": keep_totals, "state": "assist_required" if reason else "awaiting_customer",
+             "assist_reason": reason, "original_financials": _replacement_original_financials(order), "reported_by": user["id"], "reported_at": now, "supersedes": body.refresh_case_id,
+         }
+         if reason:
+@@ -6890,7 +6965,7 @@
+ async def decide_restaurant_replacement(order_id: str, case_id: str, body: GroceryReplacementDecisionIn, user: dict = Depends(get_current_user)):
+     if user.get("role") != "customer":
+         raise HTTPException(403, "Only the customer can decide on a replacement")
+-    if body.action not in {"accept", "reject"} or (body.action == "accept") != bool(body.option_id):
++    if (body.action == "accept") != bool(body.option_id):
+         raise HTTPException(422, "Choose an offered replacement or reject the options.")
+     oid = _object_id_or_404(order_id, "Order")
+
+@@ -6900,6 +6975,9 @@
+         case = next((row for row in cases if row["id"] == case_id), None)
+         if not case:
+             raise HTTPException(404, "Replacement request not found")
++        if (body.action == "keep_unavailable" and (case.get("decision") or {}).get("action") == "reject"
++                and case["state"] in {"rejected", "assist_required"} and order["status"] in RESTAURANT_REPLACEMENT_ORDER_STATES):
++            return await _decide_rejected_removal(session, order, case, "restaurant", body, user)
+         if case.get("decision"):
+             if (case["decision"]["action"], case["decision"]["option_id"]) == (body.action, body.option_id):
+                 return case
+@@ -6909,6 +6987,8 @@
+         reason = _replacement_adjustment_reason(order, "restaurant") or case.get("assist_reason")
+         now = now_utc()
+         updates = {"replacements": cases, "updated_at": now}
++        if body.action == "keep_unavailable":
++            raise HTTPException(409, "Reject the replacement offer before requesting removal.")
+         if body.action == "accept":
+             option = next((row for row in case["options"] if row["id"] == body.option_id), None)
+             if not option:
+@@ -7632,6 +7712,113 @@
+     await db.restaurant_support.update_one({"_id":oid},{"$set":{"status":status_value,"updated_at":now_utc()},"$push":{"history":{"status":status_value,"at":now_utc()}}})
+     await _notify(ticket.get("customer_id") or ticket.get("user_id"), "order_help", f"Help request {ticket.get('ref', '')}", f"Status updated to {status_value.replace('_', ' ')}.", {"ticket_id": ticket_id, "order_id": ticket.get("order_id"), "status": status_value})
+     return doc_out(await db.restaurant_support.find_one({"_id":oid}))
++
++class ReplacementFinancialReviewIn(BaseModel):
++    replacement_id: str = Field(min_length=1, max_length=40)
++    stage: Literal["reward", "professional_tax", "admin_tax"]
++    decision: Literal["approve", "reject"]
++    reason: str = Field(min_length=5, max_length=500)
++    guidance_reference: Optional[str] = Field(default=None, max_length=300)
++    document_type: Optional[str] = Field(default=None, max_length=100)
++
++
++@api.get("/admin/restaurant/support/{ticket_id}/financial-review")
++async def replacement_financial_review_details(ticket_id: str, user: dict = Depends(require_role("admin"))):
++    ticket = await db.restaurant_support.find_one({"_id": _object_id_or_404(ticket_id, "Support ticket")})
++    review = (ticket or {}).get("financial_review")
++    if not review:
++        raise HTTPException(404, "Financial review not found")
++    collection = db.orders if ticket["order_kind"] == "grocery" else db.restaurant_orders
++    order = await collection.find_one({"_id": _object_id_or_404(ticket["order_id"], "Order"), "customer_id": ticket["user_id"]})
++    if not order:
++        raise HTTPException(404, "Linked order not found")
++    audit = db.financial_audit.find({
++        "action": "replacement_financial_review", "ticket_id": ticket_id,
++        "replacement_id": review["replacement_id"],
++    }).sort("created_at", 1)
++    case = next((row for row in order.get("replacements", []) if row["id"] == review["replacement_id"]), {})
++    return {
++        "customer_id": ticket["user_id"], "merchant_id": order.get("shop_id") or order.get("restaurant_id"),
++        "shopping_reward_balance": await _available_shopping_reward_balance(ticket["user_id"]) if "reward_review" in review["reasons"] else None,
++        "original_invoice_reference": order.get("invoice_number") or order.get("invoice_id"),
++        "historical_tax_details": order.get("tax_details"), "replacement_history": case.get("decision_history", []),
++        "audit": [doc_out(row) async for row in audit],
++        "can_review_as_professional": user["id"] in {account.strip() for account in os.environ.get("COMEIN_VERIFIED_TAX_REVIEWER_IDS", "").split(",")},
++    }
++
++
++@api.post("/admin/restaurant/support/{ticket_id}/financial-review")
++async def decide_replacement_financial_review(ticket_id: str, body: ReplacementFinancialReviewIn,
++                                              user: dict = Depends(require_role("admin"))):
++    oid = _object_id_or_404(ticket_id, "Support ticket")
++    if body.stage == "professional_tax":
++        # Provision only externally verified professional accounts. An Admin
++        # role by itself cannot attest to a professional review.
++        verified = {account.strip() for account in os.environ.get("COMEIN_VERIFIED_TAX_REVIEWER_IDS", "").split(",")}
++        if user["id"] not in verified:
++            raise HTTPException(403, "A verified tax professional account is required.")
++        if body.decision == "approve" and not (body.guidance_reference or "").strip():
++            raise HTTPException(422, "Supply the applicable professional guidance reference.")
++
++    async def apply(session):
++        ticket = await db.restaurant_support.find_one({"_id": oid}, session=session)
++        review = (ticket or {}).get("financial_review") or {}
++        if review.get("replacement_id") != body.replacement_id:
++            raise HTTPException(409, "The replacement review changed. Refresh the ticket.")
++        reason = "reward_review" if body.stage == "reward" else "historical_tax_review"
++        if reason not in review["reasons"]:
++            raise HTTPException(409, "The selected review does not apply to this replacement.")
++        prior = await db.financial_audit.find_one({
++            "action": "replacement_financial_review", "ticket_id": ticket_id,
++            "replacement_id": body.replacement_id, "stage": body.stage,
++        }, session=session)
++        if prior:
++            if (prior["actor_id"], prior["decision"], prior["reason"], prior.get("guidance_reference"), prior.get("document_type")) == (
++                user["id"], body.decision, body.reason, body.guidance_reference, body.document_type
++            ):
++                return {"status": prior["status"], "financial_action_confirmed": False}
++            raise HTTPException(409, "This review stage already has a recorded decision.")
++        if body.stage == "admin_tax":
++            professional = await db.financial_audit.find_one({
++                "action": "replacement_financial_review", "ticket_id": ticket_id,
++                "replacement_id": body.replacement_id, "stage": "professional_tax", "decision": "approve",
++            }, session=session)
++            if not professional:
++                raise HTTPException(409, "A verified professional review is required before Admin approval.")
++            if professional["actor_id"] == user["id"]:
++                raise HTTPException(403, "A different Admin must decide after professional review.")
++        status = "rejected" if body.decision == "reject" else {
++            "reward": "ledger_preservation_approved",
++            "professional_tax": "pending_admin_tax_approval",
++            "admin_tax": "approved_pending_accounting_procedure",
++        }[body.stage]
++        now = now_utc()
++        await db.restaurant_support.update_one({"_id": oid}, {
++            "$set": {f"financial_review.{body.stage}_status": status, "financial_review.updated_at": now},
++        }, session=session)
++        await db.financial_audit.insert_one({
++            "action": "replacement_financial_review", "stage": body.stage, "status": status,
++            "actor_id": user["id"], "decision": body.decision, "reason": body.reason,
++            "guidance_reference": body.guidance_reference, "document_type": body.document_type,
++            "ticket_id": ticket_id, "replacement_id": body.replacement_id,
++            "order_kind": ticket["order_kind"], "order_id": ticket["order_id"], "customer_id": ticket["user_id"],
++            "created_at": now,
++        }, session=session)
++        if body.stage != "professional_tax":
++            message = (
++                "Your reward review is complete. Your existing reward ledger was preserved."
++                if body.stage == "reward" else "Your invoice review was updated. The original invoice was preserved."
++            )
++            await db.notifications.insert_one({
++                "user_id": ticket["user_id"], "kind": "order_help",
++                "title": f"{'Reward' if body.stage == 'reward' else 'Invoice'} review {'approved' if body.decision == 'approve' else 'rejected'}",
++                "body": message, "data": {"ticket_id": ticket_id, "order_id": ticket["order_id"], "order_kind": ticket["order_kind"]},
++                "read": False, "channel": "in_app", "push_status": "not_configured", "created_at": now,
++            }, session=session)
++        return {"status": status, "financial_action_confirmed": False}
++
++    return await _run_replacement_transaction(apply)
++
+
+ def _fetch_razorpay_refunds(payment_id: str, key_id: str, secret: str) -> list[dict]:
+     """Fetch every provider refund page; fail closed if the list is incomplete."""
+diff --git a/backend/tests/test_task9_grocery_replacement.py b/backend/tests/test_task9_grocery_replacement.py
+--- a/backend/tests/test_task9_grocery_replacement.py
++++ b/backend/tests/test_task9_grocery_replacement.py
+@@ -198,6 +198,18 @@
+                     assert await db.financial_ledger.count_documents({}) == 0
+                     assert await db.referral_ledger.count_documents({}) == 0
+                     assert (await call("GET", "/seller/support", actor="seller")).status_code == 200
++
++                oid = await order(payment_method="online_razorpay", payment_status="paid")
++                case = (await report(oid)).json()
++                assert (await decide(oid, case, "reject")).status_code == 200
++                result = (await decide(oid, case, "keep_unavailable")).json()
++                assert result["removal_quote"]["potential_refund_paise"] == 13000
++                replay = (await decide(oid, case, "keep_unavailable")).json()
++                assert [entry["action"] for entry in replay["decision_history"]] == ["reject", "keep_unavailable"]
++                assert (await decide(oid, case, "keep_unavailable")).json() == replay
++                saved = await db.orders.find_one({"_id": oid})
++                assert saved["payment_status"] == "paid" and saved["total"] == 209
++                assert await db.grocery_payments.count_documents({}) == 0
+         finally:
+             await mongo.drop_database(db.name)
+             mongo.close()
+diff --git a/backend/tests/test_task9_restaurant_replacement.py b/backend/tests/test_task9_restaurant_replacement.py
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -26,7 +26,7 @@
+             auth = {}
+             ids = {}
+             for actor, role in {"buyer": "customer", "other": "customer", "seller": "shopkeeper",
+-                                "other_seller": "shopkeeper", "admin": "admin"}.items():
++                                "other_seller": "shopkeeper", "admin": "admin", "professional": "admin"}.items():
+                 oid = ObjectId()
+                 ids[actor] = str(oid)
+                 email = f"{actor}@fixture.example"
+@@ -151,6 +151,52 @@
+                 assert (await db.restaurant_orders.find_one({"_id": oid}))["invoice_id"] == "original-invoice"
+                 assert await db.restaurant_support.count_documents({"order_id": str(oid)}) == 1
+
++                path = f"/admin/restaurant/support/{ticket_id}/financial-review"
++                async def review(stage, decision, actor="admin", **extra):
++                    return await request("POST", path, {"replacement_id": case["id"], "stage": stage,
++                        "decision": decision, "reason": "Verified fixture policy", **extra}, actor)
++                assert (await review("reward", "approve", "seller")).status_code == 403
++                assert (await review("admin_tax", "approve")).status_code == 409
++                assert (await review("professional_tax", "approve", guidance_reference="CA fixture")).status_code == 403
++                with monkeypatch.context() as configured:
++                    configured.setenv("COMEIN_VERIFIED_TAX_REVIEWER_IDS", ids["professional"])
++                    assert (await review("professional_tax", "approve", "professional")).status_code == 422
++                    assert (await review("professional_tax", "approve", "professional", guidance_reference="CA fixture")).status_code == 200
++                    assert (await review("admin_tax", "approve", "professional")).status_code == 403
++                assert (await review("admin_tax", "approve")).json()["status"] == "approved_pending_accounting_procedure"
++                assert (await review("reward", "approve")).json()["status"] == "ledger_preservation_approved"
++                assert (await review("reward", "approve")).status_code == 200
++                assert (await review("reward", "reject")).status_code == 409
++                assert (await request("GET", path, actor="buyer")).status_code == 403
++                details = (await request("GET", path, actor="admin")).json()
++                assert len(details["audit"]) == 3 and details["original_invoice_reference"] == "original-invoice"
++                tickets = (await request("GET", "/restaurant/support/mine")).json()
++                assert all("audit" not in ticket and "guidance_reference" not in ticket.get("financial_review", {}) for ticket in tickets)
++                assert await db.referral_ledger.count_documents({}) == 0
++
++                await db.restaurant_menu.insert_one({"_id": ObjectId(unaffected["menu_item_id"]), "restaurant_id": str(restaurant), "name": "Side", "price": 25})
++                for extras, expected in (({}, "kept_unavailable"),
++                                          ({"payment_method": "razorpay", "payment_status": "paid"}, "assist_required")):
++                    oid = await order(**extras)
++                    remove_case = (await report(oid)).json()
++                    assert (await decide(oid, remove_case, "reject")).status_code == 200
++                    responses = await asyncio.gather(*(decide(oid, remove_case, "keep_unavailable") for _ in range(2)))
++                    assert [response.status_code for response in responses] == [200, 200]
++                    removed = responses[0].json()
++                    assert removed["state"] == expected and len(removed["decision_history"]) == 2
++                    saved = await db.restaurant_orders.find_one({"_id": oid})
++                    if extras:
++                        assert removed["removal_quote"]["potential_refund_paise"] == 11000
++                        assert saved["total"] == 152.5 and saved["payment_status"] == "paid"
++                    else:
++                        assert saved["total"] == 42.5 and saved["items"] == [unaffected]
++                await db.restaurant_menu.update_one({"_id": ObjectId(unaffected["menu_item_id"])}, {"$set": {"available": False}})
++                oid = await order()
++                remove_case = (await report(oid)).json()
++                assert (await decide(oid, remove_case, "reject")).status_code == 200
++                assert (await decide(oid, remove_case, "keep_unavailable")).json()["state"] == "assist_required"
++                assert (await db.restaurant_orders.find_one({"_id": oid}))["items"] == [first, unaffected]
++
+                 await db.restaurants.update_one({"_id": restaurant}, {"$set": {
+                     "financial_policy_updated_at": server.now_utc(), "commission_rate_percent": 10,
+                     "platform_service_fee_inr": 2, "delivery_fee_beneficiary": "shopkeeper",
+diff --git a/frontend/app/admin.tsx b/frontend/app/admin.tsx
+--- a/frontend/app/admin.tsx
++++ b/frontend/app/admin.tsx
+@@ -39,6 +39,11 @@
+   const [restaurants, setRestaurants] = useState<any[]>([]);
+   const [foodOrders, setFoodOrders] = useState<any[]>([]);
+   const [support, setSupport] = useState<any[]>([]);
++  const [reviewDetails, setReviewDetails] = useState<{ id: string; data: any } | null>(null);
++  const [reviewReason, setReviewReason] = useState("");
++  const [reviewGuidance, setReviewGuidance] = useState("");
++  const [reviewDocument, setReviewDocument] = useState("");
++  const [reviewError, setReviewError] = useState("");
+   const [chandFeedback, setChandFeedback] = useState<any[]>([]);
+   const [masterProducts, setMasterProducts] = useState<any[]>([]);
+   const [announcements, setAnnouncements] = useState<any[]>([]);
+@@ -150,6 +155,32 @@
+     await load();
+   };
+
++  const readReview = async (id: string) => {
++    setReviewError("");
++    try {
++      const data = await api.get(`/admin/restaurant/support/${id}/financial-review`);
++      setReviewDetails({ id, data });
++    } catch (error: any) {
++      setReviewError(error?.message || "Could not load the financial review.");
++    }
++  };
++
++  const submitReview = async (ticket: any, stage: string, decision: "approve" | "reject") => {
++    setReviewError("");
++    try {
++      await api.post(`/admin/restaurant/support/${ticket.id}/financial-review`, {
++        replacement_id: ticket.financial_review.replacement_id, stage, decision, reason: reviewReason.trim(),
++        guidance_reference: stage === "professional_tax" ? reviewGuidance.trim() || undefined : undefined,
++        document_type: stage === "professional_tax" ? reviewDocument.trim() || undefined : undefined,
++      });
++      setReviewReason("");
++      await load();
++      await readReview(ticket.id);
++    } catch (error: any) {
++      setReviewError(error?.message || "Could not record the decision.");
++    }
++  };
++
+   const requestRefund = async (id: string) => {
+     try {
+       const result = await api.post<any>(`/admin/restaurant/orders/${id}/refund`, {});
+@@ -318,6 +349,31 @@
+               <Text style={styles.cardMeta}>Original total ₹{r.financial_review.original.total} · Decision {r.financial_review.decision || "pending"}</Text>
+               {r.financial_review.line_difference != null ? <Text style={styles.cardMeta}>Proposed item difference ₹{r.financial_review.line_difference}</Text> : null}
+               <Text style={styles.cardMeta}>Review updated {new Date(r.financial_review.updated_at).toLocaleString()}</Text>
++              {r.financial_review.removal_quote ? <Text style={styles.cardMeta}>Proposed total ₹{r.financial_review.removal_quote.total} · Potential refund ₹{(r.financial_review.removal_quote.potential_refund_paise / 100).toFixed(2)} · Pending refund policy</Text> : null}
++              <ActionBtn label="Open financial review" onPress={() => readReview(r.id)} />
++              {reviewDetails && reviewDetails.id === r.id ? <View>
++                <Text style={styles.cardMeta}>Customer {reviewDetails.data.customer_id} · Merchant {reviewDetails.data.merchant_id}</Text>
++                {reviewDetails.data.shopping_reward_balance != null ? <Text style={styles.cardMeta}>Current shopping rewards ₹{reviewDetails.data.shopping_reward_balance} · Original redemption ₹{r.financial_review.original.reward_discount ?? 0}</Text> : null}
++                {reviewDetails.data.original_invoice_reference ? <Text style={styles.cardMeta}>Original invoice {reviewDetails.data.original_invoice_reference}</Text> : null}
++                {reviewDetails.data.audit.map((entry: any) => <Text key={entry.id} style={styles.cardMeta}>{entry.stage} · {entry.status} · {entry.actor_id} · {entry.reason} · {new Date(entry.created_at).toLocaleString()}</Text>)}
++                <TextInput accessibilityLabel="Financial review reason" placeholder="Decision reason" value={reviewReason} onChangeText={setReviewReason} style={{ color: colors.onSurface }} />
++                {reviewDetails.data.can_review_as_professional && r.financial_review.reasons.includes("historical_tax_review") && !r.financial_review.professional_tax_status ? <>
++                  <TextInput placeholder="Professional guidance reference" value={reviewGuidance} onChangeText={setReviewGuidance} style={{ color: colors.onSurface }} />
++                  <TextInput placeholder="Proposed document type" value={reviewDocument} onChangeText={setReviewDocument} style={{ color: colors.onSurface }} />
++                  <ActionBtn label="Record professional approval" onPress={() => submitReview(r, "professional_tax", "approve")} />
++                  <ActionBtn label="Reject professional review" onPress={() => submitReview(r, "professional_tax", "reject")} />
++                </> : null}
++                {r.financial_review.reasons.includes("reward_review") && !r.financial_review.reward_status ? <>
++                  <ActionBtn label="Approve preserving reward ledger" onPress={() => submitReview(r, "reward", "approve")} />
++                  <ActionBtn label="Reject reward adjustment" onPress={() => submitReview(r, "reward", "reject")} />
++                </> : null}
++                {r.financial_review.professional_tax_status === "pending_admin_tax_approval" && !r.financial_review.admin_tax_status ? <>
++                  <ActionBtn label="Approve reviewed tax case" onPress={() => submitReview(r, "admin_tax", "approve")} />
++                  <ActionBtn label="Reject reviewed tax case" onPress={() => submitReview(r, "admin_tax", "reject")} />
++                </> : null}
++                {r.financial_review.reasons.includes("historical_tax_review") && !r.financial_review.professional_tax_status ? <Text style={styles.cardMeta}>Pending verified professional review</Text> : null}
++                {reviewError ? <Text accessibilityRole="alert" style={styles.cardMeta}>{reviewError}</Text> : null}
++              </View> : null}
+             </View> : null}
+             <View style={styles.btnRow}>
+               <ActionBtn label="In progress" onPress={() => setSupportStatus(r.id, "in_progress")} />
+diff --git a/frontend/app/chand.tsx b/frontend/app/chand.tsx
+--- a/frontend/app/chand.tsx
++++ b/frontend/app/chand.tsx
+@@ -32,7 +32,7 @@
+ type Message = { id: string; from: "assistant" | "user"; text: string; products?: Product[] };
+ type ChandPlanLine = { product: Product; quantity: number; variantId?: string; verifiedTotal?: number; partyNeed?: PartyNeed };
+ type SupportOrder = { id: string; ref?: string; status?: string; payment_status?: string; refund_status?: string; total?: number; restaurant_name?: string; created_at?: string; kind: "grocery" | "restaurant" };
+-type SupportTicket = { id: string; ref: string; category: string; message: string; status: string; order_id?: string; created_at?: string };
++type SupportTicket = { id: string; ref: string; category: string; message: string; status: string; order_id?: string; created_at?: string; financial_review?: { reasons: string[]; reward_status?: string; professional_tax_status?: string; admin_tax_status?: string } };
+ const ROLE_KEYS: Record<RoleMode, string> = { customer: "chand.role.customer", shopkeeper: "chand.role.shopkeeper", restaurant: "chand.role.restaurant", services: "chand.role.services" };
+ const SUGGESTION_KEYS: Record<RoleMode, string[]> = {
+   customer: ["chand.suggest.customer.1", "chand.suggest.customer.2", "chand.suggest.customer.3"],
+@@ -666,7 +666,7 @@
+             <Pressable testID="chand-support-retry" onPress={() => void loadHelpData()} style={styles.supportSecondary}><Text style={styles.supportSecondaryText}>Refresh orders / cases</Text></Pressable>
+             <Pressable testID="chand-support-submit" disabled={!user || supportMessage.trim().length < 5 || submittingSupport} onPress={() => { setSupportRequestId((current) => current || `support-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`); setConfirmSupport(true); }} style={[styles.supportSubmit, (!user || supportMessage.trim().length < 5 || submittingSupport) && styles.sendDisabled]}><Text style={styles.supportSubmitText}>Review & submit</Text></Pressable>
+           </View>
+-          {user && tickets.length > 0 && <><Text style={styles.helpHeading}>Your support cases</Text>{tickets.map((ticket) => <View key={ticket.id} style={styles.ticketCard}><Text style={styles.orderTitle}>{ticket.ref} · {ticket.category}</Text><Text style={styles.helpBody}>Actual case status: {ticket.status}</Text><Text style={styles.helpBody}>{ticket.message}</Text></View>)}</>}
++          {user && tickets.length > 0 && <><Text style={styles.helpHeading}>Your support cases</Text>{tickets.map((ticket) => <View key={ticket.id} style={styles.ticketCard}><Text style={styles.orderTitle}>{ticket.ref} · {ticket.category}</Text><Text style={styles.helpBody}>Actual case status: {ticket.status}</Text>{ticket.financial_review?.reasons.includes("reward_review") ? <Text style={styles.helpBody}>Reward review: {ticket.financial_review.reward_status?.replaceAll("_", " ") || "pending Admin review"}</Text> : null}{ticket.financial_review?.reasons.includes("historical_tax_review") ? <Text style={styles.helpBody}>Invoice review: {(ticket.financial_review.admin_tax_status || ticket.financial_review.professional_tax_status)?.replaceAll("_", " ") || "pending professional review"}</Text> : null}<Text style={styles.helpBody}>{ticket.message}</Text></View>)}</>}
+           <Text style={styles.helpFinePrint}>Backend capability note: support tickets can link to a customer-owned Grocery or Restaurant order using the explicit order kind and ID. Ticket creation is not refund approval or payment execution. No customer-facing refund request API exists; actual refund execution is admin-only. No refund dates or eligibility are inferred.</Text>
+         </ScrollView>}
+       </View>
+diff --git a/frontend/src/components/GroceryOrderReplacements.tsx b/frontend/src/components/GroceryOrderReplacements.tsx
+--- a/frontend/src/components/GroceryOrderReplacements.tsx
++++ b/frontend/src/components/GroceryOrderReplacements.tsx
+@@ -25,6 +25,7 @@
+   original_total: number;
+   options: Offer[];
+   keep_totals: Totals | null;
++  removal_quote?: Totals & { potential_refund_paise: number };
+   state: "awaiting_customer" | "rejected" | "assist_required" | "superseded" | "accepted" | "kept_unavailable";
+   final_totals?: Totals;
+   support_id?: string;
+@@ -140,11 +141,14 @@
+     </View> : null}
+     {cases.filter((entry) => entry.state !== "superseded").reverse().map((entry) => {
+       const canDecide = !staff && entry === active && statuses.includes(order.status) && (!entry.assist_reason || !entry.decision);
++      const canRemove = !staff && entry === active && statuses.includes(order.status)
++        && (entry.decision?.action === "reject" || (canDecide && !restaurant && Boolean(entry.keep_totals)));
+       return <View style={styles.case} key={entry.id}>
+         <Text style={styles.title}>{describe(entry.original)} · {money(entry.original_line_total)} original</Text>
+         <Text style={styles.text}>{order.status === "cancelled" && entry === active ? "Order cancelled" : labels[entry.state]}</Text>
+         {entry.assist_reason ? <Text style={styles.text}>{assistReasons[entry.assist_reason]}</Text> : null}
+         {entry.assist_reason && entry.decision ? <Text style={styles.text}>Your decision was sent to Assist. The order and payment stay unchanged during review.</Text> : null}
++        {entry.removal_quote ? <Text style={styles.text}>Proposed order total {money(entry.removal_quote.total)} · Potential refund {money(entry.removal_quote.potential_refund_paise / 100)} pending review</Text> : null}
+         {entry.final_totals ? <Text style={styles.text}>Confirmed order total {money(entry.final_totals.total)} · was {money(entry.original_total)}</Text> : null}
+         {entry === active && (entry.state === "awaiting_customer" || entry.state === "assist_required") && statuses.includes(order.status) ? <>
+           {!entry.options.length ? <Text style={styles.text}>The shop has no matching replacements in stock right now.</Text> : null}
+@@ -157,8 +161,8 @@
+           </View>)}
+           {canDecide && entry.options.length ? button("Reject these replacements", () => decide(entry, "reject")) : null}
+         </> : null}
+-        {canDecide && entry.keep_totals ? button(
+-          `Keep item unavailable · ${money(entry.keep_totals.total)} total`,
++        {canRemove ? button(
++          entry.keep_totals ? `Remove item · ${money(entry.keep_totals.total)} total` : "Request item removal",
+           () => decide(entry, "keep_unavailable"),
+         ) : null}
+         {canDecide && !restaurant && !entry.assist_reason && !entry.keep_totals ? <Text style={styles.text}>Without this item your order would be empty. Contact COME-IN Assist for help.</Text> : null}

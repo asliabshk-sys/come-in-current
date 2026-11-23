@@ -17,3 +17,7 @@ No payment, refund, payout, reward-balance, or tax-correction workflow was intro
 Native Android and iOS, genuine Razorpay TEST payments, and external TEST webhook and refund delivery remain deferred. No provider credentials or real transactions were used.
 
 Final verification recorded 29 focused passes and 695 full regression passes with zero failures. The sole skip was the external object-storage case. TypeScript, targeted ESLint, Expo web export and both Chromium scenarios passed.
+
+## Owner-approved policy follow-up
+
+See the [approved policy implementation and remaining decisions](../task-9-approved-financial-policies-20261123/IMPLEMENTATION_REPORT.md).
