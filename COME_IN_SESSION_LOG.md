@@ -994,3 +994,7 @@ Task 9 remains **PARTIALLY VERIFIED** after Stages 7–12. Apply `patches/task9-
 ### 23 November 2026 — T9-12 owner decision packet
 
 T9-12 remains **NOT IMPLEMENTED**. The documentation-only packet awaits the owner's three explicit decisions. [Packet](evidence/task-9-final/replacement-offer-owner-decisions/OWNER-DECISION.md)
+
+### 23 November 2026 — T9-12 owner decisions recorded
+
+Three policy decisions are owner-approved. Operational parameters remain open and T9-12 remains **NOT IMPLEMENTED**. This is a documentation-only checkpoint. [Decisions and clarification list](evidence/task-9-final/replacement-offer-owner-decisions/OWNER-DECISION.md)

@@ -63,3 +63,7 @@ Task 9 remains **PARTIALLY VERIFIED**. The CA packet, current partial and blocke
 ### T9-12 owner decision packet
 
 Documentation only. The packet records selectable duration, independent cancellation and legacy scope options without changing T9-12 status. Existing replacement/order action suites passed 14 tests. [Owner decision packet](replacement-offer-owner-decisions/OWNER-DECISION.md)
+
+### T9-12 owner decisions recorded — 23 November 2026
+
+The owner approved configurable expiry, scoped independent cancellation and system expiry, and controlled migration. Implementation remains **NOT IMPLEMENTED**. Default duration, countdown start, exact eligibility and protected handling, and activation/migration timing, notice and grace parameters remain open. [Owner decision record](replacement-offer-owner-decisions/OWNER-DECISION.md)

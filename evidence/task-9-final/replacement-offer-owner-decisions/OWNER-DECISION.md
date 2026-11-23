@@ -1,5 +1,44 @@
 # T9-12 owner decision packet
 
+**Decision record — 23 November 2026.** The project owner explicitly approved the three decisions below in the T9-12 Owner Decisions Record Update. **Implementation status: NOT IMPLEMENTED.** Operational parameters listed below are still open.
+
+## OWNER APPROVED — Configurable expiry duration
+
+- Admin controls the default replacement-offer validity duration.
+- An authorized Admin may adjust the duration for an individual offer.
+- Each offer must have an explicit expiry timestamp and audit history.
+- The customer should be informed of the expiry.
+
+## OWNER APPROVED — Independent cancellation permissions
+
+- A customer may cancel their own eligible pending offer.
+- A shopkeeper may withdraw their own pending offer. A shopkeeper must not silently change an accepted offer.
+- An Admin may cancel an eligible offer with a documented reason and audit record.
+- The system automatically expires pending offers when their configured expiry is reached.
+- Cancellation or expiry of an offer leaves the whole order in place. Accepted offers and offers after dispatch starts require protected handling and a separately authorized process.
+
+## OWNER APPROVED — Controlled migration
+
+- New offers follow the new expiry policy from its effective activation.
+- Existing unaccepted offers must be reviewed for controlled migration under Admin authority.
+- Customer notice and a reasonable grace period must be considered where needed.
+- Already accepted offers must not be silently changed or migrated.
+
+## Owner clarification required
+
+| Area | Parameters still open |
+| --- | --- |
+| Expiry configuration | Default duration and units, countdown start event, scope across Grocery and Restaurant, and treatment of reoffers. Clarify which Admin permissions qualify, what limits apply to individual adjustments, and when an adjustment can take effect. |
+| Cancellation and protections | Exact eligible pending case and order states for each actor, dispatch milestone, treatment of accepted intent pending Assist, reason requirements for customer/shopkeeper actions, and separately authorized handling after acceptance or dispatch. Clarify what follow-up resolves an unavailable line when the order remains open. |
+| Notices and audit | Customer notice method and timing for expiry, changed deadlines and migration. Clarify whether separate cancellation/expiry notices are required, and which audit details and reasons are required beyond the approved Admin reason, explicit expiry and audit history. |
+| Activation and migration | Effective activation date/time, migration timing and eligibility, handling of in-flight or reissued offers, circumstances requiring notice or grace, grace-period duration and start event, notification method, and the Admin review procedure. |
+
+No values or operational choices were assigned to these parameters. The earlier options below are preserved as historical evidence of the pre-approval packet.
+
+---
+
+## Historical packet — before owner approval
+
 **Pending explicit owner approval.** All options are unselected. Decisions apply to post-order replacement offers. Define whether Grocery and Restaurant share the same rules or approve separate wording for each.
 
 ## Decision 1 — What determines validity?
