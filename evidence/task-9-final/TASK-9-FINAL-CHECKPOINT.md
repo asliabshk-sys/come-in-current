@@ -43,3 +43,7 @@ The CA field inventory, financial reconciliation checklist and questions are rea
 ### Stage 8 — partial policies
 
 All nine partial entries were reviewed. Internal draft creation now verifies the stored Admin invoice snapshot where available. Broader owner/provider decisions remain open. [Stage 8](final-closure-20261123/STAGE-8-PARTIAL-POLICIES.md)
+
+### Stage 9 — T9-12
+
+Replacement-offer expiry and separate cancellation remain unimplemented, with the exact owner decision requirements identified. Existing order-state guards were verified. [Stage 9](final-closure-20261123/STAGE-9-T9-12.md)
