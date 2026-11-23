@@ -20,14 +20,14 @@
 ## Unimplemented rules and partially verified policies
 
 - **T9-12:** The historical design proposed expiry and independent offer cancellation. It supplied no approved duration or cancellation terms. Current order and offer-state protections remain active.
-- **T9-41–43:** Activation, checkout redemption, and atomic budget spending/exhaustion remain unimplemented. No approved active campaign with publication, funding, redemption, and failed/cancelled order release rules was identified. Draft limit validation and concurrent retry deduplication were exercised. Those do not spend funds or prove concurrency safety of redemption.
+- **T9-41–43:** Fully COME-IN-funded Grocery cash campaigns support activation, checkout redemption, atomic budget spending, eligible unpaid cancellation release, and Admin reconciliation. Other funding splits and checkout flows remain pending approved posting, reversal, and paid-refund rules.
 - **T9-26, T9-29, T9-31:** A complete replacement provider status lifecycle, replacement-related seller settlement adjustments, and unified approved sponsored/other revenue recognition remain open. Existing status, accounting, and membership paths remain in place. No commission or payout allocation was changed.
 - **T9-36–37:** Existing referral attribution and order eligibility controls passed fresh transaction tests. Dedicated identity/fraud evidence and an approved adjustment or reversal procedure for already-awarded benefits remain open. Shared household attributes alone were not added as fraud signals. T9-38 is verified for the existing approved threshold, reward amount, idempotent credit, audit and customer notification.
 - **T9-46:** Assigned review and approval safeguards passed on synthetic accounts. Historical corrected amounts must come from actual case-specific professional guidance. The software does not substitute current rates for historical tax treatment.
 
 Individual policy wording and evidence are recorded in the [final register](TASK-9-FINAL-POLICY-MASTER-REGISTER.md). Existing owner approval does not substitute for genuine evidence or an absent business rule.
 
-## Business policy addendum
+## Business policy addendum (historical pre-activation milestone)
 
 Seller payout scheduling and fixed-duration commercial accounting have a local implementation. Automatic transfers and COD reconciliation still need independently verified bank or provider integration and approved delivery partner allocation. CPM/CPC billing, delivery shortfall compensation, and full revenue consolidation need verified metering, accepted delivery and compensation terms, and approved recognition rules. Promotion drafts now support explicit discount and funding splits. Active coupon checkout, consumption and release still require a bound campaign and funding/settlement workflow. See the [payout and campaign policy](TASK-9-PAYOUT-AND-CAMPAIGN-POLICY.md).
 

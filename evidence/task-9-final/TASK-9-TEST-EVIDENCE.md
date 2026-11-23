@@ -83,3 +83,15 @@ Full backend skipped external object storage at `backend/tests/backend_test.py:3
 ### Seven-area reconciliation
 
 Task 9 focused HTTP and MongoDB suite recorded **17 passed, 0 failed, 0 skipped, 7 warnings**. Coverage includes coupon reconciliation after concurrent spending and cancellation, canonical advertisement event identity, closed campaign review concurrency and permissions, linked payment review evidence, reward ledger isolation and invoice readiness. [Focused log](reconciliation-controls-20261123/focused.log) · [Commands](reconciliation-controls-20261123/COMMANDS.md)
+
+| Verification | Result | Evidence |
+| --- | --- | --- |
+| Expanded financial, referral, advertisement, mock gateway and webhook checks | 75 passed, 0 failed, 0 skipped, 7 warnings | [Expanded log](reconciliation-controls-20261123/integrated.log) |
+| Full backend regression | 700 passed, 0 failed, 1 skipped, 9 warnings | [Full log](reconciliation-controls-20261123/full.log) |
+| TypeScript, targeted ESLint, Expo web export | All passed | [Types](reconciliation-controls-20261123/typescript.log) · [Lint](reconciliation-controls-20261123/eslint.log) · [Expo](reconciliation-controls-20261123/expo.log) |
+| Chromium | Seven scenarios passed | [Browser log](reconciliation-controls-20261123/browser.log) |
+| FastAPI restart with disposable MongoDB | Four assertions groups passed, including ad review replay and collection contract persistence | [Restart log](reconciliation-controls-20261123/restart.log) |
+
+The full-suite skip at `backend/tests/backend_test.py:397` was unavailable external object storage. Warnings cover FastAPI lifecycle hooks and catalogue dependencies. The initial focused run had two failures. The advertisement review now returns the canonical persisted timestamp consistently and the reward fixture assertion counts entries at the correct stage. Both were resolved in the final focused and full runs. [Initial focused log](reconciliation-controls-20261123/focused-initial.log)
+
+The release gate continues to defer physical Android/iOS, genuine Razorpay TEST payments, webhooks and refunds, authentic settlement confirmation, and statutory issuance.

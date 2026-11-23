@@ -67,3 +67,5 @@ Task 9 remains **PARTIALLY VERIFIED**. The follow-up adds coupon and advertiser 
 ## Seven-area reconciliation campaign — 23 November 2026
 
 Task 9 remains **PARTIALLY VERIFIED**. Cash coupon reconciliation, closed advertisement delivery review, replacement accounting evidence, disabled payment/refund review contracts and invoice readiness checks extend existing flows. The exact scope and open approvals are recorded in the [implementation report](reconciliation-controls-20261123/IMPLEMENTATION.md).
+
+Implementation checkpoint `dfc65425f7864076c2f161ac49e348109f199de2` was verified on GitHub `work`. Full backend rerun recorded 700 passes and one external object-storage skip. The final evidence also includes 75 expanded passes, seven Chromium scenarios and four restart checks. [Test evidence](TASK-9-TEST-EVIDENCE.md)
