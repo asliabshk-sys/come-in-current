@@ -1,0 +1,318 @@
+diff --git a/backend/server.py b/backend/server.py
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -225,6 +225,7 @@
+     # Never leak password hashes
+     d.pop("password_hash", None)
+     d.pop("password_version", None)
++    d.pop("referral_review_version", None)
+     # Internal Grocery idempotency/session credentials must never reach clients.
+     d.pop("grocery_idempotency_scope", None)
+     d.pop("membership_version", None)
+@@ -806,31 +807,36 @@
+     )
+
+
+-async def _maybe_create_referral_reward(referrer_id: str):
++async def _maybe_create_referral_reward(referrer_id: str, *, session):
++    # Serialize threshold evaluation for each referrer, including concurrent
++    # approvals of different qualifying orders. Use the existing user row.
+     now = now_utc()
+-    try:
+-        async def apply(session):
+-            qualified = [x async for x in db.referrals.find({"referrer_id": referrer_id, "status": "qualified"}, session=session).sort("reviewed_at", 1).limit(REFERRAL_TARGET)]
+-            eligible = len(qualified)
+-            if not reward_threshold_reached(eligible):
+-                return
+-            reward_key = f"referral-target-10:{referrer_id}"
+-            await db.referral_rewards.insert_one({
+-                "referrer_id": referrer_id, "reward_key": reward_key,
+-                "amount": REFERRAL_REWARD_INR, "currency": "INR", "status": "pending_verification",
+-                "eligible_referrals": eligible, "qualifying_referral_ids": [str(x["_id"]) for x in qualified],
+-                "qualifying_orders": [{"order_id": x.get("qualifying_order_id"), "kind": x.get("qualifying_order_kind")} for x in qualified],
+-                "created_at": now, "updated_at": now,
+-            }, session=session)
+-            await db.referral_audit.insert_one({"actor_id": "system", "action": "reward_threshold_reached", "referrer_id": referrer_id,
+-                                                "amount": REFERRAL_REWARD_INR, "eligible_referrals": eligible, "created_at": now}, session=session)
+-        await run_transaction(client, apply)
+-    except DuplicateKeyError:
+-        # Unique reward key means concurrent threshold checks can create only one workflow.
++    lock = await db.users.update_one(
++        {"_id": _object_id_or_404(referrer_id, "Referrer")},
++        {"$inc": {"referral_review_version": 1}}, session=session,
++    )
++    if not lock.matched_count:
++        raise HTTPException(409, "The referrer account is unavailable.")
++    reward_key = f"referral-target-10:{referrer_id}"
++    if await db.referral_rewards.find_one({"reward_key": reward_key}, session=session):
+         return
+-    except Exception:
+-        logger.exception("Referral reward threshold transaction failed")
+-        raise HTTPException(status_code=503, detail="Referral threshold was reached but the reward workflow could not be committed; retry admin review")
++    qualified = await db.referrals.find(
++        {"referrer_id": referrer_id, "status": "qualified"}, session=session,
++    ).sort([("reviewed_at", 1), ("_id", 1)]).limit(REFERRAL_TARGET).to_list(length=REFERRAL_TARGET)
++    eligible = len(qualified)
++    if not reward_threshold_reached(eligible):
++        return
++    await db.referral_rewards.insert_one({
++        "referrer_id": referrer_id, "reward_key": reward_key,
++        "amount": REFERRAL_REWARD_INR, "currency": "INR", "status": "pending_verification",
++        "eligible_referrals": eligible, "qualifying_referral_ids": [str(row["_id"]) for row in qualified],
++        "qualifying_orders": [{"order_id": row.get("qualifying_order_id"), "kind": row.get("qualifying_order_kind")} for row in qualified],
++        "created_at": now, "updated_at": now,
++    }, session=session)
++    await db.referral_audit.insert_one({
++        "actor_id": "system", "action": "reward_threshold_reached", "referrer_id": referrer_id,
++        "amount": REFERRAL_REWARD_INR, "eligible_referrals": eligible, "created_at": now,
++    }, session=session)
+
+
+ async def _public_referral_url(request: Request, code: str) -> str:
+@@ -1082,10 +1088,9 @@
+ async def admin_review_referral(referral_id: str, body: ReferralReviewIn, user: dict = Depends(require_role("admin"))):
+     try: oid = ObjectId(referral_id)
+     except Exception as exc: raise HTTPException(status_code=404, detail="Referral not found") from exc
+-    now = now_utc(); referrer_id = None
++    now = now_utc()
+     try:
+         async def apply(session):
+-            nonlocal referrer_id
+             referral = await db.referrals.find_one({"_id": oid}, session=session)
+             if not referral: raise HTTPException(status_code=404, detail="Referral not found")
+             referrer_id = referral["referrer_id"]
+@@ -1094,6 +1099,8 @@
+                 kind = referral.get("qualifying_order_kind"); order_id = referral.get("qualifying_order_id")
+                 try: order_oid = ObjectId(str(order_id))
+                 except Exception as exc: raise HTTPException(status_code=409, detail="Qualifying order reference is invalid") from exc
++                if kind not in {"grocery", "restaurant"}:
++                    raise HTTPException(409, "Qualifying order kind is invalid")
+                 collection = db.restaurant_orders if kind == "restaurant" else db.orders
+                 order = await collection.find_one({"_id": order_oid, "customer_id": referral["referred_user_id"]}, session=session)
+                 if not order or not order_is_referral_candidate(order):
+@@ -1106,6 +1113,11 @@
+                 updated = await db.referrals.update_one({"_id": oid, "status": "pending_review"}, {"$set": {"status": "qualified", "reviewed_by": user["id"], "review_note": body.note, "reviewed_at": now, "updated_at": now}}, session=session)
+                 if updated.modified_count != 1: raise HTTPException(status_code=409, detail="Referral review already processed")
+                 await db.referral_audit.insert_one({"actor_id": user["id"], "action": "referral_qualified", "referral_id": str(oid), "note": body.note, "contact_verification_method": body.contact_verification_method, "created_at": now}, session=session)
++                # Serialize with order changes such as a concurrently recorded
++                # refund. A failed threshold write rolls back the qualification.
++                await collection.update_one({"_id": order_oid},
++                                            {"$set": {"referral_reviewed_at": now}}, session=session)
++                await _maybe_create_referral_reward(referrer_id, session=session)
+             elif body.decision == "reject":
+                 updated = await db.referrals.update_one({"_id": oid, "status": {"$in": ["pending_review", "registered"]}}, {"$set": {"status": "rejected", "reviewed_by": user["id"], "review_note": body.note, "reviewed_at": now, "updated_at": now}}, session=session)
+                 if updated.modified_count != 1: raise HTTPException(status_code=409, detail="Referral review already processed")
+@@ -1120,8 +1132,6 @@
+     except Exception as exc:
+         logger.exception("Referral review transaction failed")
+         raise HTTPException(status_code=503, detail="Referral review could not be committed atomically") from exc
+-    if body.decision == "approve" and referrer_id:
+-        await _maybe_create_referral_reward(referrer_id)
+     return doc_out(await db.referrals.find_one({"_id": oid}))
+
+
+@@ -1146,10 +1156,14 @@
+                 for qualifying in reward["qualifying_orders"]:
+                     try: order_oid = ObjectId(str(qualifying.get("order_id")))
+                     except Exception as exc: raise HTTPException(status_code=409, detail="A qualifying order reference is invalid") from exc
+-                    collection = db.restaurant_orders if qualifying.get("kind") == "restaurant" else db.orders
++                    if qualifying.get("kind") not in {"grocery", "restaurant"}:
++                        raise HTTPException(409, "A qualifying order kind is invalid")
++                    collection = db.restaurant_orders if qualifying["kind"] == "restaurant" else db.orders
+                     qualifying_order = await collection.find_one({"_id": order_oid}, session=session)
+                     if not qualifying_order or not order_is_referral_candidate(qualifying_order):
+                         raise HTTPException(status_code=422, detail="A qualifying order is no longer eligible; reward remains pending verification")
++                    await collection.update_one({"_id": order_oid},
++                                                {"$set": {"referral_reward_reviewed_at": now}}, session=session)
+             updated = await db.referral_rewards.update_one({"_id": oid, "status": current}, {"$set": {"status": status_map[body.decision], "reviewed_by": user["id"], "review_note": body.note, "payout_reference": body.payout_reference if body.decision == "paid" else reward.get("payout_reference"), "updated_at": now}}, session=session)
+             if updated.modified_count != 1: raise HTTPException(status_code=409, detail="Reward was concurrently updated")
+             ledger_key = f"reward-credit:{reward['reward_key']}"
+@@ -1161,6 +1175,15 @@
+             if ledger_status:
+                 await db.referral_ledger.update_one({"user_id": reward["referrer_id"], "idempotency_key": ledger_key}, {"$set": {"status": ledger_status, "payout_reference": body.payout_reference if body.decision == "paid" else reward.get("payout_reference"), "updated_at": now}}, session=session)
+             await db.referral_audit.insert_one({"actor_id": user["id"], "action": f"reward_{body.decision}", "reward_id": str(oid), "note": body.note, "payout_reference": body.payout_reference, "created_at": now}, session=session)
++            if body.decision in {"approve", "reject"}:
++                outcome = status_map[body.decision]
++                await db.notifications.insert_one({
++                    "user_id": reward["referrer_id"], "kind": "referral_reward",
++                    "title": f"Referral reward {outcome}",
++                    "body": f"Your referral reward was {outcome}. View its current status in Referral & Earn.",
++                    "data": {"reward_id": str(oid)}, "read": False, "channel": "in_app",
++                    "push_status": "not_configured", "created_at": now,
++                }, session=session)
+         await run_transaction(client, apply)
+     except HTTPException:
+         raise
+diff --git a/backend/referral_rules.py b/backend/referral_rules.py
+--- a/backend/referral_rules.py
++++ b/backend/referral_rules.py
+@@ -1,4 +1,5 @@
+ """Pure, dependency-free policy helpers for COME-IN Referral & Earn."""
++import math
+ import re
+ import secrets
+ from typing import Any
+@@ -31,7 +32,7 @@
+     status = str(order.get("status", "")).lower()
+     payment_status = str(order.get("payment_status", "")).lower()
+     blocked_payment_states = {"refunded", "refund_pending", "disputed", "failed", "cancelled"}
+-    if total < REFERRAL_MIN_ORDER_INR or status != "delivered" or payment_status in blocked_payment_states:
++    if not math.isfinite(total) or total < REFERRAL_MIN_ORDER_INR or status != "delivered" or payment_status in blocked_payment_states:
+         return False
+     for field in ("refund_status", "return_status", "dispute_status"):
+         state = str(order.get(field, "") or "").strip().lower()
+diff --git a/backend/tests/test_referral_rules.py b/backend/tests/test_referral_rules.py
+--- a/backend/tests/test_referral_rules.py
++++ b/backend/tests/test_referral_rules.py
+@@ -49,3 +49,8 @@
+     assert shopping_reward_discount(0, 500) == 0.0
+     assert shopping_reward_discount(100, -2) == 0.0
+     assert shopping_reward_discount(-1, 500) == 0.0
++
++
++def test_nonfinite_order_totals_cannot_qualify_for_referral():
++    for invalid in (float("nan"), float("inf"), float("-inf"), "NaN"):
++        assert not order_is_referral_candidate({"status": "delivered", "total": invalid})
+diff --git a/backend/tests/test_referral_implementation_contract.py b/backend/tests/test_referral_implementation_contract.py
+--- a/backend/tests/test_referral_implementation_contract.py
++++ b/backend/tests/test_referral_implementation_contract.py
+@@ -23,7 +23,7 @@
+     assert 'await _record_referral_registration(referrer, str(res.inserted_id)' in SERVER
+     assert 'await _refresh_referral_order_candidate(fresh, "grocery")' in SERVER
+     assert 'await _refresh_referral_order_candidate(fresh_order, "restaurant")' in SERVER
+-    assert 'await _maybe_create_referral_reward(referrer_id)' in SERVER
++    assert 'await _maybe_create_referral_reward(referrer_id, session=session)' in SERVER
+     assert 'body.refund_return_checks_passed' in SERVER
+     assert 'Depends(require_role("admin"))' in SERVER
+     assert 'reward-credit:' in SERVER and 'referral_audit' in SERVER
+diff --git a/backend/tests/test_referral_task9_review_integration.py b/backend/tests/test_referral_task9_review_integration.py
+new file mode 100644
+--- /dev/null
++++ b/backend/tests/test_referral_task9_review_integration.py
+@@ -0,0 +1,115 @@
++"""Verifies Task 9 referral accounting with real isolated transactions."""
++import asyncio
++import os
++from uuid import uuid4
++
++import pytest
++
++
++def test_concurrent_referral_qualification_and_threshold_rollback(monkeypatch):
++    if os.environ.get("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
++        pytest.skip("requires disposable loopback MongoDB")
++    import httpx
++    from bson import ObjectId
++    from motor.motor_asyncio import AsyncIOMotorClient
++    import server
++
++    monkeypatch.setenv("JWT_SECRET", uuid4().hex)
++
++    async def scenario():
++        mongo = AsyncIOMotorClient("mongodb://127.0.0.1:27018/?replicaSet=rs0", serverSelectionTimeoutMS=3000)
++        db = mongo["comein_disposable_t9ref_" + uuid4().hex]
++        monkeypatch.setattr(server, "db", db)
++        monkeypatch.setattr(server, "client", mongo)
++        try:
++            await db.referrals.create_index("referred_user_id", unique=True)
++            await db.referral_rewards.create_index("reward_key", unique=True)
++            admin, seller, referrer = (ObjectId() for _ in range(3))
++            auth = {}
++            for actor, oid, role in (("admin", admin, "admin"), ("seller", seller, "shopkeeper"), ("referrer", referrer, "customer")):
++                email = f"{actor}@fixture.example"
++                await db.users.insert_one({"_id": oid, "role": role, "email": email})
++                auth[actor] = {"Authorization": "Bearer " + server.create_access_token(str(oid), role, email)}
++            with pytest.raises(server.HTTPException) as self_referral:
++                await server._record_referral_registration({"_id": referrer}, str(referrer), "fixture")
++            assert self_referral.value.status_code == 422
++
++            for _ in range(8):
++                early_order, early_customer = ObjectId(), ObjectId()
++                await db.orders.insert_one({"_id": early_order, "customer_id": str(early_customer),
++                                            "status": "delivered", "payment_status": "paid", "total": 100})
++                await db.referrals.insert_one({
++                    "referrer_id": str(referrer), "referred_user_id": str(early_customer), "status": "qualified",
++                    "qualifying_order_id": str(early_order), "qualifying_order_kind": "grocery", "reviewed_at": server.now_utc(),
++                })
++
++            async def candidate(kind, total=100, **extra):
++                owner, order = ObjectId(), ObjectId()
++                await db.users.insert_one({"_id": owner, "role": "customer", "address": "Shared household"})
++                await server._record_referral_registration({"_id": referrer}, str(owner), "fixture")
++                with pytest.raises(server.HTTPException) as duplicate:
++                    await server._record_referral_registration({"_id": referrer}, str(owner), "fixture")
++                assert duplicate.value.status_code == 409
++                collection = db.orders if kind == "grocery" else db.restaurant_orders
++                record = {"_id": order, "customer_id": str(owner), "total": total,
++                          "status": "delivered", "payment_status": "paid",
++                          "replacements": [{"state": "accepted", "id": "synthetic"}], **extra}
++                await collection.insert_one(record)
++                await server._refresh_referral_order_candidate(record, kind)
++                return await db.referrals.find_one({"referred_user_id": str(owner)})
++
++            grocery = await candidate("grocery")
++            restaurant = await candidate("restaurant", 120)
++            below = await candidate("grocery", 99.99)
++            refunded = await candidate("restaurant", refund_status="refunded")
++            assert below["status"] == refunded["status"] == "registered"
++
++            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=server.app), base_url="http://local") as http:
++                payload = {"decision": "approve", "contact_verified": True, "contact_verification_method": "email",
++                           "payment_confirmed": True, "refund_return_checks_passed": True}
++
++                async def approve(referral, actor="admin"):
++                    return await http.patch(f"/api/admin/referrals/{referral['_id']}/review", json=payload, headers=auth[actor])
++
++                assert (await approve(grocery, "seller")).status_code == 403
++                original = server._maybe_create_referral_reward
++
++                async def interrupted(*args, **kwargs):
++                    await original(*args, **kwargs)
++                    raise RuntimeError("fixture interruption before transaction commit")
++
++                with monkeypatch.context() as failure:
++                    failure.setattr(server, "_maybe_create_referral_reward", interrupted)
++                    assert (await approve(grocery)).status_code == 503
++                assert (await db.referrals.find_one({"_id": grocery["_id"]}))["status"] == "pending_review"
++                assert await db.referral_audit.count_documents({"action": "referral_qualified"}) == 0
++                assert await db.referral_rewards.count_documents({}) == 0
++
++                results = await asyncio.gather(approve(grocery), approve(restaurant))
++                assert [row.status_code for row in results] == [200, 200]
++                assert (await approve(grocery)).status_code == 409
++                reward = await db.referral_rewards.find_one({"referrer_id": str(referrer)})
++                assert reward["status"] == "pending_verification"
++                assert reward["amount"] == server.REFERRAL_REWARD_INR
++                assert len(reward["qualifying_referral_ids"]) == server.REFERRAL_TARGET
++                assert await db.referral_rewards.count_documents({}) == 1
++                assert await db.referral_audit.count_documents({"action": "reward_threshold_reached"}) == 1
++                assert await db.referral_ledger.count_documents({}) == 0
++                reward_url = f"/api/admin/referral-rewards/{reward['_id']}"
++                order_oid = ObjectId(restaurant["qualifying_order_id"])
++                await db.restaurant_orders.update_one({"_id": order_oid}, {"$set": {"refund_status": "refunded"}})
++                assert (await http.patch(reward_url, json={"decision": "approve"}, headers=auth["admin"])).status_code == 422
++                assert await db.referral_ledger.count_documents({}) == 0
++                await db.restaurant_orders.update_one({"_id": order_oid}, {"$unset": {"refund_status": ""}})
++                credit = await asyncio.gather(*(http.patch(reward_url, json={"decision": "approve"}, headers=auth["admin"]) for _ in range(2)))
++                assert sorted(result.status_code for result in credit) == [200, 409]
++                entry = await db.referral_ledger.find_one({"reward_id": str(reward["_id"])})
++                assert entry["status"] == "approved" and entry["amount"] == server.REFERRAL_REWARD_INR
++                assert await db.referral_ledger.count_documents({}) == 1
++                assert await db.notifications.count_documents({"kind": "referral_reward", "data.reward_id": str(reward["_id"])}) == 1
++
++        finally:
++            await mongo.drop_database(db.name)
++            mongo.close()
++
++    asyncio.run(scenario())
+diff --git a/frontend/app/notifications.tsx b/frontend/app/notifications.tsx
+--- a/frontend/app/notifications.tsx
++++ b/frontend/app/notifications.tsx
+@@ -40,6 +40,7 @@
+   const open = async (n: Notice) => {
+     if (!n.read) { api.post(`/notifications/${n.id}/read`, {}).catch(() => {}); setItems((list) => list.map((x) => (x.id === n.id ? { ...x, read: true } : x))); }
+     if (n.data?.seller) router.push((n.data.order_kind === "restaurant" ? "/restaurant/dashboard" : "/seller/orders") as never);
++    else if (n.kind === "referral_reward" && n.data?.reward_id) router.push("/referral-dashboard");
+     else if (n.data?.product_id) router.push(`/product/${n.data.product_id}`);
+     else if (n.data?.order_id && n.data.order_kind === "restaurant" && n.kind === "restaurant_replacement") {
+       router.push({ pathname: "/restaurant/orders/[id]", params: { id: n.data.order_id } });

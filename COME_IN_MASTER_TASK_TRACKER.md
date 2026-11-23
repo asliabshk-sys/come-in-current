@@ -46,7 +46,7 @@
 | 6 | Search and Filters | **COMPLETED** | Earlier Task 6 implementation and test reports preserved. | Not rerun in this batch. |
 | 7 | Cart and Checkout | **COMPLETED** | Checkout quote/idempotency source; historical COD/pickup UI/API tests; Iteration 3 fixes empty-cart and unavailable-fulfillment messaging. | No Expo runtime in current environment. |
 | 8 | Repeat Order | **COMPLETED** | Earlier TASK24 report and existing repeat-order source. | Measured repeat-order extension not fully verified. |
-| 9 | Out-of-Stock Replacement | **PARTIALLY VERIFIED** | 30 technically verified and owner-approved, one implemented pending external validation. [Final report](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md) | 19 partial, unimplemented or blocked. |
+| 9 | Out-of-Stock Replacement | **PARTIALLY VERIFIED** | 31 verified and owner-approved, one implemented with external validation pending. [Final report](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md) | 18 partial, unimplemented or blocked. |
 | 10 | Live Tracking | **COMPLETED** | Historical /api/orders/{id}/tracking runtime E2E report. | Not rerun in this batch. |
 | 11 | Order Help and Refund Status | **PARTIAL** | Restaurant Admin refund safeguards retained; Grocery refund summary states and in-app notification routes have offline coverage. | Automatic Grocery refunds, refund-specific notifications and live customer/seller/admin status synchronization remain pending. |
 | 12 | Excel/CSV Price and Stock Import | **COMPLETED** | Earlier reports; import confirmation dialog source fix; Task 5 measured CSV parser/model now has offline coverage. | Transaction-backed measured import apply remains pending with disposable MongoDB verification. |
@@ -1113,3 +1113,7 @@ Task 9 is **PARTIALLY VERIFIED**. Recovered 50 policies. Runtime and persistence
 ## Task 9 — Final authorized scope and owner approval — 2026-11-23 IST
 
 Task 9 is **PARTIALLY VERIFIED**. All 50 policies are accounted for. The owner pre-authorization covers 30 verified policies and one implemented full-refund policy awaiting external validation. Seven policies are partial, four unimplemented and eight blocked. This increment closes the cheaper replacement quote, cart substitution and measured option evidence gaps. Full regression passed 695 with one object-storage skip. Native and genuine Razorpay TEST remain deferred. [Final report](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md)
+
+## Task 9 — Referral closure and final verification — 2026-11-23 IST
+
+Task 9 is **PARTIALLY VERIFIED**. All 50 policies are accounted for. Owner pre-authorization covers 31 verified policies and one implemented policy awaiting genuine external validation. Six are partial, four are unimplemented and eight are blocked. The existing referral threshold, atomic qualification, single audited credit and notification are runtime verified. Existing amounts and financial rules remain intact. [Final report](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md)

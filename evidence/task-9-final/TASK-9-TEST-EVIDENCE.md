@@ -28,3 +28,15 @@ EXPO_NO_TELEMETRY=1 EXPO_OFFLINE=1 EXPO_PUBLIC_BACKEND_URL=http://127.0.0.1:8170
 ```
 
 Serve the export on the configured `http://localhost:8081` origin with SPA index fallback. Run the two browser scripts with Playwright, Chromium, PyMongo and requests. Run the previous audit's restart script against the updated source to reproduce the process reload test.
+
+## Closure increment
+
+| Test | Result | Output |
+| --- | --- | --- |
+| Focused regression | 63 passed, 0 failed, 0 skipped | [Focused](closure-20261123/focused.log) |
+| Full backend | 697 passed, 0 failed, 1 skipped | [Full](closure-20261123/full.log) |
+| TypeScript, targeted ESLint, Expo web export | Passed | [TypeScript](closure-20261123/typescript.log), [ESLint](closure-20261123/lint.log), [Expo](closure-20261123/expo.log) |
+| Chromium | Seven scenarios passed, including the referral notification and cart persistence | [Browser](closure-20261123/browser.log), [Cart](closure-20261123/cart.log) |
+| Policy restart and replay | Draft and pending collection review survived restart. No duplicate audit or payment on replay. | [Restart](closure-20261123/restart.log) |
+
+The sole skip was the existing external object-storage test. Fresh referral tests covered concurrent approvals at the reward threshold, transaction rollback, self-referral and duplicate attribution denial, distinct shared-household accounts, cancelled or refunded eligibility safeguards, and single-credit and notification behavior. No new coupon activation, payout, statutory issuance or genuine provider work was run. [Commands](closure-20261123/COMMANDS.md)

@@ -994,3 +994,7 @@ Task 9 is **PARTIALLY VERIFIED**. Recovered 50 policies. Runtime and persistence
 ## Task 9 — Final authorized scope and owner approval — 2026-11-23 IST
 
 Task 9 is **PARTIALLY VERIFIED**. All 50 policies are accounted for. The owner pre-authorization covers 30 verified policies and one implemented full-refund policy awaiting external validation. Seven policies are partial, four unimplemented and eight blocked. This increment closes the cheaper replacement quote, cart substitution and measured option evidence gaps. Full regression passed 695 with one object-storage skip. Native and genuine Razorpay TEST remain deferred. [Final report](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md)
+
+## Task 9 — Referral closure and final verification — 2026-11-23 IST
+
+Task 9 is **PARTIALLY VERIFIED**. All 50 policies are accounted for. Owner pre-authorization covers 31 verified policies and one implemented policy awaiting genuine external validation. Six are partial, four are unimplemented and eight are blocked. The existing referral threshold, atomic qualification, single audited credit and notification are runtime verified. Existing amounts and financial rules remain intact. [Final report](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md)
