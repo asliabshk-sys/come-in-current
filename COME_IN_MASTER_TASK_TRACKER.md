@@ -1161,3 +1161,7 @@ Apply `patches/task9-coupon-funding-verification.patch` after the approval-stage
 ### 23 November 2026 — Advertisement compensation verification
 
 Apply `patches/task9-advertisement-compensation-verification.patch` after the coupon verification patch. Advertisement compensation remains **PARTIALLY VERIFIED**. [Audit and decision links](evidence/task-9-final/advertisement-compensation-20261123/AUDIT.md)
+
+### 23 November 2026 — Delivery partner allocation verification
+
+Apply `patches/task9-delivery-partner-allocation-verification.patch` after the advertisement compensation patch. Delivery partner allocation remains **PARTIALLY VERIFIED**, pending approved assignment and settlement rules. [Audit](evidence/task-9-final/delivery-partner-allocation-20261123/AUDIT.md)

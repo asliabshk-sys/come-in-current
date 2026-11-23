@@ -1,0 +1,2 @@
+PASS original order and finalized fee evidence reconciled unchanged after restart
+PASS malformed order fee was flagged without mutating the finalized ledger or creating a payable

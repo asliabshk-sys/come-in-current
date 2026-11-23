@@ -19,3 +19,7 @@ T9-41–43 remain **PARTIALLY VERIFIED**. Existing COME-IN-funded Grocery cash c
 ### Advertisement compensation — 23 November 2026
 
 Advertisement compensation remains **PARTIALLY VERIFIED**. Campaign status and audit writes are atomic, identical status replays are deduplicated, and inactive campaigns cannot record events. Compensation eligibility and execution remain disabled pending explicit approval. [Audit](advertisement-compensation-20261123/AUDIT.md) · [Owner decisions](advertisement-compensation-20261123/OWNER-DECISION.md) · [Tests](advertisement-compensation-20261123/TESTS.md)
+
+### Delivery Partner Allocation — 23 November 2026
+
+Delivery Partner Allocation remains **PARTIALLY VERIFIED**, and T9-30 settlement remains **BLOCKED**. Existing onboarding and Admin fee controls passed; no order assignment or partner payable is enabled. [Audit](delivery-partner-allocation-20261123/AUDIT.md) · [Owner decisions](delivery-partner-allocation-20261123/OWNER-DECISION.md) · [Tests](delivery-partner-allocation-20261123/TESTS.md)

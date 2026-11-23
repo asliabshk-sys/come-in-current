@@ -1,0 +1,50 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -8660,11 +8660,17 @@
+         finalized = next((entry for entry in ledger if entry["event_type"] == "order_finalized"), {})
+         recorded_fee = finalized.get("source_delivery_fee_inr")
+         current_fee = order.get("delivery_fee")
++        fee_matches = None
++        if recorded_fee is not None and current_fee is not None:
++            try:
++                fee_matches = money(recorded_fee) == money(current_fee)
++            except ValueError:
++                # Preserve the recorded evidence for manual review.
++                fee_matches = False
+         reconciliation["delivery_fee_evidence"] = {
+             "original_fee_inr": review["original"].get("delivery_fee"),
+             "current_fee_inr": current_fee, "recorded_fee_inr": recorded_fee,
+-            "ledger_fee_matches": money(recorded_fee) == money(current_fee)
+-            if recorded_fee is not None and current_fee is not None else None,
++            "ledger_fee_matches": fee_matches,
+             "partner_payable_inr": None,
+             "status": "pending_approved_allocation",
+         }
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -209,6 +209,25 @@
+                 assert details["reconciliation"]["delivery_partner_adjustment_status"] == "pending_approved_allocation"
+                 assert details["reconciliation"]["seller_platform_ledger"] == []
+                 assert details["reconciliation"]["delivery_fee_evidence"]["partner_payable_inr"] is None
++                ledger = (await db.financial_ledger.insert_one({"order_id": str(oid), "order_kind": "restaurant",
++                    "event_type": "order_finalized", "source_delivery_fee_inr": 15, "recorded_at": server.now_utc()})).inserted_id
++                for snapshot, expected in ((15, True), (16, False), ("invalid legacy value", False)):
++                    await db.financial_ledger.update_one({"_id": ledger}, {"$set": {"source_delivery_fee_inr": snapshot}})
++                    response = await request("GET", path, actor="admin")
++                    assert response.status_code == 200
++                    evidence = response.json()["reconciliation"]["delivery_fee_evidence"]
++                    assert evidence["ledger_fee_matches"] is expected and evidence["partner_payable_inr"] is None
++                    assert evidence["original_fee_inr"] == 15 and evidence["current_fee_inr"] == 15
++                    assert (await db.financial_ledger.find_one({"_id": ledger}))["source_delivery_fee_inr"] == snapshot
++                await db.financial_ledger.delete_one({"_id": ledger})
++
++                # Onboarding access is tested separately from assignment, which has no active route.
++                for application_status in ("DRAFT", "SUBMITTED", "REJECTED", "INACTIVE", "SUSPENDED", "APPROVED"):
++                    await db.delivery_partner_applications.update_one(
++                        {"user_id": ids["buyer"]}, {"$set": {"status": application_status}}, upsert=True)
++                    response = await request("GET", "/delivery-partner/access", actor="buyer")
++                    assert response.status_code == (200 if application_status == "APPROVED" else 403)
++                    assert (await request("GET", "/delivery-partner/access", actor="other")).status_code == 403
+                 assert details["invoice_readiness"]["has_internal_draft"]
+                 linked = details["invoice_correction_draft"]
+                 assert linked["original_invoice_reference"] == "original-invoice" and linked["version"] == 1
