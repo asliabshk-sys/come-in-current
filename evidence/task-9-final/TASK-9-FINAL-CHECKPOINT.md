@@ -55,3 +55,7 @@ Eight blocked operations have named owners, missing decisions, external evidence
 ### Stage 11 — seven-area integration
 
 Fresh backend 707 passed and one object-storage skip. Seven Chromium scenarios and 16 restart checks passed. [Commands and evidence](final-closure-20261123/INTEGRATION-TESTS.md)
+
+### Stages 7–12 — final internal closure
+
+Task 9 remains **PARTIALLY VERIFIED**. The CA packet, current partial and blocked cases and final stage evidence were checkpointed separately. Fresh regression had 707 passes and one deferred object-storage skip. [Final status](final-closure-20261123/FINAL-STATUS.md) · [Integration commands and logs](final-closure-20261123/INTEGRATION-TESTS.md) · [GitHub checkpoints](final-closure-20261123/GITHUB-CHECKPOINT.md)

@@ -1058,3 +1058,7 @@ Apply `patches/task9-partial-cod-refund-verification.patch` after the rewards/re
 ### 23 November 2026 — Offer expiry verification
 
 Apply `patches/task9-offer-expiry-verification.patch` after the partial/COD verification patch. Offer expiry is **PARTIALLY VERIFIED**. [Audit and decision links](evidence/task-9-final/offer-expiry-rules-20261123/AUDIT.md)
+
+### 23 November 2026 — Task 9 final internal closure
+
+Task 9 remains **PARTIALLY VERIFIED** after Stages 7–12. Apply `patches/task9-final-invoice-snapshot-consistency.patch` after offer expiry to recover the latest authorized internal source change. [Final status](evidence/task-9-final/final-closure-20261123/FINAL-STATUS.md) · [Release readiness](evidence/task-9-final/final-closure-20261123/RELEASE-READINESS.md)

@@ -1,6 +1,6 @@
 # Task 9 Final Completion Report
 
-**Overall status — PARTIALLY VERIFIED.** All 50 policies are accounted for. The referral closure increment completed technical verification of the existing reward and notification rule. The previous removal, cart, and measured replacement evidence remains in force. Active coupons, campaign spending, and genuine financial or statutory execution remain outside the completed scope.
+**Overall status — PARTIALLY VERIFIED.** All 50 policies are accounted for. The referral closure increment completed technical verification of the existing reward and notification rule. The previous removal, cart, and measured replacement evidence remains in force. Existing approved Grocery cash coupon activation and atomic campaign spending are verified. Expanded funding/checkout and genuine financial or statutory execution remain pending.
 
 ## Owner Approval Summary
 
@@ -109,3 +109,7 @@ Partial and COD refund rules remain **PARTIALLY VERIFIED**. Existing manual COD 
 ### Offer expiry rules — 23 November 2026
 
 Offer expiry remains **PARTIALLY VERIFIED**. Existing dated coupons and advertisements use enforced server windows. Final coupon expiry rejection rolls back without charging a new amount. Replacement-offer duration and independent cancellation remain unapproved and unimplemented under T9-12. [Audit](offer-expiry-rules-20261123/AUDIT.md) · [Owner decisions](offer-expiry-rules-20261123/OWNER-DECISION.md) · [Tests](offer-expiry-rules-20261123/TESTS.md)
+
+### Stages 7–12 — final internal closure
+
+Task 9 remains **PARTIALLY VERIFIED**. The CA packet, current partial and blocked cases and final stage evidence were checkpointed separately. Fresh regression had 707 passes and one deferred object-storage skip. [Final status](final-closure-20261123/FINAL-STATUS.md) · [Integration commands and logs](final-closure-20261123/INTEGRATION-TESTS.md) · [GitHub checkpoints](final-closure-20261123/GITHUB-CHECKPOINT.md)

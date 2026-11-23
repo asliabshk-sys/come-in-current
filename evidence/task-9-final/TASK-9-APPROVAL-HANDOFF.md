@@ -52,3 +52,7 @@ Partial and COD refund rules remain **PARTIALLY VERIFIED**. Existing manual COD 
 ### Offer expiry rules — 23 November 2026
 
 Offer expiry remains **PARTIALLY VERIFIED**. Existing dated coupons and advertisements use enforced server windows. Final coupon expiry rejection rolls back without charging a new amount. Replacement-offer duration and independent cancellation remain unapproved and unimplemented under T9-12. [Audit](offer-expiry-rules-20261123/AUDIT.md) · [Owner decisions](offer-expiry-rules-20261123/OWNER-DECISION.md) · [Tests](offer-expiry-rules-20261123/TESTS.md)
+
+### Stages 7–12 — final internal closure
+
+Task 9 remains **PARTIALLY VERIFIED**. The CA packet, current partial and blocked cases and final stage evidence were checkpointed separately. Fresh regression had 707 passes and one deferred object-storage skip. [Final status](final-closure-20261123/FINAL-STATUS.md) · [Integration commands and logs](final-closure-20261123/INTEGRATION-TESTS.md) · [GitHub checkpoints](final-closure-20261123/GITHUB-CHECKPOINT.md)
