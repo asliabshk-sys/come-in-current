@@ -15,3 +15,7 @@ Starting GitHub commit `8e35b0ad2214c86d3d4edc749c3c3b3985f24a35`. Apply `patche
 [Focused tests](focused.log) · [Full regression](full.log) · [TypeScript](typescript.log) · [ESLint](lint.log) · [Expo export](expo.log) · [Chromium](browser.log) · [Browser script](browser-smoke.py)
 
 Final verification returned 46 focused passes and 695 full backend passes with zero failures. The external object-storage case was the sole skip. TypeScript, targeted ESLint, Expo web export and Chromium passed. Browser verification covered a Restaurant approval, the paid removal handoff and Admin reward rejection.
+
+## Financial framework follow-up
+
+See the [framework implementation and remaining decisions](../task-9-financial-policy-framework-20261123/IMPLEMENTATION_REPORT.md).

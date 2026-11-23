@@ -982,3 +982,7 @@ Task 9 is **PARTIALLY COMPLETE**. Applied replacements are linked to eligible fi
 ## Task 9 — Approved financial policy workflows — 2026-11-23 IST
 
 Task 9 is **PARTIALLY COMPLETE**. Eligible unpaid removal, protected reward decisions and two-stage historical tax review are implemented. Paid removal estimates remain in Assist pending a partial-refund policy. Reward ledger movement and tax correction issuance remain pending approved procedures. Native and genuine Razorpay TEST validation remain deferred. [Evidence and decisions](evidence/task-9-approved-financial-policies-20261123/IMPLEMENTATION_REPORT.md)
+
+## Task 9 — Financial policy framework — 2026-11-23 IST
+
+Task 9 is **PARTIALLY COMPLETE**. Admin can approve a server-quoted refund or incremental collection for pending execution after the matching customer decision. Verified professionals are restricted to assigned tax cases. Admin can save auditable promotion drafts with validated limits. Campaign redemption, financial execution, payout adjustments and statutory invoice issuance remain pending the documented rules and validations. [Evidence and decisions](evidence/task-9-financial-policy-framework-20261123/IMPLEMENTATION_REPORT.md)
