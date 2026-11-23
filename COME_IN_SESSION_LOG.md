@@ -888,3 +888,7 @@ Apply `patches/task4-restore-public-templates.patch` last in the verified applic
 ## Task 4 final pending-work verification — 2026-11-23 IST
 
 The authorized local fixes and fresh verification are complete. Apply `patches/task4-storage-advertisement-verification.patch` after template restoration. The full backend run recorded 686 passes, zero failures and five skips; four parser cases passed in the optional suite and the external object-storage skip remains blocked. The project-wide closure and separate external dispositions are in `evidence/task-4-project-verification-20261123/final-pending-verification/`. Canonical Task 4 remains separately tracked and production rollout remains blocked.
+
+## Task 8 — Restaurant Repeat Order — 2026-11-23 IST
+
+**FULLY COMPLETED for the authorized Restaurant Mode scope.** Verified from GitHub baseline `b4402235523be3b487a5416c1c47711f139a8a57`. Eligible history, current menu and saved option validation, safe cart merge, fresh quote and duplicate protection passed local testing. Focused backend 40 passed. Full backend 687 passed, 0 failed, 5 unrelated skips. Local Chromium repeat through pickup checkout and three mocked payment regressions passed. Native-device and genuine Razorpay TEST checks remain deferred. Apply `patches/task8-restaurant-repeat-order.patch` after the Task 4 media patch. Evidence: `evidence/task-8-restaurant-repeat-order-20261123/IMPLEMENTATION_REPORT.md`.

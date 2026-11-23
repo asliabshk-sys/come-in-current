@@ -1,0 +1,3 @@
+PASS grocery: dismiss, decline, duplicate tap/callback, failed verification, retry, and confirmed server result
+PASS restaurant: dismiss, decline, duplicate tap/callback, failed verification, retry, and confirmed server result
+PASS membership: dismiss, decline, duplicate tap/callback, failed verification, retry, and confirmed server result

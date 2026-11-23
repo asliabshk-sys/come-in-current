@@ -1,0 +1,785 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -5906,6 +5906,7 @@
+     payment_method: Literal["cod", "pickup", "razorpay"] = "cod"
+     notes: str = Field(default="", max_length=600)
+     idempotency_key: str = Field(min_length=8, max_length=100)
++    quote_fingerprint: Optional[str] = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+
+ class RestaurantStatusIn(BaseModel):
+     status: Literal["accepted", "rejected", "preparing", "ready", "picked_up", "out_for_delivery", "delivered", "cancelled"]
+@@ -6109,6 +6110,178 @@
+     restaurant_id: str
+     items: List[RestaurantOrderLineIn] = Field(default_factory=list, max_length=100)
+
++class RestaurantQuoteIn(RestaurantCartIn):
++    fulfillment: Literal["delivery", "pickup"]
++
++
++class RestaurantRepeatIn(BaseModel):
++    request_id: str = Field(min_length=8, max_length=100)
++    local_cart: Optional[RestaurantCartIn] = None
++
++
++def _restaurant_line_key(line):
++    return (line.menu_item_id, line.variant_id, tuple(sorted(line.add_on_ids)), line.instructions)
++
++
++def _restaurant_price_option(value):
++    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= 100000:
++        raise HTTPException(409, "Menu price is no longer valid")
++    return float(value)
++
++
++async def _restaurant_resolve_line(restaurant_id, line):
++    if not ObjectId.is_valid(line.menu_item_id):
++        raise HTTPException(409, "Menu item is no longer available")
++    item = await db.restaurant_menu.find_one({"_id": ObjectId(line.menu_item_id), "restaurant_id": restaurant_id})
++    if not item or not item.get("available", True):
++        raise HTTPException(409, "Menu item is no longer available")
++    variants = {str(v["id"]): v for v in (item.get("variants") or []) if isinstance(v, dict) and v.get("id")}
++    selected = None
++    price = _restaurant_price_option(item.get("price"))
++    if line.variant_id:
++        variant = variants.get(line.variant_id)
++        if not variant or not variant.get("available", True):
++            raise HTTPException(409, "Selected variant is no longer available")
++        price = _restaurant_price_option(variant.get("price"))
++        selected = {"id": line.variant_id, "name": variant.get("name", "Variant"), "price": price}
++    elif variants:
++        raise HTTPException(409, "A current variant selection is required")
++    options = {str(x["id"]): x for x in (item.get("add_ons") or []) if isinstance(x, dict) and x.get("id")}
++    add_ons = []
++    if len(set(line.add_on_ids)) != len(line.add_on_ids):
++        raise HTTPException(409, "Duplicate add-on selection")
++    for identifier in line.add_on_ids:
++        option = options.get(identifier)
++        compatible = option.get("variant_ids") if option else None
++        if not option or not option.get("available", True) or (compatible is not None and (not isinstance(compatible, list) or line.variant_id not in compatible)):
++            raise HTTPException(409, "Selected add-on is no longer available for this selection")
++        add_ons.append({"id": identifier, "name": option.get("name", "Add-on"),
++                        "price": _restaurant_price_option(option.get("price", 0))})
++    unit = round(price + sum(option["price"] for option in add_ons), 2)
++    return {"menu_item_id": line.menu_item_id, "name": item["name"], "quantity": line.quantity,
++            "unit_price": unit, "line_total": round(unit * line.quantity, 2), "variant": selected,
++            "add_ons": add_ons, "instructions": line.instructions, "image_url": item.get("image_url")}
++
++
++async def _restaurant_quote(restaurant, lines, fulfillment):
++    if not restaurant.get(f"{fulfillment}_available", True):
++        raise HTTPException(409, f"{fulfillment.capitalize()} is unavailable")
++    if not lines:
++        raise HTTPException(422, "Your restaurant cart is empty")
++    restaurant_id = str(restaurant["_id"])
++    items = [await _restaurant_resolve_line(restaurant_id, line) for line in lines]
++    subtotal = sum(item["line_total"] for item in items)
++    if subtotal < float(restaurant.get("min_order", 0)):
++        raise HTTPException(400, f"Minimum order is ₹{restaurant.get('min_order', 0)}")
++    totals = calculate_restaurant_totals(subtotal, float(restaurant.get("delivery_fee", 0)),
++                                         float(restaurant.get("tax_rate", 5)), fulfillment)
++    snapshot = {"restaurant_id": restaurant_id, "fulfillment": fulfillment,
++                "items": [{k: v for k, v in item.items() if k != "image_url"} for item in items], **totals}
++    fingerprint = hashlib.sha256(json.dumps(snapshot, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
++    return {"items": items, **totals, "fingerprint": fingerprint}
++
++
++@api.post("/restaurant/cart/quote")
++async def quote_restaurant_cart(body: RestaurantQuoteIn, user: dict = Depends(get_current_user)):
++    restaurant = await _restaurant_or_404(body.restaurant_id)
++    if restaurant.get("status") != "approved" or not restaurant.get("available", False):
++        raise HTTPException(409, "Restaurant is not accepting orders")
++    return await _restaurant_quote(restaurant, body.items, body.fulfillment)
++
++
++@api.post("/restaurant/orders/{order_id}/repeat")
++async def repeat_restaurant_order(order_id: str, body: RestaurantRepeatIn,
++                                  user: dict = Depends(require_role("customer"))):
++    order = await db.restaurant_orders.find_one({"_id": _object_id_or_404(order_id, "Order"), "customer_id": user["id"]})
++    if not order:
++        raise HTTPException(404, "Order not found")
++    if order.get("status") not in {"delivered", "picked_up"}:
++        raise HTTPException(409, "Only delivered or picked-up restaurant orders can be repeated")
++    restaurant_id = order["restaurant_id"]
++    restaurant = await _restaurant_or_404(restaurant_id)
++    if restaurant.get("status") != "approved" or not restaurant.get("available", False):
++        raise HTTPException(409, "This restaurant is not accepting orders")
++    cart = await db.restaurant_carts.find_one({"user_id": user["id"]})
++    if cart and cart.get("repeat_request_id") == body.request_id:
++        if cart.get("repeat_order_id") != order_id:
++            raise HTTPException(409, "This repeat request belongs to another order")
++        return cart["repeat_result"]
++    local = body.local_cart
++    if ((cart and cart.get("items") and cart.get("restaurant_id") != restaurant_id)
++            or (local and local.items and local.restaurant_id != restaurant_id)):
++        raise HTTPException(409, "Your food cart has items from another restaurant. Resolve it in your cart first.")
++
++    try:
++        existing = [RestaurantOrderLineIn.model_validate(row) for row in (cart or {}).get("items", [])]
++    except ValidationError as exc:
++        raise HTTPException(409, "Review invalid selections in your existing food cart") from exc
++    if local and local.items and existing and local.items != existing:
++        raise HTTPException(409, "Your saved and device carts differ. Review your food cart before repeating.")
++    if local and not existing:
++        existing = local.items
++    merged = {}
++    for line in existing:
++        try:
++            await _restaurant_resolve_line(restaurant_id, line)
++        except HTTPException as exc:
++            raise HTTPException(409, "Review unavailable selections in your existing food cart") from exc
++        key = _restaurant_line_key(line)
++        quantity = line.quantity + (merged[key].quantity if key in merged else 0)
++        if quantity > 99:
++            raise HTTPException(409, "Review quantities in your existing food cart")
++        merged[key] = line.model_copy(update={"quantity": quantity})
++    skipped, changes, added = [], [], 0
++    for previous in order.get("items", []):
++        name = previous.get("name", "Menu item") if isinstance(previous, dict) else "Menu item"
++        try:
++            if not isinstance(previous, dict) or type(previous.get("quantity")) is not int:
++                raise ValueError("Invalid historical quantity")
++            variant = previous.get("variant")
++            add_ons = previous.get("add_ons", [])
++            line = RestaurantOrderLineIn(
++                menu_item_id=previous["menu_item_id"], quantity=previous["quantity"],
++                variant_id=variant["id"] if variant is not None else previous.get("variant_id"),
++                add_on_ids=[item["id"] for item in add_ons] if "add_ons" in previous else previous.get("add_on_ids", []),
++                instructions=previous.get("instructions") or "",
++            )
++            current = await _restaurant_resolve_line(restaurant_id, line)
++            key = _restaurant_line_key(line)
++            quantity = line.quantity + (merged[key].quantity if key in merged else 0)
++            if quantity > 99 or (key not in merged and len(merged) >= 100):
++                raise HTTPException(409, "Cart quantity or item limit would be exceeded")
++        except HTTPException as exc:
++            skipped.append({"name": name, "reason": exc.detail})
++            continue
++        except (ValueError, KeyError, TypeError):
++            skipped.append({"name": name, "reason": "Saved selections could not be verified"})
++            continue
++        merged[key] = line.model_copy(update={"quantity": quantity})
++        old_price = previous.get("unit_price")
++        if isinstance(old_price, (int, float)) and old_price != current["unit_price"]:
++            changes.append({"name": name, "previous": old_price, "current": current["unit_price"]})
++        added += line.quantity
++
++    result = {"added": added, "skipped": skipped, "price_changes": changes}
++    if not added:
++        return result
++    query = ({"_id": cart["_id"], "updated_at": cart.get("updated_at"), "items": cart.get("items", [])} if cart
++             else {"user_id": user["id"], "updated_at": {"$exists": False}})
++    try:
++        written = await db.restaurant_carts.update_one(query, {"$set": {
++            "user_id": user["id"], "restaurant_id": restaurant_id,
++            "items": [line.model_dump() for line in merged.values()], "updated_at": now_utc(),
++            "repeat_request_id": body.request_id, "repeat_order_id": order_id, "repeat_result": result,
++        }}, upsert=not cart)
++    except DuplicateKeyError:
++        written = None
++    if not written or (written.matched_count != 1 and written.upserted_id is None):
++        latest = await db.restaurant_carts.find_one({"user_id": user["id"]})
++        if latest and latest.get("repeat_request_id") == body.request_id and latest.get("repeat_order_id") == order_id:
++            return latest["repeat_result"]
++        raise HTTPException(409, "Your food cart changed. Review it before repeating the order.")
++    return result
++
++
+ @api.get("/restaurant/cart")
+ async def get_restaurant_cart(user: dict = Depends(get_current_user)):
+     cart=await db.restaurant_carts.find_one({"user_id":user["id"]})
+@@ -6125,7 +6298,9 @@
+             addons={str(a.get("id")):a for a in item.get("add_ons",[]) if isinstance(a,dict) and a.get("id")}
+             for addon_id in line.get("add_on_ids",[]):
+                 if addon_id in addons: unit_price += float(addons[addon_id].get("price",0))
+-            output.append({**line,"name":item["name"],"price":round(unit_price,2),"image_url":item.get("image_url"),"description":item.get("description","")})
++            output.append({**line,"name":item["name"],"price":round(unit_price,2),"image_url":item.get("image_url"),"description":item.get("description",""),
++                           "variant_name": variant.get("name") if variant else None,
++                           "add_on_names": [addons[aid].get("name", "Add-on") for aid in line.get("add_on_ids", []) if aid in addons]})
+     return {"restaurant_id":cart.get("restaurant_id"),"restaurant_name":restaurant.get("name") if restaurant else None,"delivery_fee":float(restaurant.get("delivery_fee",0)) if restaurant else 0,"tax_rate":float(restaurant.get("tax_rate",5)) if restaurant else 5,"items":output,"updated_at":cart.get("updated_at")}
+
+ @api.put("/restaurant/cart")
+@@ -6186,28 +6361,10 @@
+         if not serviceability["serviceable"]:
+             status_code = 503 if serviceability["status"] == "unconfigured" else 400
+             raise HTTPException(status_code=status_code, detail=serviceability["reason"])
+-    item_rows=[]; subtotal=0.0
+-    for line in body.items:
+-        item = await db.restaurant_menu.find_one({"_id": _object_id_or_404(line.menu_item_id, "Menu item"), "restaurant_id": body.restaurant_id})
+-        if not item or not item.get("available", True):
+-            raise HTTPException(status_code=409, detail="A menu item is unavailable; refresh your cart")
+-        base_price=float(item["price"]); selected_addons=[]
+-        available_addons={str(a.get("id")):a for a in item.get("add_ons", []) if isinstance(a, dict) and a.get("id")}
+-        for aid in line.add_on_ids:
+-            addon=available_addons.get(aid)
+-            if not addon: raise HTTPException(status_code=400, detail="Invalid menu add-on")
+-            base_price += float(addon.get("price", 0)); selected_addons.append({"id":aid,"name":addon.get("name","Add-on"),"price":float(addon.get("price",0))})
+-        selected_variant=None
+-        if line.variant_id:
+-            variant=next((v for v in item.get("variants",[]) if isinstance(v,dict) and str(v.get("id"))==line.variant_id),None)
+-            if not variant: raise HTTPException(status_code=400, detail="Invalid menu variant")
+-            base_price=float(variant.get("price",base_price))+sum(x["price"] for x in selected_addons)
+-            selected_variant={"id":line.variant_id,"name":variant.get("name","Variant"),"price":float(variant.get("price",base_price))}
+-        subtotal += base_price*line.quantity
+-        item_rows.append({"menu_item_id":line.menu_item_id,"name":item["name"],"quantity":line.quantity,"unit_price":round(base_price,2),"line_total":round(base_price*line.quantity,2),"variant":selected_variant,"add_ons":selected_addons,"instructions":line.instructions,"image_url":item.get("image_url")})
+-    if subtotal < float(restaurant.get("min_order",0)):
+-        raise HTTPException(status_code=400, detail=f"Minimum order is ₹{restaurant.get('min_order',0)}")
+-    totals=calculate_restaurant_totals(subtotal, float(restaurant.get("delivery_fee",0)), float(restaurant.get("tax_rate",5)), body.fulfillment)
++    totals = await _restaurant_quote(restaurant, body.items, body.fulfillment)
++    if body.quote_fingerprint and body.quote_fingerprint != totals["fingerprint"]:
++        raise HTTPException(409, "Restaurant prices or selections changed. Review the updated checkout total.")
++    item_rows = totals["items"]
+     order={"ref":"FO-"+uuid.uuid4().hex[:10].upper(),"customer_id":user["id"],"restaurant_id":body.restaurant_id,"restaurant_name":restaurant["name"],"restaurant_owner_id":restaurant["owner_id"],"items":item_rows,"subtotal":totals["subtotal"],"delivery_fee":totals["delivery_fee"],"tax":totals["tax"],"total":totals["total"],"currency":"INR","fulfillment":body.fulfillment,"delivery_address":address or "Pickup","contact_name":body.contact_name,"contact_phone":body.contact_phone,"notes":body.notes,"status":"pending_payment" if body.payment_method=="razorpay" else "placed","payment_method":body.payment_method,"payment_status":"pending" if body.payment_method=="razorpay" else ("cod_pending" if body.payment_method=="cod" else "pay_at_pickup_pending"),"idempotency_key":body.idempotency_key,"status_history":[{"status":"pending_payment" if body.payment_method=="razorpay" else "placed","at":now_utc(),"note":"Order created; awaiting restaurant acceptance/payment as applicable."}],"created_at":now_utc(),"updated_at":now_utc()}
+     try:
+         result=await db.restaurant_orders.insert_one(order); order["_id"]=result.inserted_id
+--- a/backend/tests/test_shared_system_integration_contract.py
++++ b/backend/tests/test_shared_system_integration_contract.py
+@@ -67,7 +67,8 @@
+     assert 'db.addresses.find_one({"_id": _object_id_or_404(body.address_id, "Address"), "user_id": user["id"]})' in create
+     assert 'if body.fulfillment == "delivery" and not restaurant.get("delivery_available", True)' in create
+     assert 'if body.fulfillment == "pickup" and not restaurant.get("pickup_available", True)' in create
+-    assert "calculate_restaurant_totals(subtotal" in create
++    assert "_restaurant_quote(restaurant, body.items, body.fulfillment)" in create
++    assert "calculate_restaurant_totals(subtotal" in function_source("_restaurant_quote")
+     assert '"total":totals["total"]' in create
+
+
+--- /dev/null
++++ b/backend/tests/test_task8_restaurant_repeat.py
+@@ -0,0 +1,135 @@
++"""Restaurant repeat and checkout contracts through HTTP and disposable MongoDB."""
++import asyncio
++from copy import deepcopy
++import os
++from uuid import uuid4
++
++import pytest
++
++
++def test_restaurant_repeat_cart_checkout_and_ownership(monkeypatch):
++    if os.environ.get("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
++        pytest.skip("requires disposable loopback MongoDB")
++    import httpx
++    from bson import ObjectId
++    from motor.motor_asyncio import AsyncIOMotorClient
++    import server
++
++    monkeypatch.setenv("JWT_SECRET", uuid4().hex)
++
++    async def scenario():
++        mongo = AsyncIOMotorClient("mongodb://127.0.0.1:27018/?replicaSet=rs0", serverSelectionTimeoutMS=3000)
++        name = "comein_disposable_repeat_" + uuid4().hex[:16]
++        db = mongo[name]
++        monkeypatch.setattr(server, "db", db)
++        try:
++            await db.restaurant_carts.create_index("user_id", unique=True)
++            await db.restaurant_orders.create_index([("customer_id", 1), ("idempotency_key", 1)], unique=True, sparse=True)
++            buyer, other, restaurant, second = [ObjectId() for _ in range(4)]
++            headers = {}
++            for actor in (buyer, other):
++                email = f"{actor}@fixture.example"
++                await db.users.insert_one({"_id": actor, "email": email, "role": "customer"})
++                headers[actor] = {"Authorization": "Bearer " + server.create_access_token(str(actor), "customer", email)}
++            await db.restaurants.insert_one({"_id": restaurant, "name": "Local fixture", "owner_id": str(other),
++                "available": True, "delivery_available": True, "status": "approved", "tax_rate": 10, "delivery_fee": 25,
++                "payment_methods": ["cod", "pickup"], "delivery_serviceable_pincodes": ["110001"]})
++            menu = ObjectId()
++            item = {"_id": menu, "restaurant_id": str(restaurant), "name": "Fixture bowl", "price": 40,
++                    "available": True, "variants": [{"id": "large", "name": "Large", "price": 90}],
++                    "add_ons": [{"id": "dip", "name": "Dip", "price": 10, "variant_ids": ["large"]},
++                               {"id": "gone", "name": "Gone", "price": 1, "available": False},
++                               {"id": "wrong_size", "name": "Wrong size", "price": 1, "variant_ids": ["small"]}]}
++            await db.restaurant_menu.insert_one(item)
++            unavailable = ObjectId()
++            await db.restaurant_menu.insert_one({"_id": unavailable, "restaurant_id": str(restaurant), "name": "Unavailable", "available": False})
++            foreign = ObjectId()
++            await db.restaurant_menu.insert_one({"_id": foreign, "restaurant_id": str(second), "name": "Foreign menu", "available": True})
++            line = {"menu_item_id": str(menu), "name": "Fixture bowl", "quantity": 2, "unit_price": 60,
++                    "variant": {"id": "large"}, "add_ons": [{"id": "dip"}], "instructions": "No onion"}
++            skipped = [
++                {**line, "menu_item_id": str(ObjectId()), "name": "Deleted"},
++                {**line, "menu_item_id": str(unavailable), "name": "Unavailable"},
++                {**line, "menu_item_id": str(foreign), "name": "Foreign menu"},
++                {**line, "variant": {"id": "removed"}, "name": "Removed size"},
++                {**line, "add_ons": [{"id": "gone"}], "name": "Removed add-on"},
++                {**line, "add_ons": [{"id": "wrong_size"}], "name": "Incompatible add-on"},
++            ]
++            original = ObjectId()
++            history = {"_id": original, "customer_id": str(buyer), "restaurant_id": str(restaurant),
++                       "status": "delivered", "idempotency_key": "historic-checkout",
++                       "total": 120, "payment_method": "razorpay", "gateway_payment_id": "historic_payment",
++                       "items": [line, *skipped] }
++            await db.restaurant_orders.insert_one(deepcopy(history))
++            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=server.app), base_url="http://local") as http:
++                async def request(method, path, body=None, actor=buyer):
++                    return await http.request(method, "/api" + path, json=body, headers=headers.get(actor))
++
++                path = f"/restaurant/orders/{original}/repeat"
++                attempt = {"request_id": "fixture-repeat"}
++                assert (await request("POST", path, attempt, None)).status_code == 401
++                assert (await request("POST", path, attempt, other)).status_code == 404
++                for status in ("cancelled", "rejected", "placed", "pending_payment"):
++                    await db.restaurant_orders.update_one({"_id": original}, {"$set": {"status": status}})
++                    assert (await request("POST", path, attempt)).status_code == 409
++                await db.restaurant_orders.update_one({"_id": original}, {"$set": {"status": "delivered"}})
++                await db.restaurants.update_one({"_id": restaurant}, {"$set": {"available": False}})
++                assert (await request("POST", path, attempt)).status_code == 409
++                await db.restaurants.update_one({"_id": restaurant}, {"$set": {"available": True}})
++                assert not await db.restaurant_carts.find_one({"user_id": str(buyer)})
++                existing = {"menu_item_id": str(menu), "quantity": 1, "variant_id": "large",
++                            "add_on_ids": ["dip"], "instructions": "No onion"}
++                conflict = {**attempt, "local_cart": {"restaurant_id": str(second), "items": [existing]}}
++                assert (await request("POST", path, conflict)).status_code == 409
++                await db.restaurant_carts.insert_one({"user_id": str(buyer), "restaurant_id": str(second),
++                    "items": [existing], "updated_at": server.now_utc()})
++                assert (await request("POST", path, attempt)).status_code == 409
++                assert (await db.restaurant_carts.find_one({"user_id": str(buyer)}))["restaurant_id"] == str(second)
++                await db.restaurant_carts.update_one({"user_id": str(buyer)}, {"$set": {"restaurant_id": str(restaurant)}})
++                results = await asyncio.gather(*(request("POST", path, attempt) for _ in range(2)))
++                assert results[0].status_code == results[1].status_code == 200
++                assert results[0].json() == results[1].json()
++                result = results[0].json()
++                assert result["added"] == 2 and len(result["skipped"]) == 6
++                assert result["price_changes"] == [{"name": "Fixture bowl", "previous": 60, "current": 100}]
++                cart = (await request("GET", "/restaurant/cart")).json()
++                saved = cart["items"][0]
++                assert saved["quantity"] == 3 and saved["price"] == 100
++                assert saved["variant_id"] == "large" and saved["add_on_ids"] == ["dip"] and saved["instructions"] == "No onion"
++                assert (await db.restaurant_orders.find_one({"_id": original})) == history
++                picked_up = ObjectId()
++                await db.restaurant_orders.insert_one({**history, "_id": picked_up, "idempotency_key": "pickup-history",
++                                                      "status": "picked_up", "items": [line]})
++                pickup_path = f"/restaurant/orders/{picked_up}/repeat"
++                assert (await request("POST", pickup_path, {"request_id": "second-repeat"})).json()["added"] == 2
++                await db.restaurant_orders.update_one({"_id": picked_up}, {"$set": {"items": skipped}})
++                empty = await request("POST", pickup_path, {"request_id": "empty-repeat"})
++                assert empty.json()["added"] == 0
++                assert (await request("GET", "/restaurant/cart")).json()["items"][0]["quantity"] == 5
++
++                payload = {"restaurant_id": str(restaurant), "items": [{**existing, "quantity": 5, "unit_price": 1}],
++                           "fulfillment": "delivery"}
++                quote = (await request("POST", "/restaurant/cart/quote", payload)).json()
++                assert (quote["subtotal"], quote["tax"], quote["delivery_fee"], quote["total"]) == (500, 50, 25, 575)
++                pickup_quote = (await request("POST", "/restaurant/cart/quote", {**payload, "fulfillment": "pickup"})).json()
++                assert pickup_quote["total"] == 550 and pickup_quote["delivery_fee"] == 0
++                order_body = {**payload, "contact_name": "Local fixture", "contact_phone": "55501001",
++                              "delivery_address": "Local fixture 110001", "payment_method": "cod", "total": 1,
++                              "idempotency_key": "new-repeat-checkout", "quote_fingerprint": quote["fingerprint"]}
++                await db.restaurant_menu.update_one({"_id": menu}, {"$set": {"variants.0.price": 100}})
++                assert (await request("POST", "/restaurant/orders", order_body)).status_code == 409
++                fresh = (await request("POST", "/restaurant/cart/quote", payload)).json()
++                assert fresh["total"] == 630
++                order_body["quote_fingerprint"] = fresh["fingerprint"]
++                created = await asyncio.gather(*(request("POST", "/restaurant/orders", order_body) for _ in range(2)))
++                assert all(reply.status_code == 200 for reply in created)
++                placed = created[0].json()
++                assert placed["id"] == created[1].json()["id"] != str(original)
++                assert placed["total"] == 630 and placed["payment_status"] == "cod_pending"
++                assert "gateway_payment_id" not in placed and await db.restaurant_payments.count_documents({}) == 0
++                assert (await db.restaurant_orders.find_one({"_id": original})) == history
++        finally:
++            await mongo.drop_database(name)
++            mongo.close()
++
++    asyncio.run(scenario())
+--- a/frontend/app/restaurant/cart.tsx
++++ b/frontend/app/restaurant/cart.tsx
+@@ -1,7 +1,89 @@
+ import { useCallback, useState } from 'react';
+ import { Image, Pressable, Text, View } from 'react-native';
+-import { useRouter, useFocusEffect } from 'expo-router';
+-import { calculateCart, readRestaurantCart, RestaurantCartLine, writeRestaurantCart } from '@/src/restaurant/cart';
++import { useRouter, useFocusEffect, useLocalSearchParams } from 'expo-router';
++import {
++  calculateCart, readRestaurantCart, restaurantLineKey, RestaurantCartLine, writeRestaurantCart,
++} from '@/src/restaurant/cart';
+ import { RestaurantPage, rs } from '@/src/restaurant/RestaurantPage';
+ import { restaurantTheme as t } from '@/src/restaurant/theme';
+-export default function RestaurantCart(){const [lines,setLines]=useState<RestaurantCartLine[]>([]);const [ready,setReady]=useState(false);const router=useRouter();useFocusEffect(useCallback(()=>{let active=true;readRestaurantCart().then(v=>{if(active){setLines(v);setReady(true)}});return()=>{active=false}},[]));const totals=calculateCart(lines);async function update(next:RestaurantCartLine[]){setLines(next);await writeRestaurantCart(next)}return <RestaurantPage title="Your food cart" subtitle="A local demo cart saved on this device">{!ready?<Text style={rs.muted}>Loading cart…</Text>:!totals.rows.length?<View style={rs.card}><Text style={rs.heading}>Your cart is empty</Text><Text style={rs.muted}>Explore the demo menu and add something delicious.</Text><Pressable style={rs.button} onPress={()=>router.push('/restaurant' as never)}><Text style={rs.buttonText}>Browse restaurants</Text></Pressable></View>:<>{totals.rows.map(row=><View key={row.itemId} style={[rs.card,rs.row,{alignItems:'flex-start'}]}><Image source={{uri:row.item.image}} style={{width:72,height:72,borderRadius:12}}/><View style={{flex:1,gap:4}}><Text style={{color:t.text,fontWeight:'900'}}>{row.item.name}</Text><Text style={rs.muted}>{row.restaurant.name}</Text><Text style={{color:t.accent,fontWeight:'900'}}>₹{row.lineTotal}</Text><View style={[rs.row,{justifyContent:'flex-start'}]}><Pressable style={rs.chip} onPress={()=>update(row.quantity===1?lines.filter(x=>x.itemId!==row.itemId):lines.map(x=>x.itemId===row.itemId?{...x,quantity:x.quantity-1}:x))}><Text style={rs.chipText}>−</Text></Pressable><Text style={{color:t.text,fontWeight:'900'}}>{row.quantity}</Text><Pressable style={rs.chip} onPress={()=>update(lines.map(x=>x.itemId===row.itemId?{...x,quantity:x.quantity+1}:x))}><Text style={rs.chipText}>+</Text></Pressable><Pressable onPress={()=>update(lines.filter(x=>x.itemId!==row.itemId))}><Text style={{color:t.primary,fontWeight:'800'}}>Remove</Text></Pressable></View></View></View>)}<View style={rs.card}><Text style={rs.heading}>Price details</Text>{[['Subtotal',totals.subtotal],['Delivery (demo fee)',totals.delivery],['Tax (demo estimate 5%)',totals.tax]].map(([label,value])=><View key={String(label)} style={[rs.row,{justifyContent:'space-between'}]}><Text style={rs.muted}>{label}</Text><Text style={{color:t.text,fontWeight:'700'}}>₹{value}</Text></View>)}<View style={[rs.row,{justifyContent:'space-between'}]}><Text style={rs.heading}>Total</Text><Text style={{color:t.accent,fontWeight:'900',fontSize:18}}>₹{totals.total}</Text></View><Text style={rs.muted}>Fees and tax are illustrative development rules, not a restaurant&#39;s live quote.</Text><Pressable style={rs.button} onPress={()=>router.push('/restaurant/checkout' as never)}><Text style={rs.buttonText}>Continue to demo checkout</Text></Pressable></View></>}</RestaurantPage>}
++
++export default function RestaurantCart() {
++  const [lines, setLines] = useState<RestaurantCartLine[]>([]);
++  const [ready, setReady] = useState(false);
++  const router = useRouter();
++  const { repeatNotice } = useLocalSearchParams<{ repeatNotice?: string }>();
++  useFocusEffect(useCallback(() => {
++    let active = true;
++    void readRestaurantCart().then(cart => {
++      if (active) { setLines(cart); setReady(true); }
++    });
++    return () => { active = false; };
++  }, []));
++
++  const totals = calculateCart(lines);
++  async function update(next: RestaurantCartLine[]) {
++    setLines(next);
++    await writeRestaurantCart(next);
++  }
++
++  function setQuantity(key: string, quantity: number) {
++    if (quantity === 0) {
++      void update(lines.filter(line => restaurantLineKey(line) !== key));
++    } else {
++      void update(lines.map(line => restaurantLineKey(line) === key ? { ...line, quantity } : line));
++    }
++  }
++
++  return <RestaurantPage title="Your food cart" subtitle="Review your Restaurant Mode cart">
++    {repeatNotice ? <Text accessibilityLiveRegion="polite" style={rs.muted}>{repeatNotice}</Text> : null}
++    {!ready ? <Text style={rs.muted}>Loading cart…</Text> : !totals.rows.length ? (
++      <View style={rs.card}>
++        <Text style={rs.heading}>Your cart is empty</Text>
++        <Text style={rs.muted}>Explore a restaurant menu and add something delicious.</Text>
++        <Pressable style={rs.button} onPress={() => router.push('/restaurant')}>
++          <Text style={rs.buttonText}>Browse restaurants</Text>
++        </Pressable>
++      </View>
++    ) : <>
++      {totals.rows.map(row => {
++        const key = restaurantLineKey(row);
++        const selections = [row.variantName, ...(row.addOnNames || [])].filter(Boolean).join(' · ');
++        return <View key={key} style={[rs.card, rs.row, { alignItems: 'flex-start' }]}>
++          <Image source={{ uri: row.item.image }} style={{ width: 72, height: 72, borderRadius: 12 }} />
++          <View style={{ flex: 1, gap: 4 }}>
++            <Text style={{ color: t.text, fontWeight: '900' }}>{row.item.name}</Text>
++            <Text style={rs.muted}>{row.restaurant.name}</Text>
++            {selections ? <Text style={rs.muted}>{selections}</Text> : null}
++            {row.instructions ? <Text style={rs.muted}>{row.instructions}</Text> : null}
++            <Text style={{ color: t.accent, fontWeight: '900' }}>₹{row.lineTotal}</Text>
++            <View style={[rs.row, { justifyContent: 'flex-start' }]}>
++              <Pressable style={rs.chip} onPress={() => setQuantity(key, row.quantity - 1)}><Text style={rs.chipText}>−</Text></Pressable>
++              <Text style={{ color: t.text, fontWeight: '900' }}>{row.quantity}</Text>
++              <Pressable style={rs.chip} disabled={row.quantity >= 99} onPress={() => setQuantity(key, row.quantity + 1)}><Text style={rs.chipText}>+</Text></Pressable>
++              <Pressable onPress={() => setQuantity(key, 0)}><Text style={{ color: t.primary, fontWeight: '800' }}>Remove</Text></Pressable>
++            </View>
++          </View>
++        </View>;
++      })}
++      <View style={rs.card}>
++        <Text style={rs.heading}>Price details</Text>
++        {[
++          ['Subtotal', totals.subtotal], ['Delivery estimate', totals.delivery], ['Estimated tax', totals.tax],
++        ].map(([label, value]) => (
++          <View key={label} style={[rs.row, { justifyContent: 'space-between' }]}>
++            <Text style={rs.muted}>{label}</Text>
++            <Text style={{ color: t.text, fontWeight: '700' }}>₹{value}</Text>
++          </View>
++        ))}
++        <View style={[rs.row, { justifyContent: 'space-between' }]}>
++          <Text style={rs.heading}>Total</Text>
++          <Text style={{ color: t.accent, fontWeight: '900', fontSize: 18 }}>₹{totals.total}</Text>
++        </View>
++        <Text style={rs.muted}>Checkout confirms current prices, tax and fees for your selected fulfilment.</Text>
++        <Pressable style={rs.button} onPress={() => router.push('/restaurant/checkout')}>
++          <Text style={rs.buttonText}>Continue to checkout</Text>
++        </Pressable>
++      </View>
++    </>}
++  </RestaurantPage>;
++}
+--- a/frontend/app/restaurant/checkout.tsx
++++ b/frontend/app/restaurant/checkout.tsx
+@@ -1,13 +1,18 @@
+-import { useEffect, useState } from 'react';
++import { useCallback, useEffect, useRef, useState } from 'react';
+ import { Pressable, Text, TextInput, View, ActivityIndicator } from 'react-native';
+-import { useRouter } from 'expo-router';
+-import { readRestaurantCart, writeRestaurantCart } from '@/src/restaurant/cart';
++import { useFocusEffect, useRouter } from 'expo-router';
++import { readRestaurantCart, restaurantCartPayload, writeRestaurantCart } from '@/src/restaurant/cart';
+ import { RestaurantPage, rs } from '@/src/restaurant/RestaurantPage';
+ import { restaurantTheme as t } from '@/src/restaurant/theme';
+ import { createLiveOrder } from '@/src/restaurant/api';
+ import { api } from '@/src/lib/api';
+ import { razorpaySupported, useGroceryPaymentConfig } from '@/src/lib/razorpay';
+ import { useAuth } from '@/src/store/auth';
++
++type RestaurantQuote = {
++  fingerprint: string; subtotal: number; tax: number; delivery_fee: number; total: number;
++  items: { name: string; quantity: number; line_total: number; variant?: { name: string }; add_ons: { name: string }[]; instructions: string }[];
++};
+
+ type SavedAddress = {
+   id: string;
+@@ -42,6 +47,9 @@
+   const [addressNotice, setAddressNotice] = useState('');
+   const [notice, setNotice] = useState('');
+   const [busy, setBusy] = useState(false);
++  const [summary, setSummary] = useState<{ mode: 'delivery' | 'pickup'; quote: RestaurantQuote } | null>(null);
++  const [quoteError, setQuoteError] = useState('');
++  const submitLock = useRef(false);
+   const [idempotencyKey] = useState(() => `restaurant-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`);
+
+   const [addressUser, setAddressUser] = useState(user?.id);
+@@ -72,7 +80,7 @@
+       })
+       .finally(() => { if (active) setAddressesLoading(false); });
+     return () => { active = false; };
+-  }, [user?.id]);
++  }, [user]);
+
+   useEffect(() => {
+     let active = true;
+@@ -92,7 +100,23 @@
+     return () => { active = false; };
+   }, []);
+
++  useFocusEffect(useCallback(() => {
++    if (!user) return;
++    let active = true;
++    void readRestaurantCart().then(lines => {
++      if (!lines.length || !lines.every(line => line.isLive)) throw new Error("Add available restaurant items before checkout.");
++      return api.post<RestaurantQuote>('/restaurant/cart/quote', { ...restaurantCartPayload(lines), fulfillment });
++    }).then(quote => {
++      if (active) { setSummary({ mode: fulfillment, quote }); setQuoteError(''); }
++    }).catch((error: { message?: string }) => {
++      if (active) { setSummary(null); setQuoteError(error.message || 'The restaurant total could not be confirmed.'); }
++    });
++    return () => { active = false; };
++  }, [fulfillment, user]));
++
+   async function placeOrder() {
++    if (submitLock.current) return;
++    submitLock.current = true;
+     setNotice('');
+     setBusy(true);
+     try {
+@@ -147,15 +171,16 @@
+           return;
+         }
+       }
++      const payload = restaurantCartPayload(lines);
++      const quote = await api.post<RestaurantQuote>('/restaurant/cart/quote', { ...payload, fulfillment });
++      if (summary?.mode !== fulfillment || quote.fingerprint !== summary.quote.fingerprint) {
++        setSummary({ mode: fulfillment, quote });
++        setNotice('The cart summary has changed. Review the updated total, then confirm your order.');
++        return;
++      }
+       const order = await createLiveOrder({
+-        restaurant_id: restaurantId,
+-        items: lines.map((line) => ({
+-          menu_item_id: line.itemId,
+-          quantity: line.quantity,
+-          variant_id: line.variantId,
+-          add_on_ids: line.addOnIds || [],
+-          instructions: line.instructions || '',
+-        })),
++        ...payload,
++        quote_fingerprint: quote.fingerprint,
+         address_id: fulfillment === 'delivery' && addressId ? addressId : undefined,
+         contact_name: contactName.trim(),
+         contact_phone: contactPhone.trim(),
+@@ -170,6 +195,7 @@
+     } catch (error: any) {
+       setNotice(error?.message || 'Could not submit the order. Your cart has been preserved; check the order history before retrying if the connection failed.');
+     } finally {
++      submitLock.current = false;
+       setBusy(false);
+     }
+   }
+@@ -205,12 +231,18 @@
+           {addressNotice ? <Text style={rs.muted}>{addressNotice}</Text> : null}
+         </> : <Text style={rs.muted}>Pickup uses the restaurant&#39;s supported pickup option; no delivery address is required.</Text>}
+
++        <Text style={rs.heading}>Current order summary</Text>
++        {summary?.mode === fulfillment ? <>
++          {summary.quote.items.map((item, index) => <Text key={index} style={rs.muted}>{item.quantity} × {item.name}{item.variant ? ` · ${item.variant.name}` : ""}{item.add_ons.length ? ` · ${item.add_ons.map(addOn => addOn.name).join(", ")}` : ""} · ₹{item.line_total.toFixed(2)}</Text>)}
++          <Text style={rs.muted}>Subtotal ₹{summary.quote.subtotal.toFixed(2)} · Tax ₹{summary.quote.tax.toFixed(2)} · Delivery ₹{summary.quote.delivery_fee.toFixed(2)}</Text>
++          <Text style={rs.heading}>Total ₹{summary.quote.total.toFixed(2)}</Text>
++        </> : <Text style={rs.muted}>{quoteError || 'Checking current restaurant prices…'}</Text>}
+         <Text style={rs.heading}>Payment</Text>
+         {restaurantPaymentMethods.includes('cod') ? <Pressable style={[rs.chip,paymentMethod==='cod'&&rs.chipActive]} onPress={()=>setPaymentMethod('cod')}><Text style={[rs.chipText,paymentMethod==='cod'&&rs.chipTextActive]}>Cash on Delivery</Text></Pressable> : null}
+         {fulfillment==='pickup' && restaurantPaymentMethods.includes('pickup') ? <Pressable style={[rs.chip,paymentMethod==='pickup'&&rs.chipActive]} onPress={()=>setPaymentMethod('pickup')}><Text style={[rs.chipText,paymentMethod==='pickup'&&rs.chipTextActive]}>Pay at Pickup</Text></Pressable> : null}
+         {onlineEnabled && restaurantPaymentMethods.includes('razorpay') ? <Pressable style={[rs.chip,paymentMethod==='razorpay'&&rs.chipActive]} onPress={()=>setPaymentMethod('razorpay')}><Text style={[rs.chipText,paymentMethod==='razorpay'&&rs.chipTextActive]}>Pay online with Razorpay</Text></Pressable> : null}
+         <Text style={rs.muted}>Only supported methods enabled by this restaurant are offered. Online payment is confirmed only by the backend; closing checkout does not confirm or cancel a payment.</Text>
+-        <Pressable disabled={busy} style={[rs.button, busy && { opacity: 0.6 }]} onPress={placeOrder}><Text style={rs.buttonText}>{busy ? 'Submitting…' : 'Place order'}</Text></Pressable>
++        <Pressable disabled={busy} style={[rs.button, busy && { opacity: 0.6 }]} onPress={placeOrder}><Text style={rs.buttonText}>{busy ? 'Submitting…' : summary?.mode === fulfillment ? 'Place order' : 'Refresh total'}</Text></Pressable>
+         {notice ? <Text style={{ color: t.error, fontSize: 12 }}>{notice}</Text> : null}
+       </View>
+     </RestaurantPage>
+--- a/frontend/app/restaurant/orders/index.tsx
++++ b/frontend/app/restaurant/orders/index.tsx
+@@ -1,8 +1,9 @@
+-import { useCallback, useState } from 'react';
++import { useCallback, useRef, useState } from 'react';
+ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+ import { useFocusEffect, useRouter } from 'expo-router';
+
+ import { api } from '@/src/lib/api';
++import { repeatRestaurantOrder } from '@/src/restaurant/cart';
+ import { useAuth } from '@/src/store/auth';
+ import { RestaurantPage, rs } from '@/src/restaurant/RestaurantPage';
+ import { restaurantTheme as t } from '@/src/restaurant/theme';
+@@ -28,6 +29,40 @@
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState('');
+
++  const [repeating, setRepeating] = useState(false);
++  const [repeatNotice, setRepeatNotice] = useState('');
++  const repeatLock = useRef(false);
++  const attempt = useRef<{ orderId: string; requestId: string } | null>(null);
++
++  async function repeat(orderId: string) {
++    if (repeatLock.current) return;
++    repeatLock.current = true;
++    setRepeating(true);
++    setRepeatNotice('');
++    if (!attempt.current || attempt.current.orderId !== orderId) {
++      attempt.current = { orderId, requestId: `repeat-${Date.now()}-${Math.random().toString(36).slice(2)}` };
++    }
++    try {
++      const result = await repeatRestaurantOrder(orderId, attempt.current.requestId);
++      attempt.current = null;
++      const notices = [
++        result.added ? 'Repeat order started. Review your updated food cart.' : 'No valid items remain. Your food cart is unchanged.',
++        ...result.skipped.map(row => `${row.name}: ${row.reason}.`),
++        ...result.price_changes.map(row => `${row.name}: price changed from ₹${row.previous.toFixed(2)} to ₹${row.current.toFixed(2)} each.`),
++      ].join(' ');
++      if (result.added) {
++        router.push({ pathname: '/restaurant/cart', params: { repeatNotice: notices } });
++      } else {
++        setRepeatNotice(notices);
++      }
++    } catch (error) {
++      setRepeatNotice((error as { message?: string }).message || 'Could not repeat this order. Try again or review your food cart.');
++    } finally {
++      repeatLock.current = false;
++      setRepeating(false);
++    }
++  }
++
+   const loadOrders = useCallback(async (isActive: () => boolean = () => true) => {
+     if (!user || user.role !== 'customer') {
+       if (isActive()) {
+@@ -48,7 +83,7 @@
+     } finally {
+       if (isActive()) setLoading(false);
+     }
+-  }, [user?.id, user?.role]);
++  }, [user]);
+
+   useFocusEffect(useCallback(() => {
+     let active = true;
+@@ -58,6 +93,10 @@
+
+   return (
+     <RestaurantPage title="Your restaurant orders" subtitle="Your restaurant orders only · grocery orders are shown separately">
++      {repeatNotice ? <View style={rs.card}>
++        <Text accessibilityLiveRegion="polite" style={rs.muted}>{repeatNotice}</Text>
++        <Pressable style={rs.chip} onPress={() => router.push('/restaurant/cart')}><Text style={rs.chipText}>Open food cart</Text></Pressable>
++      </View> : null}
+       {user === null ? (
+         <View style={rs.card}>
+           <ActivityIndicator color={t.primary} />
+@@ -96,9 +135,8 @@
+         </View>
+       ) : (
+         orders.map((order) => (
++          <View key={order.id} style={rs.card}>
+           <Pressable
+-            key={order.id}
+-            style={rs.card}
+             onPress={() => router.push({ pathname: '/restaurant/orders/[id]', params: { id: order.id } } as never)}
+             accessibilityRole="button"
+             accessibilityLabel={`View restaurant order ${order.ref}`}
+@@ -112,6 +150,12 @@
+             <Text style={rs.muted}>{order.created_at ? new Date(order.created_at).toLocaleString() : ''}</Text>
+             <Text style={{ color: t.primary, fontSize: 12, fontWeight: '800' }}>View order details →</Text>
+           </Pressable>
++          {['delivered', 'picked_up'].includes(order.status) ? (
++            <Pressable accessibilityRole="button" disabled={repeating} style={rs.chip} onPress={() => void repeat(order.id)}>
++              <Text style={rs.chipText}>Repeat Order</Text>
++            </Pressable>
++          ) : null}
++          </View>
+         ))
+       )}
+     </RestaurantPage>
+--- a/frontend/src/restaurant/cart.ts
++++ b/frontend/src/restaurant/cart.ts
+@@ -1,15 +1,73 @@
+ import { storage } from '@/src/utils/storage';
+ import { api, TOKEN_KEY } from '@/src/lib/api';
+ import { FoodItem, findRestaurant } from './data';
+-export type RestaurantCartLine = { restaurantId:string; itemId:string; quantity:number; isLive?:boolean; itemName?:string; itemDescription?:string; unitPrice?:number; imageUrl?:string; restaurantName?:string; deliveryFee?:number; taxRate?:number; variantId?:string; addOnIds?:string[]; instructions?:string };
++export type RestaurantCartLine = { restaurantId:string; itemId:string; quantity:number; isLive?:boolean; itemName?:string; itemDescription?:string; unitPrice?:number; imageUrl?:string; restaurantName?:string; deliveryFee?:number; taxRate?:number; variantId?:string; addOnIds?:string[]; variantName?:string; addOnNames?:string[]; instructions?:string };
+ const KEY='@comein_restaurant_cart_v1';
+-export async function readRestaurantCart():Promise<RestaurantCartLine[]> {
++async function readDeviceRestaurantCart(): Promise<RestaurantCartLine[]> {
+  const raw=await storage.getItem<string>(KEY, '[]'); let local:RestaurantCartLine[]=[];
+  try { const parsed=JSON.parse(raw ?? '[]'); local=Array.isArray(parsed) ? parsed.filter((x:any)=>x&&typeof x.restaurantId==='string'&&typeof x.itemId==='string'&&Number.isInteger(x.quantity)&&x.quantity>0) : []; } catch { local=[]; }
+- const token=await storage.secureGet<string>(TOKEN_KEY,'');
+- if(token){try{const server=await api.get<any>('/restaurant/cart');if(server?.items?.length){const live:RestaurantCartLine[]=server.items.map((x:any)=>({restaurantId:server.restaurant_id,itemId:x.menu_item_id,quantity:x.quantity,isLive:true,itemName:x.name,unitPrice:Number(x.price),imageUrl:x.image_url,itemDescription:x.description,variantId:x.variant_id,addOnIds:x.add_on_ids||[],instructions:x.instructions||'',restaurantName:server.restaurant_name,deliveryFee:Number(server.delivery_fee||0),taxRate:Number(server.tax_rate??5)}));await storage.setItem(KEY,JSON.stringify(live));return live;}}catch{/* offline: retain device-local cart */}}
+  return local;
+ }
++
++function mapServerCart(server: any): RestaurantCartLine[] {
++ return (server.items || []).map((x: any) => ({
++   restaurantId: server.restaurant_id, itemId: x.menu_item_id, quantity: x.quantity,
++   isLive: true, itemName: x.name, unitPrice: Number(x.price), imageUrl: x.image_url,
++   itemDescription: x.description, variantId: x.variant_id, addOnIds: x.add_on_ids || [],
++   instructions: x.instructions || '', variantName: x.variant_name, addOnNames: x.add_on_names, restaurantName: server.restaurant_name,
++   deliveryFee: Number(server.delivery_fee || 0), taxRate: Number(server.tax_rate ?? 5),
++ }));
++}
++
++export async function readRestaurantCart(): Promise<RestaurantCartLine[]> {
++ const local = await readDeviceRestaurantCart();
++ const token = await storage.secureGet<string>(TOKEN_KEY, '');
++ if (token) {
++   try {
++     const server = await api.get<any>('/restaurant/cart');
++     if (server?.items?.length) {
++       const live = mapServerCart(server);
++       await storage.setItem(KEY, JSON.stringify(live));
++       return live;
++     }
++   } catch { /* Offline: retain the device-local cart. */ }
++ }
++ return local;
++}
++
++export function restaurantLineKey(line: RestaurantCartLine) {
++ return JSON.stringify([line.restaurantId, line.itemId, line.variantId || null, [...(line.addOnIds || [])].sort(), line.instructions || '']);
++}
++
++export function restaurantCartPayload(lines: RestaurantCartLine[]) {
++ return { restaurant_id: lines[0].restaurantId, items: lines.map(line => ({
++   menu_item_id: line.itemId, quantity: line.quantity, variant_id: line.variantId || null,
++   add_on_ids: line.addOnIds || [], instructions: line.instructions || '',
++ })) };
++}
++
++type RepeatResult = {
++ added: number;
++ skipped: { name: string; reason: string }[];
++ price_changes: { name: string; previous: number; current: number }[];
++};
++
++export async function repeatRestaurantOrder(orderId: string, requestId: string): Promise<RepeatResult> {
++ const local = await readDeviceRestaurantCart();
++ if (local.some(line => !line.isLive || line.restaurantId !== local[0].restaurantId)) {
++   throw new Error('Review your existing food cart before repeating this order.');
++ }
++ const result = await api.post<RepeatResult>(`/restaurant/orders/${encodeURIComponent(orderId)}/repeat`, {
++   request_id: requestId, local_cart: local.length ? restaurantCartPayload(local) : undefined,
++ });
++ if (result.added) {
++   const saved = mapServerCart(await api.get('/restaurant/cart'));
++   if (!saved.length) throw new Error('The repeated cart could not be loaded. Retry to refresh the same request.');
++   await storage.setItem(KEY, JSON.stringify(saved));
++ }
++ return result;
++}
++
+ export async function writeRestaurantCart(lines:RestaurantCartLine[]) {
+  await storage.setItem(KEY,JSON.stringify(lines));
+  const token=await storage.secureGet<string>(TOKEN_KEY,'');
+@@ -17,7 +75,7 @@
+ }
+ export type CalculatedCartRow = {
+   restaurantId:string; itemId:string; quantity:number; restaurant:any; item:any; lineTotal:number; unitPrice:number;
+-  isLive?:boolean; itemName?:string; itemDescription?:string; imageUrl?:string; restaurantName?:string; deliveryFee?:number; taxRate?:number; variantId?:string; addOnIds?:string[]; instructions?:string;
++  isLive?:boolean; itemName?:string; itemDescription?:string; imageUrl?:string; restaurantName?:string; deliveryFee?:number; taxRate?:number; variantId?:string; addOnIds?:string[]; variantName?:string; addOnNames?:string[]; instructions?:string;
+ };
+ export function calculateCart(lines:RestaurantCartLine[]): {rows:CalculatedCartRow[];subtotal:number;delivery:number;tax:number;total:number} {
+  const rows:CalculatedCartRow[]=[];
