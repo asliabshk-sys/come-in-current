@@ -35,3 +35,7 @@ Partial and COD refund rules remain **PARTIALLY VERIFIED**. Existing manual COD 
 ### Offer expiry rules — 23 November 2026
 
 Offer expiry remains **PARTIALLY VERIFIED**. Existing dated coupons and advertisements use enforced server windows. Final coupon expiry rejection rolls back without charging a new amount. Replacement-offer duration and independent cancellation remain unapproved and unimplemented under T9-12. [Audit](offer-expiry-rules-20261123/AUDIT.md) · [Owner decisions](offer-expiry-rules-20261123/OWNER-DECISION.md) · [Tests](offer-expiry-rules-20261123/TESTS.md)
+
+### Stage 7 — CA preparation
+
+The CA field inventory, financial reconciliation checklist and questions are ready. Actual CA approval and statutory issuance remain deferred. [CA review package](ca-preparation-20261123/CA-REVIEW-SUMMARY.md)
