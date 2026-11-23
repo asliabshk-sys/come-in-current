@@ -54,3 +54,7 @@ The sole skip was the existing external object-storage test. Fresh referral test
 - **700 full backend passed, 0 failed, 1 skipped** for unavailable external object storage. [Full output](remaining-implementation-20261123/full.log)
 - TypeScript, targeted ESLint, Expo export, four Chromium scenarios and restart/replay passed. Chromium covered Admin activation and seller report. Cash coupon order submission, retry and cancellation were exercised through the HTTP/Mongo tests. [TypeScript](remaining-implementation-20261123/typescript.log) · [ESLint](remaining-implementation-20261123/lint.log) · [Expo](remaining-implementation-20261123/expo.log) · [Chromium](remaining-implementation-20261123/browser.log) · [Restart](remaining-implementation-20261123/restart.log)
 - Native Android/iOS and genuine Razorpay TEST payment, refund and webhook validation remain deferred. [Commands](remaining-implementation-20261123/COMMANDS.md)
+
+## Local campaign lifecycle milestone
+
+Coupon and ad milestone focused result was **3 passed, 0 failed, 0 skipped** using test_task9_coupon_checkout.py and test_task9_business_policy.py. [Focused log](local-policy-20261123/coupon-ad-focused.log).

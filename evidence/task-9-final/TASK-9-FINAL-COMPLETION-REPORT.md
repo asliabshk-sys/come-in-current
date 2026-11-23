@@ -49,3 +49,7 @@ At baseline `cc3d0368969167a45d20c135b9b9681c299b1e33`, promotions had no checko
 Commercial advertisement discovery and event intake now filter explicit area/category context and active moderated poster approval. Sellers can view measured event counts and timing. Attributed orders are explicitly unavailable. The request context is not independently verified geolocation and no new Home/Search ad placement or contractual compensation mechanism was enabled.
 
 The three coupon rules T9-41–43 moved from unimplemented to partial because Grocery cash works and broader commerce does not. The resulting 50-policy totals are 31 verified, 1 implemented awaiting external validation, 9 partial, 1 unimplemented, 8 blocked. The existing 32 whole-policy owner approvals remain, and the newly verified bounded controls are owner-approved under the same authorization. Changes are in `backend/server.py`, Task 9 tests, checkout, Admin promotions and Seller Advertisements. Apply `patches/task9-coupon-checkout-and-ad-delivery.patch` after the payout campaign patch. No new collection, index or migration.
+
+## Local campaign lifecycle milestone
+
+Admin coupon campaign listing and audited pause, resume and terminal close now operate in the funded Grocery cash path. Advertisers can review and accept an optional fixed-duration impression target. Reports distinguish in-progress delivery, excess and ended shortfall. No compensation or new placement was enabled.

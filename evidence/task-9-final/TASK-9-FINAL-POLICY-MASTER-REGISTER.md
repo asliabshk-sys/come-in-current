@@ -56,3 +56,7 @@ Baseline `1a87ca116836502741613ab3049f02f4bb2cb310`. This register retains the e
 | T9-50 | Real provider and device gate | No real money, legal issuance, native or genuine external tests in this phase without required approvals/credentials. | F. All new execution routes stop at review; tests use local fixtures. Pending statuses / no provider execution records | Import no for blocked operation; persistence no for blocked operation. | Native Android/iOS and authorized genuine Razorpay TEST payment, webhook and refund validation remain deferred. | BLOCKED | No final technical approval recorded | Native Android/iOS and authorized genuine Razorpay TEST payment, webhook and refund validation remain deferred. |
 
 The [payout and campaign policy addendum](TASK-9-PAYOUT-AND-CAMPAIGN-POLICY.md) records additional verified controls under the owner-approved business structure. The 50-policy status totals remain unchanged because settlement and coupon execution are still incomplete.
+
+## Local campaign lifecycle milestone
+
+T9-41–43 retain PARTIALLY VERIFIED status for broader funding and checkout. Admin lifecycle, open quote rejection while paused, and duplicate status audit protection are locally verified. The optional accepted ad delivery target is a measured-report control, with compensation policy pending.

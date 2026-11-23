@@ -34,3 +34,7 @@ Seller payout scheduling and fixed-duration commercial accounting have a local i
 ## Grocery cash coupon closure
 
 Grocery cash activation, quote, transaction spend and unpaid cancellation release for fully COME-IN-funded campaigns are now working. T9-41–43 remain partial because seller and advertiser funding, mixed splits, Restaurant checkout, online checkout and paid refund adjustments remain unsupported. Broader funding requires a posting and reconciliation procedure, with independently verifiable provider outcomes for online usage. Ad delivery reports expose measured events. Contracted quantities and accepted shortfall/over-delivery terms are still required for financial remediation. Delivery partner allocation, reward/referral reversals, incremental provider execution, partial/COD disbursement, seller replacement adjustments and CA-approved invoice correction retain their recorded dependencies.
+
+## Local campaign lifecycle milestone
+
+Accepted impression targets are now reportable. The financial treatment of measured shortfall or excess still requires accepted remediation terms and independently authorized execution. Geographic verification and new placements remain outside this increment.
