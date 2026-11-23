@@ -47,3 +47,7 @@ All nine partial entries were reviewed. Internal draft creation now verifies the
 ### Stage 9 — T9-12
 
 Replacement-offer expiry and separate cancellation remain unimplemented, with the exact owner decision requirements identified. Existing order-state guards were verified. [Stage 9](final-closure-20261123/STAGE-9-T9-12.md)
+
+### Stage 10 — blocked policies
+
+Eight blocked operations have named owners, missing decisions, external evidence and next steps. Local safety checks passed. [Blockers](final-closure-20261123/BLOCKERS-AND-DEPENDENCIES.md)
