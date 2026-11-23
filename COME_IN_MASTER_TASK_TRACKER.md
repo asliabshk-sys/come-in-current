@@ -46,7 +46,7 @@
 | 6 | Search and Filters | **COMPLETED** | Earlier Task 6 implementation and test reports preserved. | Not rerun in this batch. |
 | 7 | Cart and Checkout | **COMPLETED** | Checkout quote/idempotency source; historical COD/pickup UI/API tests; Iteration 3 fixes empty-cart and unavailable-fulfillment messaging. | No Expo runtime in current environment. |
 | 8 | Repeat Order | **COMPLETED** | Earlier TASK24 report and existing repeat-order source. | Measured repeat-order extension not fully verified. |
-| 9 | Out-of-Stock Replacement | **PARTIALLY COMPLETE** | Unpaid Grocery and Restaurant replacement verified. Paid/online, legacy tax and reward decisions linked to Assist. [Evidence](evidence/task-9-restaurant-assist-20261123/IMPLEMENTATION_REPORT.md) | Automated financial settlement and historical invoice or reward amendments need approved rules. |
+| 9 | Out-of-Stock Replacement | **PARTIALLY COMPLETE** | Grocery and Restaurant replacement, accounting linkage and Admin financial review. [Evidence](evidence/task-9-financial-review-20261123/IMPLEMENTATION_REPORT.md) | Captured-payment adjustment, reward amendment and historical invoice policy awaiting approval. |
 | 10 | Live Tracking | **COMPLETED** | Historical /api/orders/{id}/tracking runtime E2E report. | Not rerun in this batch. |
 | 11 | Order Help and Refund Status | **PARTIAL** | Restaurant Admin refund safeguards retained; Grocery refund summary states and in-app notification routes have offline coverage. | Automatic Grocery refunds, refund-specific notifications and live customer/seller/admin status synchronization remain pending. |
 | 12 | Excel/CSV Price and Stock Import | **COMPLETED** | Earlier reports; import confirmation dialog source fix; Task 5 measured CSV parser/model now has offline coverage. | Transaction-backed measured import apply remains pending with disposable MongoDB verification. |
@@ -1093,3 +1093,7 @@ Paid/online orders, reward adjustments and legacy taxed orders use COME-IN Assis
 ## Task 9 — Restaurant replacement and financial Assist — 2026-11-23 IST
 
 Task 9 is **PARTIALLY COMPLETE**. Eligible unpaid Restaurant orders now support seller proposals, customer-only approvals, current stock availability and price checks, existing Restaurant tax recalculation, and notification/deep-link integration. Grocery and Restaurant paid/online orders, recorded rewards, and unsupported historical tax go to order-linked COME-IN Assist. Original financial records stay intact. Automated replacement settlement and historical adjustment policy remain pending. Native and genuine Razorpay TEST validation remain deferred. [Implementation and verification](evidence/task-9-restaurant-assist-20261123/IMPLEMENTATION_REPORT.md)
+
+## Task 9 — Financial audit linkage — 2026-11-23 IST
+
+Task 9 is **PARTIALLY COMPLETE**. Applied replacements are linked to eligible finalized cash accounting. Assist records all financial blockers, the customer decision and its timestamp. Admin can distinguish pending review from confirmed execution. Captured-payment settlement, reward amendments and historical invoice corrections remain pending the approvals in the decision register. Native and genuine Razorpay TEST validation remain deferred. [Implementation and pending approvals](evidence/task-9-financial-review-20261123/IMPLEMENTATION_REPORT.md)

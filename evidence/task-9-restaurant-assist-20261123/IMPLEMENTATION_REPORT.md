@@ -23,3 +23,7 @@ Source changed in `backend/server.py`, the Grocery and new Restaurant Task 9 tes
 - [Local Chromium run](browser.log) and [reproduction script](browser-smoke.py)
 
 Final result was 24 focused passes and 695 full backend passes with zero failures. The only skipped case required external object storage. TypeScript, targeted ESLint with zero warnings, Expo web export and the Chromium seller/customer scenario passed. The Mongo-backed suites covered assisted consent, reward and historical tax preservation, duplicate handling, and absence of financial ledger changes.
+
+## Financial review follow-up
+
+See the [financial review and policy decision register](../task-9-financial-review-20261123/IMPLEMENTATION_REPORT.md) for the subsequent accounting and Admin review changes.

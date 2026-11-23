@@ -124,3 +124,9 @@ Restore `patches/task9-grocery-order-replacement.patch` after `patches/task8-res
 Task 9 is **PARTIALLY COMPLETE**. Eligible unpaid Restaurant orders now support seller proposals, customer-only approvals, current stock availability and price checks, existing Restaurant tax recalculation, and notification/deep-link integration. Grocery and Restaurant paid/online orders, recorded rewards, and unsupported historical tax go to order-linked COME-IN Assist. Original financial records stay intact. Automated replacement settlement and historical adjustment policy remain pending. Native and genuine Razorpay TEST validation remain deferred. [Implementation and verification](evidence/task-9-restaurant-assist-20261123/IMPLEMENTATION_REPORT.md)
 
 Apply `patches/task9-restaurant-and-assist.patch` after `patches/task9-grocery-order-replacement.patch`. Verify current GitHub `work` before continuing.
+
+## Task 9 — Financial audit linkage — 2026-11-23 IST
+
+Task 9 is **PARTIALLY COMPLETE**. Applied replacements are linked to eligible finalized cash accounting. Assist records all financial blockers, the customer decision and its timestamp. Admin can distinguish pending review from confirmed execution. Captured-payment settlement, reward amendments and historical invoice corrections remain pending the approvals in the decision register. Native and genuine Razorpay TEST validation remain deferred. [Implementation and pending approvals](evidence/task-9-financial-review-20261123/IMPLEMENTATION_REPORT.md)
+
+Apply `patches/task9-financial-review.patch` after `patches/task9-restaurant-and-assist.patch`. Verify GitHub `work` before continuing.

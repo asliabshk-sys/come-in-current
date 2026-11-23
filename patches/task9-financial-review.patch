@@ -1,0 +1,202 @@
+diff --git a/backend/server.py b/backend/server.py
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -4826,19 +4826,56 @@
+     option_id: Optional[str] = Field(default=None, max_length=40)
+
+
+-def _replacement_adjustment_reason(order: dict, kind: str = "grocery") -> Optional[str]:
++def _replacement_adjustment_reasons(order: dict, kind: str) -> list[str]:
++    reasons = []
+     if any(order.get(key) for key in ("reward_discount", "coupon_discount", "coupon_code", "loyalty_discount", "credits_applied")):
+-        return "reward_review"
++        reasons.append("reward_review")
+     if any(order.get(key) for key in ("tax_amount", "gst", "tax_details", "invoice_id", "invoice_number", "invoice")) or (kind == "grocery" and order.get("tax")):
+-        return "historical_tax_review"
++        reasons.append("historical_tax_review")
+     cash_terms = {("cod", "cod_pending"), ("pickup", "pay_at_pickup_pending")}
+     if kind == "grocery":
+         cash_terms.update({("cash_shop", "pay_at_pickup_pending"), ("cash_shop", "pay_at_shop_pending")})
+     if (order.get("payment_method"), order.get("payment_status")) not in cash_terms or any(
+         order.get(key) for key in ("razorpay_payment_id", "gateway_payment_id", "refund_status", "cash_collection_confirmed_at")
+     ):
+-        return "payment_review"
+-    return None
++        reasons.append("payment_review")
++    return reasons
++
++
++def _replacement_adjustment_reason(order: dict, kind: str = "grocery") -> Optional[str]:
++    return next(iter(_replacement_adjustment_reasons(order, kind)), None)
++
++
++def _replacement_original_financials(order: dict) -> dict:
++    return {key: order[key] for key in (
++        "subtotal", "delivery_fee", "tax", "tax_amount", "total", "currency",
++        "reward_discount", "coupon_discount", "loyalty_discount", "payment_status",
++    ) if key in order}
++
++
++async def _replacement_financial_review(session, order, case, kind):
++    case.setdefault("original_financials", _replacement_original_financials(order))
++    reasons = list(dict.fromkeys([*_replacement_adjustment_reasons(order, kind), case["assist_reason"]]))
++    if reasons == ["no_alternative"]:
++        return
++    decision = case.get("decision")
++    selected = next((option for option in case["options"] if decision and option["id"] == decision["option_id"]), None)
++    review = {
++        "replacement_id": case["id"], "reasons": reasons, "status": "pending_policy",
++        "financial_action_confirmed": False, "original": case["original_financials"],
++        "decision": decision["action"] if decision else None,
++        "decision_at": decision["at"] if decision else None,
++        "option_id": selected["id"] if selected else None,
++        "line_difference": selected["line_difference"] if selected else None,
++        "updated_at": now_utc(),
++    }
++    result = await db.restaurant_support.update_one(
++        {"_id": ObjectId(case["support_id"]), "user_id": order["customer_id"],
++         "order_id": str(order["_id"]), "order_kind": kind},
++        {"$set": {"financial_review": review}}, session=session,
++    )
++    if not result.matched_count:
++        raise HTTPException(409, "The linked support case changed. Refresh the order.")
+
+
+ REPLACEMENT_ASSIST_REASONS = {
+@@ -5023,13 +5060,14 @@
+             "id": uuid.uuid4().hex, "line_index": body.line_index, "original": _replacement_snapshot(line),
+             "original_line_total": round(_line_amount(line), 2), "original_total": order["total"], "options": options,
+             "keep_totals": keep_totals, "state": "assist_required" if reason else "awaiting_customer",
+-            "assist_reason": reason,
++            "assist_reason": reason, "original_financials": _replacement_original_financials(order),
+             "reported_by": user["id"], "reported_at": now, "supersedes": body.refresh_case_id,
+         }
+         if open_case:
+             open_case.update({"state": "superseded", "superseded_at": now})
+         if reason:
+             await _replacement_escalate(session, order, case, "grocery", open_case)
++            await _replacement_financial_review(session, order, case, "grocery")
+         cases.append(case)
+         await db.orders.update_one({"_id": oid}, {"$set": {"replacements": cases, "updated_at": now}}, session=session)
+         message = (
+@@ -5085,6 +5123,7 @@
+             case.update({"state": "assist_required", "assist_reason": reason})
+             await _replacement_escalate(session, order, case, "grocery", case)
+             _replacement_decision(case, order, body, user, now)
++            await _replacement_financial_review(session, order, case, "grocery")
+             await db.orders.update_one({"_id": oid}, {"$set": updates}, session=session)
+             return case
+         if body.action == "reject":
+@@ -5638,6 +5677,10 @@
+               "platform_earnings": split["platform_earnings"], "shopkeeper_payable": split["shopkeeper_payable"],
+               "commission_rate_percent": split["commission_rate_percent"], "financial_policy_updated_at": entity.get("financial_policy_updated_at"),
+               "source_order_created_at": order.get("created_at"), "recorded_at": now, "status": "recorded"}
++    replacement_ids = [case["id"] for case in order.get("replacements", [])
++                       if case.get("state") in {"accepted", "kept_unavailable"} and case.get("id")]
++    if replacement_ids:
++        record["replacement_ids"] = replacement_ids
+     await db.financial_ledger.update_one({"idempotency_key": key}, {"$setOnInsert": record}, upsert=True)
+     return await db.financial_ledger.find_one({"idempotency_key": key})
+
+@@ -6827,10 +6870,11 @@
+             "id": uuid.uuid4().hex, "line_index": index, "original": display, "original_item": original,
+             "original_line_total": display["line_total"], "original_total": order["total"], "options": options,
+             "keep_totals": None, "state": "assist_required" if reason else "awaiting_customer",
+-            "assist_reason": reason, "reported_by": user["id"], "reported_at": now, "supersedes": body.refresh_case_id,
++            "assist_reason": reason, "original_financials": _replacement_original_financials(order), "reported_by": user["id"], "reported_at": now, "supersedes": body.refresh_case_id,
+         }
+         if reason:
+             await _replacement_escalate(session, order, case, "restaurant", active)
++            await _replacement_financial_review(session, order, case, "restaurant")
+         if active:
+             active.update({"state": "superseded", "superseded_at": now})
+         cases.append(case)
+@@ -6896,6 +6940,8 @@
+             case.update({"state": "assist_required", "assist_reason": reason})
+             await _replacement_escalate(session, order, case, "restaurant", case)
+         _replacement_decision(case, order, body, user, now)
++        if reason:
++            await _replacement_financial_review(session, order, case, "restaurant")
+         await db.restaurant_orders.update_one({"_id": oid}, {"$set": updates}, session=session)
+         if case["state"] == "accepted":
+             await _replacement_notify(session, order, case, "Replacement confirmed", f"Your updated order total is ₹{totals['total']:.2f}.", "restaurant")
+diff --git a/backend/tests/test_task9_restaurant_replacement.py b/backend/tests/test_task9_restaurant_replacement.py
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -117,6 +117,58 @@
+                 assert await db.financial_ledger.count_documents({}) == 0
+                 assert await db.referral_ledger.count_documents({}) == 0
+
++                oid = await order(
++                    payment_method="razorpay", payment_status="paid", coupon_discount=25,
++                    invoice_id="original-invoice", tax=9.25,
++                )
++                case = (await report(oid)).json()
++                ticket_id = ObjectId(case["support_id"])
++                ticket = await db.restaurant_support.find_one({"_id": ticket_id})
++                assert set(ticket["financial_review"]["reasons"]) == {"payment_review", "reward_review", "historical_tax_review"}
++                assert ticket["financial_review"]["original"]["tax"] == 9.25
++                assert (await request("GET", "/admin/restaurant/support", actor="seller")).status_code == 403
++                admin_tickets = (await request("GET", "/admin/restaurant/support", actor="admin")).json()
++                assert any(row["id"] == str(ticket_id) and row["financial_review"]["status"] == "pending_policy" for row in admin_tickets)
++
++                patch_review = server._replacement_financial_review
++
++                async def interrupted(*args):
++                    await patch_review(*args)
++                    raise RuntimeError("fixture interrupted after the support write")
++
++                with monkeypatch.context() as failing:
++                    failing.setattr(server, "_replacement_financial_review", interrupted)
++                    assert (await decide(oid, case)).status_code == 503
++                pending = await db.restaurant_support.find_one({"_id": ticket_id})
++                assert pending["financial_review"]["decision"] is None
++                assert not (await db.restaurant_orders.find_one({"_id": oid}))["replacements"][0].get("decision")
++                assert (await decide(oid, case)).status_code == 200
++                assert (await decide(oid, case)).status_code == 200
++                reviewed = (await db.restaurant_support.find_one({"_id": ticket_id}))["financial_review"]
++                assert reviewed["decision"] == "accept" and reviewed["line_difference"] == 140
++                assert reviewed["status"] == "pending_policy" and not reviewed["financial_action_confirmed"]
++                assert reviewed["decision_at"] is not None
++                assert (await db.restaurant_orders.find_one({"_id": oid}))["invoice_id"] == "original-invoice"
++                assert await db.restaurant_support.count_documents({"order_id": str(oid)}) == 1
++
++                await db.restaurants.update_one({"_id": restaurant}, {"$set": {
++                    "financial_policy_updated_at": server.now_utc(), "commission_rate_percent": 10,
++                    "platform_service_fee_inr": 2, "delivery_fee_beneficiary": "shopkeeper",
++                }})
++                oid = await order(created_at=server.now_utc())
++                case = (await report(oid)).json()
++                assert (await decide(oid, case)).status_code == 200
++                accepted_order = await db.restaurant_orders.find_one({"_id": oid})
++                assert await server._record_finalized_order_ledger(accepted_order, "restaurant") is None
++                # Simulate the ordinary, independently confirmed cash collection.
++                accepted_order.update(status="delivered", payment_status="cash_collected")
++                first_record = await server._record_finalized_order_ledger(accepted_order, "restaurant")
++                second_record = await server._record_finalized_order_ledger(accepted_order, "restaurant")
++                assert first_record["_id"] == second_record["_id"]
++                assert first_record["replacement_ids"] == [case["id"]]
++                assert first_record["gross_order_value"] == 306.5
++                assert first_record["shopkeeper_payable"] == 251.5
++
+                 oid = await order()
+                 case = (await report(oid)).json()
+                 assert (await decide(oid, case, "reject")).json()["state"] == "rejected"
+diff --git a/frontend/app/admin.tsx b/frontend/app/admin.tsx
+--- a/frontend/app/admin.tsx
++++ b/frontend/app/admin.tsx
+@@ -311,6 +311,14 @@
+             <Text style={styles.cardTitle}>{r.ref} · {r.category}</Text>
+             <Text style={styles.cardMeta}>{r.message}</Text>
+             <Text style={styles.cardMeta}>Status: {r.status}</Text>
++            {r.financial_review ? <View>
++              <Text style={styles.cardMeta}>Financial review pending · No financial action confirmed</Text>
++              <Text style={styles.cardMeta}>{r.order_kind} order {r.order_ref || r.order_id} · Replacement {r.financial_review.replacement_id}</Text>
++              <Text style={styles.cardMeta}>{r.financial_review.reasons.map((reason: string) => reason.replaceAll("_", " ")).join(" · ")}</Text>
++              <Text style={styles.cardMeta}>Original total ₹{r.financial_review.original.total} · Decision {r.financial_review.decision || "pending"}</Text>
++              {r.financial_review.line_difference != null ? <Text style={styles.cardMeta}>Proposed item difference ₹{r.financial_review.line_difference}</Text> : null}
++              <Text style={styles.cardMeta}>Review updated {new Date(r.financial_review.updated_at).toLocaleString()}</Text>
++            </View> : null}
+             <View style={styles.btnRow}>
+               <ActionBtn label="In progress" onPress={() => setSupportStatus(r.id, "in_progress")} />
+               <ActionBtn label="Resolve" onPress={() => setSupportStatus(r.id, "resolved")} />
