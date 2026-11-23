@@ -1,0 +1,2 @@
+PASS restarted API preserved terminal status, campaign counters, order receipt and spent audit reconciliation
+PASS after restart an eligible unpaid cancellation restored budget exactly once despite closure and replay

@@ -28,3 +28,7 @@ Broader reward policy, advertising compensation, third-party funding, statutory 
 | T9-12 | Obtain explicit expiry duration and cancellation terms before changing offer availability. | No offer is closed or reopened under an invented duration. |
 
 The current sign-off forms record authority, effective date and evidence. [Owner decisions](approval-readiness-20261123/OWNER-DECISIONS.md) · [External validation](approval-readiness-20261123/EXTERNAL-HANDOFF.md)
+
+### Coupon funding and channels — 23 November 2026
+
+T9-41–43 remain **PARTIALLY VERIFIED**. Existing COME-IN-funded Grocery cash controls passed fresh tests including release rollback, wrong-order release, paid-order denial and Admin reconciliation after restart. Commercial expansion awaits explicit approval. [Decision record](coupon-funding-20261123/OWNER-DECISION.md) · [Tests and commands](coupon-funding-20261123/TESTS.md)

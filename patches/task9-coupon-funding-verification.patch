@@ -1,0 +1,53 @@
+--- a/backend/tests/test_task9_coupon_checkout.py
++++ b/backend/tests/test_task9_coupon_checkout.py
+@@ -46,6 +46,15 @@
+                 saved = await post("/admin/financial/promotion-drafts", draft, "admin")
+                 path = f"/admin/financial/promotion-drafts/{saved.json()['id']}/activate-grocery-coupon"
+                 activation = {"code": "TEST20", "customer_scope": "all_signed_in", "release_unpaid_cancellation": True}
++                for unsupported in ({"funding_allocation_basis_points": {"seller": 5000, "come_in": 5000}},
++                                    {"restaurant_ids": [str(ObjectId())]}):
++                    proposed = await post("/admin/financial/promotion-drafts", {**draft, **unsupported}, "admin")
++                    assert proposed.status_code == 200, proposed.text
++                    attempted = await post(
++                        f"/admin/financial/promotion-drafts/{proposed.json()['id']}/activate-grocery-coupon",
++                        activation, "admin",
++                    )
++                    assert attempted.status_code == 422
+                 assert (await post(path, activation, "first")).status_code == 403
+                 assert (await post(path, activation, "admin")).status_code == 200
+                 assert (await post(path, activation, "admin")).status_code == 200
+@@ -108,6 +117,23 @@
+                 assert pending_refund["audit_released_paise"] == 0
+                 await db.orders.update_one({"_id": ObjectId(order["id"])}, {"$unset": {"refund_status": ""}})
+                 assert (await quote("second", 1)).status_code == 409
++                await db.orders.update_one({"_id": ObjectId(order["id"])}, {"$set": {"payment_status": "paid"}})
++                assert (await post(f"/orders/{order['id']}/cancel", {}, actor)).status_code == 409
++                assert await db.financial_audit.count_documents({"action": "grocery_coupon_released"}) == 0
++                await db.orders.update_one({"_id": ObjectId(order["id"])}, {"$set": {"payment_status": "cod_pending"}})
++
++                record_event = server._record_grocery_coupon_event
++                with monkeypatch.context() as failure:
++                    async def fail_after_release(*args, **kwargs):
++                        await record_event(*args, **kwargs)
++                        raise RuntimeError("fixture failure after coupon release")
++                    failure.setattr(server, "_record_grocery_coupon_event", fail_after_release)
++                    assert (await post(f"/orders/{order['id']}/cancel", {}, actor)).status_code == 503
++                persisted = await db.orders.find_one({"_id": ObjectId(order["id"])})
++                assert persisted["status"] == "pending" and persisted["coupon_redemption"]["state"] == "spent"
++                assert (await db.products.find_one({"_id": products[winner]}))["stock"] == 9
++                assert (await http.get(recon, headers=auth["admin"])).json() == funded
++
+                 cancelled = await post(f"/orders/{order['id']}/cancel", {}, actor)
+                 assert cancelled.status_code == 200 and cancelled.json()["coupon_redemption"]["state"] == "released"
+                 assert (await post(f"/orders/{order['id']}/cancel", {}, actor)).status_code == 200
+@@ -115,6 +141,10 @@
+                 released = (await http.get(recon, headers=auth["admin"])).json()
+                 assert released["status"] == "balanced" and released["receipt_paise"] == 0
+                 assert released["audit_released_paise"] == 2000
++                await db.financial_audit.update_one({"action": "grocery_coupon_released"}, {"$set": {"order_id": wrong_order}})
++                mismatch = (await http.get(recon, headers=auth["admin"])).json()
++                assert mismatch["status"] == "review_required" and mismatch["unmatched_audit_orders"] == 2
++                await db.financial_audit.update_one({"action": "grocery_coupon_released"}, {"$set": {"order_id": order["id"]}})
+                 await db.financial_policy_drafts.update_one({"_id": "coupon:TEST20"}, {"$inc": {"spent_paise": 1}})
+                 assert (await http.get(recon, headers=auth["admin"])).json()["status"] == "review_required"
+                 await db.financial_policy_drafts.update_one({"_id": "coupon:TEST20"}, {"$inc": {"spent_paise": -1}})

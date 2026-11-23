@@ -200,3 +200,7 @@ Task 9 remains **PARTIALLY VERIFIED**. Apply `patches/task9-final-contract-bindi
 ### 23 November 2026 — Task 9 approval readiness
 
 Task 9 remains **PARTIALLY VERIFIED**. The final approval dashboard and sign-off packets are linked from the checkpoint. The stored operation stage is covered by a dedicated regression assertion without changing existing production behavior. [Checkpoint](evidence/task-9-final/TASK-9-FINAL-CHECKPOINT.md)
+
+### 23 November 2026 — Task 9 coupon funding verification
+
+Apply `patches/task9-coupon-funding-verification.patch` after the approval-stage regression patch. Only the retained coupon integration test changes. T9-41–43 remain partially verified pending commercial approval. [Decision record](evidence/task-9-final/coupon-funding-20261123/OWNER-DECISION.md) · [Evidence](evidence/task-9-final/coupon-funding-20261123/TESTS.md)

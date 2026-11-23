@@ -85,3 +85,7 @@ The other six areas were reverified through the existing transaction, financial 
 The campaign extended the existing synthetic checkout test to independently alter the stored operation stage as well as amount, currency and reference. All four alterations trigger the quote conflict. Production source and business rules required no new changes for this control. No additional business, professional or third-party approvals were recorded. Existing policies remain 31 approved and verified, 1 awaiting external validation, 9 partial, 1 unimplemented and 8 blocked. Task 9 is **PARTIALLY VERIFIED**.
 
 [50-policy dashboard](approval-readiness-20261123/APPROVAL-DASHBOARD.md) · [Owner decision packet](approval-readiness-20261123/OWNER-DECISIONS.md) · [External approval packet](approval-readiness-20261123/EXTERNAL-HANDOFF.md)
+
+### Coupon funding and channels — 23 November 2026
+
+T9-41–43 remain **PARTIALLY VERIFIED**. Existing COME-IN-funded Grocery cash controls passed fresh tests including release rollback, wrong-order release, paid-order denial and Admin reconciliation after restart. Commercial expansion awaits explicit approval. [Decision record](coupon-funding-20261123/OWNER-DECISION.md) · [Tests and commands](coupon-funding-20261123/TESTS.md)

@@ -11,3 +11,7 @@ The implementation milestone was independently verified at `08888cae3489c8e3a550
 ### Approval-readiness checkpoint
 
 Baseline `06ab688c4c2474600b1fbe9cc851115756351b38` matched GitHub `work`. Apply `patches/task9-approval-stage-regression.patch` after the final contract binding patch. It changes only `backend/tests/test_task9_restaurant_replacement.py`. Existing funding and execution gates remain in force. [Dashboard](approval-readiness-20261123/APPROVAL-DASHBOARD.md)
+
+### Coupon funding and channels — 23 November 2026
+
+T9-41–43 remain **PARTIALLY VERIFIED**. Existing COME-IN-funded Grocery cash controls passed fresh tests including release rollback, wrong-order release, paid-order denial and Admin reconciliation after restart. Commercial expansion awaits explicit approval. [Decision record](coupon-funding-20261123/OWNER-DECISION.md) · [Tests and commands](coupon-funding-20261123/TESTS.md)

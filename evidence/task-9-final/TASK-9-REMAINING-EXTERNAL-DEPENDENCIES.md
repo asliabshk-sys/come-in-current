@@ -56,3 +56,7 @@ Coupon funding comparisons, ad shortfall review, recorded delivery fees and rewa
 The replacement collection adapter now implements the network-free Razorpay wire contract, validated with fixture records, signatures and restart persistence. Genuine transports and verified payment, refund or payout execution are still blocked. Closure adds more evidence for reviewing the remaining financial decisions without posting changes. [Required decisions, authorizers and next integration steps](closure-evidence-20261123/APPROVAL-HANDOFF.md)
 
 The final campaign strengthens quote-to-contract binding but leaves approved funding scope, unapproved compensation and payout rules, case-specific legal approval and genuine external validation unchanged. [Consolidated approvals, impacts and evidence required](TASK-9-APPROVAL-HANDOFF.md)
+
+### Coupon funding and channels — 23 November 2026
+
+T9-41–43 remain **PARTIALLY VERIFIED**. Existing COME-IN-funded Grocery cash controls passed fresh tests including release rollback, wrong-order release, paid-order denial and Admin reconciliation after restart. Commercial expansion awaits explicit approval. [Decision record](coupon-funding-20261123/OWNER-DECISION.md) · [Tests and commands](coupon-funding-20261123/TESTS.md)

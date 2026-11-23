@@ -137,3 +137,7 @@ The corrected full backend regression recorded **707 passed, 0 failed, 1 skipped
 | Chromium and restart/persistence | 7 scenarios and 5 checks passed | [Chromium](approval-readiness-20261123/browser.log) · [Restart](approval-readiness-20261123/restart.log) |
 
 External object storage was unavailable at `backend/tests/backend_test.py:397`. Python warnings cover framework and catalogue dependency deprecations. All financial evidence was local or synthetic. [Commands](approval-readiness-20261123/COMMANDS.md)
+
+### Coupon funding and channels — 23 November 2026
+
+T9-41–43 remain **PARTIALLY VERIFIED**. Existing COME-IN-funded Grocery cash controls passed fresh tests including release rollback, wrong-order release, paid-order denial and Admin reconciliation after restart. Commercial expansion awaits explicit approval. [Decision record](coupon-funding-20261123/OWNER-DECISION.md) · [Tests and commands](coupon-funding-20261123/TESTS.md)
