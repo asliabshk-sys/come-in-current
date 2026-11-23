@@ -42,3 +42,7 @@ Accepted impression targets are now reportable. The financial treatment of measu
 ## Local financial review safeguards
 
 The internal correction draft leaves tax values and the original invoice untouched. The final correction content and numbering require case-specific CA guidance and an authorized issuance procedure. Reward release now fails safely once a qualifying order is refunded. An approved reversal and compensating-entry policy is needed to change the customer balance. Existing captured payment and seller/platform ledger evidence appears together in Admin review. It does not authorize incremental payments, partial or COD disbursement, replacement settlement allocation or partner reconciliation.
+
+### Review consistency follow-up
+
+Recorded capture and refund checks are local approval safeguards. They do not replace the missing T9-20 linked execution protocol, T9-23 partial-refund policy or T9-24 COD verification rail. The internal draft validates the original order snapshot and does not supply the professional guidance, numbering or issuance procedures for T9-48. [Implementation and remaining work](review-consistency-20261123/IMPLEMENTATION.md)

@@ -1,0 +1,46 @@
+.................                                                        [100%]
+=============================== warnings summary ===============================
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/task4-source/backend/server.py:8890: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/fastapi/applications.py:4495: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    return self.router.on_event(event_type)
+
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/task4-source/backend/server.py:9037: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("shutdown")
+
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/task4-source/backend/server.py:10104: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+17 passed, 7 warnings in 4.40s

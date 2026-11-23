@@ -1,0 +1,15 @@
+# Task 9 review consistency — 23 November 2026
+
+Starting local and GitHub work SHA: `7902529ba91e938c23d419da4867989e6ac5bc2e`. The checkout stores the original source ZIP and continuation patches. Apply `patches/task9-review-consistency.patch` after `patches/task9-local-financial-reconciliation.patch`. Forward and reverse dry-runs passed. The patch modifies `backend/server.py` and three existing integration test files.
+
+| Area | Change and verification | Remaining work |
+| --- | --- | --- |
+| Coupons | An identical activation retry returns the persisted lifecycle state after expiry. It creates no second activation audit entry and cannot start another expired campaign. Checkout still rejects expired campaigns. | Restaurant and online redemption, other funders, and their approved posting/reversal terms. |
+| Advertisements | The owning merchant can replay already accepted terms after the flight ends without another acceptance audit entry. A different version still fails. Existing budgets and delivery measurements remain in force. | Compensation policy, independently verified geographic eligibility, variable-rate billing and revenue recognition. |
+| Seller and delivery accounting | Existing browser workflow verified payout schedule persistence. Existing order-level ledger test still verifies one finalized settlement entry for a replacement. | Approved partner replacement fee allocation, independent payout evidence and replacement compensation rules. |
+| Rewards and referral | Rejected reward review now tells the customer that the request was rejected and the original ledger was preserved. Existing review, qualification and reward ledger controls remain in the regression scope. | Approved compensating-entry rules and external identity and fraud signals. |
+| Incremental collection | When recorded paid rows exist, approval rejects ambiguous captures, amount or currency mismatches and refund conflicts using stored data. Legacy orders with no recorded capture can still enter pending review. | A provider execution protocol must require authenticated capture evidence and enforce reservation, consent, and reconciliation before financial execution. |
+| Partial and COD refunds | A conflicting pending online refund prevents approval of a second replacement adjustment. Failed refund evidence alone does not consume the recorded capture, and malformed or inconsistent history prevents approval. | Prior-refund allocation policy, confirmed provider integration and authorized COD disbursement rail with proof. |
+| Tax and invoice | A changed order financial snapshot blocks a first draft even after professional and Admin approval. Identical concurrent calls still produce a single linked draft. | Case-specific professional guidance and authorized statutory correction procedures. GST Engine is excluded. |
+
+No new indexes, collections or migrations. The changes add no provider execution path. The policy register stays at 50 policies with 31 verified, 1 implemented awaiting external validation, 9 partial, 1 unimplemented and 8 blocked. The new locally tested controls do not resolve the broader dependencies on those policy rows.

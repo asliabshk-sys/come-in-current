@@ -68,3 +68,7 @@ T9-41–43 retain PARTIALLY VERIFIED status for broader funding and checkout. Ad
 - **T9-46 and T9-48:** The internal draft is uniquely keyed to the replacement and retains the original invoice and separate approvals. Corrected amounts, numbering and statutory issuance remain case-specific dependencies.
 
 No whole-policy status changed in the 50-row register.
+
+### Review consistency evidence — 23 November 2026
+
+T9-41 and T9-42 gained expiry-safe activation replay evidence. T9-20 and T9-23 gained local order/payment consistency evidence without execution. T9-26 and T9-35 gained review status and customer notification safeguards. T9-46 and T9-48 retain their prior statuses with first-draft snapshot validation. Advertisement replay and payout schedule evidence are tracked in the same run. All 50 IDs and existing classifications remain accounted for. [Implementation and limits](review-consistency-20261123/IMPLEMENTATION.md)

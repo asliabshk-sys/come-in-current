@@ -1,0 +1,132 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -1646,10 +1646,12 @@
+             raise HTTPException(404, "Advertisement not found")
+         _assert_advertisement_owner(ad, user)
+         terms = ad.get("commercial_terms") or {}
+-        if terms.get("version") != body.version or ad["status"] in {"removed", "rejected"} or utc(ad["ends_at"]) <= now_utc():
++        if terms.get("version") != body.version:
+             raise HTTPException(409, "Campaign terms changed or are unavailable")
+         if terms.get("accepted_at"):
+             return terms
++        if ad["status"] in {"removed", "rejected"} or utc(ad["ends_at"]) <= now_utc():
++            raise HTTPException(409, "Campaign terms changed or are unavailable")
+         now = now_utc()
+         terms.update({"accepted_at": now, "accepted_by": user["id"]})
+         await db.advertisements.update_one({"_id": oid}, {"$set": {"commercial_terms": terms}}, session=session)
+@@ -4685,8 +4687,6 @@
+                 or draft.get("restaurant_ids") or draft.get("stacking") or not draft.get("discount_model")
+                 or draft.get("funding_allocation_basis_points") != {"come_in": 10000}):
+             raise HTTPException(422, "This checkout supports only explicitly configured, nonstacking COME-IN-funded Grocery campaigns")
+-        if utc(draft["expires_at"]) <= now_utc():
+-            raise HTTPException(409, "Coupon campaign expired")
+         key = f"coupon:{body.code}"
+         settings = body.model_dump()
+         settings["customer_ids"] = sorted(set(settings["customer_ids"]))
+@@ -4695,6 +4695,8 @@
+             if existing.get("draft_id") == draft_id and existing.get("activation") == settings:
+                 return {"code": body.code, "status": existing["status"]}
+             raise HTTPException(409, "Coupon code is already assigned")
++        if utc(draft["expires_at"]) <= now_utc():
++            raise HTTPException(409, "Coupon campaign expired")
+         if draft.get("activated_coupon_code"):
+             raise HTTPException(409, "This draft already has an activated coupon")
+         updated = await db.financial_policy_drafts.update_one(
+@@ -8478,6 +8480,8 @@
+             if existing["reason"] != body.reason or existing["original_invoice_reference"] != reference:
+                 raise HTTPException(409, "An immutable correction draft already exists")
+             return {"id": key, "status": existing["status"]}
++        if _replacement_original_financials(order) != review["original"]:
++            raise HTTPException(409, "The original order financial snapshot changed. Review is required.")
+         now = now_utc()
+         record = {"_id": key, "action": "replacement_invoice_correction_drafted", "status": "pending_statutory_issuance",
+                   "version": 1, "ticket_id": ticket_id, "order_id": ticket["order_id"], "order_kind": ticket["order_kind"],
+@@ -8548,6 +8552,24 @@
+             totals = _restaurant_replacement_totals(order, restaurant, _replacement_items(order, index, line))
+         if _replacement_payment_quotes(order, totals, kind).get(quote_key) != review[quote_key]:
+             raise HTTPException(409, "The replacement total changed.")
++    if order.get("payment_status") == "paid":
++        payments = db.grocery_payments if grocery else db.restaurant_payments
++        captures = await payments.find({"order_id": str(oid), "status": "paid"}, session=session).limit(2).to_list(2)
++        if captures:
++            try:
++                capture, = captures
++                captured = amount_to_paise(capture.get("amount"))
++                if captured != amount_to_paise(order["total"]) or capture.get("currency", "INR") != "INR":
++                    raise ValueError("Capture differs from original order")
++                refunds = capture.get("provider_refunds", {})
++                if not isinstance(refunds, dict):
++                    raise ValueError("Invalid refund history")
++                refund_summary = summarize_provider_refunds(list(refunds.values()), captured)
++                if (refund_summary["consumed_paise"] or capture.get("refunded_amount_paise")
++                        or capture.get("refund_pending_amount_paise") or capture.get("refund_status")):
++                    raise ValueError("An existing refund requires reconciliation")
++            except (ValueError, TypeError):
++                raise HTTPException(409, "The recorded payment or refund history requires reconciliation.") from None
+     # Write to the same order inside the approval transaction to serialize
+     # approval with order cancellation, repricing, or refund state changes.
+     await collection.update_one({"_id": oid}, {"$set": {"replacement_financial_reviewed_at": now_utc()}}, session=session)
+@@ -8631,6 +8653,8 @@
+             label = {"reward": "Reward", "admin_tax": "Invoice", "refund": "Refund", "collection": "Additional payment"}[body.stage]
+             if body.stage in {"refund", "collection"}:
+                 message = "Your financial review was updated. No money was moved."
++            elif body.stage == "reward" and body.decision == "reject":
++                message = "Your reward review request was rejected. Your existing reward ledger was preserved."
+             await db.notifications.insert_one({
+                 "user_id": ticket["user_id"], "kind": "order_help",
+                 "title": f"{label} review {'approved' if body.decision == 'approve' else 'rejected'}",
+--- a/backend/tests/test_task9_business_policy.py
++++ b/backend/tests/test_task9_business_policy.py
+@@ -140,6 +140,9 @@
+                 assert measured["contract_delivery"] == {"target_impressions": 2, "excess_impressions": 0,
+                                                          "shortfall_impressions": None, "status": "in_progress"}
+                 await db.advertisements.update_one({"_id": ad_id}, {"$set": {"ends_at": server.now_utc()}})
++                assert (await request("POST", accept, {"version": 1}, "seller")).status_code == 200
++                assert (await request("POST", accept, {"version": 2}, "seller")).status_code == 409
++                assert await db.advertisement_audit.count_documents({"event": "commercial_terms_accepted"}) == 1
+                 measured = (await request("GET", report, actor="seller")).json()
+                 assert measured["contract_delivery"]["shortfall_impressions"] == 1
+                 assert measured["contract_delivery"]["status"] == "under_delivery"
+--- a/backend/tests/test_task9_coupon_checkout.py
++++ b/backend/tests/test_task9_coupon_checkout.py
+@@ -98,6 +98,10 @@
+                 assert (await quote("second", 1)).status_code == 200
+                 await db.financial_policy_drafts.update_one({"_id": "coupon:TEST20"}, {"$set": {"expires_at": now}})
+                 assert (await quote("second", 1)).status_code == 409
++                await db.financial_policy_drafts.update_one({"_id": saved.json()["id"]}, {"$set": {"expires_at": now}})
++                assert (await post(path, activation, "admin")).json()["status"] == "active"
++                assert (await post(path, {**activation, "code": "NEXT20"}, "admin")).status_code == 409
++                assert await db.financial_audit.count_documents({"action": "grocery_coupon_activated"}) == 1
+                 close = {"status": "closed", "expected_status": "active", "reason": "Fixture close"}
+                 assert (await http.patch(campaign_path, json=close, headers=auth["admin"])).status_code == 200
+                 assert (await http.patch(campaign_path, json=resumes, headers=auth["admin"])).status_code == 409
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -181,6 +181,9 @@
+                 assert (await request("GET", path, actor="buyer")).status_code == 403
+                 details = (await request("GET", path, actor="admin")).json()
+                 assert len(details["audit"]) == 3 and details["original_invoice_reference"] == "original-invoice"
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"total": 153}})
++                assert (await request("POST", correction, correction_body, "admin")).status_code == 409
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"total": reviewed["original"]["total"]}})
+                 drafts = await asyncio.gather(*(request("POST", correction, correction_body, "admin") for _ in range(2)))
+                 assert all(response.status_code == 200 for response in drafts)
+                 assert drafts[0].json() == drafts[1].json()
+@@ -238,8 +241,17 @@
+                 assert (await decide(oid, cheap_case)).status_code == 200
+                 path = f"/admin/restaurant/support/{cheap_case['support_id']}/financial-review"
+                 approval = {"replacement_id": cheap_case["id"], "stage": "refund", "decision": "approve", "reason": "Fixture cheaper replacement"}
++                capture = (await db.restaurant_payments.insert_one({
++                    "order_id": str(oid), "status": "paid", "currency": "INR", "amount": 152.5,
++                    "provider_refunds": {"fixture": {"id": "fixture", "status": "pending", "amount": 1000}},
++                })).inserted_id
++                assert (await request("POST", path, approval, "admin")).status_code == 409
++                await db.restaurant_payments.update_one({"_id": capture}, {"$set": {"provider_refunds.fixture.status": "failed", "amount": 150}})
++                assert (await request("POST", path, approval, "admin")).status_code == 409
++                await db.restaurant_payments.update_one({"_id": capture}, {"$set": {"amount": 152.5}})
+                 assert (await request("POST", path, approval, "admin")).json()["status"] == "approved_pending_execution"
+                 assert (await db.restaurant_orders.find_one({"_id": oid}))["total"] == 152.5
++                await db.restaurant_payments.delete_one({"_id": capture})
+
+                 await db.restaurant_menu.insert_one({"_id": ObjectId(unaffected["menu_item_id"]), "restaurant_id": str(restaurant), "name": "Side", "price": 25})
+                 for extras, expected in (({}, "kept_unavailable"),

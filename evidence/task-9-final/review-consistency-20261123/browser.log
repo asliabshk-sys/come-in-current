@@ -1,0 +1,5 @@
+PASS Admin loads, edits and persists a versioned weekly payout schedule via the UI.
+PASS Advertiser sees price and accepts terms while the moderation and owner gate stays pending.
+PASS Seller sees measured delivery without inferred conversions.
+PASS Admin activated a Grocery coupon with no budget spent on activation.
+PASS Admin pauses an existing coupon and the campaign remains persisted.

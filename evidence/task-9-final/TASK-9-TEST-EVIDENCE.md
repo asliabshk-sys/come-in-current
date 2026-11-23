@@ -65,3 +65,17 @@ Coupon and ad milestone focused result was **3 passed, 0 failed, 0 skipped** usi
 - **700 full backend passed, 0 failed, 1 skipped, 9 warnings.** The existing skip was external object storage unavailable. Warnings are existing FastAPI lifecycle, multipart and parser deprecations. [Full output](local-policy-20261123/full.log)
 - TypeScript, targeted ESLint, Expo export, five Chromium scenarios, and process restart/replay passed. Browser validation covered Admin campaign pause, not statutory issuance. [TypeScript](local-policy-20261123/typescript.log) · [ESLint](local-policy-20261123/lint.log) · [Expo](local-policy-20261123/expo.log) · [Chromium](local-policy-20261123/browser.log) · [Restart](local-policy-20261123/restart.log)
 - Genuine provider, native-device, object storage, CHAND provider and statutory external checks remain deferred or blocked as documented. [Commands](local-policy-20261123/COMMANDS.md)
+
+### Review consistency campaign
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Task 9 focused | 17 passed, 0 failed, 0 skipped, 7 warnings | [Focused](review-consistency-20261123/focused.log) |
+| Expanded financial/advertisement tests | 66 passed, 0 failed, 0 skipped, 7 warnings | [Integrated](review-consistency-20261123/integrated.log) |
+| Full backend | 700 passed, 0 failed, 1 skipped, 9 warnings | [Full](review-consistency-20261123/full.log) |
+| TypeScript and targeted ESLint | Both passed | [TypeScript](review-consistency-20261123/typescript.log), [ESLint](review-consistency-20261123/eslint.log) |
+| Expo web | Exported successfully | [Expo](review-consistency-20261123/expo.log) |
+| Chromium | Five passed | [Browser](review-consistency-20261123/browser.log) |
+| FastAPI restart and replay | Three passed | [Restart](review-consistency-20261123/restart.log) |
+
+Full backend skipped external object storage at `backend/tests/backend_test.py:397`. Python warnings are FastAPI event-hook and catalogue dependency deprecations. Chromium and restart were executed separately using disposable databases. [Commands](review-consistency-20261123/COMMANDS.md)
