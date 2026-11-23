@@ -1,0 +1,11 @@
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -283,7 +283,7 @@
+                     "amount_paise": 15400, "payment_evidence_status": "linked_capture_recorded",
+                 }
+                 audit_query = {"ticket_id": linked_case["support_id"], "stage": "collection"}
+-                for field, value in (("amount_paise", 15401), ("currency", "USD"), ("reference", "different")):
++                for field, value in (("amount_paise", 15401), ("currency", "USD"), ("reference", "different"), ("kind", "refund")):
+                     original_value = approved_audit[0]["payment_contract"][field]
+                     await db.financial_audit.update_one(audit_query, {"$set": {f"payment_contract.{field}": value}})
+                     response = await request("GET", readiness, actor="admin")

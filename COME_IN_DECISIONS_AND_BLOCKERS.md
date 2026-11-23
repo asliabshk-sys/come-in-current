@@ -1030,3 +1030,7 @@ Task 9 stays **PARTIALLY VERIFIED** with all 50 policy IDs preserved. Apply `pat
 ### 23 November 2026 — Task 9 final execution campaign
 
 Task 9 remains **PARTIALLY VERIFIED**. Apply `patches/task9-final-contract-binding.patch` after the closure evidence gates patch. Payment readiness rejects contract and server quote discrepancies. [Final checkpoint](evidence/task-9-final/TASK-9-FINAL-CHECKPOINT.md)
+
+### 23 November 2026 — Task 9 approval readiness
+
+Task 9 remains **PARTIALLY VERIFIED**. The final approval dashboard and sign-off packets are linked from the checkpoint. The stored operation stage is covered by a dedicated regression assertion without changing existing production behavior. [Checkpoint](evidence/task-9-final/TASK-9-FINAL-CHECKPOINT.md)

@@ -1,0 +1,20 @@
+# Task 9 owner decision packet
+
+**Status: pending signature.** The recommended defaults preserve current scope. Each row can be approved, declined or returned for changes separately. A decision to keep a feature disabled records the owner's direction. It does not verify the unimplemented expansion or waive third-party approvals.
+
+| Decision and current implementation | Recommended default and exact decision needed for expansion | Financial, customer and operational consequences | Security and verification | Approval authority |
+| --- | --- | --- | --- | --- |
+| T9-41–43 — COME-IN-funded Grocery cash coupons work with atomic redemption and eligible unpaid cancellation release. | Keep these channels only. For expansion, specify signed funding shares, eligible modes and payments, settlement liability, publication and paid-refund release rules. | Current discounts remain available. Broader channels change liability, checkout visibility and reconciliation workload. | Test funding isolation, budget races, failed checkout, duplicate release and refund evidence. | Owner, funding merchants/advertisers and finance |
+| T9-31 — fixed-duration ad terms, measured delivery and qualified booking evidence are reportable. | Keep shortfall/excess review-only. An automatic remedy needs accepted thresholds, qualifying evidence, method, cap, rounding and revenue treatment. | Current ads continue. No new compensation or delivery obligation accrues. Operators retain the review queue. | Test cross-campaign evidence denial, over/under-delivery, cap and adjustment deduplication. | Owner, finance and contracting advertiser |
+| T9-29–30 — fees can be compared on the ledger and seller payout schedules are recorded. | Keep partner adjustments pending. Approve the authoritative assignment source, fee allocation and funding, cutoff, replacement treatment and independent settlement evidence. | Existing balances and zero sales commission are preserved. Payables and partner statements require allocation before posting. | Test duplicate reference denial, ledger balance, restart, role isolation and reversal. | Owner, finance, partner and affected merchant |
+| T9-34–37 — existing referral controls and reversal review work. | Preserve earned credits and require individual review. Any automated entry needs published earning, valuation, expiry, refund/cancellation and spent-balance rules plus notification. | No involuntary negative balance. Support reviews pending cases. | Test credit preservation, duplicate prevention, verified qualifying-order evidence, notice and rollback. Household overlap alone stays insufficient. | Owner and finance/promotions |
+| T9-23–26 — partial and COD review is available and full refunds await genuine TEST. | Keep execution disabled. Approve eligible amounts/components, cumulative refund accounting, payee verification, permitted rail, audit proof and original-order reconciliation. | No payout on review approval. Customers see pending status. Refund adjustments affect seller, coupon and reward accounting. | Test amount and prior-refund caps, approval separation, duplicate prevention, verified completion, failures and reconciliation. | Owner, finance and authorized provider/payout operator |
+| T9-12 — existing order and supersession gates work; independent offer expiry is absent. | Keep current gates. Specify the exact duration, clock, cancellation actor, reoffer semantics and handling of offers already issued. | No new automatic loss of customer choice. A new rule changes fulfillment and support timing. | Test boundaries, concurrent acceptance/cancellation, restart and audit. | Owner |
+
+Record separately for each decision.
+
+- Policy ID or IDs ____________________
+- Disposition (approve scope as written, decline, or return with changes) ____________________
+- Approved wording, exclusions and effective date ____________________
+- Approving name, role, signature and date ____________________
+- Co-approvals and referenced evidence ____________________

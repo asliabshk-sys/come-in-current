@@ -125,3 +125,15 @@ Fresh focused run: **24 passed, 0 failed, 0 skipped, 7 warnings**. Initial run: 
 The initial expanded and full runs encountered the same fixture shadowing error as the focused run. Their counts were 81 passed and 1 failed, and 706 passed, 1 failed and 1 skipped, respectively. [Initial expanded](final-campaign-20261123/integrated-initial.log) · [Initial full](final-campaign-20261123/full-initial.log)
 
 The corrected full backend regression recorded **707 passed, 0 failed, 1 skipped, 9 warnings**. The skip at `backend/tests/backend_test.py:397` was unavailable external object storage. Warnings were framework and optional catalogue dependency deprecations. [Final full output](final-campaign-20261123/full.log)
+
+### Approval readiness rerun
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Focused | 24 passed, 0 failed, 0 skipped, 7 warnings | [Log](approval-readiness-20261123/focused.log) |
+| Expanded transaction, financial, payment/refund and authorization | 82 passed, 0 failed, 0 skipped, 7 warnings | [Log](approval-readiness-20261123/expanded.log) |
+| Full backend | 707 passed, 0 failed, 1 skipped, 9 warnings | [Log](approval-readiness-20261123/full.log) |
+| TypeScript, targeted ESLint, Expo export | Passed | [Types](approval-readiness-20261123/typescript.log) · [Lint](approval-readiness-20261123/eslint.log) · [Expo](approval-readiness-20261123/expo.log) |
+| Chromium and restart/persistence | 7 scenarios and 5 checks passed | [Chromium](approval-readiness-20261123/browser.log) · [Restart](approval-readiness-20261123/restart.log) |
+
+External object storage was unavailable at `backend/tests/backend_test.py:397`. Python warnings cover framework and catalogue dependency deprecations. All financial evidence was local or synthetic. [Commands](approval-readiness-20261123/COMMANDS.md)

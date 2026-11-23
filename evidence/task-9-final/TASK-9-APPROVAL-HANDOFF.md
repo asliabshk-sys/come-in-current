@@ -26,3 +26,5 @@ Broader reward policy, advertising compensation, third-party funding, statutory 
 | T9-20, T9-23–25, T9-50 | Keep execution disabled pending the approved rail and controlled provider TEST evidence. | Customers see review status. No money moves on review approval. |
 | T9-46, T9-48 | Require case-specific CA guidance and issuer authorization before statutory numbering or issuance. | Internal drafts preserve original evidence and leave statutory sequences untouched. |
 | T9-12 | Obtain explicit expiry duration and cancellation terms before changing offer availability. | No offer is closed or reopened under an invented duration. |
+
+The current sign-off forms record authority, effective date and evidence. [Owner decisions](approval-readiness-20261123/OWNER-DECISIONS.md) · [External validation](approval-readiness-20261123/EXTERNAL-HANDOFF.md)
