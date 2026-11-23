@@ -1,0 +1,702 @@
+diff --git a/backend/server.py b/backend/server.py
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -4722,7 +4722,10 @@
+     items = order.get("items") or []
+     if not items:
+         raise HTTPException(status_code=409, detail="Order inventory details are unavailable; contact support before cancellation")
+-    for line in items:
++    unavailable = {case["line_index"] for case in order.get("replacements", []) if case["state"] in GROCERY_REPLACEMENT_OPEN_STATES}
++    for index, line in enumerate(items):
++        if index in unavailable:
++            continue
+         product_id = str(line.get("product_id") or "")
+         try:
+             pid = ObjectId(product_id)
+@@ -4804,6 +4807,255 @@
+     _assert_shop_owner(shop, user)
+     cursor = db.orders.find({"shop_id": shop_id}).sort("created_at", -1)
+     return [doc_out(r) async for r in cursor]
++
++
++GROCERY_REPLACEMENT_ORDER_STATES = {"pending_payment", "pending", "accepted", "preparing"}
++GROCERY_REPLACEMENT_OPEN_STATES = {"awaiting_customer", "rejected", "assist_required"}
++
++
++class GroceryUnavailableIn(BaseModel):
++    line_index: int = Field(ge=0, lt=100)
++    product_id: str = Field(min_length=1, max_length=80)
++    variant_id: Optional[str] = Field(default=None, max_length=80)
++    qty: int = Field(ge=1, le=MEASURED_QTY_LIMIT)
++    refresh_case_id: Optional[str] = Field(default=None, max_length=40)
++
++
++class GroceryReplacementDecisionIn(BaseModel):
++    action: Literal["accept", "reject", "keep_unavailable"]
++    option_id: Optional[str] = Field(default=None, max_length=40)
++
++
++def _replacement_can_reprice(order: dict) -> bool:
++    return (
++        (order.get("payment_method"), order.get("payment_status")) in {
++            ("cod", "cod_pending"), ("pickup", "pay_at_pickup_pending"),
++            ("cash_shop", "pay_at_pickup_pending"), ("cash_shop", "pay_at_shop_pending"),
++        }
++        and not any(order.get(key) for key in ("reward_discount", "tax", "tax_amount", "gst", "razorpay_payment_id"))
++    )
++
++
++def _replacement_items(order: dict, index: int, line: Optional[dict] = None) -> list[dict]:
++    items = order["items"]
++    return items[:index] + ([line] if line else []) + items[index + 1:]
++
++
++def _replacement_totals(order: dict, index: int, line: Optional[dict] = None) -> Optional[dict]:
++    items = _replacement_items(order, index, line)
++    return _quote_totals(items, order.get("fulfillment", "delivery")) if items else None
++
++
++def _replacement_snapshot(line: dict) -> dict:
++    return {key: line.get(key) for key in (
++        "product_id", "variant_id", "name", "unit", "qty", "price", "sell_by",
++        "quantity_label", "line_total", "category_id",
++    )}
++
++
++async def _replacement_options(session, order: dict, index: int) -> list[dict]:
++    original = order["items"][index]
++    if not ObjectId.is_valid(original.get("product_id", "")):
++        return []
++    original_id = ObjectId(original["product_id"])
++    original_product = await db.products.find_one({"_id": original_id, "shop_id": order["shop_id"]}, session=session)
++    category = original.get("category_id") or (original_product or {}).get("category_id")
++    # A shared category alone can be broad. Require a shared name token for
++    # different products, and always consider other configurations of this SKU.
++    tokens = {token for token in re.findall(r"[^\W_]+", original.get("name", "").casefold()) if len(token) >= 3 and not token.isdigit()}
++    candidates = [original_product] if original_product else []
++    if category and tokens:
++        pattern = r"\b(?:" + "|".join(re.escape(token) for token in sorted(tokens)[:12]) + r")\b"
++        cursor = db.products.find({
++            "shop_id": order["shop_id"], "category_id": category,
++            "_id": {"$ne": original_id}, "available": True, "name": {"$regex": pattern, "$options": "i"},
++        }, session=session).sort("_id", 1).limit(24)
++        candidates.extend(await cursor.to_list(length=24))
++    options = []
++    for product in candidates:
++        for variant in (product.get("variants") or [{}])[:12]:
++            variant_id = variant.get("id")
++            stock = (variant or product).get("stock", 0)
++            qty = min(int(original["qty"]), int(stock or 0))
++            sell_by = product.get("sell_by") if not product.get("variants") else None
++            measured_kind = sell_by if sell_by in MEASURED_SELL_BY else None
++            if measured_kind != original.get("sell_by"):
++                continue
++            if sell_by in MEASURED_SELL_BY:
++                measure = product.get("measure") or {}
++                minimum = int(measure.get("min_qty", 1))
++                step = max(1, int(measure.get("step", 1)))
++                qty = min(qty, int(measure.get("max_qty", MEASURED_QTY_LIMIT)))
++                qty -= (qty - minimum) % step
++                if qty < minimum:
++                    continue
++            if qty < 1 or (
++                product["_id"] == original_id and variant_id == original.get("variant_id")
++                and qty == original["qty"]
++            ):
++                continue
++            try:
++                lines, _ = await _resolve_grocery_lines(
++                    [QuoteLineIn(product_id=str(product["_id"]), variant_id=variant_id, qty=qty)], session=session,
++                )
++            except HTTPException:
++                continue
++            line = lines[0]
++            options.append({
++                "id": uuid.uuid4().hex, "item": _replacement_snapshot(line),
++                "line_difference": round(_line_amount(line) - _line_amount(original), 2),
++                "totals": _replacement_totals(order, index, line),
++            })
++            if len(options) == 5:
++                return options
++    return options
++
++
++async def _replacement_notify(session, order: dict, case: dict, title: str, body: str):
++    await db.notifications.insert_one({
++        "user_id": order["customer_id"], "kind": "grocery_replacement", "title": title, "body": body[:500],
++        "data": {"order_id": str(order["_id"]), "order_kind": "grocery", "replacement_id": case["id"]},
++        "read": False, "channel": "in_app", "push_status": "not_configured", "created_at": now_utc(),
++    }, session=session)
++
++
++async def _run_replacement_transaction(callback):
++    try:
++        return await run_transaction(client, callback)
++    except HTTPException:
++        raise
++    except Exception as exc:
++        logger.exception("Grocery replacement transaction failed")
++        raise HTTPException(status_code=503, detail="The update could not be confirmed. Refresh the order before retrying.") from exc
++
++
++@api.post("/orders/{order_id}/replacements")
++async def report_grocery_unavailable(order_id: str, body: GroceryUnavailableIn, user: dict = Depends(get_current_user)):
++    if user.get("role") not in {"shopkeeper", "admin"}:
++        raise HTTPException(status_code=403, detail="Only authorized shop staff can report an unavailable item")
++    oid = _object_id_or_404(order_id, "Order")
++
++    async def apply(session):
++        order = await db.orders.find_one({"_id": oid}, session=session)
++        if not order:
++            raise HTTPException(status_code=404, detail="Order not found")
++        shop = await _get_shop_or_404(order["shop_id"], session=session)
++        _assert_shop_owner(shop, user)
++        if not order.get("customer_id") or order["status"] not in GROCERY_REPLACEMENT_ORDER_STATES:
++            raise HTTPException(status_code=409, detail="This order requires manual support for unavailable items")
++        cases = order.get("replacements") or []
++        refreshed = next((case for case in cases if case.get("supersedes") == body.refresh_case_id), None) if body.refresh_case_id else None
++        if refreshed:
++            return refreshed
++        items = order.get("items") or []
++        line = items[body.line_index] if body.line_index < len(items) else {}
++        if (line.get("product_id"), line.get("variant_id"), line.get("qty")) != (body.product_id, body.variant_id, body.qty):
++            raise HTTPException(status_code=409, detail="The order items changed. Refresh before reporting an item.")
++        open_case = next((case for case in cases if case["state"] in GROCERY_REPLACEMENT_OPEN_STATES), None)
++        if open_case and open_case["line_index"] != body.line_index:
++            raise HTTPException(status_code=409, detail="Resolve the existing unavailable item before reporting another")
++        if open_case and not body.refresh_case_id:
++            return open_case
++        if body.refresh_case_id and (not open_case or open_case["id"] != body.refresh_case_id):
++            raise HTTPException(status_code=409, detail="The replacement request changed. Refresh the order.")
++        if len(cases) >= 40:
++            raise HTTPException(status_code=409, detail="Contact COME-IN Assist for further changes to this order")
++        can_reprice = _replacement_can_reprice(order)
++        options = await _replacement_options(session, order, body.line_index) if can_reprice else []
++        keep_totals = _replacement_totals(order, body.line_index) if can_reprice else None
++        if open_case:
++            same_options = [{k: v for k, v in option.items() if k != "id"} for option in options] == [
++                {k: v for k, v in option.items() if k != "id"} for option in open_case["options"]
++            ]
++            if open_case["state"] != "rejected" and same_options and keep_totals == open_case["keep_totals"]:
++                return open_case
++        now = now_utc()
++        case = {
++            "id": uuid.uuid4().hex, "line_index": body.line_index, "original": _replacement_snapshot(line),
++            "original_line_total": round(_line_amount(line), 2), "original_total": order["total"], "options": options,
++            "keep_totals": keep_totals, "state": "awaiting_customer" if can_reprice else "assist_required",
++            "reported_by": user["id"], "reported_at": now, "supersedes": body.refresh_case_id,
++        }
++        if open_case:
++            open_case.update({"state": "superseded", "superseded_at": now})
++        cases.append(case)
++        await db.orders.update_one({"_id": oid}, {"$set": {"replacements": cases, "updated_at": now}}, session=session)
++        message = (
++            "Review your replacement options and choose how to continue." if options else
++            "Review the unavailable item in your order or contact COME-IN Assist."
++        )
++        await _replacement_notify(session, order, case, "An order item is unavailable", f"{line['name']} is unavailable. {message}")
++        return case
++
++    return await _run_replacement_transaction(apply)
++
++
++@api.post("/orders/{order_id}/replacements/{case_id}/decision")
++async def decide_grocery_replacement(order_id: str, case_id: str, body: GroceryReplacementDecisionIn, user: dict = Depends(get_current_user)):
++    if user.get("role") != "customer":
++        raise HTTPException(status_code=403, detail="Only the customer can decide on a replacement")
++    oid = _object_id_or_404(order_id, "Order")
++
++    async def apply(session):
++        order = await db.orders.find_one({"_id": oid, "customer_id": user["id"]}, session=session)
++        cases = (order or {}).get("replacements") or []
++        case = next((entry for entry in cases if entry["id"] == case_id), None)
++        if not case:
++            raise HTTPException(status_code=404, detail="Replacement request not found")
++        decision = case.get("decision") or {}
++        if decision.get("action") == body.action and decision.get("option_id") == body.option_id:
++            return case
++        if case["state"] not in {"awaiting_customer", "rejected"} or order["status"] not in GROCERY_REPLACEMENT_ORDER_STATES:
++            raise HTTPException(status_code=409, detail="This offer is no longer open. Refresh your order or contact COME-IN Assist.")
++        if not _replacement_can_reprice(order):
++            raise HTTPException(status_code=409, detail="Contact COME-IN Assist to handle the payment adjustment.")
++        if (body.action == "accept") != bool(body.option_id):
++            raise HTTPException(status_code=422, detail="Select one offered replacement to accept")
++        if case["state"] == "rejected" and body.action != "keep_unavailable":
++            raise HTTPException(status_code=409, detail="Wait for new options or choose to continue without the item")
++        index = case["line_index"]
++        now = now_utc()
++        updates = {"replacements": cases, "updated_at": now}
++        if body.action == "reject":
++            case["state"] = "rejected"
++        else:
++            line = None
++            if body.action == "accept":
++                option = next((item for item in case["options"] if item["id"] == body.option_id), None)
++                if not option:
++                    raise HTTPException(status_code=422, detail="Select a replacement offered for this order")
++                offered = option["item"]
++                lines, shop_id = await _resolve_grocery_lines(
++                    [QuoteLineIn(product_id=offered["product_id"], variant_id=offered["variant_id"], qty=offered["qty"])], session=session,
++                )
++                line = lines[0]
++                if shop_id != order["shop_id"] or _replacement_snapshot(line) != offered:
++                    raise HTTPException(status_code=409, detail="The replacement changed. Ask the shop to refresh the options.")
++                shown_totals = option["totals"]
++            else:
++                shown_totals = case["keep_totals"]
++            totals = _replacement_totals(order, index, line)
++            if not totals:
++                raise HTTPException(status_code=409, detail="No items would remain. Contact COME-IN Assist or cancel if your order is eligible.")
++            if totals != shown_totals or order["total"] != case["original_total"]:
++                raise HTTPException(status_code=409, detail="The order total changed. Ask the shop to refresh the options.")
++            if line and not await _atomic_decrement_line(session, line):
++                raise HTTPException(status_code=409, detail="Replacement stock changed. Ask the shop for new options.")
++            # The shop confirmed the originally reserved units cannot be supplied.
++            # Do not credit those missing units back into sellable inventory.
++            updates.update({"items": _replacement_items(order, index, line), **totals})
++            case.update({"state": "accepted" if line else "kept_unavailable", "final_totals": totals})
++        case.setdefault("decision_history", []).append({"action": body.action, "option_id": body.option_id, "at": now, "customer_id": user["id"]})
++        case["decision"] = case["decision_history"][-1]
++        await db.orders.update_one({"_id": oid}, {"$set": updates}, session=session)
++        if body.action != "reject":
++            await _replacement_notify(
++                session, order, case, "Replacement confirmed" if line else "Order updated",
++                f"Your decision was saved. Your order total is ₹{totals['total']:.2f} (previously ₹{order['total']:.2f}).",
++            )
++        return case
++
++    return await _run_replacement_transaction(apply)
+
+
+ @api.patch("/orders/{order_id}/status")
+@@ -4848,7 +5100,15 @@
+     }
+     if body.status in {"delivered", "cancelled"}:
+         update["$unset"] = {"delivery_location": ""}
+-    changed = await db.orders.update_one({"_id": oid, "status": order.get("status")}, update)
++    if body.status == "ready":
++        changed = await db.orders.update_one({
++            "_id": oid, "status": order.get("status"),
++            "replacements": {"$not": {"$elemMatch": {"state": {"$in": list(GROCERY_REPLACEMENT_OPEN_STATES)}}}},
++        }, update)
++        if changed.modified_count != 1:
++            raise HTTPException(status_code=409, detail="Order changed or has an unresolved unavailable item. Refresh before marking it ready.")
++    else:
++        changed = await db.orders.update_one({"_id": oid, "status": order.get("status")}, update)
+     if changed.modified_count != 1:
+         raise HTTPException(status_code=409, detail="Order status changed; refresh before trying again")
+     fresh = await db.orders.find_one({"_id": oid})
+diff --git a/backend/tests/test_task9_grocery_replacement.py b/backend/tests/test_task9_grocery_replacement.py
+new file mode 100644
+--- /dev/null
++++ b/backend/tests/test_task9_grocery_replacement.py
+@@ -0,0 +1,208 @@
++"""Exercise Task 9 through the HTTP API, including real Mongo transactions."""
++
++import asyncio
++from copy import deepcopy
++import os
++from pathlib import Path
++from uuid import uuid4
++
++import pytest
++
++
++def test_grocery_replacement_http_and_transactions(monkeypatch):
++    if os.environ.get("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
++        pytest.skip("requires disposable loopback MongoDB")
++    import httpx
++    from bson import ObjectId
++    from motor.motor_asyncio import AsyncIOMotorClient
++    import server
++
++    monkeypatch.setenv("JWT_SECRET", uuid4().hex)
++
++    async def scenario():
++        mongo = AsyncIOMotorClient("mongodb://127.0.0.1:27018/?replicaSet=rs0", serverSelectionTimeoutMS=3000)
++        db = mongo["comein_disposable_replacement_" + uuid4().hex]
++        monkeypatch.setattr(server, "client", mongo)
++        monkeypatch.setattr(server, "db", db)
++        try:
++            headers = {}
++            user_ids = {}
++            for actor, role in {"buyer": "customer", "other": "customer", "seller": "shopkeeper",
++                                "other_seller": "shopkeeper", "support": "support", "admin": "admin"}.items():
++                oid = ObjectId()
++                user_ids[actor] = str(oid)
++                email = f"{actor}@fixture.example"
++                await db.users.insert_one({"_id": oid, "role": role, "email": email})
++                headers[actor] = {"Authorization": "Bearer " + server.create_access_token(str(oid), role, email)}
++            shop = ObjectId()
++            await db.shops.insert_one({"_id": shop, "owner_id": user_ids["seller"], "status": "approved"})
++            product_ids = {}
++
++            async def product(key, title, price, stock=10, **overrides):
++                oid = ObjectId()
++                product_ids[key] = oid
++                await db.products.insert_one({
++                    "_id": oid, "shop_id": str(shop), "name": title, "price": price, "stock": stock,
++                    "available": True, "category_id": "dairy", "unit": "1 L", **overrides,
++                })
++
++            await product("missing", "Green Milk", 130, 0)
++            await product("higher", "Fresh Milk", 160, variants=[{"id": "large", "unit": "500 ml", "price": 160, "stock": 4, "available": True}])
++            await product("lower", "Value Milk", 70, sell_by="pack")
++            await product("unavailable", "Gone Milk", 10, available=False)
++            await product("zero", "Zero Milk", 10, stock=0)
++            await product("foreign", "Foreign Milk", 1, shop_id=str(ObjectId()))
++            await product("unrelated", "Butter", 1)
++            await product("imported", "Imported Milk", 5, catalogue_import_job_id="fixture")
++            await product("other", "Fixture Rice", 50, category_id="grains")
++
++            original = {"product_id": str(product_ids["missing"]), "shop_id": str(shop), "name": "Green Milk",
++                        "price": 130, "qty": 1, "unit": "1 L", "category_id": "dairy"}
++            unaffected = {"product_id": str(product_ids["other"]), "qty": 1, "price": 50, "name": "Fixture Rice",
++                          "unit": "1 kg", "variant_id": None, "instructions": "Leave sealed"}
++
++            async def order(**overrides):
++                oid = ObjectId()
++                await db.orders.insert_one({
++                    "_id": oid, "shop_id": str(shop), "customer_id": user_ids["buyer"], "ref": "FIXTURE",
++                    "status": "preparing", "payment_method": "cod", "payment_status": "cod_pending",
++                    "fulfillment": "delivery", "items": [deepcopy(original), deepcopy(unaffected)],
++                    "subtotal": 180, "delivery_fee": 29, "total": 209, "notes": "Keep the bag sealed",
++                    **overrides,
++                })
++                return oid
++
++            attempt = {"line_index": 0, "product_id": original["product_id"], "qty": 1, "price": 1}
++            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=server.app), base_url="http://local") as http:
++                async def call(method, path, body=None, actor="buyer"):
++                    return await http.request(method, "/api" + path, json=body, headers=headers.get(actor))
++
++                async def report(oid, actor="seller", **extras):
++                    return await call("POST", f"/orders/{oid}/replacements", {**attempt, **extras}, actor)
++
++                async def decide(oid, case, action, option=None, actor="buyer"):
++                    return await call("POST", f"/orders/{oid}/replacements/{case['id']}/decision",
++                                      {"action": action, "option_id": option, "price": 1, "total": 1}, actor)
++
++                async def notices(oid):
++                    return await db.notifications.count_documents({"data.order_id": str(oid)})
++
++                oid = await order()
++                assert (await report(oid, None)).status_code == 401
++                for actor in ("buyer", "other_seller", "support"):
++                    assert (await report(oid, actor)).status_code == 403
++                reports = await asyncio.gather(report(oid), report(oid))
++                assert [response.status_code for response in reports] == [200, 200]
++                case = reports[0].json()
++                assert reports[1].json()["id"] == case["id"]
++                assert case["original_line_total"] == 130
++                assert await notices(oid) == 1
++                offers = {option["item"]["name"]: option for option in case["options"]}
++                assert set(offers) == {"Fresh Milk", "Value Milk"}
++                higher, lower = offers["Fresh Milk"], offers["Value Milk"]
++                assert higher["item"]["variant_id"] == "large"
++                assert higher["line_difference"] == 30
++                assert higher["totals"] == {"subtotal": 210, "delivery_fee": 0, "total": 210}
++                assert lower["line_difference"] == -60
++                assert lower["totals"] == {"subtotal": 120, "delivery_fee": 29, "total": 149}
++                decision_args = (oid, case, "accept", higher["id"])
++                assert (await decide(*decision_args, actor=None)).status_code == 401
++                assert (await decide(*decision_args, actor="other")).status_code == 404
++                for actor in ("seller", "support", "admin"):
++                    assert (await decide(*decision_args, actor=actor)).status_code == 403
++                assert (await decide(oid, case, "accept", uuid4().hex)).status_code == 422
++                assert (await call("PATCH", f"/orders/{oid}/status", {"status": "ready"}, "seller")).status_code == 409
++
++                # Prove the inventory and order updates roll back when a later
++                # write in this transaction cannot be persisted.
++                async def unavailable_notice(*args, **kwargs):
++                    raise RuntimeError("simulated notification store failure")
++
++                with monkeypatch.context() as failing:
++                    failing.setattr(server, "_replacement_notify", unavailable_notice)
++                    assert (await decide(*decision_args)).status_code == 503
++                assert (await db.products.find_one({"_id": product_ids["higher"]}))["variants"][0]["stock"] == 4
++                assert (await db.orders.find_one({"_id": oid}))["total"] == 209
++
++                accepted = await asyncio.gather(decide(*decision_args), decide(*decision_args))
++                assert [response.status_code for response in accepted] == [200, 200]
++                assert (await decide(oid, case, "accept", lower["id"])).status_code == 409
++                assert (await db.products.find_one({"_id": product_ids["higher"]}))["variants"][0]["stock"] == 3
++                assert (await db.products.find_one({"_id": product_ids["missing"]}))["stock"] == 0
++                stored = await db.orders.find_one({"_id": oid})
++                assert stored["items"][1] == unaffected
++                assert stored["notes"] == "Keep the bag sealed"
++                assert stored["payment_status"] == "cod_pending"
++                assert stored["total"] == 210
++                assert len(stored["replacements"][0]["decision_history"]) == 1
++                assert await notices(oid) == 2
++                assert (await call("PATCH", f"/orders/{oid}/status", {"status": "ready"}, "seller")).status_code == 200
++
++                oid = await order()
++                case = (await report(oid, "admin")).json()
++                assert (await decide(oid, case, "reject")).json()["state"] == "rejected"
++                assert (await decide(oid, case, "reject")).json()["state"] == "rejected"
++                assert await notices(oid) == 1
++                refreshed = (await report(oid, refresh_case_id=case["id"])).json()
++                assert refreshed["id"] != case["id"]
++                assert (await report(oid, refresh_case_id=case["id"])).json()["id"] == refreshed["id"]
++                assert (await decide(oid, case, "keep_unavailable")).status_code == 409
++                assert (await decide(oid, refreshed, "keep_unavailable")).json()["final_totals"]["total"] == 79
++                stored = await db.orders.find_one({"_id": oid})
++                assert stored["items"] == [unaffected]
++                assert [entry["state"] for entry in stored["replacements"]] == ["superseded", "kept_unavailable"]
++                assert stored["replacements"][0]["decision"]["action"] == "reject"
++                assert await notices(oid) == 3
++
++                oid = await order()
++                case = (await report(oid)).json()
++                old_price = next(option for option in case["options"] if option["item"]["name"] == "Value Milk")
++                await db.products.update_one({"_id": product_ids["lower"]}, {"$set": {"price": 65}})
++                assert (await decide(oid, case, "accept", old_price["id"])).status_code == 409
++                assert (await db.orders.find_one({"_id": oid}))["total"] == 209
++                case = (await report(oid, refresh_case_id=case["id"])).json()
++                new_price = next(option for option in case["options"] if option["item"]["name"] == "Value Milk")
++                assert (await decide(oid, case, "accept", new_price["id"])).json()["final_totals"]["total"] == 144
++
++                oid = await order(status="pending")
++                await report(oid)
++                assert (await call("POST", f"/orders/{oid}/cancel")).status_code == 200
++                assert (await db.products.find_one({"_id": product_ids["missing"]}))["stock"] == 0
++                assert (await db.products.find_one({"_id": product_ids["other"]}))["stock"] == 11
++
++                oid = await order(items=[deepcopy(original)], subtotal=130, delivery_fee=29, total=159)
++                case = (await report(oid)).json()
++                assert case["keep_totals"] is None
++                assert (await decide(oid, case, "keep_unavailable")).status_code == 409
++
++                for extras in ({"payment_method": "online_razorpay", "payment_status": "paid"}, {"reward_discount": 5}, {"tax_amount": 7}):
++                    oid = await order(**extras)
++                    case = (await report(oid)).json()
++                    assert case["state"] == "assist_required" and case["options"] == []
++                    assert (await decide(oid, case, "keep_unavailable")).status_code == 409
++                    assert (await db.orders.find_one({"_id": oid}))["total"] == 209
++                    ticket = {"order_id": str(oid), "order_kind": "grocery", "category": "wrong_or_missing_item", "message": "Please confirm the actual stock with the shop."}
++                    assert (await call("POST", "/restaurant/support", ticket, "other")).status_code == 404
++                    assert (await call("POST", "/restaurant/support", ticket)).json()["order_id"] == str(oid)
++                    assert (await call("GET", "/seller/support", actor="seller")).status_code == 200
++        finally:
++            await mongo.drop_database(db.name)
++            mongo.close()
++
++    asyncio.run(scenario())
++
++
++def test_grocery_replacement_frontend_contract():
++    root = Path(__file__).resolve().parents[2]
++    widget = (root / "frontend/src/components/GroceryOrderReplacements.tsx").read_text()
++    tracking = (root / "frontend/app/order-tracking.tsx").read_text()
++    seller = (root / "frontend/app/seller/orders.tsx").read_text()
++    assert 'orderKind === "grocery" ? api.get<GroceryOrderDetails>' in tracking
++    assert '<GroceryOrderReplacements order={order} onChange={load}' in tracking
++    assert '<GroceryOrderReplacements order={item} onChange={load} staff' in seller
++    assert "disabled={busy}" in widget and "await onChange()" in widget
++    assert 'decide(entry, "accept", option.id)' in widget
++    assert 'decide(entry, "reject")' in widget
++    assert 'decide(entry, "keep_unavailable")' in widget
++    assert "option.totals.total" in widget and "option.line_difference" in widget
++    assert 'openHelp: "1", order_id: order.id, order_kind: "grocery"' in widget
+diff --git a/frontend/app/order-tracking.tsx b/frontend/app/order-tracking.tsx
+--- a/frontend/app/order-tracking.tsx
++++ b/frontend/app/order-tracking.tsx
+@@ -4,11 +4,12 @@
+ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+ import { useSafeAreaInsets } from "react-native-safe-area-context";
+
++import { GroceryOrderReplacements, type ReplacementOrder } from "@/src/components/GroceryOrderReplacements";
+ import { api } from "@/src/lib/api";
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
+
+ type Tracking = { order_id: string; kind: string; status: string; status_history?: { status: string; at: string; note?: string }[]; tracking_active: boolean; location: null | { latitude: number; longitude: number; accuracy_m?: number | null; updated_at: string }; eta_minutes: number | null; map_provider: string | null; message: string };
+-type GroceryOrderDetails = { id: string; ref: string; status: string; items: { product_id: string; variant_id?: string | null; name: string; unit: string; qty: number; price: number; quantity_label?: string; line_total?: number }[]; subtotal: number; delivery_fee: number; total: number; payment_method: string; payment_status: string; delivery_address: string; status_history?: { status: string; at: string; note?: string }[] };
++type GroceryOrderDetails = ReplacementOrder & { id: string; ref: string; status: string; items: { product_id: string; variant_id?: string | null; name: string; unit: string; qty: number; price: number; quantity_label?: string; line_total?: number }[]; subtotal: number; delivery_fee: number; total: number; payment_method: string; payment_status: string; delivery_address: string; status_history?: { status: string; at: string; note?: string }[] };
+
+ export default function OrderTrackingScreen() {
+   const { id, kind } = useLocalSearchParams<{ id: string; kind?: string }>();
+@@ -53,6 +54,7 @@
+           </View>)}
+           <View style={styles.orderTotals}><Text style={styles.body}>Subtotal ₹{order.subtotal} · Delivery ₹{order.delivery_fee}</Text><Text style={styles.total}>Total ₹{order.total}</Text></View>
+           <Text style={styles.body}>Payment: {order.payment_method} · {order.payment_status}</Text>
++          <GroceryOrderReplacements order={order} onChange={load} />
+           {order.delivery_address ? <Text style={styles.body}>Address: {order.delivery_address}</Text> : null}
+           {order.status_history?.length ? <View style={styles.history}><Text style={styles.eyebrow}>STATUS HISTORY</Text>{order.status_history.map((entry, index) => <Text key={`${entry.status}:${index}`} style={styles.body}>{entry.status.replaceAll("_", " ")} · {new Date(entry.at).toLocaleString()}{entry.note ? ` · ${entry.note}` : ""}</Text>)}</View> : null}
+         </View> : null}
+diff --git a/frontend/app/seller/orders.tsx b/frontend/app/seller/orders.tsx
+--- a/frontend/app/seller/orders.tsx
++++ b/frontend/app/seller/orders.tsx
+@@ -14,6 +14,7 @@
+ } from "react-native";
+ import { useSafeAreaInsets } from "react-native-safe-area-context";
+
++import { GroceryOrderReplacements, groceryReplacementOpenStates } from "@/src/components/GroceryOrderReplacements";
+ import { api } from "@/src/lib/api";
+ import { useAuth } from "@/src/store/auth";
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
+@@ -134,11 +135,16 @@
+                 <Text key={idx} style={styles.line}>• {line.quantity_label ? `${line.quantity_label} × ${line.name} — ₹${Number(line.line_total).toFixed(2)}` : `${line.qty} × ${line.name} — ₹${(line.price * line.qty).toFixed(0)}`}</Text>
+               ))}
+             </View>
++            <GroceryOrderReplacements order={item} onChange={load} staff />
+             <Text style={styles.total}>Total ₹{item.total}  ·  {paymentLabel(item.payment_method)} · {item.payment_status || "payment status unavailable"}</Text>
+             {item.payment_method === "upi" && item.payment_status === "awaiting_upi_payment" && item.status === "pending_payment" ? <Pressable testID={`confirm-upi-${item.id}`} onPress={() => confirmUpiPayment(item.id)} style={[styles.actionBtn, { alignSelf: "flex-start", marginTop: 8 }]}><Text style={styles.actionText}>Confirm UPI received (verify bank first)</Text></Pressable> : null}
+             {(NEXT[item.status] || []).length > 0 && (
+               <View style={{ flexDirection: "row", gap: spacing.sm, marginTop: 8, flexWrap: "wrap" }}>
+-                {(NEXT[item.status] || []).map((a) => (
++                {(NEXT[item.status] || []).filter((action) =>
++                  action.next !== "ready" || !item.replacements?.some(
++                    (entry: { state: string }) => groceryReplacementOpenStates.includes(entry.state),
++                  ),
++                ).map((a) => (
+                   <Pressable key={a.next} testID={`advance-${item.id}-${a.next}`} onPress={() => advance(item.id, a.next)} style={styles.actionBtn}>
+                     <Text style={styles.actionText}>{a.label}</Text>
+                   </Pressable>
+diff --git a/frontend/src/components/GroceryOrderReplacements.tsx b/frontend/src/components/GroceryOrderReplacements.tsx
+new file mode 100644
+--- /dev/null
++++ b/frontend/src/components/GroceryOrderReplacements.tsx
+@@ -0,0 +1,142 @@
++import { useRouter } from "expo-router";
++import { useState } from "react";
++import { Pressable, Text, View } from "react-native";
++
++import { api } from "@/src/lib/api";
++import { makeStyles, radius, spacing } from "@/src/theme";
++
++type Line = {
++  product_id: string;
++  variant_id?: string | null;
++  name: string;
++  unit?: string;
++  qty: number;
++  quantity_label?: string | null;
++  price: number;
++  line_total?: number | null;
++};
++type Totals = { subtotal: number; delivery_fee: number; total: number };
++type Offer = { id: string; item: Line; line_difference: number; totals: Totals };
++type ReplacementCase = {
++  id: string;
++  line_index: number;
++  original: Line;
++  original_line_total: number;
++  original_total: number;
++  options: Offer[];
++  keep_totals: Totals | null;
++  state: "awaiting_customer" | "rejected" | "assist_required" | "superseded" | "accepted" | "kept_unavailable";
++  final_totals?: Totals;
++};
++export type ReplacementOrder = {
++  id: string;
++  status: string;
++  customer_id?: string | null;
++  items: Line[];
++  replacements?: ReplacementCase[];
++};
++type Decision = "accept" | "reject" | "keep_unavailable";
++
++export const groceryReplacementOpenStates = ["awaiting_customer", "rejected", "assist_required"];
++const reportStatuses = ["pending_payment", "pending", "accepted", "preparing"];
++const money = (amount: number) => `₹${amount.toFixed(2)}`;
++const describe = (line: Line) => `${line.quantity_label || line.qty} × ${line.name}${line.unit ? ` · ${line.unit}` : ""}`;
++const labels = {
++  awaiting_customer: "Awaiting customer decision",
++  rejected: "Customer declined these options",
++  assist_required: "COME-IN Assist is needed for this order",
++  superseded: "Options updated by the shop",
++  accepted: "Replacement confirmed",
++  kept_unavailable: "Customer continued without this item",
++};
++
++export function GroceryOrderReplacements({ order, onChange, staff = false }: {
++  order: ReplacementOrder;
++  onChange: () => Promise<unknown>;
++  staff?: boolean;
++}) {
++  const router = useRouter();
++  const styles = useStyles();
++  const [busy, setBusy] = useState(false);
++  const [error, setError] = useState("");
++  const cases = order.replacements ?? [];
++  const active = cases.find((entry) => groceryReplacementOpenStates.includes(entry.state));
++  const canReport = staff && Boolean(order.customer_id) && reportStatuses.includes(order.status);
++  const base = `/orders/${encodeURIComponent(order.id)}/replacements`;
++
++  async function update(path: string, body: object) {
++    if (busy) return;
++    setBusy(true);
++    setError("");
++    try {
++      await api.post(path, body);
++      await onChange();
++    } catch (cause) {
++      setError(cause && typeof cause === "object" && "message" in cause && typeof cause.message === "string"
++        ? cause.message : "Could not confirm the update. Refresh the order and try again.");
++    } finally {
++      setBusy(false);
++    }
++  }
++
++  const report = (line: Line, index: number, refreshCaseId?: string) =>
++    void update(base, { line_index: index, product_id: line.product_id, variant_id: line.variant_id ?? null, qty: line.qty, refresh_case_id: refreshCaseId });
++  const decide = (entry: ReplacementCase, action: Decision, optionId?: string) =>
++    void update(`${base}/${entry.id}/decision`, { action, option_id: optionId });
++  const button = (label: string, action: () => void) => (
++    <Pressable accessibilityRole="button" disabled={busy} onPress={action} style={[styles.button, busy && styles.disabled]}>
++      <Text style={styles.buttonText}>{label}</Text>
++    </Pressable>
++  );
++
++  if (!cases.length && !canReport) return null;
++
++  return <View style={styles.group}>
++    <Text style={styles.title}>Unavailable items</Text>
++    {error ? <Text accessibilityLiveRegion="polite" style={styles.error}>{error}</Text> : null}
++    {canReport && !active && order.items.map((line, index) => <View key={`${line.product_id}:${index}`}>
++      {button(`Report ${line.name}${line.unit ? ` (${line.unit})` : ""} unavailable`, () => report(line, index))}
++    </View>)}
++    {cases.filter((entry) => entry.state !== "superseded").reverse().map((entry) => {
++      const canDecide = !staff && entry === active && reportStatuses.includes(order.status) && entry.state !== "assist_required";
++      return <View style={styles.case} key={entry.id}>
++        <Text style={styles.title}>{describe(entry.original)} · {money(entry.original_line_total)} original</Text>
++        <Text style={styles.text}>{order.status === "cancelled" && entry === active ? "Order cancelled" : labels[entry.state]}</Text>
++        {entry.final_totals ? <Text style={styles.text}>Confirmed order total {money(entry.final_totals.total)} · was {money(entry.original_total)}</Text> : null}
++        {entry === active && entry.state === "awaiting_customer" && reportStatuses.includes(order.status) ? <>
++          {!entry.options.length ? <Text style={styles.text}>The shop has no matching replacements in stock right now.</Text> : null}
++          {entry.options.map((option) => <View key={option.id} style={styles.offer}>
++            <Text style={styles.text}>{describe(option.item)} · {money(option.item.line_total ?? option.item.price * option.item.qty)}</Text>
++            <Text style={styles.text}>Item difference {option.line_difference > 0 ? "+" : option.line_difference < 0 ? "−" : ""}{money(Math.abs(option.line_difference))}</Text>
++            <Text style={styles.text}>New order total {money(option.totals.total)} · delivery {money(option.totals.delivery_fee)}</Text>
++            {canDecide ? button(`Accept ${option.item.name} · ${money(option.totals.total)} total`, () => decide(entry, "accept", option.id)) : null}
++          </View>)}
++          {canDecide && entry.options.length ? button("Reject these replacements", () => decide(entry, "reject")) : null}
++        </> : null}
++        {canDecide && entry.keep_totals ? button(
++          `Keep item unavailable · ${money(entry.keep_totals.total)} total`,
++          () => decide(entry, "keep_unavailable"),
++        ) : null}
++        {canDecide && !entry.keep_totals ? <Text style={styles.text}>Without this item your order would be empty. Contact COME-IN Assist for help.</Text> : null}
++        {canReport && entry === active && entry.state !== "assist_required" && order.items[entry.line_index]
++          ? button("Refresh in-stock options", () => report(order.items[entry.line_index], entry.line_index, entry.id))
++          : null}
++      </View>;
++    })}
++    {!staff && active && reportStatuses.includes(order.status) ? button("Contact COME-IN Assist", () =>
++      router.push({ pathname: "/chand", params: { openHelp: "1", order_id: order.id, order_kind: "grocery" } }),
++    ) : null}
++  </View>;
++}
++
++const useStyles = makeStyles((colors) => ({
++  group: { gap: spacing.sm, paddingVertical: spacing.sm },
++  case: { gap: spacing.sm, padding: spacing.md, borderWidth: 1, borderRadius: radius.md, borderColor: colors.border, backgroundColor: colors.surfaceSecondary },
++  offer: { gap: spacing.sm, padding: spacing.sm, borderWidth: 1, borderRadius: radius.md, borderColor: colors.border },
++  title: { fontWeight: "800", color: colors.onSurface },
++  text: { color: colors.onSurfaceSecondary },
++  error: { color: colors.error },
++  button: { alignSelf: "flex-start", borderRadius: radius.md, backgroundColor: colors.brandPrimary, padding: spacing.sm },
++  buttonText: { color: colors.onBrandPrimary, fontWeight: "700" },
++  disabled: { opacity: 0.55 },
++}));

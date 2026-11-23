@@ -112,3 +112,9 @@ The authorized local fixes and fresh verification are complete. Apply `patches/t
 ## Task 8 — Restaurant Repeat Order — 2026-11-23 IST
 
 **FULLY COMPLETED for the authorized Restaurant Mode scope.** Verified from GitHub baseline `b4402235523be3b487a5416c1c47711f139a8a57`. Eligible history, current menu and saved option validation, safe cart merge, fresh quote and duplicate protection passed local testing. Focused backend 40 passed. Full backend 687 passed, 0 failed, 5 unrelated skips. Local Chromium repeat through pickup checkout and three mocked payment regressions passed. Native-device and genuine Razorpay TEST checks remain deferred. Apply `patches/task8-restaurant-repeat-order.patch` after the Task 4 media patch. Evidence: `evidence/task-8-restaurant-repeat-order-20261123/IMPLEMENTATION_REPORT.md`.
+
+## Task 9 — Out-of-Stock Item Replacement — 2026-11-23 IST
+
+**PARTIALLY COMPLETE.** The prior Grocery cart replacement remains available. Signed-in Grocery orders with unpaid cash terms now support seller-confirmed unavailability, stock-validated options, customer approval or removal, recalculated totals, and order-linked COME-IN Assist. Focused verification passed 22 tests. Full backend regression passed 689 tests with five environment-dependent skips. TypeScript, targeted ESLint, Expo export and Chromium seller/customer/Assist flow passed. See `evidence/task-9-out-of-stock-replacement-20261123/IMPLEMENTATION_REPORT.md`.
+
+Restore `patches/task9-grocery-order-replacement.patch` after `patches/task8-restaurant-repeat-order.patch` in the existing extracted source. Fetch and verify GitHub `work` before continuing. Paid/online orders, reward adjustments and legacy taxed orders use COME-IN Assist. Automated settlement and Restaurant post-order replacement require approved rules. Guest or empty-order cases use eligible cancellation or assistance. Native device and genuine Razorpay TEST checks remain deferred.

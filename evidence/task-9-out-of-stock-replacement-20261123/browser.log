@@ -1,0 +1,3 @@
+PASS Seller reported missing item and saw the pending customer decision.
+PASS The customer submitted an order-linked COME-IN Assist ticket from the notification flow, and the seller received it.
+PASS Customer approved the displayed total; the seller saw the decision and the order stayed COD pending.
