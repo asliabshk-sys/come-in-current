@@ -974,3 +974,7 @@ Apply `patches/task9-advertisement-compensation-verification.patch` after the co
 ### 23 November 2026 — Delivery partner allocation verification
 
 Apply `patches/task9-delivery-partner-allocation-verification.patch` after the advertisement compensation patch. Delivery partner allocation remains **PARTIALLY VERIFIED**, pending approved assignment and settlement rules. [Audit](evidence/task-9-final/delivery-partner-allocation-20261123/AUDIT.md)
+
+### 23 November 2026 — Rewards and referral reversal verification
+
+Apply `patches/task9-rewards-referral-reversal-verification.patch` after the delivery allocation verification patch. Rewards and Referral Reversal remains **PARTIALLY VERIFIED**. [Audit and decision links](evidence/task-9-final/rewards-referral-reversal-20261123/AUDIT.md)

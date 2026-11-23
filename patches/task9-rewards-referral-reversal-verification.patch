@@ -1,0 +1,103 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -1153,15 +1153,30 @@
+             current = reward.get("status")
+             if body.decision not in transitions.get(current, set()): raise HTTPException(status_code=409, detail="Invalid reward status transition")
+             if body.decision in {"approve", "available", "processing"}:
+-                if len(reward.get("qualifying_orders", [])) < REFERRAL_TARGET:
+-                    raise HTTPException(status_code=409, detail="Reward is missing its ten qualifying order references")
+-                for qualifying in reward["qualifying_orders"]:
++                order_refs = reward.get("qualifying_orders", [])
++                referral_refs = reward.get("qualifying_referral_ids", [])
++                if (len(order_refs) != REFERRAL_TARGET or len(referral_refs) != REFERRAL_TARGET
++                        or not all(isinstance(ref, str) and ObjectId.is_valid(ref) for ref in referral_refs)):
++                    raise HTTPException(409, "Reward does not have its required qualifying referral and order references")
++                qualified_referrals = await db.referrals.find({
++                    "_id": {"$in": [ObjectId(ref) for ref in referral_refs]},
++                    "referrer_id": reward["referrer_id"], "status": "qualified",
++                }, session=session).to_list(REFERRAL_TARGET)
++                owners = {(row.get("qualifying_order_kind"), row.get("qualifying_order_id")): row.get("referred_user_id")
++                          for row in qualified_referrals}
++                if (len(owners) != REFERRAL_TARGET or len(set(owners.values())) != REFERRAL_TARGET
++                        or None in owners.values() or reward["referrer_id"] in owners.values()):
++                    raise HTTPException(409, "The qualifying referral records no longer match this reward")
++                for qualifying in order_refs:
+                     try: order_oid = ObjectId(str(qualifying.get("order_id")))
+                     except Exception as exc: raise HTTPException(status_code=409, detail="A qualifying order reference is invalid") from exc
+                     if qualifying.get("kind") not in {"grocery", "restaurant"}:
+                         raise HTTPException(409, "A qualifying order kind is invalid")
+                     collection = db.restaurant_orders if qualifying["kind"] == "restaurant" else db.orders
+-                    qualifying_order = await collection.find_one({"_id": order_oid}, session=session)
++                    customer_id = owners.pop((qualifying["kind"], str(order_oid)), None)
++                    if not customer_id:
++                        raise HTTPException(409, "A qualifying order is duplicated or unrelated to this reward")
++                    qualifying_order = await collection.find_one({"_id": order_oid, "customer_id": customer_id}, session=session)
+                     if not qualifying_order or not order_is_referral_candidate(qualifying_order):
+                         raise HTTPException(status_code=422, detail="A qualifying order is no longer eligible; reward remains pending verification")
+                     await collection.update_one({"_id": order_oid},
+@@ -1176,7 +1191,8 @@
+             ledger_status = {"available": "available", "processing": "processing", "paid": "paid", "reject": "rejected"}.get(body.decision)
+             if ledger_status:
+                 await db.referral_ledger.update_one({"user_id": reward["referrer_id"], "idempotency_key": ledger_key}, {"$set": {"status": ledger_status, "payout_reference": body.payout_reference if body.decision == "paid" else reward.get("payout_reference"), "updated_at": now}}, session=session)
+-            await db.referral_audit.insert_one({"actor_id": user["id"], "action": f"reward_{body.decision}", "reward_id": str(oid), "note": body.note, "payout_reference": body.payout_reference, "created_at": now}, session=session)
++            await db.referral_audit.insert_one({"actor_id": user["id"], "action": f"reward_{body.decision}", "reward_id": str(oid), "previous_status": current,
++                                               "status": status_map[body.decision], "note": body.note, "payout_reference": body.payout_reference, "created_at": now}, session=session)
+             if body.decision in {"approve", "reject"}:
+                 outcome = status_map[body.decision]
+                 await db.notifications.insert_one({
+--- a/backend/tests/test_referral_task9_review_integration.py
++++ b/backend/tests/test_referral_task9_review_integration.py
+@@ -11,7 +11,7 @@
+         pytest.skip("requires disposable loopback MongoDB")
+     import httpx
+     from bson import ObjectId
+-    from motor.motor_asyncio import AsyncIOMotorClient
++    from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
+     import server
+
+     monkeypatch.setenv("JWT_SECRET", uuid4().hex)
+@@ -101,12 +101,44 @@
+                 assert (await http.patch(reward_url, json={"decision": "approve"}, headers=auth["admin"])).status_code == 422
+                 assert await db.referral_ledger.count_documents({}) == 0
+                 await db.restaurant_orders.update_one({"_id": order_oid}, {"$unset": {"refund_status": ""}})
++                assert (await http.patch(reward_url, json={"decision": "approve"}, headers=auth["seller"])).status_code == 403
++                order_refs = reward["qualifying_orders"]
++                for invalid in ([order_refs[0]] * server.REFERRAL_TARGET, [*order_refs[:-1], {"kind": "grocery", "order_id": str(ObjectId())}]):
++                    await db.referral_rewards.update_one({"_id": reward["_id"]}, {"$set": {"qualifying_orders": invalid}})
++                    assert (await http.patch(reward_url, json={"decision": "approve"}, headers=auth["admin"])).status_code == 409
++                    assert await db.referral_ledger.count_documents({}) == 0
++                await db.referral_rewards.update_one({"_id": reward["_id"]}, {"$set": {"qualifying_orders": order_refs}})
++
++                original_insert = AsyncIOMotorCollection.insert_one
++
++                async def fail_notification(collection, document, *args, **kwargs):
++                    result = await original_insert(collection, document, *args, **kwargs)
++                    if collection.name == "notifications" and document.get("kind") == "referral_reward":
++                        raise RuntimeError("fixture interruption after notification write")
++                    return result
++
++                with monkeypatch.context() as failure:
++                    failure.setattr(AsyncIOMotorCollection, "insert_one", fail_notification)
++                    assert (await http.patch(reward_url, json={"decision": "approve"}, headers=auth["admin"])).status_code == 503
++                assert (await db.referral_rewards.find_one({"_id": reward["_id"]}))["status"] == "pending_verification"
++                assert await db.referral_ledger.count_documents({}) == 0
++                assert await db.referral_audit.count_documents({"action": "reward_approve"}) == 0
++                assert await db.notifications.count_documents({"kind": "referral_reward"}) == 0
+                 credit = await asyncio.gather(*(http.patch(reward_url, json={"decision": "approve"}, headers=auth["admin"]) for _ in range(2)))
+                 assert sorted(result.status_code for result in credit) == [200, 409]
+                 entry = await db.referral_ledger.find_one({"reward_id": str(reward["_id"])})
+                 assert entry["status"] == "approved" and entry["amount"] == server.REFERRAL_REWARD_INR
+                 assert await db.referral_ledger.count_documents({}) == 1
+                 assert await db.notifications.count_documents({"kind": "referral_reward", "data.reward_id": str(reward["_id"])}) == 1
++                audit = await db.referral_audit.find_one({"action": "reward_approve", "reward_id": str(reward["_id"])})
++                assert audit["previous_status"] == "pending_verification" and audit["status"] == "approved"
++                notice = await db.notifications.find_one({"kind": "referral_reward", "data.reward_id": str(reward["_id"])})
++                assert notice["title"] == "Referral reward approved" and notice["user_id"] == str(referrer)
++                for fields in ({"status": "cancelled"}, {"refund_status": "partially_refunded"}):
++                    await db.restaurant_orders.update_one({"_id": order_oid}, {"$set": fields})
++                    assert (await http.patch(reward_url, json={"decision": "available"}, headers=auth["admin"])).status_code == 422
++                    await db.restaurant_orders.update_one({"_id": order_oid}, {"$set": {"status": "delivered"}, "$unset": {"refund_status": ""}})
++                    assert (await db.referral_ledger.find_one({"_id": entry["_id"]})) == entry
+                 await db.restaurant_orders.update_one({"_id": order_oid}, {"$set": {"refund_status": "refunded"}})
+                 for decision in ("available", "processing"):
+                     response = await http.patch(reward_url, json={"decision": decision}, headers=auth["admin"])

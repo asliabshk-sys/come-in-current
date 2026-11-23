@@ -23,3 +23,7 @@ Advertisement compensation remains **PARTIALLY VERIFIED**. Campaign status and a
 ### Delivery Partner Allocation — 23 November 2026
 
 Delivery Partner Allocation remains **PARTIALLY VERIFIED**, and T9-30 settlement remains **BLOCKED**. Existing onboarding and Admin fee controls passed; no order assignment or partner payable is enabled. [Audit](delivery-partner-allocation-20261123/AUDIT.md) · [Owner decisions](delivery-partner-allocation-20261123/OWNER-DECISION.md) · [Tests](delivery-partner-allocation-20261123/TESTS.md)
+
+### Rewards and referral reversal — 23 November 2026
+
+Rewards and Referral Reversal remains **PARTIALLY VERIFIED**. Distinct qualifying referral, order and customer links are rechecked, and reward transitions record old/new state. Existing credits were preserved. External identity and reversal policies remain open. [Audit](rewards-referral-reversal-20261123/AUDIT.md) · [Owner decision](rewards-referral-reversal-20261123/OWNER-DECISION.md) · [Tests](rewards-referral-reversal-20261123/TESTS.md)
