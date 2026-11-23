@@ -27,3 +27,7 @@ Delivery Partner Allocation remains **PARTIALLY VERIFIED**, and T9-30 settlement
 ### Rewards and referral reversal — 23 November 2026
 
 Rewards and Referral Reversal remains **PARTIALLY VERIFIED**. Distinct qualifying referral, order and customer links are rechecked, and reward transitions record old/new state. Existing credits were preserved. External identity and reversal policies remain open. [Audit](rewards-referral-reversal-20261123/AUDIT.md) · [Owner decision](rewards-referral-reversal-20261123/OWNER-DECISION.md) · [Tests](rewards-referral-reversal-20261123/TESTS.md)
+
+### Partial and COD refunds — 23 November 2026
+
+Partial and COD refund rules remain **PARTIALLY VERIFIED**. Existing manual COD confirmation, audit and eligible ledger now commit atomically. Independent actual cash amount evidence and authorized partial/COD execution rules remain pending. [Audit](partial-cod-refund-20261123/AUDIT.md) · [Owner decisions](partial-cod-refund-20261123/OWNER-DECISION.md) · [Tests](partial-cod-refund-20261123/TESTS.md)

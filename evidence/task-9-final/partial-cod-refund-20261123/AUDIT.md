@@ -1,0 +1,16 @@
+# Partial and COD refunds — scoped audit
+
+**Overall: PARTIALLY VERIFIED.** Clean local work and GitHub started at `21d9f025481f83cf262ecefc77a28bae2320ca6f`. The audit used retained source and disposable order, payment and ledger records only.
+
+| Area | Status | Evidence and gap |
+| --- | --- | --- |
+| A. Order and payment evidence | VERIFIED | Customer/order linkage, original snapshot and Admin-only readiness were checked. Online capture and previous refund totals use persisted server records. COD records manual attestation and delivery separately. |
+| B. Full refunds | PARTIALLY VERIFIED | Existing cancelled-order workflow verifies captured amount and supported state, requires Admin, tracks provider reference and is idempotent through mocked provider/webhook cases. Pending, failed and confirmed remain separate. Genuine provider confirmation is deferred. |
+| C. Partial refunds | OWNER DECISION REQUIRED | Existing item replacement and removal quotes are review evidence. Capture accounting sums pending and completed refunds and excludes failed records. Duplicate or over-cap evidence is rejected. Multiple provider refund records can be reconciled, but there is no authorized continuing-order partial payout formula. |
+| D. COD | PARTIALLY VERIFIED | Preparing or uncollected COD cannot become confirmed via the merchant evidence path before fulfillment. Matching delivery, recorded collection and matching audit are distinct, including legacy rows without an audit. The timestamped audit now stores the order total and currency. No independently measured cash amount exists, so an alleged actual amount mismatch cannot be resolved from local data. No payout rail is enabled. |
+| E. Amount and financial integrity | PARTIALLY VERIFIED | Server-backed captures, cumulative bounds and refund replay were checked with fixtures. COD confirmation, its audit and any eligible finalized ledger snapshot now commit together. An injected failure rolls the transaction back. Paid partial and COD allocation calculations remain unapproved. |
+| F. Components | OWNER DECISION REQUIRED | Existing supported full refunds use matching captured total. Replacement review carries priced line and original evidence. No approved component-by-component partial/COD allocation across product, delivery, tax, discounts, coupons, rewards or adjustments was found. GST Engine is outside scope. |
+| G. Authorization and notices | VERIFIED | Scoped tests cover customer ownership, Admin review, merchant ownership, duplicate and invalid requests, and accurate status notifications in local fixtures. COD audit now records old/new status and source total. Review approval remains separate from execution and failure is not reported as success. |
+| H. Persistence and recovery | PARTIALLY VERIFIED | Restart replay preserves one COD audit and one finalized ledger row without a refund record. Focused webhook fixtures exercised retry, rollback and order/payment consistency. Live timeout/reconciliation behavior is deferred. |
+
+**DEFERRED — POST ALL APP TASKS**. Genuine Razorpay TEST payment, webhook and refund validation, physical Android/iOS, and required external provider validation. No real refund, payout, transfer or settlement occurred. No change to Razorpay production integration.

@@ -1,0 +1,2 @@
+PASS post-restart COD replay preserved one audit and one finalized ledger snapshot
+PASS persisted COD evidence remains review-only and no provider refund record was created

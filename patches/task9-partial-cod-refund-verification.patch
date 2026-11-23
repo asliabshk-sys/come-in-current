@@ -1,0 +1,163 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -6311,19 +6311,19 @@
+     return float(total.quantize(Decimal("0.01")))
+
+
+-async def _record_finalized_order_ledger(order: dict, kind: str):
++async def _record_finalized_order_ledger(order: dict, kind: str, session=None):
+     """Idempotently snapshot a finalized order's financial split when policy is known."""
+     order_id = str(order.get("_id", ""))
+     if not order_id:
+         return None
+     if kind == "grocery":
+         shop_id = str(order.get("shop_id", ""))
+-        entity = await db.shops.find_one({"_id": ObjectId(shop_id)}) if ObjectId.is_valid(shop_id) else None
++        entity = await db.shops.find_one({"_id": ObjectId(shop_id)}, session=session) if ObjectId.is_valid(shop_id) else None
+         beneficiary_type = "shop"
+         beneficiary_id = shop_id
+     else:
+         restaurant_id = str(order.get("restaurant_id", ""))
+-        entity = await db.restaurants.find_one({"_id": ObjectId(restaurant_id)}) if ObjectId.is_valid(restaurant_id) else None
++        entity = await db.restaurants.find_one({"_id": ObjectId(restaurant_id)}, session=session) if ObjectId.is_valid(restaurant_id) else None
+         beneficiary_type = "restaurant"
+         beneficiary_id = restaurant_id
+     if not entity:
+@@ -6346,8 +6346,8 @@
+                        if case.get("state") in {"accepted", "kept_unavailable"} and case.get("id")]
+     if replacement_ids:
+         record["replacement_ids"] = replacement_ids
+-    await db.financial_ledger.update_one({"idempotency_key": key}, {"$setOnInsert": record}, upsert=True)
+-    return await db.financial_ledger.find_one({"idempotency_key": key})
++    await db.financial_ledger.update_one({"idempotency_key": key}, {"$setOnInsert": record}, upsert=True, session=session)
++    return await db.financial_ledger.find_one({"idempotency_key": key}, session=session)
+
+
+ async def _record_refund_reversal(order: dict, kind: str, refund_id: str, session=None):
+@@ -6407,40 +6407,45 @@
+     if not body.confirmed:
+         raise HTTPException(status_code=422, detail="Explicit cash collection confirmation is required")
+     oid = _object_id_or_404(order_id, "Order")
+-    if kind == "grocery":
+-        order = await db.orders.find_one({"_id": oid})
+-        if not order: raise HTTPException(status_code=404, detail="Order not found")
+-        shop = await _get_shop_or_404(str(order.get("shop_id", "")))
+-        _assert_shop_owner(shop, user)
+-        collection = db.orders
+-    else:
+-        order = await db.restaurant_orders.find_one({"_id": oid})
+-        if not order: raise HTTPException(status_code=404, detail="Restaurant order not found")
+-        restaurant = await _restaurant_or_404(str(order.get("restaurant_id", "")))
+-        _restaurant_owner(restaurant, user)
+-        collection = db.restaurant_orders
+-    if order.get("payment_status") == "cash_collected": return doc_out(order)
+-    # Grocery orders created before the Pay-at-Pickup status was standardized
+-    # may still be stored as pay_at_shop_pending. Keep that legacy state
+-    # confirmable; new Grocery orders use pay_at_pickup_pending. Restaurant
+-    # orders continue to accept only their existing canonical status.
+-    allowed_cash_states = {"cod_pending", "pay_at_pickup_pending"}
+-    if kind == "grocery":
+-        allowed_cash_states.add("pay_at_shop_pending")
+-    if order.get("payment_status") not in allowed_cash_states:
+-        raise HTTPException(status_code=409, detail="Only unconfirmed cash/COD orders can be manually collected")
+-    if str(order.get("status", "")).lower() not in {"delivered", "picked_up"}:
+-        raise HTTPException(status_code=409, detail="Cash collection can only be confirmed after delivery or pickup")
+-    now = now_utc()
+-    result = await collection.update_one({"_id": oid, "payment_status": order.get("payment_status"), "status": order.get("status")}, {"$set": {"payment_status": "cash_collected", "cash_collection_confirmed_by": user["id"], "cash_collection_confirmed_at": now, "cash_collection_note": body.note, "updated_at": now}})
+-    if result.modified_count != 1:
+-        fresh = await collection.find_one({"_id": oid})
+-        if fresh and fresh.get("payment_status") == "cash_collected": return doc_out(fresh)
+-        raise HTTPException(status_code=409, detail="Order payment state changed concurrently; refresh and retry")
+-    await db.financial_audit.insert_one({"actor_id": user["id"], "action": "manual_cash_collection_confirmed", "order_kind": kind, "order_id": str(oid), "note": body.note, "created_at": now})
+-    fresh = await collection.find_one({"_id": oid})
+-    await _record_finalized_order_ledger(fresh, kind)
+-    return doc_out(fresh)
++    async def apply(session):
++        if kind == "grocery":
++            order = await db.orders.find_one({"_id": oid}, session=session)
++            if not order: raise HTTPException(status_code=404, detail="Order not found")
++            shop = await _get_shop_or_404(str(order.get("shop_id", "")))
++            _assert_shop_owner(shop, user)
++            collection = db.orders
++        else:
++            order = await db.restaurant_orders.find_one({"_id": oid}, session=session)
++            if not order: raise HTTPException(status_code=404, detail="Restaurant order not found")
++            restaurant = await _restaurant_or_404(str(order.get("restaurant_id", "")))
++            _restaurant_owner(restaurant, user)
++            collection = db.restaurant_orders
++        if order.get("payment_status") == "cash_collected": return doc_out(order)
++        # Grocery orders created before the Pay-at-Pickup status was standardized
++        # may still be stored as pay_at_shop_pending. Keep that legacy state
++        # confirmable; new Grocery orders use pay_at_pickup_pending. Restaurant
++        # orders continue to accept only their existing canonical status.
++        allowed_cash_states = {"cod_pending", "pay_at_pickup_pending"}
++        if kind == "grocery":
++            allowed_cash_states.add("pay_at_shop_pending")
++        if order.get("payment_status") not in allowed_cash_states:
++            raise HTTPException(status_code=409, detail="Only unconfirmed cash/COD orders can be manually collected")
++        if str(order.get("status", "")).lower() not in {"delivered", "picked_up"}:
++            raise HTTPException(status_code=409, detail="Cash collection can only be confirmed after delivery or pickup")
++        now = now_utc()
++        result = await collection.update_one({"_id": oid, "payment_status": order.get("payment_status"), "status": order.get("status")}, {"$set": {"payment_status": "cash_collected", "cash_collection_confirmed_by": user["id"], "cash_collection_confirmed_at": now, "cash_collection_note": body.note, "updated_at": now}}, session=session)
++        if result.modified_count != 1:
++            fresh = await collection.find_one({"_id": oid}, session=session)
++            if fresh and fresh.get("payment_status") == "cash_collected": return doc_out(fresh)
++            raise HTTPException(status_code=409, detail="Order payment state changed concurrently; refresh and retry")
++        await db.financial_audit.insert_one({"actor_id": user["id"], "action": "manual_cash_collection_confirmed", "order_kind": kind, "order_id": str(oid), "note": body.note, "previous_payment_status": order.get("payment_status"),
++                                             "payment_status": "cash_collected", "order_total_at_confirmation": order.get("total"),
++                                             "currency": order.get("currency", "INR"), "created_at": now}, session=session)
++        fresh = await collection.find_one({"_id": oid}, session=session)
++        await _record_finalized_order_ledger(fresh, kind, session=session)
++        return doc_out(fresh)
++
++    return await _run_replacement_transaction(apply)
+
+
+ async def _financial_ledger_summary(start_utc, end_utc):
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -12,7 +12,7 @@
+         pytest.skip("requires disposable loopback MongoDB")
+     import httpx
+     from bson import ObjectId
+-    from motor.motor_asyncio import AsyncIOMotorClient
++    from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
+     import server
+
+     monkeypatch.setenv("JWT_SECRET", uuid4().hex)
+@@ -368,9 +368,32 @@
+                 cod = (await request("GET", cod_path, actor="admin")).json()["reconciliation"]["cod_evidence"]
+                 assert cod == {"collection_recorded": False, "delivery_recorded": False,
+                                "collection_audit_matched": False, "payout_status": "pending_authorized_cod_rail"}
+-                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"status": "delivered", "payment_status": "cod_pending"}})
+-                assert (await request("POST", f"/earnings/orders/restaurant/{oid}/cash-collected",
+-                                      {"confirmed": True, "note": "Fixture cash collection"}, "seller")).status_code == 200
++                collection_path = f"/earnings/orders/restaurant/{oid}/cash-collected"
++                cash_note = {"confirmed": True, "note": "Fixture cash collection"}
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"payment_status": "cod_pending"}})
++                assert (await request("POST", collection_path, cash_note, "seller")).status_code == 409
++                assert (await request("POST", collection_path, cash_note, "buyer")).status_code == 403
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"status": "delivered"}})
++                original_insert = AsyncIOMotorCollection.insert_one
++
++                async def fail_after_cash_audit(collection, document, *args, **kwargs):
++                    result = await original_insert(collection, document, *args, **kwargs)
++                    if collection.name == "financial_audit" and document.get("action") == "manual_cash_collection_confirmed":
++                        raise RuntimeError("fixture interruption after cash audit write")
++                    return result
++
++                with monkeypatch.context() as failure:
++                    failure.setattr(AsyncIOMotorCollection, "insert_one", fail_after_cash_audit)
++                    assert (await request("POST", collection_path, cash_note, "seller")).status_code == 503
++                cash_audit = {"order_id": str(oid), "action": "manual_cash_collection_confirmed"}
++                assert (await db.restaurant_orders.find_one({"_id": oid}))["payment_status"] == "cod_pending"
++                assert await db.financial_audit.count_documents(cash_audit) == 0
++                retries = await asyncio.gather(*(request("POST", collection_path, cash_note, "seller") for _ in range(2)))
++                assert [result.status_code for result in retries] == [200, 200]
++                assert await db.financial_audit.count_documents(cash_audit) == 1
++                confirmation = await db.financial_audit.find_one(cash_audit)
++                assert confirmation["order_total_at_confirmation"] == 152.5
++                assert confirmation["previous_payment_status"] == "cod_pending" and confirmation["payment_status"] == "cash_collected"
+                 cod = (await request("GET", cod_path, actor="admin")).json()["reconciliation"]["cod_evidence"]
+                 assert cod == {"collection_recorded": True, "delivery_recorded": True,
+                                "collection_audit_matched": True, "payout_status": "pending_authorized_cod_rail"}

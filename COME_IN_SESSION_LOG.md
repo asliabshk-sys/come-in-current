@@ -978,3 +978,7 @@ Apply `patches/task9-delivery-partner-allocation-verification.patch` after the a
 ### 23 November 2026 — Rewards and referral reversal verification
 
 Apply `patches/task9-rewards-referral-reversal-verification.patch` after the delivery allocation verification patch. Rewards and Referral Reversal remains **PARTIALLY VERIFIED**. [Audit and decision links](evidence/task-9-final/rewards-referral-reversal-20261123/AUDIT.md)
+
+### 23 November 2026 — Partial and COD refund review
+
+Apply `patches/task9-partial-cod-refund-verification.patch` after the rewards/referral verification patch. Partial and COD Refund Rules remain **PARTIALLY VERIFIED**. [Audit and decision links](evidence/task-9-final/partial-cod-refund-20261123/AUDIT.md)
