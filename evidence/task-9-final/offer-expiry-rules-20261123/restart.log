@@ -1,0 +1,2 @@
+PASS restarted API preserved the paused campaign and rejected resume beyond the stored deadline
+PASS after restart an eligible unpaid cancellation restored budget exactly once without reactivation, including cancellation replay

@@ -105,3 +105,7 @@ Rewards and Referral Reversal remains **PARTIALLY VERIFIED**. Distinct qualifyin
 ### Partial and COD refunds — 23 November 2026
 
 Partial and COD refund rules remain **PARTIALLY VERIFIED**. Existing manual COD confirmation, audit and eligible ledger now commit atomically. Independent actual cash amount evidence and authorized partial/COD execution rules remain pending. [Audit](partial-cod-refund-20261123/AUDIT.md) · [Owner decisions](partial-cod-refund-20261123/OWNER-DECISION.md) · [Tests](partial-cod-refund-20261123/TESTS.md)
+
+### Offer expiry rules — 23 November 2026
+
+Offer expiry remains **PARTIALLY VERIFIED**. Existing dated coupons and advertisements use enforced server windows. Final coupon expiry rejection rolls back without charging a new amount. Replacement-offer duration and independent cancellation remain unapproved and unimplemented under T9-12. [Audit](offer-expiry-rules-20261123/AUDIT.md) · [Owner decisions](offer-expiry-rules-20261123/OWNER-DECISION.md) · [Tests](offer-expiry-rules-20261123/TESTS.md)

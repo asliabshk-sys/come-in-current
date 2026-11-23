@@ -978,3 +978,7 @@ Apply `patches/task9-rewards-referral-reversal-verification.patch` after the del
 ### 23 November 2026 — Partial and COD refund review
 
 Apply `patches/task9-partial-cod-refund-verification.patch` after the rewards/referral verification patch. Partial and COD Refund Rules remain **PARTIALLY VERIFIED**. [Audit and decision links](evidence/task-9-final/partial-cod-refund-20261123/AUDIT.md)
+
+### 23 November 2026 — Offer expiry verification
+
+Apply `patches/task9-offer-expiry-verification.patch` after the partial/COD verification patch. Offer expiry is **PARTIALLY VERIFIED**. [Audit and decision links](evidence/task-9-final/offer-expiry-rules-20261123/AUDIT.md)

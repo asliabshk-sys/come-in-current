@@ -1,0 +1,173 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -1264,6 +1264,8 @@
+
+     @model_validator(mode="after")
+     def advertisement_campaign_window(self):
++        if self.starts_at.utcoffset() is None or self.ends_at.utcoffset() is None:
++            raise ValueError("Campaign dates must include a time zone")
+         if self.ends_at <= self.starts_at:
+             raise ValueError("Campaign end must be after its start")
+         if self.ends_at - self.starts_at > timedelta(days=90):
+@@ -1460,6 +1462,9 @@
+
+ def _advertisement_out(advertisement: dict, *, public: bool = False) -> dict:
+     result = doc_out(advertisement)
++    for field in ("starts_at", "ends_at"):
++        if isinstance(advertisement.get(field), datetime):
++            result[field] = utc(advertisement[field]).astimezone(timezone.utc)
+     if public:
+         for field in ("owner_id", "shop_id", "ai_review", "admin_reason", "poster_storage_path", "commercial_terms", "commercial_budget", "delivery_review_recorded_at"):
+             result.pop(field, None)
+@@ -1613,8 +1618,9 @@
+     poster_sha256 = advertisement.get("poster_sha256")
+     status = advertisement.get("status")
+     now = now_utc()
+-    resuming = (status == "paused" and utc(advertisement["ends_at"]) > now
+-                and (advertisement.get("owner_approval") or {}).get("poster_sha256") == poster_sha256)
++    if utc(advertisement["ends_at"]) <= now:
++        raise HTTPException(409, "Expired advertisements cannot be published or resumed")
++    resuming = (status == "paused" and (advertisement.get("owner_approval") or {}).get("poster_sha256") == poster_sha256)
+     if ((status != "pending_owner_approval" and not resuming) or review.get("status") != "COMPLETED"
+             or review.get("decision") != "safe" or not isinstance(poster_sha256, str)
+             or review.get("poster_sha256") != poster_sha256):
+@@ -1623,7 +1629,7 @@
+                 {"owner_id": user["id"], "poster_sha256": poster_sha256, "approved_at": now})
+     updated = await db.advertisements.update_one({
+         "_id": advertisement["_id"], "status": status, "poster_sha256": poster_sha256,
+-        "ai_review": review, "updated_at": advertisement.get("updated_at"),
++        "ends_at": {"$gt": now}, "ai_review": review, "updated_at": advertisement.get("updated_at"),
+         "commercial_terms": terms,
+     }, {"$set": {"status": "approved", "owner_approval": approval, "updated_at": now}})
+     if updated.matched_count != 1:
+@@ -4952,7 +4958,8 @@
+     campaign = await db.financial_policy_drafts.find_one({"_id": f"coupon:{code}", "status": "active"}, session=session)
+     now = now_utc()
+     if not campaign or not utc(campaign["starts_at"]) <= now < utc(campaign["expires_at"]):
+-        raise HTTPException(409, "Coupon is unavailable or outside its valid dates")
++        raise HTTPException(409, detail={"code": "quote_changed",
++            "message": "This coupon is unavailable or outside its valid dates. Request a fresh quote and review the total."})
+     activation = campaign["activation"]
+     if activation["customer_scope"] == "allowlist" and user["id"] not in activation["customer_ids"]:
+         raise HTTPException(403, "This account is not eligible for the coupon")
+@@ -4994,7 +5001,8 @@
+     if action == "released":
+         query.update({"spent_paise": {"$gte": -delta}, "redemptions": {"$gte": 1}})
+     else:
+-        query.update({"status": "active", "expires_at": {"$gt": now_utc()}})
++        now = now_utc()
++        query.update({"status": "active", "starts_at": {"$lte": now}, "expires_at": {"$gt": now}})
+         query["$expr"] = {"$and": [
+             {"$lte": [{"$add": ["$spent_paise", delta]}, "$budget_paise"]},
+             {"$lt": ["$redemptions", "$max_redemptions"]},
+@@ -5002,6 +5010,9 @@
+     update = await db.financial_policy_drafts.update_one(query,
+         {"$inc": {"spent_paise": delta, "redemptions": 1 if action == "spent" else -1}}, session=session)
+     if update.matched_count != 1:
++        if action == "spent":
++            raise HTTPException(409, detail={"code": "quote_changed",
++                "message": "This coupon is no longer available. No order was placed. Request a fresh quote and review the total."})
+         raise HTTPException(409, "Coupon accounting record is unavailable")
+     await db.financial_audit.insert_one({"action": f"grocery_coupon_{action}", "coupon_code": coupon["code"],
+         "order_id": str(order["_id"]), "actor_id": order["customer_id"], "amount_paise": abs(delta), "created_at": now_utc()}, session=session)
+--- a/backend/tests/test_task4_storage_advertisement_integration.py
++++ b/backend/tests/test_task4_storage_advertisement_integration.py
+@@ -116,6 +116,21 @@
+                     assert (await upload(general, "customer", png())).status_code == 502
+                 provider["fault"] = None
+
++                from pydantic import ValidationError
++
++                campaign_data = {"shop_id": str(ObjectId()), "title": "Fixture campaign", "business_name": "Fixture shop",
++                                 "destination": "/shops", "starts_at": "2026-11-23T10:00:00+05:30",
++                                 "ends_at": "2026-11-23T04:30:01Z"}
++                model = server.AdvertisementCreateIn.model_validate(campaign_data)
++                assert server._advertisement_out(model.model_dump())["starts_at"].isoformat() == "2026-11-23T04:30:00+00:00"
++                for invalid in (
++                    {**campaign_data, "starts_at": "2026-11-23T10:00:00"},
++                    {**campaign_data, "ends_at": "2026-11-23T04:30:00Z"},
++                    {key: value for key, value in campaign_data.items() if key != "ends_at"},
++                ):
++                    with pytest.raises(ValidationError):
++                        server.AdvertisementCreateIn.model_validate(invalid)
++
+                 ad = ObjectId()
+                 now = server.now_utc()
+                 await db.advertisements.insert_one({"_id": ad, "owner_id": ids["seller"], "status": "draft",
+@@ -155,7 +170,13 @@
+                 assert (await req("POST", review, "seller")).status_code == 200
+                 assert (await db.advertisements.find_one({"_id": ad}))["status"] == "pending_owner_approval"
+                 assert (await req("GET", second)).status_code == 404
+-                assert (await req("POST", publish, "owner")).status_code == 200
++                await db.advertisements.update_one({"_id": ad}, {"$set": {"ends_at": now - timedelta(minutes=1)}})
++                assert (await req("POST", publish, "owner")).status_code == 409
++                assert (await db.advertisements.find_one({"_id": ad}))["status"] == "pending_owner_approval"
++                await db.advertisements.update_one({"_id": ad}, {"$set": {"ends_at": now + timedelta(hours=1)}})
++                published = await req("POST", publish, "owner")
++                assert published.status_code == 200
++                assert published.json()["ends_at"].endswith(("Z", "+00:00"))
+                 assert (await req("POST", review, "seller")).status_code == 409
+                 assert (await req("GET", second)).content == second_data
+                 active = (await req("GET", "/api/advertisements/active")).json()
+--- a/backend/tests/test_task9_coupon_checkout.py
++++ b/backend/tests/test_task9_coupon_checkout.py
+@@ -1,5 +1,5 @@
+ import asyncio
+-from datetime import timedelta
++from datetime import timedelta, timezone
+ import os
+ from uuid import uuid4
+
+@@ -55,6 +55,10 @@
+                         activation, "admin",
+                     )
+                     assert attempted.status_code == 422
++                for bad_dates in ({"expires_at": draft["starts_at"]}, {"expires_at": "2026-12-01T00:00:00"}):
++                    assert (await post("/admin/financial/promotion-drafts", {**draft, **bad_dates}, "admin")).status_code == 422
++                assert (await post("/admin/financial/promotion-drafts",
++                                   {key: value for key, value in draft.items() if key != "expires_at"}, "admin")).status_code == 422
+                 assert (await post(path, activation, "first")).status_code == 403
+                 assert (await post(path, activation, "admin")).status_code == 200
+                 assert (await post(path, activation, "admin")).status_code == 200
+@@ -91,6 +95,30 @@
+                     failure.setattr(server, "_record_grocery_coupon_event", fail)
+                     assert (await place("first", 0, tokens[0])).status_code == 503
+                 assert await db.orders.count_documents({}) == 0
++                assert (await db.products.find_one({"_id": products[0]}))["stock"] == 10
++                original_record = server._record_grocery_coupon_event
++                campaign = await db.financial_policy_drafts.find_one({"_id": "coupon:TEST20"})
++                deadline = campaign["expires_at"].replace(tzinfo=timezone.utc)
++                with monkeypatch.context() as clock:
++                    clock.setattr(server, "now_utc", lambda: deadline - timedelta(milliseconds=1))
++                    assert (await quote("first", 0)).status_code == 200
++                    for instant in (deadline, deadline + timedelta(milliseconds=1)):
++                        clock.setattr(server, "now_utc", lambda: instant)
++                        expired = await quote("first", 0)
++                        assert expired.status_code == 409 and expired.json()["detail"]["code"] == "quote_changed"
++
++                async def spend_at_deadline(*args, **kwargs):
++                    with monkeypatch.context() as clock:
++                        clock.setattr(server, "now_utc", lambda: deadline)
++                        return await original_record(*args, **kwargs)
++
++                with monkeypatch.context() as timed_checkout:
++                    timed_checkout.setattr(server, "_record_grocery_coupon_event", spend_at_deadline)
++                    expired = await place("first", 0, tokens[0])
++                    assert expired.status_code == 409 and expired.json()["detail"]["code"] == "quote_changed"
++                assert await db.orders.count_documents({}) == 0
++                assert await db.financial_audit.count_documents({"action": "grocery_coupon_spent"}) == 0
++                assert (await db.grocery_quotes.find_one({"_id": tokens[0]}))["status"] == "open"
+                 assert (await db.products.find_one({"_id": products[0]}))["stock"] == 10
+                 results = await asyncio.gather(place("first", 0, tokens[0]), place("second", 1, tokens[1]))
+                 assert sorted(result.status_code for result in results) == [200, 409]
+@@ -155,7 +183,9 @@
+                 assert (await post(path, activation, "admin")).json()["status"] == "active"
+                 assert (await post(path, {**activation, "code": "NEXT20"}, "admin")).status_code == 409
+                 assert await db.financial_audit.count_documents({"action": "grocery_coupon_activated"}) == 1
+-                close = {"status": "closed", "expected_status": "active", "reason": "Fixture close"}
++                assert (await http.patch(campaign_path, json=pause, headers=auth["admin"])).status_code == 200
++                assert (await http.patch(campaign_path, json=resumes, headers=auth["admin"])).status_code == 409
++                close = {"status": "closed", "expected_status": "paused", "reason": "Fixture close"}
+                 assert (await http.patch(campaign_path, json=close, headers=auth["admin"])).status_code == 200
+                 assert (await http.patch(campaign_path, json=resumes, headers=auth["admin"])).status_code == 409
+         finally:
