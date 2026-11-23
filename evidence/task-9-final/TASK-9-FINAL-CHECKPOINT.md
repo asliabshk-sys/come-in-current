@@ -5,3 +5,5 @@ Initial audit on 23 November 2026 confirmed clean work and GitHub HEAD `6ab5d8ad
 The verified initial audit commit is `bd7db0614ce8427ab2694487cfe9a73e0c71940c`. Restore the tested application change by applying `patches/task9-final-contract-binding.patch` after `patches/task9-closure-evidence-gates.patch`. Changed retained source files are `backend/server.py` and `backend/tests/test_task9_restaurant_replacement.py`. No transport, schema or write capability was added. Task 8, Task 21 and the original archive have no direct diff.
 
 Final disposition is **PARTIALLY VERIFIED**. See the [50-policy execution matrix](final-campaign-20261123/POLICY-EXECUTION-MATRIX.md), [approval handoff](TASK-9-APPROVAL-HANDOFF.md), and [fresh evidence](TASK-9-TEST-EVIDENCE.md).
+
+The implementation milestone was independently verified at `08888cae3489c8e3a5508545a29b3ca40e37c54a` on GitHub. Final regression after the corrected test fixture recorded 707 passes and one external object-storage skip. The closing evidence commit contains the full logs.

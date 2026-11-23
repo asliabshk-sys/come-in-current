@@ -114,3 +114,14 @@ The only regression skip was external object storage at `backend/tests/backend_t
 ### Final execution campaign
 
 Fresh focused run: **24 passed, 0 failed, 0 skipped, 7 warnings**. Initial run: **23 passed, 1 failed**. The new fixture reused the original item identifier's variable name and affected a later case. The corrected fixture kept all assertions. [Focused](final-campaign-20261123/focused.log) · [Initial output](final-campaign-20261123/focused-initial.log) · [Commands](final-campaign-20261123/COMMANDS.md)
+
+| Check | Fresh result | Evidence |
+| --- | --- | --- |
+| Expanded Task 9, financial, referral, ad and refund contracts | 82 passed, 0 failed, 0 skipped, 7 warnings | [Expanded](final-campaign-20261123/integrated.log) |
+| TypeScript, targeted ESLint, Expo web export | Passed | [Types](final-campaign-20261123/typescript.log) · [Lint](final-campaign-20261123/eslint.log) · [Expo](final-campaign-20261123/expo.log) |
+| Chromium | 7 scenarios passed | [Browser](final-campaign-20261123/browser.log) |
+| FastAPI restart and replay | 5 checks passed | [Restart](final-campaign-20261123/restart.log) |
+
+The initial expanded and full runs encountered the same fixture shadowing error as the focused run. Their counts were 81 passed and 1 failed, and 706 passed, 1 failed and 1 skipped, respectively. [Initial expanded](final-campaign-20261123/integrated-initial.log) · [Initial full](final-campaign-20261123/full-initial.log)
+
+The corrected full backend regression recorded **707 passed, 0 failed, 1 skipped, 9 warnings**. The skip at `backend/tests/backend_test.py:397` was unavailable external object storage. Warnings were framework and optional catalogue dependency deprecations. [Final full output](final-campaign-20261123/full.log)
