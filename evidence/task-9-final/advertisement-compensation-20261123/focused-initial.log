@@ -1,0 +1,135 @@
+..F.....                                                                 [100%]
+=================================== FAILURES ===================================
+_____________________ test_storage_and_advertisement_http ______________________
+backend/tests/test_task4_storage_advertisement_integration.py:176: in test_storage_and_advertisement_http
+    asyncio.run(exercise())
+../.comein-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+../.comein-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.comein-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+backend/tests/test_task4_storage_advertisement_integration.py:167: in exercise
+    assert (await req("PATCH", f"/api/admin/advertisements/{ad}", "admin",
+E   assert 503 == 200
+E    +  where 503 = <Response [503 Service Unavailable]>.status_code
+------------------------------ Captured log call -------------------------------
+ERROR    comein:server.py:5581 Order replacement transaction failed
+Traceback (most recent call last):
+  File "/workspace/task4-source/backend/server.py", line 5577, in _run_replacement_transaction
+    return await run_transaction(client, callback)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/task4-source/backend/mongo_transactions.py", line 76, in run_transaction
+    return await session.with_transaction(commit_with_retry)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/motor/core.py", line 473, in with_transaction
+    ret = await coro(self)
+          ^^^^^^^^^^^^^^^^
+  File "/workspace/task4-source/backend/mongo_transactions.py", line 57, in commit_with_retry
+    result = await callback(session)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/task4-source/backend/server.py", line 1568, in apply
+    advertisement = await db.advertisements.find_one({"_id": oid}, session=session)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/.comein-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 1728, in find_one
+    for result in cursor.limit(-1):
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/cursor.py", line 1139, in __next__
+    return self.next()
+           ^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/cursor.py", line 1118, in next
+    if len(self._data) or self._refresh():
+                          ^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/cursor.py", line 1069, in _refresh
+    self._send_message(q)
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/cursor.py", line 972, in _send_message
+    response = client._run_operation(operation, self._run_with_conn, address=self._address)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/_csot.py", line 126, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 1939, in _run_operation
+    return self._retryable_read(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2061, in _retryable_read
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/_csot.py", line 126, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2022, in _retry_internal
+    ).run()
+      ^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2890, in run
+    res = self._read() if self._is_read else self._write()
+          ^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 3130, in _read
+    return self._func(self._session, self._server, conn, read_pref)  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 1937, in _cmd
+    return run_with_conn(conn, operation, read_preference)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/helpers.py", line 51, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/cursor_base.py", line 113, in _run_with_conn
+    use_cmd = operation.use_command(conn)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/message.py", line 1261, in use_command
+    conn.validate_session(self.client, self.session)  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/pymongo/synchronous/pool.py", line 486, in validate_session
+    raise InvalidOperation("Can only use session with the MongoClient that started it")
+pymongo.errors.InvalidOperation: Can only use session with the MongoClient that started it
+=============================== warnings summary ===============================
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/task4-source/backend/server.py:9246: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/fastapi/applications.py:4495: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    return self.router.on_event(event_type)
+
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/task4-source/backend/server.py:9393: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("shutdown")
+
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/task4-source/backend/server.py:10460: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED backend/tests/test_task4_storage_advertisement_integration.py::test_storage_and_advertisement_http
+1 failed, 7 passed, 7 warnings in 2.12s

@@ -1,0 +1,2 @@
+PASS immutable shortfall review preserved and replayed after process restart
+PASS terminal removal and audit persisted without any duplicate audit or budget mutation

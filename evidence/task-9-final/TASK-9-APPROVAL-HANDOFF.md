@@ -32,3 +32,7 @@ The current sign-off forms record authority, effective date and evidence. [Owner
 ### Coupon funding and channels — 23 November 2026
 
 T9-41–43 remain **PARTIALLY VERIFIED**. Existing COME-IN-funded Grocery cash controls passed fresh tests including release rollback, wrong-order release, paid-order denial and Admin reconciliation after restart. Commercial expansion awaits explicit approval. [Decision record](coupon-funding-20261123/OWNER-DECISION.md) · [Tests and commands](coupon-funding-20261123/TESTS.md)
+
+### Advertisement compensation — 23 November 2026
+
+Advertisement compensation remains **PARTIALLY VERIFIED**. Campaign status and audit writes are atomic, identical status replays are deduplicated, and inactive campaigns cannot record events. Compensation eligibility and execution remain disabled pending explicit approval. [Audit](advertisement-compensation-20261123/AUDIT.md) · [Owner decisions](advertisement-compensation-20261123/OWNER-DECISION.md) · [Tests](advertisement-compensation-20261123/TESTS.md)

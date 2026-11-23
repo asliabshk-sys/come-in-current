@@ -204,3 +204,7 @@ Task 9 remains **PARTIALLY VERIFIED**. The final approval dashboard and sign-off
 ### 23 November 2026 — Task 9 coupon funding verification
 
 Apply `patches/task9-coupon-funding-verification.patch` after the approval-stage regression patch. Only the retained coupon integration test changes. T9-41–43 remain partially verified pending commercial approval. [Decision record](evidence/task-9-final/coupon-funding-20261123/OWNER-DECISION.md) · [Evidence](evidence/task-9-final/coupon-funding-20261123/TESTS.md)
+
+### 23 November 2026 — Advertisement compensation verification
+
+Apply `patches/task9-advertisement-compensation-verification.patch` after the coupon verification patch. Advertisement compensation remains **PARTIALLY VERIFIED**. [Audit and decision links](evidence/task-9-final/advertisement-compensation-20261123/AUDIT.md)
