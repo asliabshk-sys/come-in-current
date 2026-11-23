@@ -47,3 +47,10 @@ The sole skip was the existing external object-storage test. Fresh referral test
 - **699 backend passed**, zero failures, **one skip** for unavailable external object storage. [Full output](business-policy-20261123/full.log)
 - TypeScript, targeted ESLint, Expo export, two Chromium workflows and process restart/replay passed. [TypeScript](business-policy-20261123/typescript.log) · [ESLint](business-policy-20261123/lint.log) · [Expo](business-policy-20261123/expo.log) · [Chromium](business-policy-20261123/browser.log) · [Restart](business-policy-20261123/restart.log)
 - No real payout, genuine provider validation, or coupon checkout redemption was executed. [Commands](business-policy-20261123/COMMANDS.md)
+
+## Grocery coupon and ad delivery increment
+
+- **49 focused passed**, with no failures or skips. Covered real Mongo transaction rollback after stock decrement, two customers competing for the final funded coupon, cancellation and repeated requests, expired coupon, draft activation access, fixed campaign area filtering and measured report ownership. [Focused output](remaining-implementation-20261123/focused.log)
+- **700 full backend passed, 0 failed, 1 skipped** for unavailable external object storage. [Full output](remaining-implementation-20261123/full.log)
+- TypeScript, targeted ESLint, Expo export, four Chromium scenarios and restart/replay passed. Chromium covered Admin activation and seller report. Cash coupon order submission, retry and cancellation were exercised through the HTTP/Mongo tests. [TypeScript](remaining-implementation-20261123/typescript.log) · [ESLint](remaining-implementation-20261123/lint.log) · [Expo](remaining-implementation-20261123/expo.log) · [Chromium](remaining-implementation-20261123/browser.log) · [Restart](remaining-implementation-20261123/restart.log)
+- Native Android/iOS and genuine Razorpay TEST payment, refund and webhook validation remain deferred. [Commands](remaining-implementation-20261123/COMMANDS.md)

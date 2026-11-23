@@ -4,14 +4,14 @@
 
 ## Owner Approval Summary
 
-The owner explicitly pre-authorized previously approved Task 9 implementation and verification in this execution turn. With successful technical evidence, **32 policies are technically owner-approved**. **31** are **OWNER APPROVED — IMPLEMENTED AND VERIFIED** and **1** is **OWNER APPROVED — EXTERNAL VALIDATION PENDING**. **6** remain partially verified, **4** are not implemented, and **8** are blocked by specific missing dependencies. No separate approval task was created for already authorized work.
+The owner explicitly pre-authorized previously approved Task 9 implementation and verification in this execution turn. With successful technical evidence, **32 policies are technically owner-approved**. **31** are **OWNER APPROVED — IMPLEMENTED AND VERIFIED** and **1** is **OWNER APPROVED — EXTERNAL VALIDATION PENDING**. **9** remain partially verified, **1** is not implemented, and **8** are blocked by specific missing dependencies. No separate approval task was created for already authorized work.
 
 | Status | Count |
 | --- | ---: |
 | VERIFIED | 31 |
 | IMPLEMENTED — EXTERNAL VALIDATION PENDING | 1 |
-| PARTIALLY VERIFIED | 6 |
-| NOT IMPLEMENTED | 4 |
+| PARTIALLY VERIFIED | 9 |
+| NOT IMPLEMENTED | 1 |
 | BLOCKED | 8 |
 
 ## Completed changes
@@ -41,3 +41,11 @@ The Mission baseline was GitHub work `1a87ca116836502741613ab3049f02f4bb2cb310`.
 The owner-approved weekly payout configuration, cycle eligibility, merchant CSV, single-use manual payout reference, fixed-duration accepted campaign budget, and explicit coupon draft funding were implemented. The focused and browser paths verify this code. Sensitive terms are omitted from public advertising responses, and existing poster and owner approval gates still govern publication. Task 9 remains **PARTIALLY VERIFIED**. The 50-policy register retains 31 fully verified, one externally pending, six partial, four unimplemented and eight blocked.
 
 Changed source covers `backend/server.py`, its new business policy integration test, Admin and Seller Earnings, Seller Advertisements and the API statement client. Apply `patches/task9-payout-campaign-policy.patch` after the referral closure patch. No approved payout split, rate, reward, referral or membership amount changed. No payment or refund was executed. [Business policy and evidence boundaries](TASK-9-PAYOUT-AND-CAMPAIGN-POLICY.md)
+
+## Grocery coupons and advertisement delivery increment
+
+At baseline `cc3d0368969167a45d20c135b9b9681c299b1e33`, promotions had no checkout path. Admin can now activate qualifying COME-IN-funded Grocery cash campaigns with explicit audience and unpaid cancellation terms. One coupon applies to the server quote and cannot stack with shopping rewards. The customer sees the discount, funder and terms. A quote does not reserve budget. A successful order reserves and spends the coupon budget atomically with stock and order insertion. Eligible unpaid cancellation releases the same receipt once. Failed transactions make no ledger/budget change. Active coupon terms are copied from the draft. The original order retains the benefit and any unsupported paid adjustment goes through existing review.
+
+Commercial advertisement discovery and event intake now filter explicit area/category context and active moderated poster approval. Sellers can view measured event counts and timing. Attributed orders are explicitly unavailable. The request context is not independently verified geolocation and no new Home/Search ad placement or contractual compensation mechanism was enabled.
+
+The three coupon rules T9-41–43 moved from unimplemented to partial because Grocery cash works and broader commerce does not. The resulting 50-policy totals are 31 verified, 1 implemented awaiting external validation, 9 partial, 1 unimplemented, 8 blocked. The existing 32 whole-policy owner approvals remain, and the newly verified bounded controls are owner-approved under the same authorization. Changes are in `backend/server.py`, Task 9 tests, checkout, Admin promotions and Seller Advertisements. Apply `patches/task9-coupon-checkout-and-ad-delivery.patch` after the payout campaign patch. No new collection, index or migration.

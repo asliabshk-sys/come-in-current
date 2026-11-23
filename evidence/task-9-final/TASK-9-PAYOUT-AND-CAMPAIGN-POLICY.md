@@ -19,3 +19,7 @@ The new code reuses existing policy, ledger, settlement, advertisement and audit
 The owner-supplied references were used as design pointers for documented terms, finite campaigns and transparent accounting. The environment's HTTPS proxy denied direct access to the supplied pages during this run. Exact competitor rates, private workflows and any legal conclusions were excluded.
 
 [Zomato sponsored listings](https://www.zomato.com/policies/ads/growth-pack-policy/) · [Zomato title partner terms](https://www.zomato.com/policies/ads/title-partner-policy/) · [Zomato ordering](https://www.zomato.com/policies/online-ordering/) · [Blinkit seller fees](https://seller.blinkit.com/fees-commission) · [Blinkit Brand Central](https://brands.blinkit.com/dashboard/) · [Blinkit terms](https://blinkit.com/terms)
+
+## Follow-up
+
+See the [completion report](TASK-9-FINAL-COMPLETION-REPORT.md) for bounded Grocery cash redemption, commercial advertisement targeting and measured delivery. The first increment above records its historical scope.

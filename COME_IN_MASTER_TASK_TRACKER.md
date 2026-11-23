@@ -46,7 +46,7 @@
 | 6 | Search and Filters | **COMPLETED** | Earlier Task 6 implementation and test reports preserved. | Not rerun in this batch. |
 | 7 | Cart and Checkout | **COMPLETED** | Checkout quote/idempotency source; historical COD/pickup UI/API tests; Iteration 3 fixes empty-cart and unavailable-fulfillment messaging. | No Expo runtime in current environment. |
 | 8 | Repeat Order | **COMPLETED** | Earlier TASK24 report and existing repeat-order source. | Measured repeat-order extension not fully verified. |
-| 9 | Out-of-Stock Replacement | **PARTIALLY VERIFIED** | Seller payout and ad budgeting controls added. [Policy](evidence/task-9-final/TASK-9-PAYOUT-AND-CAMPAIGN-POLICY.md) | Live execution and active checkout coupons remain pending. |
+| 9 | Out-of-Stock Replacement | **PARTIALLY VERIFIED** | Grocery cash coupons and ad delivery in local scope. [Evidence](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md) | Broader funding and external execution pending. |
 | 10 | Live Tracking | **COMPLETED** | Historical /api/orders/{id}/tracking runtime E2E report. | Not rerun in this batch. |
 | 11 | Order Help and Refund Status | **PARTIAL** | Restaurant Admin refund safeguards retained; Grocery refund summary states and in-app notification routes have offline coverage. | Automatic Grocery refunds, refund-specific notifications and live customer/seller/admin status synchronization remain pending. |
 | 12 | Excel/CSV Price and Stock Import | **COMPLETED** | Earlier reports; import confirmation dialog source fix; Task 5 measured CSV parser/model now has offline coverage. | Transaction-backed measured import apply remains pending with disposable MongoDB verification. |
@@ -1121,3 +1121,7 @@ Task 9 is **PARTIALLY VERIFIED**. All 50 policies are accounted for. Owner pre-a
 ## Task 9 — Payout schedule and commercial campaign policy — 2026-11-23 IST
 
 Task 9 remains **PARTIALLY VERIFIED**. Versioned payout scheduling, merchant statements, zero sales commission enforcement, fixed-duration accepted campaign budgeting and explicit coupon draft funding are verified locally. No transfers, live redemptions, new payout splits or statutory documents were created. The 50-policy classification is unchanged. [Policy and evidence](evidence/task-9-final/TASK-9-PAYOUT-AND-CAMPAIGN-POLICY.md)
+
+## Task 9 — Grocery coupon checkout and ad delivery — 2026-11-23 IST
+
+Task 9 is **PARTIALLY VERIFIED**. COME-IN-funded Grocery cash coupons now support explicit activation, server quotes, transaction-safe spend and eligible cancellation release. Commercial ad API targeting and measured delivery are in place. All 50 policies are recorded, including 31 verified, one externally pending, nine partial, one unimplemented and eight blocked. [Completion report](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md)

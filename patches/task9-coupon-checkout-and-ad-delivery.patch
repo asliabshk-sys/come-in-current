@@ -1,0 +1,501 @@
+diff --git a/backend/server.py b/backend/server.py
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -619,6 +619,7 @@
+     items: List[QuoteLineIn] = Field(min_length=1, max_length=100)
+     fulfillment: Literal["delivery", "pickup"] = "delivery"
+     use_rewards: bool = False
++    coupon_code: Optional[str] = Field(default=None, pattern=r"^[A-Z0-9][A-Z0-9_-]{2,31}$")
+
+
+ class OrderIn(BaseModel):
+@@ -1716,11 +1717,51 @@
+     return await _run_replacement_transaction(apply)
+
+
++def _advertisement_target_filter(area, category):
++    branches = [{"commercial_terms": None}]
++    if normalized(area):
++        branches.append({
++            "commercial_terms.accepted_at": {"$exists": True},
++            "commercial_terms.target_area": {"$regex": f"^{re.escape(area.strip())}$", "$options": "i"},
++            "$or": [{"commercial_terms.eligible_categories": {"$size": 0}},
++                    {"commercial_terms.eligible_categories": category}] if category else
++                   [{"commercial_terms.eligible_categories": {"$size": 0}}],
++        })
++    return {"$or": branches}
++
++
++def _active_advertisement_filter(now):
++    return {"status": "approved", "poster_url": {"$type": "string"}, "poster_sha256": {"$type": "string"},
++            "starts_at": {"$lte": now}, "ends_at": {"$gt": now},
++            "$expr": {"$eq": ["$poster_sha256", "$owner_approval.poster_sha256"]}}
++
++
+ @api.get("/advertisements/active")
+-async def active_advertisements(placement: Literal["home_banner", "search_sponsored"] = "home_banner", limit: int = Query(default=6, ge=1, le=20)):
+-    now = now_utc()
+-    query = {"status": "approved", "placement": placement, "poster_url": {"$type": "string"}, "starts_at": {"$lte": now}, "ends_at": {"$gt": now}, "$expr": {"$eq": ["$poster_sha256", "$owner_approval.poster_sha256"]}}
++async def active_advertisements(placement: Literal["home_banner", "search_sponsored"] = "home_banner",
++                                limit: int = Query(default=6, ge=1, le=20),
++                                area: Optional[str] = Query(default=None, max_length=120),
++                                category: Optional[str] = Query(default=None, max_length=80)):
++    query = {**_active_advertisement_filter(now_utc()), **_advertisement_target_filter(area, category), "placement": placement}
+     return [_advertisement_out(row, public=True) async for row in db.advertisements.find(query).sort("created_at", -1).limit(limit)]
++
++
++@api.get("/advertisements/{advertisement_id}/delivery-report")
++async def advertisement_delivery_report(advertisement_id: str, user: dict = Depends(get_current_user)):
++    ad = await _advertisement_or_404(advertisement_id)
++    _assert_advertisement_owner(ad, user)
++    counts = {"impression": 0, "click": 0}
++    async for row in db.advertisement_events.aggregate([
++        {"$match": {"advertisement_id": advertisement_id, "created_at": {"$gte": ad["starts_at"], "$lt": ad["ends_at"]}}},
++        {"$group": {"_id": "$event_type", "count": {"$sum": 1}}},
++    ]):
++        if row["_id"] in counts:
++            counts[row["_id"]] = row["count"]
++    return {"impressions": counts["impression"], "clicks": counts["click"],
++            "observed_ctr": round(counts["click"] / counts["impression"], 4) if counts["impression"] else None,
++            "measurement": "authenticated_deduplicated_events",
++            "starts_at": ad["starts_at"], "ends_at": ad["ends_at"], "budget": ad.get("commercial_budget"),
++            "delivery_reconciliation": "manual_review_required",
++            "attributed_orders": None}
+
+
+ # Membership: payment confirmation is intentionally separate from the request.
+@@ -2507,12 +2548,18 @@
+
+
+ @api.post("/advertisements/{advertisement_id}/events/{event_type}")
+-async def track_advertisement_event(advertisement_id: str, event_type: Literal["impression", "click"], user: Optional[dict] = Depends(get_current_user_optional)):
++async def track_advertisement_event(advertisement_id: str, event_type: Literal["impression", "click"], user: Optional[dict] = Depends(get_current_user_optional),
++                                    area: Optional[str] = Query(default=None, max_length=120),
++                                    category: Optional[str] = Query(default=None, max_length=80)):
+     # Only attributable authenticated events are recorded; anonymous tracking is
+     # intentionally omitted rather than collecting a device fingerprint.
+     if not user:
+         return {"recorded": False}
+     advertisement = await _advertisement_or_404(advertisement_id)
++    if advertisement.get("commercial_terms") and not await db.advertisements.find_one({
++        "_id": advertisement["_id"], **_active_advertisement_filter(now_utc()), **_advertisement_target_filter(area, category),
++    }, {"_id": 1}):
++        return {"recorded": False}
+     now = now_utc(); day = now.date().isoformat()
+     try:
+         await db.advertisement_events.insert_one({"advertisement_id": advertisement_id, "user_id": user["id"], "event_type": event_type, "day": day, "created_at": now})
+@@ -4609,6 +4656,112 @@
+     return {"product_id": line["product_id"], "qty": line["qty"], "price": line["price"], "unit": line["unit"], "line_total": line["line_total"], "quantity_label": line["quantity_label"], "currency": "INR"}
+
+
++class GroceryCouponActivationIn(BaseModel):
++    code: str = Field(pattern=r"^[A-Z0-9][A-Z0-9_-]{2,31}$")
++    customer_scope: Literal["all_signed_in", "allowlist"]
++    customer_ids: list[str] = Field(default_factory=list, max_length=100)
++    release_unpaid_cancellation: bool
++
++
++@api.post("/admin/financial/promotion-drafts/{draft_id}/activate-grocery-coupon")
++async def activate_grocery_coupon(draft_id: str, body: GroceryCouponActivationIn, user: dict = Depends(require_role("admin"))):
++    if (body.customer_scope == "allowlist") != bool(body.customer_ids) or any(not ObjectId.is_valid(value) for value in body.customer_ids):
++        raise HTTPException(422, "Specify a valid customer audience")
++
++    async def apply(session):
++        draft = await db.financial_policy_drafts.find_one({"_id": draft_id, "status": "draft"}, session=session)
++        if (not draft or draft.get("kind") not in {"shop", "campaign", "sponsored"}
++                or draft.get("restaurant_ids") or draft.get("stacking") or not draft.get("discount_model")
++                or draft.get("funding_allocation_basis_points") != {"come_in": 10000}):
++            raise HTTPException(422, "This checkout supports only explicitly configured, nonstacking COME-IN-funded Grocery campaigns")
++        if utc(draft["expires_at"]) <= now_utc():
++            raise HTTPException(409, "Coupon campaign expired")
++        key = f"coupon:{body.code}"
++        settings = body.model_dump()
++        settings["customer_ids"] = sorted(set(settings["customer_ids"]))
++        existing = await db.financial_policy_drafts.find_one({"_id": key}, session=session)
++        if existing:
++            if existing.get("draft_id") == draft_id and existing.get("activation") == settings:
++                return {"code": body.code, "status": existing["status"]}
++            raise HTTPException(409, "Coupon code is already assigned")
++        if draft.get("activated_coupon_code"):
++            raise HTTPException(409, "This draft already has an activated coupon")
++        updated = await db.financial_policy_drafts.update_one(
++            {"_id": draft_id, "activated_coupon_code": {"$exists": False}},
++            {"$set": {"activated_coupon_code": body.code}}, session=session,
++        )
++        if updated.modified_count != 1:
++            raise HTTPException(409, "This draft already has an activated coupon")
++        record = {**draft, "_id": key, "draft_id": draft_id, "status": "active", "activation": settings,
++                  "spent_paise": 0, "redemptions": 0, "activated_by": user["id"], "activated_at": now_utc()}
++        await db.financial_policy_drafts.insert_one(record, session=session)
++        await db.financial_audit.insert_one({"action": "grocery_coupon_activated", "coupon_code": body.code,
++            "draft_id": draft_id, "actor_id": user["id"], "created_at": now_utc()}, session=session)
++        return {"code": body.code, "status": "active"}
++
++    return await _run_replacement_transaction(apply)
++
++
++async def _grocery_coupon_terms(code, user, lines, shop_id, totals, *, session=None):
++    if not user or user.get("role") != "customer":
++        raise HTTPException(403, "Sign in as a customer to apply a coupon")
++    campaign = await db.financial_policy_drafts.find_one({"_id": f"coupon:{code}", "status": "active"}, session=session)
++    now = now_utc()
++    if not campaign or not utc(campaign["starts_at"]) <= now < utc(campaign["expires_at"]):
++        raise HTTPException(409, "Coupon is unavailable or outside its valid dates")
++    activation = campaign["activation"]
++    if activation["customer_scope"] == "allowlist" and user["id"] not in activation["customer_ids"]:
++        raise HTTPException(403, "This account is not eligible for the coupon")
++    if campaign["shop_ids"] and shop_id not in campaign["shop_ids"]:
++        raise HTTPException(409, "Coupon is not valid for this shop")
++    amount = sum((money(_line_amount(line)) for line in lines
++                  if (not campaign["product_ids"] or line["product_id"] in campaign["product_ids"])
++                  and (not campaign["category_ids"] or line.get("category_id") in campaign["category_ids"])), Decimal("0"))
++    eligible_paise = int(amount * 100)
++    if not eligible_paise or eligible_paise < campaign["min_order_paise"]:
++        raise HTTPException(409, "Eligible items do not meet the coupon minimum")
++    offered = campaign["fixed_discount_paise"] if campaign["discount_model"] == "fixed" else (
++        eligible_paise * campaign["discount_basis_points"] // 10000
++    )
++    # The current cash workflow cannot accept a zero-payable order.
++    discount = min(offered, eligible_paise, campaign["max_benefit_paise"], int(money(totals["total"]) * 100) - 1)
++    spent = count = 0
++    async for row in db.orders.find({"customer_id": user["id"], "coupon_redemption.code": code,
++                                     "coupon_redemption.state": "spent"}, {"coupon_redemption.discount_paise": 1}, session=session):
++        count += 1
++        spent += row["coupon_redemption"]["discount_paise"]
++    if discount <= 0 or campaign["spent_paise"] + discount > campaign["budget_paise"] or campaign["redemptions"] >= campaign["max_redemptions"]:
++        raise HTTPException(409, "Coupon campaign budget or redemption limit reached")
++    if spent + discount > campaign["customer_budget_paise"] or count >= campaign["per_customer_limit"]:
++        raise HTTPException(409, "Your coupon limit has been reached")
++    return {"code": code, "discount_paise": discount, "funded_by": "COME-IN", "terms": campaign["terms"],
++            "cancellation_terms": campaign["cancellation_terms"], "release_unpaid_cancellation": activation["release_unpaid_cancellation"]}
++
++
++def _apply_grocery_coupon(totals, coupon):
++    if coupon:
++        totals["coupon"] = coupon
++        totals["total"] = float(money(totals["total"]) - Decimal(coupon["discount_paise"]) / 100)
++
++
++async def _record_grocery_coupon_event(session, order, coupon, action):
++    delta = coupon["discount_paise"] if action == "spent" else -coupon["discount_paise"]
++    query = {"_id": f"coupon:{coupon['code']}"}
++    if action == "released":
++        query.update({"spent_paise": {"$gte": -delta}, "redemptions": {"$gte": 1}})
++    else:
++        query["$expr"] = {"$and": [
++            {"$lte": [{"$add": ["$spent_paise", delta]}, "$budget_paise"]},
++            {"$lt": ["$redemptions", "$max_redemptions"]},
++        ]}
++    update = await db.financial_policy_drafts.update_one(query,
++        {"$inc": {"spent_paise": delta, "redemptions": 1 if action == "spent" else -1}}, session=session)
++    if update.matched_count != 1:
++        raise HTTPException(409, "Coupon accounting record is unavailable")
++    await db.financial_audit.insert_one({"action": f"grocery_coupon_{action}", "coupon_code": coupon["code"],
++        "order_id": str(order["_id"]), "actor_id": order["customer_id"], "amount_paise": abs(delta), "created_at": now_utc()}, session=session)
++
++
+ @api.post("/grocery/quotes")
+ async def create_grocery_quote(body: GroceryQuoteIn, request: Request):
+     user = await get_current_user_optional(request)
+@@ -4629,6 +4782,10 @@
+         reward_discount = shopping_reward_discount(totals["total"], available_balance)
+     totals["reward_discount"] = reward_discount
+     totals["total"] = round(max(0.0, totals["total"] - reward_discount), 2)
++    if body.coupon_code:
++        if body.use_rewards:
++            raise HTTPException(422, "A coupon cannot be combined with shopping rewards")
++        _apply_grocery_coupon(totals, await _grocery_coupon_terms(body.coupon_code, user, resolved, shop_id, totals))
+     token = secrets.token_urlsafe(36)
+     now = now_utc()
+     quote = {"_id": token, "scope": scope, "customer_id": user["id"] if user else None, "shop_id": shop_id, "fulfillment": body.fulfillment, "items": resolved, **totals, "created_at": now, "expires_at": now + timedelta(minutes=GROCERY_QUOTE_TTL_MINUTES), "status": "open"}
+@@ -4710,13 +4867,18 @@
+         raise HTTPException(status_code=409, detail={"code": "reward_balance_changed", "message": "Your available reward balance changed. Request a fresh quote."})
+     current_totals["reward_discount"] = reward_discount
+     current_totals["total"] = round(max(0.0, current_totals["total"] - reward_discount), 2)
++    coupon = quote.get("coupon")
++    if coupon:
++        if body.payment_method not in {"cod", "cash_shop", "pickup"}:
++            raise HTTPException(422, "This coupon is available only for Grocery cash payment")
++        _apply_grocery_coupon(current_totals, await _grocery_coupon_terms(coupon["code"], user, current_lines, shop_id, current_totals))
+     old_stock_snapshot = [(x["product_id"], x.get("variant_id"), x.get("stock_at_quote")) for x in quote["items"]]
+     new_stock_snapshot = [(x["product_id"], x.get("variant_id"), x.get("stock_at_quote")) for x in current_lines]
+     if old_stock_snapshot != new_stock_snapshot:
+         raise HTTPException(status_code=409, detail={"code": "stock_changed", "message": "Inventory changed after your quote. No order was placed; review your cart and request a new quote."})
+     old_snapshot = [(x["product_id"], x.get("variant_id"), x["price"], x["unit"]) for x in quote["items"]]
+     new_snapshot = [(x["product_id"], x.get("variant_id"), x["price"], x["unit"]) for x in current_lines]
+-    if old_snapshot != new_snapshot or quote["subtotal"] != current_totals["subtotal"] or quote["delivery_fee"] != current_totals["delivery_fee"] or round(float(quote.get("reward_discount", 0) or 0), 2) != current_totals["reward_discount"] or quote["total"] != current_totals["total"]:
++    if old_snapshot != new_snapshot or quote["subtotal"] != current_totals["subtotal"] or quote["delivery_fee"] != current_totals["delivery_fee"] or round(float(quote.get("reward_discount", 0) or 0), 2) != current_totals["reward_discount"] or quote["total"] != current_totals["total"] or coupon != current_totals.get("coupon"):
+         # Never allow a flag on the stale token to confirm changed prices. Issue a new
+         # quote token; the customer must review that exact snapshot before retrying.
+         fresh_token = secrets.token_urlsafe(36)
+@@ -4770,6 +4932,10 @@
+             latest_totals = _quote_totals(latest_lines, body.fulfillment)
+             latest_totals["reward_discount"] = reward_discount
+             latest_totals["total"] = round(max(0.0, latest_totals["total"] - reward_discount), 2)
++            if coupon:
++                _apply_grocery_coupon(latest_totals, await _grocery_coupon_terms(
++                    coupon["code"], user, latest_lines, latest_shop_id, latest_totals, session=session,
++                ))
+             latest_stock = [(x["product_id"], x.get("variant_id"), x.get("stock_at_quote")) for x in latest_lines]
+             if latest_stock != new_stock_snapshot:
+                 raise HTTPException(status_code=409, detail={"code": "stock_changed", "message": "Inventory changed during checkout. No order was placed; request a new quote."})
+@@ -4792,8 +4958,13 @@
+                 if not await _atomic_decrement_line(session, line):
+                     raise HTTPException(status_code=409, detail={"code": "insufficient_stock", "message": "Stock changed while checking out. No order was placed; review your cart."})
+             order_doc["items"] = latest_lines
++            if coupon:
++                order_doc["coupon_discount"] = coupon["discount_paise"] / 100
++                order_doc["coupon_redemption"] = {**coupon, "state": "spent"}
+             res = await db.orders.insert_one(order_doc, session=session)
+             order_doc["_id"] = res.inserted_id
++            if coupon:
++                await _record_grocery_coupon_event(session, order_doc, coupon, "spent")
+             if reward_discount > 0:
+                 await _consume_shopping_reward(session, user["id"], reward_discount, str(res.inserted_id), now)
+                 await db.orders.update_one({"_id": res.inserted_id}, {"$set": {"reward_discount": reward_discount}}, session=session)
+@@ -4932,6 +5103,10 @@
+             )
+             if result.modified_count != 1:
+                 raise HTTPException(status_code=409, detail="Order changed while cancellation was processing; refresh your orders")
++            coupon = order.get("coupon_redemption") or {}
++            if coupon.get("state") == "spent" and coupon.get("release_unpaid_cancellation"):
++                await _record_grocery_coupon_event(session, order, coupon, "released")
++                await db.orders.update_one({"_id": oid}, {"$set": {"coupon_redemption.state": "released"}}, session=session)
+             fresh = await db.orders.find_one({"_id": oid}, session=session)
+             return doc_out(fresh)
+         return await run_transaction(client, apply)
+diff --git a/backend/tests/test_task9_coupon_checkout.py b/backend/tests/test_task9_coupon_checkout.py
+new file mode 100644
+--- /dev/null
++++ b/backend/tests/test_task9_coupon_checkout.py
+@@ -0,0 +1,95 @@
++import asyncio
++from datetime import timedelta
++import os
++from uuid import uuid4
++
++import pytest
++
++
++def test_grocery_coupon_budget_and_cancellation_are_atomic(monkeypatch):
++    if os.environ.get("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
++        pytest.skip("requires disposable loopback MongoDB")
++    import httpx
++    from bson import ObjectId
++    from motor.motor_asyncio import AsyncIOMotorClient
++    import server
++
++    monkeypatch.setenv("JWT_SECRET", uuid4().hex)
++
++    async def run():
++        client = AsyncIOMotorClient("mongodb://127.0.0.1:27018/?replicaSet=rs0")
++        db = client["comein_disposable_coupon_" + uuid4().hex]
++        monkeypatch.setattr(server, "db", db)
++        monkeypatch.setattr(server, "client", client)
++        try:
++            auth = {}
++            for label, role in (("admin", "admin"), ("first", "customer"), ("second", "customer")):
++                uid = ObjectId()
++                email = f"{label}@fixture.example"
++                await db.users.insert_one({"_id": uid, "role": role, "email": email})
++                auth[label] = {"Authorization": "Bearer " + server.create_access_token(str(uid), role, email)}
++            shop = (await db.shops.insert_one({"status": "approved", "delivery_available": True, "payment_methods": ["cod"]})).inserted_id
++            products = (await db.products.insert_many([{"shop_id": str(shop), "category_id": "dairy",
++                "name": "Coupon item", "unit": "pack", "price": 100, "stock": 10, "available": True} for _ in range(2)])).inserted_ids
++            now = server.now_utc()
++            draft = {"name": "Test sponsored offer", "kind": "campaign", "starts_at": (now - timedelta(days=1)).isoformat(),
++                "expires_at": (now + timedelta(days=1)).isoformat(), "budget_paise": 2000, "max_benefit_paise": 2000,
++                "customer_budget_paise": 2000, "min_order_paise": 5000, "max_redemptions": 10,
++                "per_customer_limit": 1, "funding_reference": "Fixture funding", "eligibility": "Signed-in customers",
++                "terms": "Coupon on eligible items", "cancellation_terms": "Unpaid cancellations restore eligibility",
++                "refund_terms": "No automatic cash refund", "discount_model": "fixed", "fixed_discount_paise": 2000,
++                "funding_allocation_basis_points": {"come_in": 10000}}
++            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=server.app), base_url="http://local") as http:
++                async def post(path, data, actor):
++                    return await http.post("/api" + path, json=data, headers=auth[actor])
++
++                saved = await post("/admin/financial/promotion-drafts", draft, "admin")
++                path = f"/admin/financial/promotion-drafts/{saved.json()['id']}/activate-grocery-coupon"
++                activation = {"code": "TEST20", "customer_scope": "all_signed_in", "release_unpaid_cancellation": True}
++                assert (await post(path, activation, "first")).status_code == 403
++                assert (await post(path, activation, "admin")).status_code == 200
++                assert (await post(path, activation, "admin")).status_code == 200
++                assert await db.financial_audit.count_documents({"action": "grocery_coupon_activated"}) == 1
++
++                def items(index):
++                    return [{"product_id": str(products[index]), "qty": 1}]
++
++                async def quote(actor, index, **extra):
++                    return await post("/grocery/quotes", {"items": items(index), "coupon_code": "TEST20", **extra}, actor)
++
++                async def place(actor, index, token):
++                    return await post("/orders", {"items": [{"product_id": str(products[index]), "qty": 1, "name": "Item",
++                        "price": 1, "unit": "pack", "shop_id": str(shop)}], "delivery_address": "Fixture address",
++                        "payment_method": "cod", "quote_token": token, "idempotency_key": f"fixture-coupon-{actor}"}, actor)
++                assert (await quote("first", 0, use_rewards=True)).status_code == 422
++                quotes = [await quote("first", 0), await quote("second", 1)]
++                assert all(result.status_code == 200 and result.json()["total"] == 109 for result in quotes)
++                tokens = [result.json()["quote_token"] for result in quotes]
++                assert quotes[0].json()["coupon"]["funded_by"] == "COME-IN"
++                with monkeypatch.context() as failure:
++                    async def fail(*args, **kwargs):
++                        raise RuntimeError("fixture failure after stock decrement")
++                    failure.setattr(server, "_record_grocery_coupon_event", fail)
++                    assert (await place("first", 0, tokens[0])).status_code == 503
++                assert await db.orders.count_documents({}) == 0
++                assert (await db.products.find_one({"_id": products[0]}))["stock"] == 10
++                results = await asyncio.gather(place("first", 0, tokens[0]), place("second", 1, tokens[1]))
++                assert sorted(result.status_code for result in results) == [200, 409]
++                winner = next(index for index, result in enumerate(results) if result.status_code == 200)
++                actor = ("first", "second")[winner]
++                order = results[winner].json()
++                assert (await place(actor, winner, tokens[winner])).json()["id"] == order["id"]
++                assert await db.financial_audit.count_documents({"action": "grocery_coupon_spent"}) == 1
++                assert (await quote("second", 1)).status_code == 409
++                cancelled = await post(f"/orders/{order['id']}/cancel", {}, actor)
++                assert cancelled.status_code == 200 and cancelled.json()["coupon_redemption"]["state"] == "released"
++                assert (await post(f"/orders/{order['id']}/cancel", {}, actor)).status_code == 200
++                assert await db.financial_audit.count_documents({"action": "grocery_coupon_released"}) == 1
++                assert (await quote("second", 1)).status_code == 200
++                await db.financial_policy_drafts.update_one({"_id": "coupon:TEST20"}, {"$set": {"expires_at": now}})
++                assert (await quote("second", 1)).status_code == 409
++        finally:
++            await client.drop_database(db.name)
++            client.close()
++
++    asyncio.run(run())
+diff --git a/backend/tests/test_task9_business_policy.py b/backend/tests/test_task9_business_policy.py
+--- a/backend/tests/test_task9_business_policy.py
++++ b/backend/tests/test_task9_business_policy.py
+@@ -127,7 +127,16 @@
+                 assert (await request("POST", budget, spend)).json()["status"] == "spent"
+                 assert await db.advertisement_audit.count_documents({"event": "commercial_budget_spent"}) == 1
+                 assert (await request("POST", budget, {"action": "release", "reason": "Fixture release"})).status_code == 409
+-                public = (await request("GET", "/advertisements/active")).json()
++                assert (await request("GET", "/advertisements/active")).json() == []
++                assert (await request("GET", "/advertisements/active?area=Elsewhere")).json() == []
++                public = (await request("GET", "/advertisements/active?area=Fixture")).json()
++                event = f"/advertisements/{ad_id}/events/impression"
++                assert not (await request("POST", event + "?area=Wrong", {}, "other")).json()["recorded"]
++                assert (await request("POST", event + "?area=Fixture", {}, "other")).json()["recorded"]
++                report = f"/advertisements/{ad_id}/delivery-report"
++                assert (await request("GET", report, actor="other")).status_code == 403
++                measured = (await request("GET", report, actor="seller")).json()
++                assert measured["impressions"] == 1 and measured["attributed_orders"] is None
+                 assert len(public) == 1 and "commercial_terms" not in public[0] and "commercial_budget" not in public[0]
+         finally:
+             await mongo.drop_database(db.name)
+diff --git a/frontend/app/checkout.tsx b/frontend/app/checkout.tsx
+--- a/frontend/app/checkout.tsx
++++ b/frontend/app/checkout.tsx
+@@ -31,7 +31,7 @@
+ const GUEST_SESSION_KEY = "@comein_grocery_guest_session_v1";
+ const IDEMPOTENCY_KEY_STORAGE = "@comein_grocery_idempotency_v1";
+ const makeOpaqueLocalKey = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+-type GroceryQuote = { quote_token: string; expires_at: string; items: any[]; subtotal: number; delivery_fee: number; reward_discount?: number; total: number; currency: string; fulfillment?: "delivery" | "pickup" };
++type GroceryQuote = { quote_token: string; expires_at: string; items: any[]; subtotal: number; delivery_fee: number; reward_discount?: number; coupon?: { code: string; discount_paise: number; funded_by: string; terms: string; cancellation_terms: string }; total: number; currency: string; fulfillment?: "delivery" | "pickup" };
+
+ export default function CheckoutScreen() {
+   const insets = useSafeAreaInsets();
+@@ -64,6 +64,7 @@
+   const [quote, setQuote] = useState<GroceryQuote | null>(null);
+   const [rewardBalance, setRewardBalance] = useState(0);
+   const [useRewards, setUseRewards] = useState(false);
++  const [couponCode, setCouponCode] = useState("");
+   const [guestSession, setGuestSession] = useState("");
+   const [idempotencyKey, setIdempotencyKey] = useState("");
+   const shopIds = Array.from(new Set(checkoutLines.map((line) => line.product.shopId).filter(Boolean)));
+@@ -162,6 +163,7 @@
+           items: checkoutLines.map((line) => ({ product_id: line.product.id, variant_id: line.variant?.id, qty: line.qty })),
+           fulfillment,
+           use_rewards: useRewards,
++          coupon_code: couponCode.trim() || undefined,
+         }, true, guestHeaders);
+         setQuote(created);
+         setError("Review the server-confirmed prices below, then confirm to place your order. Quote expires in 10 minutes.");
+@@ -278,7 +280,11 @@
+         {checkoutLines.length > 0 && shopOptions && !shopOptions.loadFailed && !onlineAvailable && !shopOptions.paymentMethods.some((method) => method === "cod" || method === "upi" && Boolean(shopOptions.publicUpi) || (method === "cash_shop" || method === "pickup") && shopOptions.pickup) ? <Text style={styles.pmSub} testID="no-supported-payment">This shop has no payment method enabled and configured for this checkout. Contact the shop owner; do not place the order.</Text> : null}
+         {paymentMethod === "upi" ? <Text style={styles.pmSub}>UPI payment is initiated in your UPI app. COME-IN does not automatically receive bank confirmation; the shopkeeper must verify the actual credit before accepting the order as paid. Never share your UPI PIN or OTP.</Text> : null}
+
+-        {user?.role === "customer" && rewardBalance > 0 ? <Pressable testID="checkout-use-referral-rewards" onPress={() => { setUseRewards((current) => !current); setQuote(null); }} style={[styles.pmRow, useRewards && { borderColor: colors.brandPrimary, backgroundColor: colors.brandTertiary }]}><Feather name="gift" size={18} color={colors.brandPrimary} /><View style={{ flex: 1 }}><Text style={styles.pmTitle}>Use Referral Rewards</Text><Text style={styles.pmSub}>Available balance ₹{rewardBalance.toFixed(2)} · {useRewards ? "Will apply to the next server quote" : "Use approved rewards on this order"}</Text></View><Feather name={useRewards ? "check-circle" : "circle"} size={18} color={useRewards ? colors.brandPrimary : colors.muted} /></Pressable> : null}
++        {user?.role === "customer" ? <TextInput accessibilityLabel="Coupon code" placeholder="Coupon code (cash checkout)"
++          placeholderTextColor={colors.muted} value={couponCode} autoCapitalize="characters" maxLength={32}
++          onChangeText={(value) => { setCouponCode(value.toUpperCase()); setQuote(null); if (value.trim()) setUseRewards(false); }}
++          style={styles.input} /> : null}
++        {user?.role === "customer" && rewardBalance > 0 ? <Pressable testID="checkout-use-referral-rewards" onPress={() => { setUseRewards((current) => !current); setCouponCode(""); setQuote(null); }} style={[styles.pmRow, useRewards && { borderColor: colors.brandPrimary, backgroundColor: colors.brandTertiary }]}><Feather name="gift" size={18} color={colors.brandPrimary} /><View style={{ flex: 1 }}><Text style={styles.pmTitle}>Use Referral Rewards</Text><Text style={styles.pmSub}>Available balance ₹{rewardBalance.toFixed(2)} · {useRewards ? "Will apply to the next server quote" : "Use approved rewards on this order"}</Text></View><Feather name={useRewards ? "check-circle" : "circle"} size={18} color={useRewards ? colors.brandPrimary : colors.muted} /></Pressable> : null}
+         <SectionTitle text={quote ? "Server-confirmed quote" : "Order summary"} />
+         {quote && <Text style={styles.errorText}>Quote expires: {new Date(quote.expires_at).toLocaleTimeString()}</Text>}
+         <View style={styles.bill}>
+@@ -290,6 +296,7 @@
+           ))}
+           <View style={styles.billLine}><Text style={styles.billName}>Items subtotal</Text><Text style={styles.billValue}>₹{quote?.subtotal ?? subtotal}</Text></View>
+           <View style={styles.billLine}><Text style={styles.billName}>{fulfillment === "pickup" ? "Pickup" : "Delivery"}</Text><Text style={styles.billValue}>{fulfillment === "pickup" ? "At shop" : (quote?.delivery_fee ?? deliveryFee) === 0 ? "FREE" : `₹${quote?.delivery_fee ?? deliveryFee}`}</Text></View>
++          {quote?.coupon ? <View><View style={styles.billLine}><Text style={styles.billName}>{quote.coupon.code} · funded by {quote.coupon.funded_by}</Text><Text style={styles.billValue}>−₹{(quote.coupon.discount_paise / 100).toFixed(2)}</Text></View><Text style={styles.billName}>{quote.coupon.terms}</Text><Text style={styles.billName}>{quote.coupon.cancellation_terms}</Text></View> : null}
+           {Number(quote?.reward_discount || 0) > 0 ? <View style={styles.billLine}><Text style={styles.billName}>Referral rewards</Text><Text style={styles.billValue}>−₹{Number(quote?.reward_discount || 0).toFixed(2)}</Text></View> : null}
+           <View style={styles.divider} />
+           <View style={styles.billLine}><Text style={[styles.billName, { fontWeight: "800", color: colors.onSurface }]}>To pay</Text><Text style={[styles.billValue, { fontWeight: "800", fontSize: 16 }]}>₹{quote?.total ?? total}</Text></View>
+diff --git a/frontend/app/admin.tsx b/frontend/app/admin.tsx
+--- a/frontend/app/admin.tsx
++++ b/frontend/app/admin.tsx
+@@ -575,6 +575,7 @@
+   const { colors } = useTheme();
+   const [expanded, setExpanded] = useState(false);
+   const [draft, setDraft] = useState("");
++  const [activation, setActivation] = useState("");
+   const [notice, setNotice] = useState("");
+   const [rows, setRows] = useState<{ id: string; name: string; kind: string; budget_paise: number }[]>([]);
+   const load = async () => {
+@@ -584,7 +585,7 @@
+   return <View style={styles.card}>
+     <ActionBtn label={expanded ? "Hide promotion drafts" : "Open promotion drafts"} onPress={() => { setExpanded(!expanded); if (!expanded) void load(); }} />
+     {expanded ? <>
+-      <Text style={styles.cardMeta}>Drafts only. Redemption requires an approved campaign and checkout integration.</Text>
++      <Text style={styles.cardMeta}>Drafts require explicit activation. Grocery cash checkout supports eligible COME-IN-funded, nonstacking campaigns.</Text>
+       <Text style={styles.cardMeta}>Enter the campaign name, kind, dates with time zones, limits in paise, funding reference, eligibility and published terms as JSON.</Text>
+       <TextInput accessibilityLabel="Promotion draft JSON" multiline value={draft} onChangeText={setDraft} style={{ color: colors.onSurface }} />
+       <ActionBtn label="Save promotion draft" onPress={async () => {
+@@ -595,7 +596,17 @@
+         } catch (error: any) { setNotice(error?.message || "Could not save draft."); }
+       }} />
+       {notice ? <Text accessibilityLiveRegion="polite" style={styles.cardMeta}>{notice}</Text> : null}
+-      {rows.map((row) => <Text key={row.id} style={styles.cardMeta}>{row.name} · {row.kind} · ₹{(row.budget_paise / 100).toFixed(2)} budget · draft</Text>)}
++      <Text style={styles.cardMeta}>To activate a supported Grocery cash coupon, enter JSON with code, customer_scope, customer_ids and release_unpaid_cancellation.</Text>
++      <TextInput accessibilityLabel="Grocery coupon activation JSON" multiline value={activation} onChangeText={setActivation} style={{ color: colors.onSurface }} />
++      {rows.map((row) => <View key={row.id}>
++        <Text style={styles.cardMeta}>{row.name} · {row.kind} · ₹{(row.budget_paise / 100).toFixed(2)} budget</Text>
++        <ActionBtn label={`Activate Grocery coupon for ${row.name}`} onPress={async () => {
++          try {
++            const result = await api.post<{ code: string }>(`/admin/financial/promotion-drafts/${row.id}/activate-grocery-coupon`, JSON.parse(activation));
++            setNotice(`Grocery cash coupon ${result.code} active.`);
++          } catch (error: any) { setNotice(error?.message || "Could not activate Grocery coupon."); }
++        }} />
++      </View>)}
+     </> : null}
+   </View>;
+ }
+diff --git a/frontend/app/seller/advertisements.tsx b/frontend/app/seller/advertisements.tsx
+--- a/frontend/app/seller/advertisements.tsx
++++ b/frontend/app/seller/advertisements.tsx
+@@ -16,6 +16,7 @@
+   const router = useRouter(); const insets = useSafeAreaInsets(); const styles = useStyles(); const { colors } = useTheme(); const { user } = useAuth();
+   const [shop, setShop] = useState<Shop | null>(null); const [rows, setRows] = useState<Advertisement[]>([]); const [title, setTitle] = useState("");
+   const [startsAt, setStartsAt] = useState(""); const [endsAt, setEndsAt] = useState(""); const [notice, setNotice] = useState(""); const [busy, setBusy] = useState(false); const [loading, setLoading] = useState(true);
++  const [deliveryReport, setDeliveryReport] = useState<{ id: string; impressions: number; clicks: number } | null>(null);
+   const load = useCallback(async () => { if (user?.role !== "shopkeeper") return; const current = await api.get<Shop | null>("/shops/mine"); setShop(current); const campaigns = await api.get<Advertisement[]>("/advertisements/mine"); setRows(campaigns); }, [user?.role]);
+   useEffect(() => { let active = true; void Promise.resolve().then(load).catch((e: any) => { if (active) setNotice(e?.message || "Could not load advertisement campaigns."); }).finally(() => { if (active) setLoading(false); }); return () => { active = false; }; }, [load]);
+   const chooseAndSubmit = async () => {
+@@ -40,7 +41,13 @@
+     <View style={styles.card}><Text style={styles.title}>Submit a banner or poster</Text><Text style={styles.muted}>Only advertisements may use image upload. A verified poster, CHAND review, and final admin approval are required before any customer can see it.</Text>
+       {!shop ? <Text style={styles.error}>Create your shop before submitting an advertisement.</Text> : <><TextInput value={title} onChangeText={setTitle} placeholder="Campaign title" placeholderTextColor={colors.muted} style={styles.input}/><TextInput value={startsAt} onChangeText={setStartsAt} placeholder="Start (ISO, e.g. 2026-12-01T00:00:00+05:30)" placeholderTextColor={colors.muted} style={styles.input}/><TextInput value={endsAt} onChangeText={setEndsAt} placeholder="End (max 90 days after start)" placeholderTextColor={colors.muted} style={styles.input}/><Pressable disabled={busy} style={[styles.primary, busy && { opacity: 0.55 }]} onPress={() => void chooseAndSubmit()}><Text style={styles.primaryText}>{busy ? "Saving…" : "Choose poster and submit"}</Text></Pressable></>}
+       {!!notice && <Text style={notice.includes("Could not") || notice.includes("Enter ") ? styles.error : styles.muted}>{notice}</Text>}</View>
+-    <Text style={styles.section}>Campaign history</Text>{rows.length ? rows.map((row) => <View key={row.id} style={styles.card}><Text style={styles.title}>{row.title}</Text><Text style={styles.muted}>Status: {row.status} · CHAND: {row.ai_review?.status || "NOT_RUN"}</Text>{row.ai_review?.reason ? <Text style={styles.muted}>{row.ai_review.reason}</Text> : null}{row.commercial_terms ? <View>
++    <Text style={styles.section}>Campaign history</Text>{rows.length ? rows.map((row) => <View key={row.id} style={styles.card}><Text style={styles.title}>{row.title}</Text><Text style={styles.muted}>Status: {row.status} · CHAND: {row.ai_review?.status || "NOT_RUN"}</Text>{row.ai_review?.reason ? <Text style={styles.muted}>{row.ai_review.reason}</Text> : null}<Pressable style={styles.primary} onPress={async () => {
++      try {
++        const report = await api.get<{ impressions: number; clicks: number }>(`/advertisements/${row.id}/delivery-report`);
++        setDeliveryReport({ id: row.id, ...report });
++      } catch (error: any) { setNotice(error?.message || "Could not load campaign delivery."); }
++    }}><Text style={styles.primaryText}>Load measured delivery</Text></Pressable>
++    {deliveryReport?.id === row.id ? <Text style={styles.muted}>{deliveryReport?.impressions} measured impressions · {deliveryReport?.clicks} measured clicks · Reconciliation requires review</Text> : null}{row.commercial_terms ? <View>
+       <Text style={styles.muted}>{row.commercial_terms.model.replaceAll("_", " ")} · ₹{(row.commercial_terms.rate_paise / 100).toFixed(2)} · {row.commercial_terms.target_area}</Text>
+       <Text style={styles.muted}>{new Date(row.starts_at).toLocaleString()} to {new Date(row.ends_at).toLocaleString()}</Text>
+       <Text style={styles.muted}>Daily cap ₹{(row.commercial_terms.daily_budget_paise / 100).toFixed(2)} · Total cap ₹{(row.commercial_terms.total_budget_paise / 100).toFixed(2)}</Text>

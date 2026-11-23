@@ -166,3 +166,9 @@ Apply `patches/task9-referral-closure.patch` after the final authorized scope pa
 Task 9 remains **PARTIALLY VERIFIED**. Versioned payout scheduling, merchant statements, zero sales commission enforcement, fixed-duration accepted campaign budgeting and explicit coupon draft funding are verified locally. No transfers, live redemptions, new payout splits or statutory documents were created. The 50-policy classification is unchanged. [Policy and evidence](evidence/task-9-final/TASK-9-PAYOUT-AND-CAMPAIGN-POLICY.md)
 
 Apply `patches/task9-payout-campaign-policy.patch` after the referral closure patch.
+
+## Task 9 — Grocery coupon checkout and ad delivery — 2026-11-23 IST
+
+Task 9 is **PARTIALLY VERIFIED**. COME-IN-funded Grocery cash coupons now support explicit activation, server quotes, transaction-safe spend and eligible cancellation release. Commercial ad API targeting and measured delivery are in place. All 50 policies are recorded, including 31 verified, one externally pending, nine partial, one unimplemented and eight blocked. [Completion report](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md)
+
+Apply `patches/task9-coupon-checkout-and-ad-delivery.patch` after the payout campaign patch.
