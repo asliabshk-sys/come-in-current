@@ -990,3 +990,7 @@ Apply `patches/task9-offer-expiry-verification.patch` after the partial/COD veri
 ### 23 November 2026 — Task 9 final internal closure
 
 Task 9 remains **PARTIALLY VERIFIED** after Stages 7–12. Apply `patches/task9-final-invoice-snapshot-consistency.patch` after offer expiry to recover the latest authorized internal source change. [Final status](evidence/task-9-final/final-closure-20261123/FINAL-STATUS.md) · [Release readiness](evidence/task-9-final/final-closure-20261123/RELEASE-READINESS.md)
+
+### 23 November 2026 — T9-12 owner decision packet
+
+T9-12 remains **NOT IMPLEMENTED**. The documentation-only packet awaits the owner's three explicit decisions. [Packet](evidence/task-9-final/replacement-offer-owner-decisions/OWNER-DECISION.md)

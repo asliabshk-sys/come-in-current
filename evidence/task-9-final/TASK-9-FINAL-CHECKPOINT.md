@@ -59,3 +59,7 @@ Fresh backend 707 passed and one object-storage skip. Seven Chromium scenarios a
 ### Stages 7–12 — final internal closure
 
 Task 9 remains **PARTIALLY VERIFIED**. The CA packet, current partial and blocked cases and final stage evidence were checkpointed separately. Fresh regression had 707 passes and one deferred object-storage skip. [Final status](final-closure-20261123/FINAL-STATUS.md) · [Integration commands and logs](final-closure-20261123/INTEGRATION-TESTS.md) · [GitHub checkpoints](final-closure-20261123/GITHUB-CHECKPOINT.md)
+
+### T9-12 owner decision packet
+
+Documentation only. The packet records selectable duration, independent cancellation and legacy scope options without changing T9-12 status. Existing replacement/order action suites passed 14 tests. [Owner decision packet](replacement-offer-owner-decisions/OWNER-DECISION.md)
