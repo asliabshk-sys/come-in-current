@@ -148,3 +148,9 @@ Apply `patches/task9-financial-policy-framework.patch` after `patches/task9-appr
 Task 9 is **PARTIALLY VERIFIED**. Recovered 50 policies. Runtime and persistence evidence supports 27 complete rules. Eleven are partial, four are not implemented, and eight require external approvals or validation. No import failure or unresolved approved-rule conflict was demonstrated. The audit corrected stale Admin financial approval. Full regression passed 695 with one external object storage skip. [Policy audit](evidence/task-9-policy-audit-20261123/TASK-9-POLICY-MASTER-AUDIT-REPORT.md)
 
 Apply `patches/task9-policy-audit-corrections.patch` after the financial policy framework patch. Use the master register before assessing completion.
+
+## Task 9 — Final authorized scope and owner approval — 2026-11-23 IST
+
+Task 9 is **PARTIALLY VERIFIED**. All 50 policies are accounted for. The owner pre-authorization covers 30 verified policies and one implemented full-refund policy awaiting external validation. Seven policies are partial, four unimplemented and eight blocked. This increment closes the cheaper replacement quote, cart substitution and measured option evidence gaps. Full regression passed 695 with one object-storage skip. Native and genuine Razorpay TEST remain deferred. [Final report](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md)
+
+Apply `patches/task9-final-authorized-scope.patch` after the policy-audit correction patch.

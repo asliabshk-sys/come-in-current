@@ -1,0 +1,3 @@
+PASS process 1 saved normalized promotion fields; redemption is disabled.
+PASS process 2 retrieved the same draft and caps; replay reused the identifier.
+PASS process 2 reloaded pending collection and its audit; replay created no duplicate or payment.

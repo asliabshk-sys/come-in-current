@@ -1,0 +1,264 @@
+diff --git a/backend/server.py b/backend/server.py
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -4853,6 +4853,17 @@
+     ) if key in order}
+
+
++def _replacement_payment_quotes(order, totals, kind):
++    if not totals or _replacement_adjustment_reasons(order, kind) != ["payment_review"]:
++        return {}
++    difference = int((money(totals["total"]) - money(order["total"])) * 100)
++    if difference > 0:
++        return {"collection_quote": {"total": totals["total"], "difference_paise": difference}}
++    if difference < 0 and order.get("payment_status") in {"paid", "cash_collected"}:
++        return {"replacement_refund_quote": {"total": totals["total"], "potential_refund_paise": -difference}}
++    return {}
++
++
+ async def _replacement_financial_review(session, order, case, kind):
+     case.setdefault("original_financials", _replacement_original_financials(order))
+     reasons = list(dict.fromkeys([*_replacement_adjustment_reasons(order, kind), case["assist_reason"]]))
+@@ -4869,6 +4880,7 @@
+         "line_difference": selected["line_difference"] if selected else None,
+         "removal_quote": case.get("removal_quote"),
+         "collection_quote": selected.get("collection_quote") if selected and decision["action"] == "accept" else None,
++        "replacement_refund_quote": selected.get("replacement_refund_quote") if selected and decision["action"] == "accept" else None,
+         "updated_at": now_utc(),
+     }
+     linked_ticket = await db.restaurant_support.find_one({"_id": ObjectId(case["support_id"])}, session=session)
+@@ -5052,10 +5064,7 @@
+         keep_totals = _replacement_totals(order, body.line_index) if not reason else None
+         if reason:
+             for option in options:
+-                if _replacement_adjustment_reasons(order, "grocery") == ["payment_review"] and option["totals"]:
+-                    delta = money(option["totals"]["total"]) - money(order["total"])
+-                    if delta > 0:
+-                        option["collection_quote"] = {"total": option["totals"]["total"], "difference_paise": int(delta * 100)}
++                option.update(_replacement_payment_quotes(order, option["totals"], "grocery"))
+                 option["totals"] = None
+         reason = reason or ("no_alternative" if not options and not keep_totals else None)
+         if open_case:
+@@ -5198,7 +5207,8 @@
+                 )
+                 if shop_id != order["shop_id"] or _replacement_snapshot(lines[0]) != offered:
+                     raise HTTPException(409, "The replacement changed. Ask the shop to refresh the options.")
+-                quote = next(row.get("collection_quote") for row in case["options"] if row["id"] == body.option_id)
++                option = next(row for row in case["options"] if row["id"] == body.option_id)
++                quote = option.get("collection_quote") or option.get("replacement_refund_quote")
+                 if quote and (_replacement_totals(order, index, lines[0])["total"] != quote["total"]
+                               or order["total"] != case["original_total"]):
+                     raise HTTPException(409, "The quoted total changed. Ask the shop to refresh the options.")
+@@ -6942,15 +6952,10 @@
+                 raise HTTPException(422, "Choose a different item or variant.")
+             proposed = _restaurant_replacement_display(line)
+             revised = _restaurant_replacement_totals(order, restaurant, _replacement_items(order, index, line))
+-            collection_quote = None
+-            if revised and _replacement_adjustment_reasons(order, "restaurant") == ["payment_review"]:
+-                delta = money(revised["total"]) - money(order["total"])
+-                if delta > 0:
+-                    collection_quote = {"total": revised["total"], "difference_paise": int(delta * 100)}
+             options.append({
+                 "id": uuid.uuid4().hex, "item": proposed, "selection": selection.model_dump(),
+                 "line_difference": round(proposed["line_total"] - display["line_total"], 2),
+-                "totals": None if reason else revised, "collection_quote": collection_quote,
++                "totals": None if reason else revised, **_replacement_payment_quotes(order, revised, "restaurant"),
+             })
+         remaining = _replacement_items(order, index)
+         keep_totals = _restaurant_replacement_totals(order, restaurant, remaining) if remaining and not reason else None
+@@ -7017,7 +7022,7 @@
+             restaurant = await _restaurant_replacement_context(order, session)
+             items = _replacement_items(order, case["line_index"], line)
+             totals = _restaurant_replacement_totals(order, restaurant, items)
+-            quote = option.get("collection_quote")
++            quote = option.get("collection_quote") or option.get("replacement_refund_quote")
+             if quote and (not totals or totals["total"] != quote["total"] or order["total"] != case["original_total"]):
+                 raise HTTPException(409, "The quoted total changed. Ask the restaurant to refresh the options.")
+             if not reason:
+@@ -7927,14 +7932,15 @@
+             or (case.get("decision") or {}).get("action") != review["decision"]):
+         raise HTTPException(409, "The order or financial terms changed. Refresh the review.")
+     index = case["line_index"]
+-    if stage == "refund":
++    if stage == "refund" and review["decision"] == "keep_unavailable":
+         totals = await _replacement_removal_totals(session, order, index, kind)
+         if not totals or any(review["removal_quote"].get(key) != value for key, value in totals.items()):
+             raise HTTPException(409, "The remaining items or removal total changed.")
+     else:
+         option = next((row for row in case["options"] if row["id"] == review["option_id"]), None)
+-        if not option or option.get("collection_quote") != review["collection_quote"]:
+-            raise HTTPException(409, "The original collection quote changed.")
++        quote_key = "replacement_refund_quote" if stage == "refund" else "collection_quote"
++        if not option or option.get(quote_key) != review[quote_key]:
++            raise HTTPException(409, "The original replacement quote changed.")
+         if grocery:
+             item = option["item"]
+             lines, shop_id = await _resolve_grocery_lines(
+@@ -7951,7 +7957,7 @@
+             if _restaurant_replacement_display(line) != option["item"]:
+                 raise HTTPException(409, "The replacement or catalogue price changed.")
+             totals = _restaurant_replacement_totals(order, restaurant, _replacement_items(order, index, line))
+-        if not totals or totals["total"] != review["collection_quote"]["total"]:
++        if _replacement_payment_quotes(order, totals, kind).get(quote_key) != review[quote_key]:
+             raise HTTPException(409, "The replacement total changed.")
+     # Write to the same order inside the approval transaction to serialize
+     # approval with order cancellation, repricing, or refund state changes.
+@@ -8000,7 +8006,8 @@
+         amount_paise = None
+         if body.stage in {"refund", "collection"}:
+             quote_key, amount_key, required_decision = (
+-                ("removal_quote", "potential_refund_paise", "keep_unavailable") if body.stage == "refund"
++                (("removal_quote", "potential_refund_paise", "keep_unavailable") if review.get("decision") == "keep_unavailable"
++                 else ("replacement_refund_quote", "potential_refund_paise", "accept")) if body.stage == "refund"
+                 else ("collection_quote", "difference_paise", "accept")
+             )
+             amount_paise = (review.get(quote_key) or {}).get(amount_key)
+diff --git a/backend/tests/test_task9_grocery_replacement.py b/backend/tests/test_task9_grocery_replacement.py
+--- a/backend/tests/test_task9_grocery_replacement.py
++++ b/backend/tests/test_task9_grocery_replacement.py
+@@ -210,6 +210,37 @@
+                 saved = await db.orders.find_one({"_id": oid})
+                 assert saved["payment_status"] == "paid" and saved["total"] == 209
+                 assert await db.grocery_payments.count_documents({}) == 0
++
++                oid = await order(payment_method="online_razorpay", payment_status="paid")
++                case = (await report(oid)).json()
++                lower = next(option for option in case["options"] if option["item"]["name"] == "Value Milk")
++                assert lower["replacement_refund_quote"] == {"total": 144, "potential_refund_paise": 6500}
++                path = f"/admin/restaurant/support/{case['support_id']}/financial-review"
++                payload = {"replacement_id": case["id"], "stage": "refund", "decision": "approve", "reason": "Fixture pending settlement"}
++                assert (await call("POST", path, payload, "admin")).status_code == 409
++                assert (await decide(oid, case, "accept", lower["id"])).status_code == 200
++                await db.products.update_one({"_id": product_ids["lower"]}, {"$set": {"price": 64}})
++                assert (await call("POST", path, payload, "admin")).status_code == 409
++                await db.products.update_one({"_id": product_ids["lower"]}, {"$set": {"price": 65}})
++                approvals = await asyncio.gather(*(call("POST", path, payload, "admin") for _ in range(2)))
++                assert all(reply.json() == {"status": "approved_pending_execution", "financial_action_confirmed": False} for reply in approvals)
++                assert await db.financial_audit.count_documents({"ticket_id": case["support_id"], "stage": "refund"}) == 1
++                assert await db.grocery_payments.count_documents({}) == 0
++                assert (await db.orders.find_one({"_id": oid}))["items"][0]["product_id"] == original["product_id"]
++
++                await product("measured_original", "Farm Rice", 100, 0, category_id="grains", sell_by="weight")
++                await product("measured_available", "Value Rice", 120, 680, category_id="grains", sell_by="weight",
++                              measure={"min_qty": 250, "max_qty": 2000, "step": 250})
++                await product("measured_wrong_unit", "Other Rice", 35, 900, category_id="grains", sell_by="volume")
++                measured = {**original, "product_id": str(product_ids["measured_original"]), "name": "Farm Rice",
++                            "price": 100, "qty": 1000, "line_total": 100, "category_id": "grains", "sell_by": "weight"}
++                oid = await order(items=[measured, unaffected], subtotal=150, delivery_fee=29, total=179)
++                case = (await report(oid, product_id=measured["product_id"], qty=1000)).json()
++                assert [(row["item"]["name"], row["item"]["qty"]) for row in case["options"]] == [("Value Rice", 500)]
++                accepted = await decide(oid, case, "accept", case["options"][0]["id"])
++                assert accepted.json()["final_totals"]["total"] == 139
++                assert (await db.products.find_one({"_id": product_ids["measured_available"]}))["stock"] == 180
++
+         finally:
+             await mongo.drop_database(db.name)
+             mongo.close()
+diff --git a/backend/tests/test_task9_restaurant_replacement.py b/backend/tests/test_task9_restaurant_replacement.py
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -213,6 +213,16 @@
+                 assert (await request("POST", path, approval, "admin")).json()["financial_action_confirmed"] is False
+                 assert await db.restaurant_payments.count_documents({}) == 0
+
++                cheaper = (await db.restaurant_menu.insert_one({"restaurant_id": str(restaurant), "name": "Budget Soup", "price": 30})).inserted_id
++                oid = await order(payment_method="razorpay", payment_status="paid")
++                cheap_case = (await report(oid, alternatives=[{"menu_item_id": str(cheaper), "quantity": 2}])).json()
++                assert cheap_case["options"][0]["replacement_refund_quote"] == {"total": 108.5, "potential_refund_paise": 4400}
++                assert (await decide(oid, cheap_case)).status_code == 200
++                path = f"/admin/restaurant/support/{cheap_case['support_id']}/financial-review"
++                approval = {"replacement_id": cheap_case["id"], "stage": "refund", "decision": "approve", "reason": "Fixture cheaper replacement"}
++                assert (await request("POST", path, approval, "admin")).json()["status"] == "approved_pending_execution"
++                assert (await db.restaurant_orders.find_one({"_id": oid}))["total"] == 152.5
++
+                 await db.restaurant_menu.insert_one({"_id": ObjectId(unaffected["menu_item_id"]), "restaurant_id": str(restaurant), "name": "Side", "price": 25})
+                 for extras, expected in (({}, "kept_unavailable"),
+                                           ({"payment_method": "razorpay", "payment_status": "paid"}, "assist_required")):
+diff --git a/frontend/app/admin.tsx b/frontend/app/admin.tsx
+--- a/frontend/app/admin.tsx
++++ b/frontend/app/admin.tsx
+@@ -349,6 +349,7 @@
+               {r.financial_review.line_difference != null ? <Text style={styles.cardMeta}>Proposed item difference ₹{r.financial_review.line_difference}</Text> : null}
+               <Text style={styles.cardMeta}>Review updated {new Date(r.financial_review.updated_at).toLocaleString()}</Text>
+               {r.financial_review.removal_quote ? <Text style={styles.cardMeta}>Proposed total ₹{r.financial_review.removal_quote.total} · Potential refund ₹{(r.financial_review.removal_quote.potential_refund_paise / 100).toFixed(2)} · Pending refund policy</Text> : null}
++              {r.financial_review.replacement_refund_quote ? <Text style={styles.cardMeta}>Proposed total ₹{r.financial_review.replacement_refund_quote.total} · Potential refund ₹{(r.financial_review.replacement_refund_quote.potential_refund_paise / 100).toFixed(2)} · Pending refund policy</Text> : null}
+               <ActionBtn label="Open financial review" onPress={() => readReview(r.id)} />
+               {reviewDetails && reviewDetails.id === r.id ? <View>
+                 <Text style={styles.cardMeta}>Customer {reviewDetails.data.customer_id} · Merchant {reviewDetails.data.merchant_id}</Text>
+@@ -368,7 +369,7 @@
+                   }} />
+                 </> : null}
+                 {(["refund", "collection"] as const).map((stage) => {
+-                  const quote = stage === "refund" ? r.financial_review.removal_quote : r.financial_review.collection_quote;
++                  const quote = stage === "refund" ? r.financial_review.removal_quote || r.financial_review.replacement_refund_quote : r.financial_review.collection_quote;
+                   const state = r.financial_review[`${stage}_status`];
+                   if (!quote) return null;
+                   return <View key={stage}>
+diff --git a/frontend/app/chand.tsx b/frontend/app/chand.tsx
+--- a/frontend/app/chand.tsx
++++ b/frontend/app/chand.tsx
+@@ -32,7 +32,7 @@
+ type Message = { id: string; from: "assistant" | "user"; text: string; products?: Product[] };
+ type ChandPlanLine = { product: Product; quantity: number; variantId?: string; verifiedTotal?: number; partyNeed?: PartyNeed };
+ type SupportOrder = { id: string; ref?: string; status?: string; payment_status?: string; refund_status?: string; total?: number; restaurant_name?: string; created_at?: string; kind: "grocery" | "restaurant" };
+-type SupportTicket = { id: string; ref: string; category: string; message: string; status: string; order_id?: string; created_at?: string; financial_review?: { reasons: string[]; reward_status?: string; professional_tax_status?: string; admin_tax_status?: string; refund_status?: string; collection_status?: string; removal_quote?: { potential_refund_paise: number }; collection_quote?: { difference_paise: number } } };
++type SupportTicket = { id: string; ref: string; category: string; message: string; status: string; order_id?: string; created_at?: string; financial_review?: { reasons: string[]; reward_status?: string; professional_tax_status?: string; admin_tax_status?: string; refund_status?: string; collection_status?: string; removal_quote?: { potential_refund_paise: number }; replacement_refund_quote?: { potential_refund_paise: number }; collection_quote?: { difference_paise: number } } };
+ const ROLE_KEYS: Record<RoleMode, string> = { customer: "chand.role.customer", shopkeeper: "chand.role.shopkeeper", restaurant: "chand.role.restaurant", services: "chand.role.services" };
+ const SUGGESTION_KEYS: Record<RoleMode, string[]> = {
+   customer: ["chand.suggest.customer.1", "chand.suggest.customer.2", "chand.suggest.customer.3"],
+@@ -666,7 +666,7 @@
+             <Pressable testID="chand-support-retry" onPress={() => void loadHelpData()} style={styles.supportSecondary}><Text style={styles.supportSecondaryText}>Refresh orders / cases</Text></Pressable>
+             <Pressable testID="chand-support-submit" disabled={!user || supportMessage.trim().length < 5 || submittingSupport} onPress={() => { setSupportRequestId((current) => current || `support-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`); setConfirmSupport(true); }} style={[styles.supportSubmit, (!user || supportMessage.trim().length < 5 || submittingSupport) && styles.sendDisabled]}><Text style={styles.supportSubmitText}>Review & submit</Text></Pressable>
+           </View>
+-          {user && tickets.length > 0 && <><Text style={styles.helpHeading}>Your support cases</Text>{tickets.map((ticket) => <View key={ticket.id} style={styles.ticketCard}><Text style={styles.orderTitle}>{ticket.ref} · {ticket.category}</Text><Text style={styles.helpBody}>Actual case status: {ticket.status}</Text>{ticket.financial_review?.removal_quote ? <Text style={styles.helpBody}>Refund review: {ticket.financial_review.refund_status?.replaceAll("_", " ") || "under review"}</Text> : null}{ticket.financial_review?.collection_quote ? <Text style={styles.helpBody}>Additional payment review: {ticket.financial_review.collection_status?.replaceAll("_", " ") || "under review"}</Text> : null}{ticket.financial_review?.reasons.includes("reward_review") ? <Text style={styles.helpBody}>Reward review: {ticket.financial_review.reward_status?.replaceAll("_", " ") || "pending Admin review"}</Text> : null}{ticket.financial_review?.reasons.includes("historical_tax_review") ? <Text style={styles.helpBody}>Invoice review: {(ticket.financial_review.admin_tax_status || ticket.financial_review.professional_tax_status)?.replaceAll("_", " ") || "pending professional review"}</Text> : null}<Text style={styles.helpBody}>{ticket.message}</Text></View>)}</>}
++          {user && tickets.length > 0 && <><Text style={styles.helpHeading}>Your support cases</Text>{tickets.map((ticket) => <View key={ticket.id} style={styles.ticketCard}><Text style={styles.orderTitle}>{ticket.ref} · {ticket.category}</Text><Text style={styles.helpBody}>Actual case status: {ticket.status}</Text>{(ticket.financial_review?.removal_quote || ticket.financial_review?.replacement_refund_quote) ? <Text style={styles.helpBody}>Refund review: {ticket.financial_review.refund_status?.replaceAll("_", " ") || "under review"}</Text> : null}{ticket.financial_review?.collection_quote ? <Text style={styles.helpBody}>Additional payment review: {ticket.financial_review.collection_status?.replaceAll("_", " ") || "under review"}</Text> : null}{ticket.financial_review?.reasons.includes("reward_review") ? <Text style={styles.helpBody}>Reward review: {ticket.financial_review.reward_status?.replaceAll("_", " ") || "pending Admin review"}</Text> : null}{ticket.financial_review?.reasons.includes("historical_tax_review") ? <Text style={styles.helpBody}>Invoice review: {(ticket.financial_review.admin_tax_status || ticket.financial_review.professional_tax_status)?.replaceAll("_", " ") || "pending professional review"}</Text> : null}<Text style={styles.helpBody}>{ticket.message}</Text></View>)}</>}
+           <Text style={styles.helpFinePrint}>Backend capability note: support tickets can link to a customer-owned Grocery or Restaurant order using the explicit order kind and ID. Ticket creation is not refund approval or payment execution. No customer-facing refund request API exists; actual refund execution is admin-only. No refund dates or eligibility are inferred.</Text>
+         </ScrollView>}
+       </View>
+diff --git a/frontend/src/components/GroceryOrderReplacements.tsx b/frontend/src/components/GroceryOrderReplacements.tsx
+--- a/frontend/src/components/GroceryOrderReplacements.tsx
++++ b/frontend/src/components/GroceryOrderReplacements.tsx
+@@ -16,7 +16,7 @@
+   line_total?: number | null;
+ };
+ type Totals = { subtotal: number; delivery_fee: number; tax?: number; total: number };
+-type Offer = { id: string; item: Line; line_difference: number; totals: Totals | null; collection_quote?: { total: number; difference_paise: number } | null };
++type Offer = { id: string; item: Line; line_difference: number; totals: Totals | null; collection_quote?: { total: number; difference_paise: number } | null; replacement_refund_quote?: { total: number; potential_refund_paise: number } };
+ type ReplacementCase = {
+   id: string;
+   line_index: number;
+@@ -158,6 +158,7 @@
+             {option.totals ? <Text style={styles.text}>New order total {money(option.totals.total)} · delivery {money(option.totals.delivery_fee)}{option.totals.tax != null ? ` · tax ${money(option.totals.tax)}` : ""}</Text>
+               : <Text style={styles.text}>Assist will confirm any change to the order total.</Text>}
+             {option.collection_quote ? <Text style={styles.text}>Proposed order total {money(option.collection_quote.total)} · Additional payment {money(option.collection_quote.difference_paise / 100)}</Text> : null}
++            {option.replacement_refund_quote ? <Text style={styles.text}>Proposed order total {money(option.replacement_refund_quote.total)} · Potential refund {money(option.replacement_refund_quote.potential_refund_paise / 100)} pending review</Text> : null}
+             {canDecide ? button(option.totals ? `Accept ${option.item.name} · ${money(option.totals.total)} total` : `Approve ${option.item.name} for Assist review`, () => decide(entry, "accept", option.id)) : null}
+           </View>)}
+           {canDecide && entry.options.length ? button("Reject these replacements", () => decide(entry, "reject")) : null}
+diff --git a/frontend/app/(tabs)/cart.tsx b/frontend/app/(tabs)/cart.tsx
+--- a/frontend/app/(tabs)/cart.tsx
++++ b/frontend/app/(tabs)/cart.tsx
+@@ -166,10 +166,10 @@
+                 </View>
+               </View>
+               {line.product.source === "live" && !liveProducts.some((candidate) => candidate.id === line.product.id && candidate.shopId === line.product.shopId && (!line.variant || candidate.variants?.some((variant) => variant.id === line.variant?.id))) && <Text style={styles.unavailableNotice} testID={`cart-unavailable-${line.key}`}>This item or selected pack is no longer available in the current live catalog. Remove it or choose a replacement below.</Text>}
+-              {line.product.source === "live" && !liveProducts.some((candidate) => candidate.id === line.product.id && candidate.shopId === line.product.shopId && (!line.variant || candidate.variants?.some((variant) => variant.id === line.variant?.id))) && liveProducts.some((candidate) => candidate.id !== line.product.id && candidate.shopId === line.product.shopId && candidate.categoryId === line.product.categoryId && (candidate.variants?.length ? candidate.variants.some((variant) => variant.available !== false && Number(variant.stock ?? 0) >= line.qty + getQty(candidate.id, variant.id)) : Number(candidate.stock ?? 0) >= line.qty + getQty(candidate.id))) && (
++              {line.product.source === "live" && !liveProducts.some((candidate) => candidate.id === line.product.id && candidate.shopId === line.product.shopId && (!line.variant || candidate.variants?.some((variant) => variant.id === line.variant?.id))) && !isMeasured(line.product) && liveProducts.some((candidate) => !isMeasured(candidate) && candidate.id !== line.product.id && candidate.shopId === line.product.shopId && candidate.categoryId === line.product.categoryId && (candidate.variants?.length ? candidate.variants.some((variant) => variant.available !== false && Number(variant.stock ?? 0) >= line.qty + getQty(candidate.id, variant.id)) : Number(candidate.stock ?? 0) >= line.qty + getQty(candidate.id))) && (
+                 <View style={styles.replacementWrap} testID={`replacement-options-${line.key}`}>
+                   <Text style={styles.replacementTitle}>Choose a replacement from the same shop and category</Text>
+-                  {liveProducts.filter((candidate) => candidate.id !== line.product.id && candidate.shopId === line.product.shopId && candidate.categoryId === line.product.categoryId && (candidate.variants?.length ? candidate.variants.some((variant) => variant.available !== false && Number(variant.stock ?? 0) >= line.qty + getQty(candidate.id, variant.id)) : Number(candidate.stock ?? 0) >= line.qty + getQty(candidate.id))).slice(0, 3).map((candidate) => {
++                  {liveProducts.filter((candidate) => !isMeasured(candidate) && candidate.id !== line.product.id && candidate.shopId === line.product.shopId && candidate.categoryId === line.product.categoryId && (candidate.variants?.length ? candidate.variants.some((variant) => variant.available !== false && Number(variant.stock ?? 0) >= line.qty + getQty(candidate.id, variant.id)) : Number(candidate.stock ?? 0) >= line.qty + getQty(candidate.id))).slice(0, 3).map((candidate) => {
+                     const variant = candidate.variants?.find((item) => item.available !== false && Number(item.stock ?? 0) >= line.qty + getQty(candidate.id, item.id));
+                     return <Pressable key={candidate.id} testID={`replace-${line.key}-with-${candidate.id}`} onPress={() => replaceLine(line.product.id, line.variant?.id, candidate, variant?.id, line.qty)} style={styles.replacementOption}>
+                       <Text style={styles.replacementName} numberOfLines={1}>{candidate.name} · {variant?.unit || candidate.unit}</Text>
+diff --git a/frontend/src/store/cart.tsx b/frontend/src/store/cart.tsx
+--- a/frontend/src/store/cart.tsx
++++ b/frontend/src/store/cart.tsx
+@@ -198,6 +198,7 @@
+     const newKey = getCartItemKey(replacement.id, replacementVariantId);
+     if (newKey === oldKey) return;
+     setItems((prev) => {
++      if (prev[oldKey] !== qty) return prev;
+       const existingReplacementQty = prev[newKey] ?? 0;
+       const maxStock = replacementVariant ? Number(replacementVariant.stock ?? 0) : Number(replacement.stock ?? 0);
+       if (existingReplacementQty + qty > maxStock) return prev;
