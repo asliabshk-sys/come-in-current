@@ -110,3 +110,7 @@ The focused HTTP, MongoDB and local provider adapter run recorded **24 passed, 0
 | Source checkpoint | Forward dry-run and reverse apply check passed | [Patch](../../patches/task9-closure-evidence-gates.patch) |
 
 The only regression skip was external object storage at `backend/tests/backend_test.py:397`. Warnings were Python framework and catalogue dependency deprecations. All payment records and signatures used for the new adapter tests were fixtures. Real payments, provider transport, native device testing, and statutory issuance remain deferred or blocked.
+
+### Final execution campaign
+
+Fresh focused run: **24 passed, 0 failed, 0 skipped, 7 warnings**. Initial run: **23 passed, 1 failed**. The new fixture reused the original item identifier's variable name and affected a later case. The corrected fixture kept all assertions. [Focused](final-campaign-20261123/focused.log) · [Initial output](final-campaign-20261123/focused-initial.log) · [Commands](final-campaign-20261123/COMMANDS.md)

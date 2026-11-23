@@ -73,3 +73,9 @@ Implementation checkpoint `dfc65425f7864076c2f161ac49e348109f199de2` was verifie
 ## Closure evidence gates — 23 November 2026
 
 The closure increment implements receipt-level coupon checks, verified booking linkage, delivery and referral discrepancy evidence, a network-free incremental collection adapter and read-only preflight, COD cash audit linkage and invoice approval binding. Task 9 is **PARTIALLY VERIFIED**. [Implementation](closure-evidence-20261123/IMPLEMENTATION.md) · [Exact approval and integration handoff](closure-evidence-20261123/APPROVAL-HANDOFF.md)
+
+## Final execution campaign — 23 November 2026
+
+Readiness now verifies the stored collection/refund contract against the server quote and separately persisted approval amount, operation reference, stage, INR currency and disabled execution state. It returns a conflict when stored evidence diverges. Synthetic regression tests alter the amount, currency and reference independently and confirm rejection. No production write, bank instruction, invoice issue or provider execution path was added.
+
+The other six areas were reverified through the existing transaction, financial and browser suites. Existing approved business rules and the register's 50 IDs were preserved. Final state is **PARTIALLY VERIFIED** with 31 verified and owner approved, 1 implemented awaiting external validation, 9 partial, 1 unimplemented, and 8 blocked. [All 50 policies](final-campaign-20261123/POLICY-EXECUTION-MATRIX.md) · [Closure checkpoint](TASK-9-FINAL-CHECKPOINT.md) · [Approval handoff](TASK-9-APPROVAL-HANDOFF.md)

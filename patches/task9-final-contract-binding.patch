@@ -1,0 +1,67 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -8774,6 +8774,18 @@
+     return await _decide_replacement_financial_review(ticket_id, body, user)
+
+
++def _replacement_review_amount(review, stage):
++    quote_key, amount_key, required_decision = (
++        (("removal_quote", "potential_refund_paise", "keep_unavailable") if review.get("decision") == "keep_unavailable"
++         else ("replacement_refund_quote", "potential_refund_paise", "accept")) if stage == "refund"
++        else ("collection_quote", "difference_paise", "accept")
++    )
++    amount_paise = (review.get(quote_key) or {}).get(amount_key)
++    if review.get("decision") != required_decision or type(amount_paise) is not int or amount_paise <= 0:
++        raise HTTPException(409, "A positive server quote and matching customer decision are required.")
++    return amount_paise
++
++
+ @api.get("/admin/restaurant/support/{ticket_id}/payment-readiness/{stage}")
+ async def replacement_payment_readiness(ticket_id: str, stage: Literal["collection", "refund"],
+                                         _: dict = Depends(require_role("admin"))):
+@@ -8791,6 +8803,13 @@
+         contract = (approval or {}).get("payment_contract")
+         if not contract:
+             raise HTTPException(409, "An approved payment review contract is required.")
++        reference = f"replacement:{ticket['order_kind']}:{ticket['order_id']}:{review['replacement_id']}:{stage}"
++        amount = _replacement_review_amount(review, stage)
++        if (contract.get("reference") != reference or contract.get("kind") != stage
++                or contract.get("currency") != "INR" or contract.get("status") != "execution_disabled"
++                or type(contract.get("amount_paise")) is not int or contract["amount_paise"] != amount
++                or approval.get("amount_paise") != amount):
++            raise HTTPException(409, "The approved contract no longer matches the server quote.")
+         if contract["consent_recorded_at"] != review.get("decision_at"):
+             raise HTTPException(409, "The recorded customer consent changed.")
+         evidence = await _validate_pending_payment_review(session, ticket, review, stage, lock_order=False)
+@@ -8927,14 +8946,7 @@
+         amount_paise = None
+         payment_contract = None
+         if body.stage in {"refund", "collection"}:
+-            quote_key, amount_key, required_decision = (
+-                (("removal_quote", "potential_refund_paise", "keep_unavailable") if review.get("decision") == "keep_unavailable"
+-                 else ("replacement_refund_quote", "potential_refund_paise", "accept")) if body.stage == "refund"
+-                else ("collection_quote", "difference_paise", "accept")
+-            )
+-            amount_paise = (review.get(quote_key) or {}).get(amount_key)
+-            if review.get("decision") != required_decision or not isinstance(amount_paise, int) or amount_paise <= 0:
+-                raise HTTPException(409, "A positive server quote and matching customer decision are required.")
++            amount_paise = _replacement_review_amount(review, body.stage)
+             if body.decision == "approve":
+                 evidence = await _validate_pending_payment_review(session, ticket, review, body.stage)
+                 if body.stage == "refund" and amount_paise > evidence.get("remaining_paise", amount_paise):
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -282,6 +282,13 @@
+                     "status": "execution_disabled", "reference": approved_audit[0]["payment_contract"]["reference"],
+                     "amount_paise": 15400, "payment_evidence_status": "linked_capture_recorded",
+                 }
++                audit_query = {"ticket_id": linked_case["support_id"], "stage": "collection"}
++                for field, value in (("amount_paise", 15401), ("currency", "USD"), ("reference", "different")):
++                    original_value = approved_audit[0]["payment_contract"][field]
++                    await db.financial_audit.update_one(audit_query, {"$set": {f"payment_contract.{field}": value}})
++                    response = await request("GET", readiness, actor="admin")
++                    assert response.status_code == 409 and "server quote" in response.json()["detail"]
++                    await db.financial_audit.update_one(audit_query, {"$set": {f"payment_contract.{field}": original_value}})
+                 await db.restaurant_payments.update_one({"_id": captured}, {"$set": {"gateway_payment_id": "pay_changed"}})
+                 assert (await request("GET", readiness, actor="admin")).status_code == 409
+                 await db.restaurant_payments.update_one({"_id": captured}, {"$set": {"gateway_payment_id": "pay_fixture",

@@ -1,0 +1,85 @@
+......................F.                                                 [100%]
+=================================== FAILURES ===================================
+__________ test_restaurant_replacement_approval_and_financial_assist ___________
+backend/tests/test_task9_restaurant_replacement.py:404: in test_restaurant_replacement_approval_and_financial_assist
+    asyncio.run(run())
+../.comein-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:190: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+../.comein-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../.comein-tools/python/cpython-3.11.18-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+backend/tests/test_task9_restaurant_replacement.py:303: in run
+    assert cheap_case["options"][0]["replacement_refund_quote"] == {"total": 108.5, "potential_refund_paise": 4400}
+           ^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'options'
+------------------------------ Captured log call -------------------------------
+ERROR    comein:server.py:5565 Order replacement transaction failed
+Traceback (most recent call last):
+  File "/workspace/task4-source/backend/server.py", line 5561, in _run_replacement_transaction
+    return await run_transaction(client, callback)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/task4-source/backend/mongo_transactions.py", line 76, in run_transaction
+    return await session.with_transaction(commit_with_retry)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/motor/core.py", line 473, in with_transaction
+    ret = await coro(self)
+          ^^^^^^^^^^^^^^^^
+  File "/workspace/task4-source/backend/mongo_transactions.py", line 57, in commit_with_retry
+    result = await callback(session)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/task4-source/backend/server.py", line 7708, in apply
+    await _replacement_financial_review(session, order, case, "restaurant")
+  File "/workspace/task4-source/backend/tests/test_task9_restaurant_replacement.py", line 137, in interrupted
+    raise RuntimeError("fixture interrupted after the support write")
+RuntimeError: fixture interrupted after the support write
+=============================== warnings summary ===============================
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/starlette/formparsers.py:12: PendingDeprecationWarning: Please use `import python_multipart` instead.
+    import multipart
+
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/task4-source/backend/server.py:9230: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/COME-IN-COMPLETE-MASTER-SOURCE-20261115/backend/.venv/lib/python3.11/site-packages/fastapi/applications.py:4495: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    return self.router.on_event(event_type)
+
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/task4-source/backend/server.py:9377: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("shutdown")
+
+tests/test_task9_business_policy.py::test_task9_business_policy_integration
+  /workspace/task4-source/backend/server.py:10444: DeprecationWarning:
+          on_event is deprecated, use lifespan event handlers instead.
+
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+
+    @app.on_event("startup")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED backend/tests/test_task9_restaurant_replacement.py::test_restaurant_replacement_approval_and_financial_assist
+1 failed, 23 passed, 7 warnings in 4.77s
