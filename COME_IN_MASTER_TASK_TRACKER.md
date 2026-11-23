@@ -46,7 +46,7 @@
 | 6 | Search and Filters | **COMPLETED** | Earlier Task 6 implementation and test reports preserved. | Not rerun in this batch. |
 | 7 | Cart and Checkout | **COMPLETED** | Checkout quote/idempotency source; historical COD/pickup UI/API tests; Iteration 3 fixes empty-cart and unavailable-fulfillment messaging. | No Expo runtime in current environment. |
 | 8 | Repeat Order | **COMPLETED** | Earlier TASK24 report and existing repeat-order source. | Measured repeat-order extension not fully verified. |
-| 9 | Out-of-Stock Replacement | **PARTIALLY COMPLETE** | Replacement, payment/refund review, assigned tax review and draft promotions. [Evidence](evidence/task-9-financial-policy-framework-20261123/IMPLEMENTATION_REPORT.md) | Execution, redemptions and invoice issuance pending. |
+| 9 | Out-of-Stock Replacement | **PARTIALLY VERIFIED** | 50-policy audit and stale-approval correction. [Evidence](evidence/task-9-policy-audit-20261123/TASK-9-POLICY-MASTER-AUDIT-REPORT.md) | Active promotions, execution, payout and statutory issuance remain pending. |
 | 10 | Live Tracking | **COMPLETED** | Historical /api/orders/{id}/tracking runtime E2E report. | Not rerun in this batch. |
 | 11 | Order Help and Refund Status | **PARTIAL** | Restaurant Admin refund safeguards retained; Grocery refund summary states and in-app notification routes have offline coverage. | Automatic Grocery refunds, refund-specific notifications and live customer/seller/admin status synchronization remain pending. |
 | 12 | Excel/CSV Price and Stock Import | **COMPLETED** | Earlier reports; import confirmation dialog source fix; Task 5 measured CSV parser/model now has offline coverage. | Transaction-backed measured import apply remains pending with disposable MongoDB verification. |
@@ -1105,3 +1105,7 @@ Task 9 is **PARTIALLY COMPLETE**. Eligible unpaid removal, protected reward deci
 ## Task 9 — Financial policy framework — 2026-11-23 IST
 
 Task 9 is **PARTIALLY COMPLETE**. Admin can approve a server-quoted refund or incremental collection for pending execution after the matching customer decision. Verified professionals are restricted to assigned tax cases. Admin can save auditable promotion drafts with validated limits. Campaign redemption, financial execution, payout adjustments and statutory invoice issuance remain pending the documented rules and validations. [Evidence and decisions](evidence/task-9-financial-policy-framework-20261123/IMPLEMENTATION_REPORT.md)
+
+## Task 9 — Policy master audit — 2026-11-23 IST
+
+Task 9 is **PARTIALLY VERIFIED**. Recovered 50 policies. Runtime and persistence evidence supports 27 complete rules. Eleven are partial, four are not implemented, and eight require external approvals or validation. No import failure or unresolved approved-rule conflict was demonstrated. The audit corrected stale Admin financial approval. Full regression passed 695 with one external object storage skip. [Policy audit](evidence/task-9-policy-audit-20261123/TASK-9-POLICY-MASTER-AUDIT-REPORT.md)

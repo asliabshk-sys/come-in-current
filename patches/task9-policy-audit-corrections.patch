@@ -1,0 +1,95 @@
+diff --git a/backend/server.py b/backend/server.py
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -7910,6 +7910,54 @@
+     return await _decide_replacement_financial_review(ticket_id, body, user)
+
+
++async def _validate_pending_payment_review(session, ticket, review, stage):
++    """Reconcile a proposed review with the current order before recording approval."""
++    kind = ticket["order_kind"]
++    grocery = kind == "grocery"
++    collection = db.orders if grocery else db.restaurant_orders
++    oid = _object_id_or_404(ticket["order_id"], "Order")
++    order = await collection.find_one({"_id": oid, "customer_id": ticket["user_id"]}, session=session)
++    states = GROCERY_REPLACEMENT_ORDER_STATES if grocery else RESTAURANT_REPLACEMENT_ORDER_STATES
++    case = next((row for row in (order or {}).get("replacements", [])
++                 if row["id"] == review["replacement_id"]), None)
++    if (not order or not case or case["state"] != "assist_required"
++            or order["status"] not in states or order.get("refund_status")
++            or _replacement_adjustment_reasons(order, kind) != ["payment_review"]
++            or _replacement_original_financials(order) != review["original"]
++            or (case.get("decision") or {}).get("action") != review["decision"]):
++        raise HTTPException(409, "The order or financial terms changed. Refresh the review.")
++    index = case["line_index"]
++    if stage == "refund":
++        totals = await _replacement_removal_totals(session, order, index, kind)
++        if not totals or any(review["removal_quote"].get(key) != value for key, value in totals.items()):
++            raise HTTPException(409, "The remaining items or removal total changed.")
++    else:
++        option = next((row for row in case["options"] if row["id"] == review["option_id"]), None)
++        if not option or option.get("collection_quote") != review["collection_quote"]:
++            raise HTTPException(409, "The original collection quote changed.")
++        if grocery:
++            item = option["item"]
++            lines, shop_id = await _resolve_grocery_lines(
++                [QuoteLineIn(product_id=item["product_id"], qty=item["qty"], variant_id=item.get("variant_id"))], session=session,
++            )
++            if shop_id != order["shop_id"] or _replacement_snapshot(lines[0]) != item:
++                raise HTTPException(409, "The replacement or catalogue price changed.")
++            totals = _replacement_totals(order, index, lines[0])
++        else:
++            restaurant = await _restaurant_replacement_context(order, session)
++            line = await _restaurant_resolve_line(
++                order["restaurant_id"], RestaurantOrderLineIn.model_validate(option["selection"]), session=session,
++            )
++            if _restaurant_replacement_display(line) != option["item"]:
++                raise HTTPException(409, "The replacement or catalogue price changed.")
++            totals = _restaurant_replacement_totals(order, restaurant, _replacement_items(order, index, line))
++        if not totals or totals["total"] != review["collection_quote"]["total"]:
++            raise HTTPException(409, "The replacement total changed.")
++    # Write to the same order inside the approval transaction to serialize
++    # approval with order cancellation, repricing, or refund state changes.
++    await collection.update_one({"_id": oid}, {"$set": {"replacement_financial_reviewed_at": now_utc()}}, session=session)
++
++
+ async def _decide_replacement_financial_review(ticket_id: str, body: ReplacementFinancialReviewIn, user: dict):
+     oid = _object_id_or_404(ticket_id, "Support ticket")
+     if body.stage == "professional_tax":
+@@ -7958,6 +8006,8 @@
+             amount_paise = (review.get(quote_key) or {}).get(amount_key)
+             if review.get("decision") != required_decision or not isinstance(amount_paise, int) or amount_paise <= 0:
+                 raise HTTPException(409, "A positive server quote and matching customer decision are required.")
++            if body.decision == "approve":
++                await _validate_pending_payment_review(session, ticket, review, body.stage)
+         status = "rejected" if body.decision == "reject" else {
+             "reward": "ledger_preservation_approved",
+             "professional_tax": "pending_admin_tax_approval",
+diff --git a/backend/tests/test_task9_restaurant_replacement.py b/backend/tests/test_task9_restaurant_replacement.py
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -201,6 +201,14 @@
+                 approval = {"replacement_id": paid_case["id"], "stage": "collection", "decision": "approve", "reason": "Verify pending collection"}
+                 assert (await request("POST", path, approval, "admin")).status_code == 409
+                 assert (await decide(oid, paid_case)).status_code == 200
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"status": "cancelled"}})
++                assert (await request("POST", path, approval, "admin")).status_code == 409
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"status": "preparing", "coupon_discount": 10}})
++                assert (await request("POST", path, approval, "admin")).status_code == 409
++                await db.restaurant_orders.update_one({"_id": oid}, {"$unset": {"coupon_discount": ""}})
++                await db.restaurant_menu.update_one({"_id": option}, {"$set": {"variants.0.price": 120}})
++                assert (await request("POST", path, approval, "admin")).status_code == 409
++                await db.restaurant_menu.update_one({"_id": option}, {"$set": {"variants.0.price": 110}})
+                 assert (await request("POST", path, approval, "admin")).json()["status"] == "approved_pending_execution"
+                 assert (await request("POST", path, approval, "admin")).json()["financial_action_confirmed"] is False
+                 assert await db.restaurant_payments.count_documents({}) == 0
+@@ -221,6 +229,9 @@
+                         assert saved["total"] == 152.5 and saved["payment_status"] == "paid"
+                         path = f"/admin/restaurant/support/{remove_case['support_id']}/financial-review"
+                         approval = {"replacement_id": remove_case["id"], "stage": "refund", "decision": "approve", "reason": "Confirm pending refund review"}
++                        await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"refund_status": "refund_pending"}})
++                        assert (await request("POST", path, approval, "admin")).status_code == 409
++                        await db.restaurant_orders.update_one({"_id": oid}, {"$unset": {"refund_status": ""}})
+                         assert (await request("POST", path, approval, "admin")).json()["status"] == "approved_pending_execution"
+                         assert await db.restaurant_payments.count_documents({}) == 0
+                     else:

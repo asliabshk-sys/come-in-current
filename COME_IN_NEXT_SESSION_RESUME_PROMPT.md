@@ -142,3 +142,9 @@ Apply `patches/task9-approved-financial-policies.patch` after `patches/task9-fin
 Task 9 is **PARTIALLY COMPLETE**. Admin can approve a server-quoted refund or incremental collection for pending execution after the matching customer decision. Verified professionals are restricted to assigned tax cases. Admin can save auditable promotion drafts with validated limits. Campaign redemption, financial execution, payout adjustments and statutory invoice issuance remain pending the documented rules and validations. [Evidence and decisions](evidence/task-9-financial-policy-framework-20261123/IMPLEMENTATION_REPORT.md)
 
 Apply `patches/task9-financial-policy-framework.patch` after `patches/task9-approved-financial-policies.patch`.
+
+## Task 9 — Policy master audit — 2026-11-23 IST
+
+Task 9 is **PARTIALLY VERIFIED**. Recovered 50 policies. Runtime and persistence evidence supports 27 complete rules. Eleven are partial, four are not implemented, and eight require external approvals or validation. No import failure or unresolved approved-rule conflict was demonstrated. The audit corrected stale Admin financial approval. Full regression passed 695 with one external object storage skip. [Policy audit](evidence/task-9-policy-audit-20261123/TASK-9-POLICY-MASTER-AUDIT-REPORT.md)
+
+Apply `patches/task9-policy-audit-corrections.patch` after the financial policy framework patch. Use the master register before assessing completion.
