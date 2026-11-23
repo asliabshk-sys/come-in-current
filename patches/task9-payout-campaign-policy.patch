@@ -1,0 +1,644 @@
+diff --git a/backend/server.py b/backend/server.py
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -1443,7 +1443,7 @@
+ def _advertisement_out(advertisement: dict, *, public: bool = False) -> dict:
+     result = doc_out(advertisement)
+     if public:
+-        for field in ("owner_id", "shop_id", "ai_review", "admin_reason", "poster_storage_path"):
++        for field in ("owner_id", "shop_id", "ai_review", "admin_reason", "poster_storage_path", "commercial_terms", "commercial_budget"):
+             result.pop(field, None)
+     return result
+
+@@ -1571,6 +1571,9 @@
+ async def owner_publish_advertisement(advertisement_id: str, user: dict = Depends(get_current_user)):
+     _assert_designated_advertisement_owner(user)
+     advertisement = await _advertisement_or_404(advertisement_id)
++    terms = advertisement.get("commercial_terms")
++    if terms and (not terms.get("accepted_at") or terms["model"] != "fixed_duration"):
++        raise HTTPException(409, "Advertiser acceptance of a fixed-duration price is required before publication")
+     review = advertisement.get("ai_review") or {}
+     poster_sha256 = advertisement.get("poster_sha256")
+     if (advertisement.get("status") != "pending_owner_approval" or review.get("status") != "COMPLETED" or review.get("decision") != "safe" or not isinstance(poster_sha256, str) or review.get("poster_sha256") != poster_sha256):
+@@ -1580,11 +1583,137 @@
+     updated = await db.advertisements.update_one({
+         "_id": advertisement["_id"], "status": "pending_owner_approval", "poster_sha256": poster_sha256,
+         "ai_review": review, "updated_at": advertisement.get("updated_at"),
++        "commercial_terms": terms,
+     }, {"$set": {"status": "approved", "owner_approval": approval, "updated_at": now}})
+     if updated.matched_count != 1:
+         raise HTTPException(status_code=409, detail="Campaign changed before owner approval; submit it for review again")
+     await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id, "actor_id": user["id"], "event": "owner_published", "poster_sha256": poster_sha256, "created_at": now})
+     return _advertisement_out(await db.advertisements.find_one({"_id": advertisement["_id"]}))
++
++
++class AdvertisementCommercialTermsIn(BaseModel):
++    model: Literal["fixed_duration", "cpm", "cpc"]
++    rate_paise: int = Field(gt=0, le=100_000_000_000, strict=True)
++    daily_budget_paise: int = Field(gt=0, le=100_000_000_000, strict=True)
++    total_budget_paise: int = Field(gt=0, le=100_000_000_000, strict=True)
++    funding_reference: str = Field(min_length=1, max_length=150)
++    objective: str = Field(min_length=1, max_length=200)
++    target_area: str = Field(min_length=1, max_length=120)
++    eligible_categories: list[str] = Field(default_factory=list, max_length=50)
++    reason: str = Field(min_length=5, max_length=500)
++
++
++@api.put("/admin/advertisements/{advertisement_id}/commercial-terms")
++async def configure_advertisement_terms(advertisement_id: str, body: AdvertisementCommercialTermsIn,
++                                        user: dict = Depends(require_role("admin"))):
++    if body.daily_budget_paise > body.total_budget_paise:
++        raise HTTPException(422, "Daily cap exceeds the total budget")
++    if body.model == "fixed_duration" and body.rate_paise > body.daily_budget_paise:
++        raise HTTPException(422, "The agreed fixed fee must fit within the daily and total caps")
++    oid = _object_id_or_404(advertisement_id, "Advertisement")
++
++    async def apply(session):
++        ad = await db.advertisements.find_one({"_id": oid}, session=session)
++        if not ad:
++            raise HTTPException(404, "Advertisement not found")
++        previous = ad.get("commercial_terms", {})
++        if previous.get("accepted_at") or ad["status"] in {"approved", "removed"}:
++            raise HTTPException(409, "Accepted, published or removed campaigns cannot be repriced")
++        terms = {**body.model_dump(), "version": previous.get("version", 0) + 1, "updated_at": now_utc(),
++                 "starts_at": ad["starts_at"], "ends_at": ad["ends_at"], "placement": ad["placement"]}
++        await db.advertisements.update_one({"_id": oid}, {"$set": {"commercial_terms": terms}}, session=session)
++        await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id, "event": "commercial_terms_configured",
++            "actor_id": user["id"], "terms": terms, "created_at": now_utc()}, session=session)
++        return terms
++
++    return await _run_replacement_transaction(apply)
++
++
++class AdvertisementTermsAcceptanceIn(BaseModel):
++    version: int = Field(ge=1)
++
++
++@api.post("/advertisements/{advertisement_id}/accept-commercial-terms")
++async def accept_advertisement_terms(advertisement_id: str, body: AdvertisementTermsAcceptanceIn,
++                                      user: dict = Depends(require_role("shopkeeper"))):
++    oid = _object_id_or_404(advertisement_id, "Advertisement")
++
++    async def apply(session):
++        ad = await db.advertisements.find_one({"_id": oid}, session=session)
++        if not ad:
++            raise HTTPException(404, "Advertisement not found")
++        _assert_advertisement_owner(ad, user)
++        terms = ad.get("commercial_terms") or {}
++        if terms.get("version") != body.version or ad["status"] in {"removed", "rejected"} or utc(ad["ends_at"]) <= now_utc():
++            raise HTTPException(409, "Campaign terms changed or are unavailable")
++        if terms.get("accepted_at"):
++            return terms
++        now = now_utc()
++        terms.update({"accepted_at": now, "accepted_by": user["id"]})
++        await db.advertisements.update_one({"_id": oid}, {"$set": {"commercial_terms": terms}}, session=session)
++        await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id, "event": "commercial_terms_accepted",
++            "actor_id": user["id"], "version": body.version, "created_at": now}, session=session)
++        return terms
++
++    return await _run_replacement_transaction(apply)
++
++
++class AdvertisementBudgetActionIn(BaseModel):
++    action: Literal["reserve", "record_verified_spend", "release"]
++    reason: str = Field(min_length=5, max_length=500)
++    evidence_reference: Optional[str] = Field(default=None, max_length=160)
++
++
++@api.post("/admin/advertisements/{advertisement_id}/fixed-budget")
++async def adjust_advertisement_fixed_budget(advertisement_id: str, body: AdvertisementBudgetActionIn,
++                                            user: dict = Depends(require_role("admin"))):
++    """Book the accepted fixed fee once. This does not move money or spend from raw events."""
++    oid = _object_id_or_404(advertisement_id, "Advertisement")
++
++    async def apply(session):
++        ad = await db.advertisements.find_one({"_id": oid}, session=session)
++        if not ad:
++            raise HTTPException(404, "Advertisement not found")
++        terms = ad.get("commercial_terms") or {}
++        if not terms.get("accepted_at") or terms.get("model") != "fixed_duration":
++            raise HTTPException(409, "Accepted fixed-duration terms required")
++        budget = ad.get("commercial_budget") or {}
++        expected = {"reserve": "reserved", "record_verified_spend": "spent", "release": "released"}[body.action]
++        if budget.get("status") == expected:
++            if body.action == "record_verified_spend" and budget.get("evidence_reference") != (body.evidence_reference or "").strip():
++                raise HTTPException(409, "Fixed fee already recorded against different evidence")
++            return budget
++        now = now_utc()
++        if body.action == "reserve":
++            if (budget or ad["status"] != "approved" or not utc(ad["starts_at"]) <= now < utc(ad["ends_at"])
++                    or not ad.get("poster_sha256") or ad.get("owner_approval", {}).get("poster_sha256") != ad["poster_sha256"]):
++                raise HTTPException(409, "An active, moderated campaign with an unused budget is required")
++            amount = terms["rate_paise"]
++            if amount > min(terms["daily_budget_paise"], terms["total_budget_paise"]):
++                raise HTTPException(409, "The fixed fee exceeds the budget")
++            budget = {"amount_paise": amount, "reserved_at": now, "version": terms["version"]}
++        elif budget.get("status") != "reserved":
++            raise HTTPException(409, "No open reservation")
++        if body.action == "record_verified_spend":
++            reference = (body.evidence_reference or "").strip()
++            if not reference:
++                raise HTTPException(422, "An independently verified payment or invoice reference is required")
++            key = hashlib.sha256(reference.casefold().encode()).hexdigest()
++            try:
++                await db.advertisement_audit.insert_one({"_id": f"campaign-evidence:{key}", "event": "commercial_evidence_claimed",
++                    "advertisement_id": advertisement_id, "actor_id": user["id"], "created_at": now}, session=session)
++            except DuplicateKeyError as exc:
++                raise HTTPException(409, "Evidence reference already used") from exc
++            budget["evidence_reference"] = reference
++        budget.update({"status": expected, "remaining_paise": terms["total_budget_paise"] - (
++            budget["amount_paise"] if expected in {"reserved", "spent"} else 0), "updated_at": now})
++        await db.advertisements.update_one({"_id": oid}, {"$set": {"commercial_budget": budget}}, session=session)
++        await db.advertisement_audit.insert_one({"advertisement_id": advertisement_id,
++            "event": f"commercial_budget_{expected}", "actor_id": user["id"], "reason": body.reason,
++            "budget": budget, "created_at": now}, session=session)
++        return budget
++
++    return await _run_replacement_transaction(apply)
+
+
+ @api.get("/advertisements/active")
+@@ -6119,10 +6248,111 @@
+     entity = await collection.find_one({"_id": _object_id_or_404(entity_id, kind.title())})
+     if not entity:
+         raise HTTPException(status_code=404, detail=f"{kind.title()} not found")
++    if body.commission_rate_percent != 0:
++        raise HTTPException(422, "COME-IN does not charge commission on merchant product sales")
+     patch = {"commission_rate_percent": float(body.commission_rate_percent), "platform_service_fee_inr": float(body.platform_service_fee_inr), "delivery_fee_beneficiary": body.delivery_fee_beneficiary, "financial_policy_updated_at": now_utc(), "financial_policy_updated_by": user["id"]}
+     await collection.update_one({"_id": entity["_id"]}, {"$set": patch})
+     await db.financial_audit.insert_one({"actor_id": user["id"], "action": "financial_policy_updated", "entity_type": kind, "entity_id": entity_id, "policy": patch, "created_at": now_utc()})
+     return {"entity_type": kind, "entity_id": entity_id, **{k: v for k,v in patch.items() if k != "financial_policy_updated_by"}}
++
++
++class PayoutScheduleIn(BaseModel):
++    cycle_start: datetime
++    cycle_days: int = Field(default=7, ge=1, le=90)
++    processing_weekday: int = Field(ge=0, le=6)
++    reconciliation_days: int = Field(ge=0, le=90)
++    minimum_payout_paise: Optional[int] = Field(default=None, gt=0, le=100_000_000_000)
++    eligible_statuses: set[Literal["delivered", "picked_up"]] = Field(min_length=1)
++    reason: str = Field(min_length=5, max_length=500)
++    expected_version: int = Field(ge=0)
++
++
++@api.get("/admin/earnings/payout-schedule")
++async def get_payout_schedule(_: dict = Depends(require_role("admin"))):
++    return doc_out(await db.financial_policy_drafts.find_one({"_id": "seller-payout-schedule"}) or {})
++
++
++@api.put("/admin/earnings/payout-schedule")
++async def save_payout_schedule(body: PayoutScheduleIn, user: dict = Depends(require_role("admin"))):
++    if body.cycle_start.utcoffset() is None:
++        raise HTTPException(422, "Cycle start requires a timezone")
++    config = body.model_dump(exclude={"expected_version"})
++    config["eligible_statuses"] = sorted(config["eligible_statuses"])
++    config["cycle_start"] = config["cycle_start"].astimezone(timezone.utc)
++
++    async def apply(session):
++        key = "seller-payout-schedule"
++        previous = await db.financial_policy_drafts.find_one({"_id": key}, session=session) or {}
++        if previous.get("version", 0) != body.expected_version:
++            raise HTTPException(409, "Schedule version changed; reload before saving")
++        now = now_utc()
++        state = {"_id": key, "record_type": "payout_schedule", **config, "version": body.expected_version + 1,
++                 "updated_at": now, "actor_id": user["id"]}
++        await db.financial_policy_drafts.replace_one({"_id": key}, state, upsert=True, session=session)
++        await db.financial_audit.insert_one({"action": "seller_payout_schedule_updated", "actor_id": user["id"],
++            "version": state["version"], "configuration": config, "created_at": now}, session=session)
++        return doc_out(state)
++
++    return await _run_replacement_transaction(apply)
++
++
++def _completed_payout_cutoff(schedule, now):
++    start = utc(schedule["cycle_start"])
++    hold = timedelta(days=schedule["reconciliation_days"])
++    length = timedelta(days=schedule["cycle_days"])
++    days_since_processing = (now.weekday() - schedule["processing_weekday"]) % 7
++    run_day = (now - timedelta(days=days_since_processing)).date()
++    last_run = datetime.combine(run_day, start.timetz())
++    if last_run > now:
++        last_run -= timedelta(days=7)
++    cycles = (last_run - hold - start) // length
++    return start + cycles * length if cycles >= 1 else None
++
++
++async def _scheduled_payout_rows(rows, beneficiary_type, beneficiary_id):
++    rows = [row for row in rows if row.get("commission") == 0]
++    schedule = await db.financial_policy_drafts.find_one({"_id": "seller-payout-schedule"})
++    if not schedule:
++        return rows, {}
++    cutoff = _completed_payout_cutoff(schedule, now_utc())
++    eligible = {entry["order_id"] async for entry in db.financial_ledger.find({
++        "beneficiary_type": beneficiary_type, "beneficiary_id": beneficiary_id, "event_type": "order_finalized",
++        "recorded_at": {"$lt": cutoff}, "commission_amount": 0,
++    }, {"order_id": 1})} if cutoff else set()
++    rows = [row for row in rows if row["order_id"] in eligible and row["status"] in schedule["eligible_statuses"]]
++    return rows, {"schedule_version": schedule["version"], "cycle_cutoff": cutoff,
++                  "minimum_payout_paise": schedule["minimum_payout_paise"]}
++
++
++@api.get("/earnings/settlements/{settlement_id}/statement")
++async def settlement_statement(settlement_id: str, user: dict = Depends(get_current_user)):
++    oid = _object_id_or_404(settlement_id, "Settlement")
++    query = {"_id": oid}
++    if user.get("role") != "admin":
++        if user.get("role") != "shopkeeper":
++            raise HTTPException(403, "Settlement statements require merchant or Admin access")
++        query["beneficiary_user_id"] = user["id"]
++    settlement = await db.settlement_requests.find_one(query)
++    if not settlement:
++        raise HTTPException(404, "Settlement not found")
++    if user["role"] != "admin":
++        entity = (await _get_shop_or_404(settlement["beneficiary_id"]) if settlement["beneficiary_type"] == "shop"
++                  else await _restaurant_or_404(settlement["beneficiary_id"]))
++        if entity.get("owner_id") != user["id"]:
++            raise HTTPException(404, "Settlement not found")
++    stream = io.StringIO()
++    writer = csv.writer(stream)
++    writer.writerow(["settlement_id", "currency", "settlement_status", "recorded_total", "order_id", "allocated_payable", "payout_reference"])
++    allocations = settlement.get("order_payables", {})
++    reference = settlement.get("payout_reference") or ""
++    if str(reference).lstrip().startswith(("=", "+", "-", "@")):
++        reference = "'" + reference
++    for order_id in settlement.get("order_ids", []) or [""]:
++        writer.writerow([settlement_id, settlement["currency"], settlement["status"], settlement["amount"], order_id,
++                         allocations.get(order_id, ""), reference])
++    return Response(stream.getvalue(), media_type="text/csv", headers={
++        "Content-Disposition": f'attachment; filename="settlement-{oid}.csv"', "Cache-Control": "private, no-store",
++    })
+
+
+ @api.get("/admin/earnings/settlements")
+@@ -6147,7 +6377,10 @@
+     prior = [x async for x in db.settlement_requests.find({"beneficiary_user_id": user["id"], "beneficiary_type": "shop", "beneficiary_id": shop_id, "status": {"$in": ["pending_review", "approved", "processing", "paid"]}}, {"order_ids": 1})]
+     allocated = {oid for x in prior for oid in x.get("order_ids", [])}
+     rows = [r for r in rows if r["order_id"] not in allocated]
++    rows, cycle = await _scheduled_payout_rows(rows, "shop", shop_id)
+     amount = sum((money(r["shopkeeper_payable"]) for r in rows), Decimal("0.00"))
++    if cycle.get("minimum_payout_paise") and int(amount * 100) < cycle["minimum_payout_paise"]:
++        raise HTTPException(409, "Eligible earnings are below the configured payout threshold")
+     if not rows or amount <= 0:
+         raise HTTPException(status_code=409, detail="No finalized, unallocated payable orders are available. Check the commission policy and order statuses.")
+     if not await db.payout_bank_accounts.find_one({"beneficiary_type": "shop", "beneficiary_id": shop_id}):
+@@ -6156,6 +6389,7 @@
+     doc = {"beneficiary_type": "shop", "beneficiary_id": shop_id, "beneficiary_user_id": user["id"], "amount": float(amount), "currency": "INR", "order_ids": [r["order_id"] for r in rows], "status": "pending_review", "idempotency_key": body.idempotency_key, "created_at": now, "updated_at": now}
+     order_keys = [f"grocery:{r['order_id']}" for r in rows]
+     doc["order_keys"] = order_keys
++    doc.update(cycle, order_payables={row["order_id"]: row["shopkeeper_payable"] for row in rows})
+     try:
+         async def apply(session):
+             prior_doc = await db.settlement_requests.find_one({"idempotency_key": body.idempotency_key, "beneficiary_user_id": user["id"], "beneficiary_type": "shop", "beneficiary_id": shop_id}, session=session)
+@@ -6195,10 +6429,14 @@
+     prior = [x async for x in db.settlement_requests.find({"beneficiary_user_id": user["id"], "beneficiary_type": "restaurant", "beneficiary_id": restaurant_id, "status": {"$in": ["pending_review", "approved", "processing", "paid"]}}, {"order_ids": 1})]
+     allocated = {oid for x in prior for oid in x.get("order_ids", [])}
+     rows = [r for r in rows if r["order_id"] not in allocated]
++    rows, cycle = await _scheduled_payout_rows(rows, "restaurant", restaurant_id)
+     amount = sum((money(r["shopkeeper_payable"]) for r in rows), Decimal("0.00"))
++    if cycle.get("minimum_payout_paise") and int(amount * 100) < cycle["minimum_payout_paise"]:
++        raise HTTPException(409, "Eligible earnings are below the configured payout threshold")
+     if not rows or amount <= 0: raise HTTPException(status_code=409, detail="No finalized, unallocated payable restaurant orders are available.")
+     now=now_utc(); doc={"beneficiary_type":"restaurant","beneficiary_id":restaurant_id,"beneficiary_user_id":user["id"],"amount":float(amount),"currency":"INR","order_ids":[r["order_id"] for r in rows],"status":"pending_review","idempotency_key":body.idempotency_key,"created_at":now,"updated_at":now}
+     order_keys=[f"restaurant:{r['order_id']}" for r in rows];doc["order_keys"]=order_keys
++    doc.update(cycle, order_payables={row["order_id"]: row["shopkeeper_payable"] for row in rows})
+     try:
+         async def apply(session):
+             prior_doc=await db.settlement_requests.find_one({"idempotency_key":body.idempotency_key,"beneficiary_user_id":user["id"],"beneficiary_type":"restaurant","beneficiary_id":restaurant_id},session=session)
+@@ -6237,6 +6475,19 @@
+     if body.decision == "reverse": patch["reversal_reference"] = body.payout_reference
+     try:
+         async def apply(session):
++            if body.decision == "paid":
++                normalized_ref = patch["payout_reference"].casefold()
++                existing = await db.settlement_requests.find_one({
++                    "_id": {"$ne": oid}, "payout_reference": {"$regex": f"^{re.escape(patch['payout_reference'])}$", "$options": "i"},
++                }, {"_id": 1}, session=session)
++                if existing:
++                    raise HTTPException(409, "Payout reference already used")
++                key = hashlib.sha256(normalized_ref.encode()).hexdigest()
++                try:
++                    await db.financial_audit.insert_one({"_id": f"payout-reference:{key}", "action": "payout_reference_claimed",
++                        "settlement_id": settlement_id, "actor_id": user["id"], "created_at": now}, session=session)
++                except DuplicateKeyError as exc:
++                    raise HTTPException(409, "Payout reference already used") from exc
+             updated = await db.settlement_requests.update_one({"_id": oid, "status": row.get("status")}, {"$set": patch}, session=session)
+             if updated.modified_count != 1:
+                 raise HTTPException(status_code=409, detail="Settlement state changed concurrently; refresh and retry")
+@@ -7781,12 +8032,16 @@
+     category_ids: list[str] = Field(default_factory=list, max_length=100)
+     stacking: bool = False
+     earning_rate_basis_points: Optional[int] = Field(default=None, ge=0, le=10000, strict=True)
++    discount_model: Optional[Literal["fixed", "percentage"]] = None
++    fixed_discount_paise: Optional[int] = Field(default=None, gt=0, le=100_000_000_000, strict=True)
++    discount_basis_points: Optional[int] = Field(default=None, gt=0, le=10000, strict=True)
++    funding_allocation_basis_points: dict[Literal["seller", "come_in", "advertiser"], int] = Field(default_factory=dict)
+     expiry_rule_reference: Optional[str] = Field(default=None, max_length=200)
+
+
+ @api.get("/admin/financial/promotion-drafts")
+ async def admin_promotion_policy_drafts(_: dict = Depends(require_role("admin"))):
+-    return [doc_out(row) async for row in db.financial_policy_drafts.find().sort("created_at", -1).limit(100)]
++    return [doc_out(row) async for row in db.financial_policy_drafts.find({"status": "draft"}).sort("created_at", -1).limit(100)]
+
+
+ @api.post("/admin/financial/promotion-drafts")
+@@ -7797,7 +8052,21 @@
+         raise HTTPException(422, "Campaign expiry must follow its start.")
+     if not body.max_benefit_paise <= body.customer_budget_paise <= body.budget_paise or body.per_customer_limit > body.max_redemptions:
+         raise HTTPException(422, "Campaign benefit and redemption caps must fit within their budgets.")
++    if body.discount_model == "fixed" and (not body.fixed_discount_paise or body.discount_basis_points is not None
++                                         or body.fixed_discount_paise > body.max_benefit_paise):
++        raise HTTPException(422, "Fixed discount must fit within the configured benefit cap")
++    if body.discount_model == "percentage" and (body.discount_basis_points is None or body.fixed_discount_paise is not None):
++        raise HTTPException(422, "Supply one percentage in basis points and no fixed amount")
++    if not body.discount_model and (body.fixed_discount_paise is not None or body.discount_basis_points is not None):
++        raise HTTPException(422, "A discount model is required for the supplied amount")
++    if body.funding_allocation_basis_points and (any(value <= 0 for value in body.funding_allocation_basis_points.values())
++                                                or sum(body.funding_allocation_basis_points.values()) != 10000):
++        raise HTTPException(422, "Positive funding shares must sum to 10,000 basis points")
+     payload = body.model_dump()
++    for key in ("discount_model", "fixed_discount_paise", "discount_basis_points", "funding_allocation_basis_points"):
++        if not payload[key]:
++            payload.pop(key)
++
+     for field in ("shop_ids", "restaurant_ids", "product_ids", "category_ids"):
+         if any(not value.strip() or len(value) > 100 for value in payload[field]):
+             raise HTTPException(422, "Invalid campaign eligibility reference.")
+diff --git a/backend/tests/test_task9_business_policy.py b/backend/tests/test_task9_business_policy.py
+new file mode 100644
+--- /dev/null
++++ b/backend/tests/test_task9_business_policy.py
+@@ -0,0 +1,146 @@
++"""Offline payout and commercial campaign contracts over an isolated replica set."""
++import asyncio
++from datetime import datetime, timedelta, timezone
++import os
++from uuid import uuid4
++
++import pytest
++
++
++def test_task9_business_policy_integration(monkeypatch):
++    if os.environ.get("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
++        pytest.skip("requires disposable loopback MongoDB")
++    import httpx
++    from bson import ObjectId
++    from motor.motor_asyncio import AsyncIOMotorClient
++    import server
++
++    monkeypatch.setenv("JWT_SECRET", uuid4().hex)
++
++    async def run():
++        mongo = AsyncIOMotorClient("mongodb://127.0.0.1:27018/?replicaSet=rs0", serverSelectionTimeoutMS=3000)
++        db = mongo["comein_disposable_t9biz_" + uuid4().hex]
++        monkeypatch.setattr(server, "db", db)
++        monkeypatch.setattr(server, "client", mongo)
++        try:
++            auth = {}
++            ids = {}
++            for actor, role in (("admin", "admin"), ("seller", "shopkeeper"), ("other", "shopkeeper")):
++                oid = ObjectId()
++                ids[actor] = str(oid)
++                email = f"{actor}@fixture.example"
++                await db.users.insert_one({"_id": oid, "role": role, "email": email})
++                auth[actor] = {"Authorization": "Bearer " + server.create_access_token(str(oid), role, email)}
++            now = server.now_utc()
++            shop = (await db.shops.insert_one({"owner_id": ids["seller"]})).inserted_id
++            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=server.app), base_url="http://local") as http:
++                async def request(method, path, body=None, actor="admin"):
++                    return await http.request(method, "/api" + path, headers=auth[actor], json=body)
++
++                path = "/admin/earnings/payout-schedule"
++                schedule = {"cycle_start": (now - timedelta(days=21)).isoformat(), "processing_weekday": now.weekday(),
++                            "reconciliation_days": 1, "eligible_statuses": ["delivered"], "reason": "Fixture weekly schedule",
++                            "expected_version": 0}
++                assert (await request("PUT", path, schedule, "seller")).status_code == 403
++                first = await request("PUT", path, schedule)
++                assert first.status_code == 200 and first.json()["version"] == 1
++                assert (await request("PUT", path, schedule)).status_code == 409
++                assert (await request("GET", path)).json()["version"] == 1
++                assert await db.financial_audit.count_documents({"action": "seller_payout_schedule_updated"}) == 1
++                draft = {"name": "Fixture funded coupon", "kind": "shop", "starts_at": now.isoformat(),
++                         "expires_at": (now + timedelta(days=1)).isoformat(), "budget_paise": 10000,
++                         "max_benefit_paise": 1000, "min_order_paise": 1000, "customer_budget_paise": 1500,
++                         "max_redemptions": 10, "per_customer_limit": 1, "funding_reference": "fixture",
++                         "eligibility": "fixture", "terms": "fixture", "cancellation_terms": "fixture",
++                         "refund_terms": "fixture", "discount_model": "percentage", "discount_basis_points": 1000,
++                         "funding_allocation_basis_points": {"seller": 5000, "advertiser": 5000}}
++                drafts = "/admin/financial/promotion-drafts"
++                assert (await request("POST", drafts, {**draft, "funding_allocation_basis_points": {"seller": 9000}})).status_code == 422
++                assert (await request("POST", drafts, {**draft, "fixed_discount_paise": 50})).status_code == 422
++                saved_draft = await request("POST", drafts, draft)
++                assert saved_draft.status_code == 200 and not saved_draft.json()["redemption_enabled"]
++                stored_drafts = (await request("GET", drafts)).json()
++                assert len(stored_drafts) == 1 and stored_drafts[0]["funding_allocation_basis_points"] == draft["funding_allocation_basis_points"]
++
++                nonzero = {"commission_rate_percent": 1, "platform_service_fee_inr": 0, "delivery_fee_beneficiary": "shopkeeper"}
++                assert (await request("PATCH", f"/admin/financial-policy/shop/{shop}", nonzero)).status_code == 422
++
++                valid, early, commissioned = (str(ObjectId()) for _ in range(3))
++                stored_schedule = await db.financial_policy_drafts.find_one({"_id": "seller-payout-schedule"})
++                cutoff = server._completed_payout_cutoff(stored_schedule, now)
++                assert cutoff is not None
++                await db.financial_ledger.insert_many([
++                    {"order_id": order_id, "beneficiary_type": "shop", "beneficiary_id": str(shop),
++                     "event_type": "order_finalized", "commission_amount": commission, "recorded_at": when}
++                    for order_id, commission, when in ((valid, 0, cutoff - timedelta(seconds=1)),
++                                                        (early, 0, cutoff), (commissioned, 1, cutoff - timedelta(days=1)))
++                ])
++                rows, cycle = await server._scheduled_payout_rows(
++                    [{"order_id": key, "status": "delivered", "commission": 1 if key == commissioned else 0} for key in (valid, early, commissioned)], "shop", str(shop),
++                )
++                assert [row["order_id"] for row in rows] == [valid] and cycle["schedule_version"] == 1
++
++                settlements = []
++                for _ in range(2):
++                    settlement = await db.settlement_requests.insert_one({
++                        "beneficiary_type": "shop", "beneficiary_id": str(shop), "beneficiary_user_id": ids["seller"],
++                        "amount": 123, "currency": "INR", "status": "approved",
++                        "order_ids": [valid], "order_payables": {valid: 123},
++                    })
++                    settlements.append(settlement.inserted_id)
++                statement = f"/earnings/settlements/{settlements[0]}/statement"
++                assert (await request("GET", statement, actor="other")).status_code == 404
++                response = await request("GET", statement, actor="seller")
++                assert response.status_code == 200 and "123" in response.text and valid in response.text
++                paid = {"decision": "paid", "payout_reference": "fixture-reference", "manual_payment_confirmed": True}
++                reviews = await asyncio.gather(*(request("PATCH", f"/admin/earnings/settlements/{oid}", paid) for oid in settlements))
++                assert sorted(row.status_code for row in reviews) == [200, 409]
++                assert await db.settlement_requests.count_documents({"status": "paid"}) == 1
++
++                ad_id = (await db.advertisements.insert_one({
++                    "owner_id": ids["seller"], "shop_id": str(shop), "status": "pending_owner_approval",
++                    "starts_at": now - timedelta(days=1), "ends_at": now + timedelta(days=1),
++                    "placement": "home_banner", "poster_sha256": "fixture-hash", "poster_url": "/fixture.png",
++                })).inserted_id
++                terms = {"model": "fixed_duration", "rate_paise": 1000, "daily_budget_paise": 1000, "total_budget_paise": 2000,
++                         "funding_reference": "fixture funding", "objective": "Fixture awareness", "target_area": "Fixture",
++                         "reason": "Fixture accepted terms"}
++                config = f"/admin/advertisements/{ad_id}/commercial-terms"
++                assert (await request("PUT", config, dict(terms, rate_paise=1001))).status_code == 422
++                assert (await request("PUT", config, terms)).status_code == 200
++                accept = f"/advertisements/{ad_id}/accept-commercial-terms"
++                assert (await request("POST", accept, {"version": 1}, "other")).status_code == 403
++                assert (await request("POST", accept, {"version": 1}, "seller")).status_code == 200
++                assert (await request("PUT", config, terms)).status_code == 409
++                budget = f"/admin/advertisements/{ad_id}/fixed-budget"
++                reserve = {"action": "reserve", "reason": "Fixture reserve"}
++                assert (await request("POST", budget, reserve)).status_code == 409
++                await db.advertisements.update_one({"_id": ad_id}, {"$set": {"status": "approved",
++                    "owner_approval": {"poster_sha256": "fixture-hash"}}})
++                retries = await asyncio.gather(*(request("POST", budget, reserve) for _ in range(2)))
++                assert all(row.status_code == 200 and row.json()["remaining_paise"] == 1000 for row in retries)
++                assert await db.advertisement_audit.count_documents({"event": "commercial_budget_reserved"}) == 1
++                spend = {"action": "record_verified_spend", "reason": "Fixture booking"}
++                assert (await request("POST", budget, spend)).status_code == 422
++                spend["evidence_reference"] = "fixture-invoice"
++                assert (await request("POST", budget, spend)).json()["status"] == "spent"
++                assert (await request("POST", budget, spend)).json()["status"] == "spent"
++                assert await db.advertisement_audit.count_documents({"event": "commercial_budget_spent"}) == 1
++                assert (await request("POST", budget, {"action": "release", "reason": "Fixture release"})).status_code == 409
++                public = (await request("GET", "/advertisements/active")).json()
++                assert len(public) == 1 and "commercial_terms" not in public[0] and "commercial_budget" not in public[0]
++        finally:
++            await mongo.drop_database(db.name)
++            mongo.close()
++
++    asyncio.run(run())
++
++
++def test_short_cycles_only_open_on_the_configured_processing_day():
++    from server import _completed_payout_cutoff
++
++    monday = datetime(2026, 11, 2, 10, tzinfo=timezone.utc)
++    schedule = {"cycle_start": monday, "cycle_days": 1, "processing_weekday": 0, "reconciliation_days": 1}
++    assert _completed_payout_cutoff(schedule, monday + timedelta(days=6)) is None
++    assert _completed_payout_cutoff(schedule, monday + timedelta(days=7)) == monday + timedelta(days=6)
++    assert _completed_payout_cutoff(schedule, monday + timedelta(days=10)) == monday + timedelta(days=6)
+diff --git a/frontend/app/admin-earnings.tsx b/frontend/app/admin-earnings.tsx
+--- a/frontend/app/admin-earnings.tsx
++++ b/frontend/app/admin-earnings.tsx
+@@ -15,6 +15,10 @@
+   const [loading, setLoading] = useState(true); const [notice, setNotice] = useState(""); const [startDate, setStartDate] = useState(""); const [endDate, setEndDate] = useState(""); const [transactionOrderId, setTransactionOrderId] = useState(""); const [transactionShopId, setTransactionShopId] = useState(""); const [transactionStatus, setTransactionStatus] = useState(""); const [transactionType, setTransactionType] = useState(""); const [settlementReference, setSettlementReference] = useState("");
+   const [holder, setHolder] = useState(""); const [bankName, setBankName] = useState(""); const [account, setAccount] = useState(""); const [ifsc, setIfsc] = useState(""); const [bankSummary, setBankSummary] = useState<any>(null);
+   const [payoutRef, setPayoutRef] = useState("");
++  const [schedule, setSchedule] = useState("");
++  const [adId, setAdId] = useState("");
++  const [commercial, setCommercial] = useState("");
++  const [campaignReference, setCampaignReference] = useState("");
+   const [policyEntities, setPolicyEntities] = useState<any[]>([]); const [policyKind, setPolicyKind] = useState<"shop"|"restaurant">("shop"); const [policyId, setPolicyId] = useState("");
+   const [commissionRate, setCommissionRate] = useState(""); const [serviceFee, setServiceFee] = useState("0"); const [deliveryBeneficiary, setDeliveryBeneficiary] = useState("not_applicable");
+   const styles = StyleSheet.create({ root:{flex:1,backgroundColor:colors.background}, header:{paddingHorizontal:spacing.lg,paddingBottom:spacing.md,backgroundColor:colors.surface,flexDirection:"row",alignItems:"center",gap:spacing.sm,borderBottomWidth:StyleSheet.hairlineWidth,borderBottomColor:colors.border}, title:{fontSize:20,fontWeight:"800",color:colors.onSurface}, sub:{fontSize:12,color:colors.muted}, section:{backgroundColor:colors.surface,borderColor:colors.border,borderWidth:1,borderRadius:radius.md,padding:spacing.md,gap:spacing.sm}, sectionTitle:{fontSize:15,fontWeight:"800",color:colors.onSurface}, text:{fontSize:12,color:colors.onSurface}, muted:{fontSize:11,color:colors.muted}, input:{minHeight:40,borderWidth:1,borderColor:colors.border,borderRadius:radius.sm,paddingHorizontal:spacing.sm,color:colors.onSurface,backgroundColor:colors.surfaceSecondary}, btn:{paddingHorizontal:spacing.md,paddingVertical:10,borderRadius:radius.sm,backgroundColor:colors.brandPrimary,alignItems:"center"}, btnText:{color:colors.onBrandPrimary,fontWeight:"800",fontSize:12}, row:{paddingVertical:spacing.sm,borderTopWidth:StyleSheet.hairlineWidth,borderTopColor:colors.border,gap:4}, metric:{fontSize:18,fontWeight:"800",color:colors.onSurface}, wrap:{flexDirection:"row",flexWrap:"wrap",gap:spacing.sm}, chip:{flexGrow:1,minWidth:140,padding:spacing.sm,borderWidth:1,borderColor:colors.border,borderRadius:radius.sm,gap:3} });
+@@ -42,10 +46,42 @@
+     <View style={styles.section}><Text style={styles.sectionTitle}>Date range</Text><View style={styles.wrap}><TextInput value={startDate} onChangeText={setStartDate} placeholder="Start YYYY-MM-DD" placeholderTextColor={colors.muted} style={[styles.input,{flex:1,minWidth:135}]}/><TextInput value={endDate} onChangeText={setEndDate} placeholder="End YYYY-MM-DD" placeholderTextColor={colors.muted} style={[styles.input,{flex:1,minWidth:135}]}/></View><Pressable style={styles.btn} onPress={()=>{setLoading(true);load().catch((e:any)=>setNotice(e?.message||"Failed")).finally(()=>setLoading(false));}}><Text style={styles.btnText}>Apply dates</Text></Pressable><Text style={styles.muted}>Dates are inclusive in the selected local timezone; backend uses an exclusive next-day boundary.</Text></View>
+     <View style={styles.section}><Text style={styles.sectionTitle}>Platform earnings — not gross shop sales</Text><View style={styles.wrap}>{[["Today (recorded ledger)",today.net_platform_earnings],["This month (recorded ledger)",month.net_platform_earnings],["Selected range (recorded ledger)",ledgerSelected.net_platform_earnings],["Net commission ledger",ledgerSelected.commission_net],["Net platform service fees",ledgerSelected.platform_service_fees_net],["Net retained delivery fees",ledgerSelected.platform_retained_delivery_fees_net],["Refund reversals",ledgerSelected.refund_reversals],["Gross order sales (not revenue)",selected.gross_order_sales],["Gross merchandise",selected.gross_merchandise_value],["Expenses",data?.expenses?.available?"Supported":"Unavailable"],["Other platform income",data?.other_platform_income?.available?"Supported":"Unavailable"],["Adjustments", "No general adjustment workflow"]].map(([label,value]:any)=><View key={label} style={styles.chip}><Text style={styles.muted}>{label}</Text><Text style={styles.metric}>{typeof value === "string" ? value : inr(value)}</Text></View>)}</View><Text style={styles.muted}>Ledger entries in selected range: {ledgerSelected.entry_count ?? 0} · {ledgerSelected.coverage_note || "No ledger coverage information."}</Text><Text style={styles.muted}>Orders: {selected.orders_total ?? 0}{selected.data_limit_reached ? " · WARNING: report hit the 10,000-order per-mode limit" : ""} · Delivered: {selected.delivered_orders ?? 0} · Cancelled: {selected.cancelled_orders ?? 0} · Refunded: {selected.refunded_orders ?? 0}</Text><Text style={styles.muted}>Missing financial policies: {selected.financial_policy_missing_orders ?? 0}. If any required policy is missing, net platform earnings are unavailable rather than estimated.</Text><Text style={styles.muted}>Customers: {data?.registrations?.customers ?? 0} · Shopkeepers: {data?.registrations?.shopkeepers ?? 0} · Shops approved/pending: {data?.shops?.approved ?? 0}/{data?.shops?.pending ?? 0}</Text><Text style={styles.muted}>Active users: unavailable — reliable activity tracking is not configured.</Text></View>
+     <View style={styles.section}><Text style={styles.sectionTitle}>Referral & Earn liabilities (separate from commission)</Text><Text style={styles.text}>Pending reward liability: {inr(data?.referral_rewards?.pending_liability_inr)}</Text><Text style={styles.muted}>Awaiting verification: {data?.referral_rewards?.pending_verification ?? 0} · Approved/unpaid: {data?.referral_rewards?.approved_unpaid ?? 0} · Paid: {data?.referral_rewards?.paid ?? 0} · Rejected: {data?.referral_rewards?.rejected ?? 0}</Text></View>
+-    <View style={styles.section}><Text style={styles.sectionTitle}>Commission & fee policy (admin only)</Text><Text style={styles.muted}>Select the actual shop/restaurant agreement. The app does not assume a default commission. A policy applies only to orders created after its recorded timestamp. Older orders remain unavailable instead of being recalculated retroactively.</Text>{policyEntities.map((entity:any)=><Pressable key={`${entity.policy_kind}-${entity.id}`} onPress={()=>choosePolicy(entity)} style={[styles.row,{backgroundColor:policyId===entity.id&&policyKind===entity.policy_kind?colors.surfaceTertiary:"transparent",paddingHorizontal:spacing.xs}]}><Text style={styles.text}>{policyKind===entity.policy_kind&&policyId===entity.id?"● ":"○ "}{entity.name} · {entity.policy_kind} · commission {entity.commission_rate_percent==null?"not set":`${entity.commission_rate_percent}%`}</Text><Text style={styles.muted}>{entity.id}</Text></Pressable>)}<TextInput value={commissionRate} onChangeText={setCommissionRate} placeholder="Commission % (explicitly agreed)" placeholderTextColor={colors.muted} keyboardType="decimal-pad" style={styles.input}/><TextInput value={serviceFee} onChangeText={setServiceFee} placeholder="Platform service fee ₹ per order" placeholderTextColor={colors.muted} keyboardType="decimal-pad" style={styles.input}/><Text style={styles.muted}>Delivery fee beneficiary: {deliveryBeneficiary}</Text><View style={styles.wrap}>{["platform","shopkeeper","third_party","not_applicable"].map(v=><Pressable key={v} onPress={()=>setDeliveryBeneficiary(v)} style={[styles.btn,{opacity:deliveryBeneficiary===v?1:0.65}]}><Text style={styles.btnText}>{v.replaceAll("_"," ")}</Text></Pressable>)}</View><Pressable style={styles.btn} onPress={savePolicy}><Text style={styles.btnText}>Save commission & fee policy</Text></Pressable></View>
++    <View style={styles.section}><Text style={styles.sectionTitle}>Zero commission & fee policy (Admin)</Text><Text style={styles.muted}>Select the actual shop/restaurant agreement. Merchant sales commission must be zero. A policy applies only to orders created after its recorded timestamp. Older orders remain unavailable instead of being recalculated retroactively.</Text>{policyEntities.map((entity:any)=><Pressable key={`${entity.policy_kind}-${entity.id}`} onPress={()=>choosePolicy(entity)} style={[styles.row,{backgroundColor:policyId===entity.id&&policyKind===entity.policy_kind?colors.surfaceTertiary:"transparent",paddingHorizontal:spacing.xs}]}><Text style={styles.text}>{policyKind===entity.policy_kind&&policyId===entity.id?"● ":"○ "}{entity.name} · {entity.policy_kind} · commission {entity.commission_rate_percent==null?"not set":`${entity.commission_rate_percent}%`}</Text><Text style={styles.muted}>{entity.id}</Text></Pressable>)}<TextInput value={commissionRate} onChangeText={setCommissionRate} placeholder="Commission % (0 required)" placeholderTextColor={colors.muted} keyboardType="decimal-pad" style={styles.input}/><TextInput value={serviceFee} onChangeText={setServiceFee} placeholder="Platform service fee ₹ per order" placeholderTextColor={colors.muted} keyboardType="decimal-pad" style={styles.input}/><Text style={styles.muted}>Delivery fee beneficiary: {deliveryBeneficiary}</Text><View style={styles.wrap}>{["platform","shopkeeper","third_party","not_applicable"].map(v=><Pressable key={v} onPress={()=>setDeliveryBeneficiary(v)} style={[styles.btn,{opacity:deliveryBeneficiary===v?1:0.65}]}><Text style={styles.btnText}>{v.replaceAll("_"," ")}</Text></Pressable>)}</View><Pressable style={styles.btn} onPress={savePolicy}><Text style={styles.btnText}>Save commission & fee policy</Text></Pressable></View>
+     <View style={styles.section}><Text style={styles.sectionTitle}>Platform bank destination</Text><Text style={styles.text}>{bankSummary ? `${bankSummary.account_holder_name} · ${bankSummary.bank_name} · ${bankSummary.account_number_masked} · ${bankSummary.ifsc_masked}` : "No platform bank account registered."}</Text><Text style={styles.muted}>Verification status: {bankSummary?.verification_status || "not registered"}. The app has no bank verification provider; format checks are not ownership verification.</Text><TextInput value={holder} onChangeText={setHolder} placeholder="Account holder name" placeholderTextColor={colors.muted} style={styles.input}/><TextInput value={bankName} onChangeText={setBankName} placeholder="Bank name" placeholderTextColor={colors.muted} style={styles.input}/><TextInput value={account} onChangeText={setAccount} placeholder="Account number (not stored in plaintext)" placeholderTextColor={colors.muted} keyboardType="number-pad" secureTextEntry style={styles.input}/><TextInput value={ifsc} onChangeText={setIfsc} placeholder="IFSC" placeholderTextColor={colors.muted} autoCapitalize="characters" style={styles.input}/><Pressable style={styles.btn} onPress={saveBank}><Text style={styles.btnText}>Save bank details securely</Text></Pressable><Text style={styles.muted}>Saving is blocked until BANK_DATA_ENCRYPTION_KEY is configured on the backend.</Text></View>
+     <View style={styles.section}><Text style={styles.sectionTitle}>Financial transaction history</Text><TextInput value={transactionOrderId} onChangeText={setTransactionOrderId} placeholder="Filter by order ID/reference" placeholderTextColor={colors.muted} style={styles.input}/><TextInput value={transactionShopId} onChangeText={setTransactionShopId} placeholder="Shop or restaurant ID" placeholderTextColor={colors.muted} style={styles.input}/><TextInput value={transactionStatus} onChangeText={setTransactionStatus} placeholder="Exact order status (optional)" placeholderTextColor={colors.muted} style={styles.input}/><TextInput value={transactionType} onChangeText={setTransactionType} placeholder="Type: grocery, restaurant, pending_calculation..." placeholderTextColor={colors.muted} style={styles.input}/><TextInput value={settlementReference} onChangeText={setSettlementReference} placeholder="Settlement ID or payout reference" placeholderTextColor={colors.muted} style={styles.input}/><Pressable style={styles.btn} onPress={()=>{setLoading(true);load().catch((e:any)=>setNotice(e?.message||"Failed")).finally(()=>setLoading(false));}}><Text style={styles.btnText}>Apply transaction filters</Text></Pressable>{transactions.length===0?<Text style={styles.muted}>No order records in this date range.</Text>:transactions.map((t:any)=><View key={t.transaction_id} style={styles.row}><Text style={styles.text}>{t.order_ref} · {t.order_kind} · {t.status}</Text><Text style={styles.muted}>Shop/restaurant: {t.shop_name} · gross order: {inr(t.gross_order_value)} · commission: {inr(t.commission)} · platform earnings: {inr(t.platform_earnings)}</Text><Text style={styles.muted}>State: {t.financial_state} · ID: {t.transaction_id}</Text></View>)}</View>
+     <View style={styles.section}><Text style={styles.sectionTitle}>Persisted financial ledger</Text>{ledgerEntries.length===0?<Text style={styles.muted}>No finalized ledger snapshots or confirmed refund reversals in this range. Older orders are not automatically backfilled.</Text>:ledgerEntries.map((entry:any)=><View key={entry.idempotency_key} style={styles.row}><Text style={styles.text}>{entry.event_type} · {entry.order_ref} · {entry.status}</Text><Text style={styles.muted}>Platform earnings adjustment: {inr(entry.platform_earnings)} · commission: {inr(entry.commission_amount)} · shop payable adjustment: {inr(entry.shopkeeper_payable)}</Text><Text style={styles.muted}>Ledger ID: {entry.id} · idempotency: {entry.idempotency_key}</Text></View>)}<Text style={styles.muted}>Ledger snapshots are recorded when supported order states and a timestamped admin policy are available. Refund reversals are recorded only when a supported provider confirms a refund.</Text></View>
++    <View style={styles.section}><Text style={styles.sectionTitle}>Seller payout schedule</Text>
++      <Text style={styles.muted}>Configure cycle start with timezone, cycle days, processing weekday (Monday = 0, UTC), reconciliation days, thresholds and eligible statuses.</Text>
++      <Pressable style={styles.btn} onPress={async () => {
++        try { const current = await api.get<any>("/admin/earnings/payout-schedule");
++          setSchedule(JSON.stringify({ cycle_start: "", cycle_days: 7, processing_weekday: 0, reconciliation_days: 0, minimum_payout_paise: null,
++            eligible_statuses: ["delivered", "picked_up"], reason: "", ...current, expected_version: current.version || 0 }, null, 2));
++        } catch (error: any) { setNotice(error?.message || "Could not load schedule."); }
++      }}><Text style={styles.btnText}>Load payout schedule</Text></Pressable>
++      <TextInput accessibilityLabel="Payout schedule JSON" multiline value={schedule} onChangeText={setSchedule} style={styles.input} />
++      <Pressable style={styles.btn} onPress={async () => {
++        try { const saved = await api.put<any>("/admin/earnings/payout-schedule", JSON.parse(schedule));
++          setSchedule(JSON.stringify({ ...saved, expected_version: saved.version }, null, 2));
++          setNotice(`Payout schedule version ${saved.version} saved.`); }
++        catch (error: any) { setNotice(error?.message || "Could not save schedule."); }
++      }}><Text style={styles.btnText}>Save payout schedule</Text></Pressable>
++    </View>
++    <View style={styles.section}><Text style={styles.sectionTitle}>Advertisement finance</Text>
++      <TextInput placeholder="Campaign ID" value={adId} onChangeText={setAdId} style={styles.input} />
++      <Text style={styles.muted}>Enter accepted campaign economics in paise with a funding reference, target area, objective and reason. Fixed-duration accounting uses one reservation. Impression and click pricing can be configured for review.</Text>
++      <TextInput accessibilityLabel="Campaign commercial terms JSON" multiline value={commercial} onChangeText={setCommercial} style={styles.input} />
++      <Pressable style={styles.btn} onPress={async () => {
++        try { await api.put(`/admin/advertisements/${encodeURIComponent(adId)}/commercial-terms`, JSON.parse(commercial)); setNotice("Campaign terms saved for advertiser acceptance."); }
++        catch (error: any) { setNotice(error?.message || "Could not save campaign terms."); }
++      }}><Text style={styles.btnText}>Save commercial terms</Text></Pressable>
++      <TextInput placeholder="Independently verified evidence reference" value={campaignReference} onChangeText={setCampaignReference} style={styles.input} />
++      {(["reserve", "record_verified_spend", "release"] as const).map((action) => <Pressable key={action} style={styles.btn} onPress={async () => {
++        try { const budget = await api.post<any>(`/admin/advertisements/${encodeURIComponent(adId)}/fixed-budget`,
++          { action, evidence_reference: campaignReference || undefined, reason: `Admin campaign budget action: ${action}` });
++          setNotice(`Budget ${budget.status}. Remaining ₹${(budget.remaining_paise / 100).toFixed(2)}.`); }
++        catch (error: any) { setNotice(error?.message || "Campaign budget action failed."); }
++      }}><Text style={styles.btnText}>{action.replaceAll("_", " ")}</Text></Pressable>)}
++    </View>
+     <View style={styles.section}><Text style={styles.sectionTitle}>Settlement review</Text>{settlements.length===0?<Text style={styles.muted}>No settlement requests.</Text>:settlements.map((s:any)=><View key={s.id} style={styles.row}><Text style={styles.text}>{inr(s.amount)} · {s.status} · {s.beneficiary_type}</Text><Text style={styles.muted}>Beneficiary: {s.beneficiary_user_id} · settlement {s.id} · orders: {(s.order_ids||[]).length}</Text>{s.status==="pending_review"?<View style={styles.wrap}><Pressable style={styles.btn} onPress={()=>decision(s.id,"approve")}><Text style={styles.btnText}>Approve</Text></Pressable><Pressable style={[styles.btn,{backgroundColor:colors.brandPrimary}]} onPress={()=>decision(s.id,"reject")}><Text style={styles.btnText}>Reject</Text></Pressable></View>:null}{["approved","processing"].includes(s.status)?<><TextInput value={payoutRef} onChangeText={setPayoutRef} placeholder="Actual manual transfer reference" placeholderTextColor={colors.muted} style={styles.input}/><View style={styles.wrap}>{s.status==="approved"?<Pressable style={styles.btn} onPress={()=>decision(s.id,"processing")}><Text style={styles.btnText}>Mark processing</Text></Pressable>:null}<Pressable style={styles.btn} onPress={()=>Alert.alert("Confirm actual transfer", "Only continue after a real bank transfer has been completed and its reference checked.",[{text:"Cancel",style:"cancel"},{text:"Confirm transfer",onPress:()=>decision(s.id,"paid")}])}><Text style={styles.btnText}>Mark paid (manual)</Text></Pressable></View></>:null}</View>)}</View>
+   </ScrollView></View>;
+ }
+diff --git a/frontend/app/seller-earnings.tsx b/frontend/app/seller-earnings.tsx
+--- a/frontend/app/seller-earnings.tsx
++++ b/frontend/app/seller-earnings.tsx
+@@ -31,6 +31,15 @@
+  <View style={styles.section}><Text style={styles.sectionTitle}>Product sales & stock</Text>{(data?.products_sold||[]).length===0?<Text style={styles.muted}>No completed product sales in this range.</Text>:(data.products_sold||[]).map((p:any,i:number)=><View key={`${p.product}-${p.variant_id}-${i}`} style={styles.row}><Text style={styles.text}>{p.product}{p.variant_id?` · ${p.variant_id}`:""} — Qty {p.quantity_sold}</Text><Text style={styles.muted}>Sales: {inr(p.sales_amount)}</Text></View>)}{(data?.stock||[]).length>0?<><Text style={styles.sectionTitle}>Current inventory</Text>{data.stock.map((p:any)=><View key={p.product_id} style={styles.row}><Text style={styles.text}>{p.name} · stock {p.stock} {p.out_of_stock?"· OUT OF STOCK":p.low_stock?"· LOW STOCK":""}</Text>{(p.variants||[]).map((v:any)=><Text key={v.id} style={styles.muted}>Variant {v.unit||v.id}: {v.stock}</Text>)}</View>)}</>:null}</View>
+  <View style={styles.section}><Text style={styles.sectionTitle}>Orders & financial details</Text>{(data?.orders||[]).length===0?<Text style={styles.muted}>No orders for this shop in this date range.</Text>:(data.orders||[]).map((o:any)=><View key={`${o.order_kind}-${o.order_id}`} style={styles.row}><Text style={styles.text}>{o.order_ref} · {o.status} · {o.financial_state}</Text><Text style={styles.muted}>Gross: {inr(o.gross_order_value)} · commission: {inr(o.commission)} · delivery fee: {inr(o.delivery_fee)} · net payable: {inr(o.shopkeeper_payable)}</Text><Text style={styles.muted}>Customer: {o.customer_name||"Not recorded"}{o.customer_phone?` · ${o.customer_phone}`:""}</Text><Text style={styles.muted}>Payment: {o.payment_status} · Settlement is separate; no bank payout is inferred from delivery.</Text>{["delivered","picked_up"].includes(o.status)&&["cod_pending","pay_at_pickup_pending","pay_at_shop_pending"].includes(o.payment_status)?<Pressable style={[styles.btn,{marginTop:4}]} onPress={()=>{api.post(`/earnings/orders/${o.order_kind}/${o.order_id}/cash-collected`,{confirmed:true,note:"Shopkeeper confirmed cash was physically received."}).then(()=>refresh()).catch((e:any)=>setNotice(e?.message||"Cash collection could not be confirmed."));}}><Text style={styles.btnText}>Confirm cash physically received</Text></Pressable>:null}</View>)}</View>
+  <View style={styles.section}><Text style={styles.sectionTitle}>Your payout bank account</Text><Text style={styles.text}>{bankSummary?`${bankSummary.account_holder_name} · ${bankSummary.bank_name} · ${bankSummary.account_number_masked} · ${bankSummary.ifsc_masked}`:"No bank account registered."}</Text><Text style={styles.muted}>Status: {bankSummary?.verification_status||"not registered"}. Account format is checked only; account ownership is not verified by a provider.</Text><TextInput value={holder} onChangeText={setHolder} placeholder="Account holder name" placeholderTextColor={colors.muted} style={styles.input}/><TextInput value={bankName} onChangeText={setBankName} placeholder="Bank name" placeholderTextColor={colors.muted} style={styles.input}/><TextInput value={account} onChangeText={setAccount} placeholder="Account number" placeholderTextColor={colors.muted} keyboardType="number-pad" secureTextEntry style={styles.input}/><TextInput value={ifsc} onChangeText={setIfsc} placeholder="IFSC" placeholderTextColor={colors.muted} autoCapitalize="characters" style={styles.input}/><Pressable style={styles.btn} onPress={saveBank}><Text style={styles.btnText}>Save payout details</Text></Pressable><Text style={styles.muted}>Requires backend BANK_DATA_ENCRYPTION_KEY. Bank verification is not integrated.</Text></View>
+- <View style={styles.section}><Text style={styles.sectionTitle}>Settlement history</Text>{(data?.settlements||[]).length===0?<Text style={styles.muted}>No settlement records.</Text>:(data.settlements||[]).map((s:any)=><View key={s.id} style={styles.row}><Text style={styles.text}>{inr(s.amount)} · {s.status}</Text><Text style={styles.muted}>Reference: {s.payout_reference||"not paid/recorded"} · {s.id}</Text></View>)}<TextInput value={settlementKey} onChangeText={setSettlementKey} placeholder="Unique request key (min 16 chars)" placeholderTextColor={colors.muted} style={styles.input}/><Pressable style={styles.btn} onPress={requestSettlement}><Text style={styles.btnText}>Request settlement</Text></Pressable><Text style={styles.muted}>Requests reserve eligible orders and require admin review. A request does not initiate a bank transfer.</Text></View>
++ <View style={styles.section}><Text style={styles.sectionTitle}>Settlement history</Text>{(data?.settlements||[]).length===0?<Text style={styles.muted}>No settlement records.</Text>:(data.settlements||[]).map((s:any)=><View key={s.id} style={styles.row}><Text style={styles.text}>{inr(s.amount)} · {s.status}</Text><Text style={styles.muted}>Reference: {s.payout_reference||"not paid/recorded"} · {s.id}</Text>{s.cycle_cutoff ? <Text style={styles.muted}>Cycle cutoff {new Date(s.cycle_cutoff).toLocaleString()} · version {s.schedule_version}</Text> : null}{typeof document !== "undefined" ? <Pressable style={styles.btn} onPress={async () => {
++  try {
++    const url = URL.createObjectURL(await api.downloadSettlementStatement(s.id));
++    const link = document.createElement("a");
++    link.href = url;
++    link.download = `settlement-${s.id}.csv`;
++    link.click();
++    setTimeout(() => URL.revokeObjectURL(url), 1000);
++  } catch (error: any) { setNotice(error?.message || "Could not download settlement statement."); }
++}}><Text style={styles.btnText}>Download settlement statement</Text></Pressable> : null}</View>)}<TextInput value={settlementKey} onChangeText={setSettlementKey} placeholder="Unique request key (min 16 chars)" placeholderTextColor={colors.muted} style={styles.input}/><Pressable style={styles.btn} onPress={requestSettlement}><Text style={styles.btnText}>Request settlement</Text></Pressable><Text style={styles.muted}>Requests reserve eligible orders and require admin review. A request does not initiate a bank transfer.</Text></View>
+  </ScrollView></View>;
+ }
+diff --git a/frontend/app/seller/advertisements.tsx b/frontend/app/seller/advertisements.tsx
+--- a/frontend/app/seller/advertisements.tsx
++++ b/frontend/app/seller/advertisements.tsx
+@@ -10,7 +10,7 @@
+ import { makeStyles, radius, spacing, useTheme } from "@/src/theme";
+
+ type Shop = { id: string; name: string };
+-type Advertisement = { id: string; title: string; status: string; ai_review?: { status?: string; reason?: string }; starts_at: string; ends_at: string; poster_url?: string };
++type Advertisement = { id: string; title: string; status: string; ai_review?: { status?: string; reason?: string }; starts_at: string; ends_at: string; poster_url?: string; commercial_terms?: { version: number; model: string; rate_paise: number; accepted_at?: string; target_area: string; daily_budget_paise: number; total_budget_paise: number }; commercial_budget?: { status: string; remaining_paise: number } };
+
+ export default function SellerAdvertisements() {
+   const router = useRouter(); const insets = useSafeAreaInsets(); const styles = useStyles(); const { colors } = useTheme(); const { user } = useAuth();
+@@ -40,7 +40,16 @@
+     <View style={styles.card}><Text style={styles.title}>Submit a banner or poster</Text><Text style={styles.muted}>Only advertisements may use image upload. A verified poster, CHAND review, and final admin approval are required before any customer can see it.</Text>
+       {!shop ? <Text style={styles.error}>Create your shop before submitting an advertisement.</Text> : <><TextInput value={title} onChangeText={setTitle} placeholder="Campaign title" placeholderTextColor={colors.muted} style={styles.input}/><TextInput value={startsAt} onChangeText={setStartsAt} placeholder="Start (ISO, e.g. 2026-12-01T00:00:00+05:30)" placeholderTextColor={colors.muted} style={styles.input}/><TextInput value={endsAt} onChangeText={setEndsAt} placeholder="End (max 90 days after start)" placeholderTextColor={colors.muted} style={styles.input}/><Pressable disabled={busy} style={[styles.primary, busy && { opacity: 0.55 }]} onPress={() => void chooseAndSubmit()}><Text style={styles.primaryText}>{busy ? "Saving…" : "Choose poster and submit"}</Text></Pressable></>}
+       {!!notice && <Text style={notice.includes("Could not") || notice.includes("Enter ") ? styles.error : styles.muted}>{notice}</Text>}</View>
+-    <Text style={styles.section}>Campaign history</Text>{rows.length ? rows.map((row) => <View key={row.id} style={styles.card}><Text style={styles.title}>{row.title}</Text><Text style={styles.muted}>Status: {row.status} · CHAND: {row.ai_review?.status || "NOT_RUN"}</Text>{row.ai_review?.reason ? <Text style={styles.muted}>{row.ai_review.reason}</Text> : null}</View>) : <Text style={styles.muted}>No advertisement campaigns yet.</Text>}
++    <Text style={styles.section}>Campaign history</Text>{rows.length ? rows.map((row) => <View key={row.id} style={styles.card}><Text style={styles.title}>{row.title}</Text><Text style={styles.muted}>Status: {row.status} · CHAND: {row.ai_review?.status || "NOT_RUN"}</Text>{row.ai_review?.reason ? <Text style={styles.muted}>{row.ai_review.reason}</Text> : null}{row.commercial_terms ? <View>
++      <Text style={styles.muted}>{row.commercial_terms.model.replaceAll("_", " ")} · ₹{(row.commercial_terms.rate_paise / 100).toFixed(2)} · {row.commercial_terms.target_area}</Text>
++      <Text style={styles.muted}>{new Date(row.starts_at).toLocaleString()} to {new Date(row.ends_at).toLocaleString()}</Text>
++      <Text style={styles.muted}>Daily cap ₹{(row.commercial_terms.daily_budget_paise / 100).toFixed(2)} · Total cap ₹{(row.commercial_terms.total_budget_paise / 100).toFixed(2)}</Text>
++      {row.commercial_budget ? <Text style={styles.muted}>Budget {row.commercial_budget.status} · ₹{(row.commercial_budget.remaining_paise / 100).toFixed(2)} remaining</Text> : null}
++      {row.commercial_terms.accepted_at ? <Text style={styles.muted}>Commercial terms accepted</Text> : <Pressable style={styles.primary} onPress={async () => {
++        try { await api.post(`/advertisements/${row.id}/accept-commercial-terms`, { version: row.commercial_terms?.version }); await load(); }
++        catch (error: any) { setNotice(error?.message || "Could not accept terms."); }
++      }}><Text style={styles.primaryText}>Accept displayed terms</Text></Pressable>}
++    </View> : null}</View>) : <Text style={styles.muted}>No advertisement campaigns yet.</Text>}
+   </ScrollView>;
+ }
+ const useStyles = makeStyles((c) => StyleSheet.create({ root:{flex:1,backgroundColor:c.background,paddingHorizontal:spacing.lg}, center:{flex:1,alignItems:"center",justifyContent:"center",backgroundColor:c.background,padding:spacing.lg,gap:spacing.md}, header:{flexDirection:"row",alignItems:"center",gap:spacing.md,marginBottom:spacing.lg}, heading:{fontSize:22,fontWeight:"800",color:c.onSurface}, card:{backgroundColor:c.surface,borderColor:c.border,borderWidth:1,borderRadius:radius.lg,padding:spacing.lg,gap:spacing.sm,marginBottom:spacing.md}, title:{fontSize:16,fontWeight:"800",color:c.onSurface}, section:{fontSize:17,fontWeight:"800",color:c.onSurface,marginVertical:spacing.sm}, muted:{color:c.muted,lineHeight:20}, error:{color:c.danger,lineHeight:20}, input:{borderWidth:1,borderColor:c.border,borderRadius:radius.md,color:c.onSurface,padding:spacing.md}, primary:{backgroundColor:c.brandPrimary,borderRadius:radius.md,padding:spacing.md,alignItems:"center"}, primaryText:{color:c.onBrandPrimary,fontWeight:"800"} }));
+diff --git a/frontend/src/lib/api.ts b/frontend/src/lib/api.ts
+--- a/frontend/src/lib/api.ts
++++ b/frontend/src/lib/api.ts
+@@ -132,6 +132,15 @@
+     if (!res.ok) throw { status: res.status, message: toMessage(payload?.detail ?? payload), detail: payload?.detail } as ApiError;
+     return payload;
+   },
++  async downloadSettlementStatement(id: string): Promise<Blob> {
++    if (!API_BASE) throw { status: 0, message: "Backend URL is not configured." } as ApiError;
++    const res = await fetch(`${API_URL}/earnings/settlements/${encodeURIComponent(id)}/statement`, { headers: await withAuthHeaders() });
++    if (!res.ok) {
++      const details = await res.json().catch(() => null);
++      throw { status: res.status, message: toMessage(details?.detail) } as ApiError;
++    }
++    return res.blob();
++  },
+   async downloadShopImportTemplate(shopId: string): Promise<Blob> {
+     if (!API_BASE) throw { status: 0, message: "Backend URL is not configured. Set EXPO_PUBLIC_BACKEND_URL in frontend/.env and restart Expo." } as ApiError;
+     const headers = await withAuthHeaders();

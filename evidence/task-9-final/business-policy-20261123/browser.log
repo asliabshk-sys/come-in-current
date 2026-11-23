@@ -1,0 +1,2 @@
+PASS Admin loads, edits and persists a versioned weekly payout schedule via the UI.
+PASS Advertiser sees price and accepts terms while the moderation and owner gate stays pending.

@@ -26,3 +26,7 @@
 - **T9-46:** Assigned review and approval safeguards passed on synthetic accounts. Historical corrected amounts must come from actual case-specific professional guidance. The software does not substitute current rates for historical tax treatment.
 
 Individual policy wording and evidence are recorded in the [final register](TASK-9-FINAL-POLICY-MASTER-REGISTER.md). Existing owner approval does not substitute for genuine evidence or an absent business rule.
+
+## Business policy addendum
+
+Seller payout scheduling and fixed-duration commercial accounting have a local implementation. Automatic transfers and COD reconciliation still need independently verified bank or provider integration and approved delivery partner allocation. CPM/CPC billing, delivery shortfall compensation, and full revenue consolidation need verified metering, accepted delivery and compensation terms, and approved recognition rules. Promotion drafts now support explicit discount and funding splits. Active coupon checkout, consumption and release still require a bound campaign and funding/settlement workflow. See the [payout and campaign policy](TASK-9-PAYOUT-AND-CAMPAIGN-POLICY.md).

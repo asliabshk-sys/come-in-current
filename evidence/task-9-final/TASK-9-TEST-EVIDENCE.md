@@ -40,3 +40,10 @@ Serve the export on the configured `http://localhost:8081` origin with SPA index
 | Policy restart and replay | Draft and pending collection review survived restart. No duplicate audit or payment on replay. | [Restart](closure-20261123/restart.log) |
 
 The sole skip was the existing external object-storage test. Fresh referral tests covered concurrent approvals at the reward threshold, transaction rollback, self-referral and duplicate attribution denial, distinct shared-household accounts, cancelled or refunded eligibility safeguards, and single-credit and notification behavior. No new coupon activation, payout, statutory issuance or genuine provider work was run. [Commands](closure-20261123/COMMANDS.md)
+
+## Payout and campaign policy increment
+
+- **65 focused passed** with no failures or skips. Coverage includes schedule versions and processing boundaries, zero commission, concurrent duplicate payout references, CSV authorization, campaign price acceptance, budget caps and replay, private funding information and coupon draft funding validation. [Focused evidence](business-policy-20261123/focused.log)
+- **699 backend passed**, zero failures, **one skip** for unavailable external object storage. [Full output](business-policy-20261123/full.log)
+- TypeScript, targeted ESLint, Expo export, two Chromium workflows and process restart/replay passed. [TypeScript](business-policy-20261123/typescript.log) · [ESLint](business-policy-20261123/lint.log) · [Expo](business-policy-20261123/expo.log) · [Chromium](business-policy-20261123/browser.log) · [Restart](business-policy-20261123/restart.log)
+- No real payout, genuine provider validation, or coupon checkout redemption was executed. [Commands](business-policy-20261123/COMMANDS.md)

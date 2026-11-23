@@ -926,3 +926,7 @@ Task 9 is **PARTIALLY VERIFIED**. All 50 policies are accounted for. The owner p
 ## Task 9 — Referral closure and final verification — 2026-11-23 IST
 
 Task 9 is **PARTIALLY VERIFIED**. All 50 policies are accounted for. Owner pre-authorization covers 31 verified policies and one implemented policy awaiting genuine external validation. Six are partial, four are unimplemented and eight are blocked. The existing referral threshold, atomic qualification, single audited credit and notification are runtime verified. Existing amounts and financial rules remain intact. [Final report](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md)
+
+## Task 9 — Payout schedule and commercial campaign policy — 2026-11-23 IST
+
+Task 9 remains **PARTIALLY VERIFIED**. Versioned payout scheduling, merchant statements, zero sales commission enforcement, fixed-duration accepted campaign budgeting and explicit coupon draft funding are verified locally. No transfers, live redemptions, new payout splits or statutory documents were created. The 50-policy classification is unchanged. [Policy and evidence](evidence/task-9-final/TASK-9-PAYOUT-AND-CAMPAIGN-POLICY.md)

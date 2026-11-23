@@ -35,3 +35,9 @@ Apply `patches/task9-referral-closure.patch` after the final authorized scope pa
 - [Remaining dependencies and safe fallbacks](TASK-9-REMAINING-EXTERNAL-DEPENDENCIES.md)
 
 The Mission baseline was GitHub work `1a87ca116836502741613ab3049f02f4bb2cb310`. The delivered increment is identified by this report's containing commit.
+
+## Payout and campaign business policy increment
+
+The owner-approved weekly payout configuration, cycle eligibility, merchant CSV, single-use manual payout reference, fixed-duration accepted campaign budget, and explicit coupon draft funding were implemented. The focused and browser paths verify this code. Sensitive terms are omitted from public advertising responses, and existing poster and owner approval gates still govern publication. Task 9 remains **PARTIALLY VERIFIED**. The 50-policy register retains 31 fully verified, one externally pending, six partial, four unimplemented and eight blocked.
+
+Changed source covers `backend/server.py`, its new business policy integration test, Admin and Seller Earnings, Seller Advertisements and the API statement client. Apply `patches/task9-payout-campaign-policy.patch` after the referral closure patch. No approved payout split, rate, reward, referral or membership amount changed. No payment or refund was executed. [Business policy and evidence boundaries](TASK-9-PAYOUT-AND-CAMPAIGN-POLICY.md)
