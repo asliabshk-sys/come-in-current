@@ -1,0 +1,31 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -8795,6 +8795,9 @@
+         reviewed_invoice = professional.get("invoice_review_snapshot")
+         if reviewed_invoice is not None and reviewed_invoice != _invoice_review_snapshot(order):
+             raise HTTPException(409, "The invoice or tax details changed after professional review.")
++        approved_invoice = admin.get("invoice_review_snapshot")
++        if approved_invoice is not None and approved_invoice != _invoice_review_snapshot(order):
++            raise HTTPException(409, "The invoice or tax details changed after Admin approval.")
+         key = f"invoice-review-draft:{ticket['order_kind']}:{ticket['order_id']}:{body.replacement_id}"
+         existing = await db.financial_audit.find_one({"_id": key}, session=session)
+         if existing:
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -200,6 +200,16 @@
+                 await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"total": 153}})
+                 assert (await request("POST", correction, correction_body, "admin")).status_code == 409
+                 await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"total": reviewed["original"]["total"]}})
++                professional_filter = {"ticket_id": str(ticket_id), "stage": "professional_tax", "decision": "approve"}
++                professional_record = await db.financial_audit.find_one(professional_filter)
++                await db.financial_audit.update_one(professional_filter, {"$unset": {"invoice_review_snapshot": ""}})
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"invoice_id": "changed-after-admin-approval"}})
++                rejected = await request("POST", correction, correction_body, "admin")
++                assert rejected.status_code == 409 and "Admin approval" in rejected.json()["detail"]
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"invoice_id": "original-invoice"}})
++                await db.financial_audit.update_one(professional_filter, {"$set": {
++                    "invoice_review_snapshot": professional_record["invoice_review_snapshot"],
++                }})
+                 drafts = await asyncio.gather(*(request("POST", correction, correction_body, "admin") for _ in range(2)))
+                 assert all(response.status_code == 200 for response in drafts)
+                 assert drafts[0].json() == drafts[1].json()

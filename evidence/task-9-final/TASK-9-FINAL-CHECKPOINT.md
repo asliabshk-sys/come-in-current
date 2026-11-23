@@ -39,3 +39,7 @@ Offer expiry remains **PARTIALLY VERIFIED**. Existing dated coupons and advertis
 ### Stage 7 — CA preparation
 
 The CA field inventory, financial reconciliation checklist and questions are ready. Actual CA approval and statutory issuance remain deferred. [CA review package](ca-preparation-20261123/CA-REVIEW-SUMMARY.md)
+
+### Stage 8 — partial policies
+
+All nine partial entries were reviewed. Internal draft creation now verifies the stored Admin invoice snapshot where available. Broader owner/provider decisions remain open. [Stage 8](final-closure-20261123/STAGE-8-PARTIAL-POLICIES.md)

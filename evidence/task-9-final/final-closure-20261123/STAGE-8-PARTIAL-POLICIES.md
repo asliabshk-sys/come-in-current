@@ -1,0 +1,19 @@
+# Stage 8 — current partially verified policies
+
+All nine partial entries were checked against the register and recent area-specific evidence. Only an identified internal defect was changed. The remaining instructions below require an approved rule, external evidence, or both.
+
+| Policy | Verified locally | Remaining technical step and dependency |
+| --- | --- | --- |
+| T9-26 Refund status and customer notices | Pending/failed/confirmed fixture states, payout-disabled review, and local notifications. | Owner and finance must define continuing-order and COD execution rules, then integration owner can connect unified lifecycle to independently verified provider outcomes. [Refund audit](../partial-cod-refund-20261123/AUDIT.md) |
+| T9-29 Seller settlement requests and execution | Versioned payout schedule, finalized fee evidence, duplicate reference rejection. | Owner and finance approval for replacement adjustment treatment, then independent bank settlement evidence. [Allocation audit](../delivery-partner-allocation-20261123/AUDIT.md) |
+| T9-31 COME-IN recognized revenue categories | Separate fixed ad booking, review, booking evidence linkage and membership metrics. | Owner, finance and advertiser must approve recognition and adjustment terms for ad/other income; reconcile verified bookings. [Advertisement audit](../advertisement-compensation-20261123/AUDIT.md) |
+| T9-36 Referral identity and attribution | Local ownership, self-referral, distinct order/customer and duplicate checks. | Obtain authorized third-party identity and appropriate fraud-signal validation. No adverse action based on household overlap alone. [Rewards audit](../rewards-referral-reversal-20261123/AUDIT.md) |
+| T9-37 Referral qualifying order | Current eligibility gates, transaction-safe issuance and preserved credits on cancellation/refund. | Owner and finance must approve treatment of already issued and redeemed benefits. [Rewards decisions](../rewards-referral-reversal-20261123/OWNER-DECISION.md) |
+| T9-41 Coupon activation and eligibility | Explicit activation, funding/eligibility gates, cash checkout, active date boundaries. | Owner and co-funders must approve channels and eligibility for wider scope before implementing online or Restaurant redemption. [Coupon decision](../coupon-funding-20261123/OWNER-DECISION.md) |
+| T9-42 Coupon redemption and refund policy | Single eligible cancellation release, paid-order denial and original receipt preservation. | Approved paid-refund allocation, restoration, funding and corresponding provider confirmation. [Coupon decision](../coupon-funding-20261123/OWNER-DECISION.md) |
+| T9-43 Concurrent campaign spend and exhaustion | Atomic spending, limits, price/expiry cutoff, rollback and reconciliation. | Signed broader channel/funding rules before implementing other spend/release paths. [Expiry audit](../offer-expiry-rules-20261123/AUDIT.md) |
+| T9-46 Case-specific tax recommendation | Bound original snapshot, independent professional/Admin review and internal draft only. | Fixed an internal gap: a stored Admin snapshot is now checked even when a legacy professional decision lacks its own snapshot. Actual corrected values still require case-specific CA guidance. [CA packet](../ca-preparation-20261123/CA-REVIEW-SUMMARY.md) |
+
+Production change only in retained `backend/server.py`; regression added to `backend/tests/test_task9_restaurant_replacement.py`. Apply `patches/task9-final-invoice-snapshot-consistency.patch` after the offer-expiry patch. Original approval records and financial history are preserved. No new pricing, tax, numbering, issuance or provider behavior was introduced.
+
+Run `python -m pytest -q -n 0 --tb=short backend/tests/test_task9*.py backend/tests/test_referral_task9_review_integration.py` with the retained [fixture setup](../approval-readiness-20261123/COMMANDS.md). [Output](stage-8-focused.log)
