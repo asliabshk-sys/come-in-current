@@ -38,3 +38,7 @@ Grocery cash activation, quote, transaction spend and unpaid cancellation releas
 ## Local campaign lifecycle milestone
 
 Accepted impression targets are now reportable. The financial treatment of measured shortfall or excess still requires accepted remediation terms and independently authorized execution. Geographic verification and new placements remain outside this increment.
+
+## Local financial review safeguards
+
+The internal correction draft leaves tax values and the original invoice untouched. The final correction content and numbering require case-specific CA guidance and an authorized issuance procedure. Reward release now fails safely once a qualifying order is refunded. An approved reversal and compensating-entry policy is needed to change the customer balance. Existing captured payment and seller/platform ledger evidence appears together in Admin review. It does not authorize incremental payments, partial or COD disbursement, replacement settlement allocation or partner reconciliation.

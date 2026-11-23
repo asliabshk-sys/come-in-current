@@ -1010,3 +1010,7 @@ Task 9 is **PARTIALLY VERIFIED**. COME-IN-funded Grocery cash coupons now suppor
 ## Task 9 — Local campaign lifecycle — 2026-11-23 IST
 
 Grocery coupon lifecycle and accepted ad delivery targets passed focused transaction checks. Apply `patches/task9-campaign-lifecycle.patch` after the checkout and ad delivery patch. Task 9 remains partially verified.
+
+## Task 9 — Local financial reconciliation — 2026-11-23 IST
+
+Task 9 remains **PARTIALLY VERIFIED**. Reward release eligibility checks, Admin reconciliation data and an approval-linked internal invoice draft are implemented. External financial execution, compensation policies and statutory issuance remain pending. Apply `patches/task9-local-financial-reconciliation.patch` after the campaign lifecycle patch.

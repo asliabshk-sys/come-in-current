@@ -53,3 +53,9 @@ The three coupon rules T9-41–43 moved from unimplemented to partial because Gr
 ## Local campaign lifecycle milestone
 
 Admin coupon campaign listing and audited pause, resume and terminal close now operate in the funded Grocery cash path. Advertisers can review and accept an optional fixed-duration impression target. Reports distinguish in-progress delivery, excess and ended shortfall. No compensation or new placement was enabled.
+
+## Local financial review milestone
+
+The existing referral ledger now rechecks qualifying orders when an approved reward is made available or processing begins. A newly refunded qualifying order blocks that transition without changing the original credit. Admin can create one immutable internal invoice correction draft after separate verified-professional and Admin approvals. It links the original invoice, order, replacement and approval records. It is marked pending statutory issuance. The Admin financial review also shows recorded payment status, locally recorded capture and existing seller/platform ledger entries for the same order. Partner allocations and external settlement stay pending.
+
+The 50-policy classification is unchanged at **31 verified and owner-approved, 1 implemented awaiting external validation, 9 partial, 1 unimplemented, 8 blocked**. New bounded local controls are verified under the existing owner authorization. Cash disbursement, provider confirmation and statutory issuance were not executed. No migration, new index or collection was added. Apply `patches/task9-local-financial-reconciliation.patch` after the campaign lifecycle patch. [Milestone commands](local-policy-20261123/COMMANDS.md)

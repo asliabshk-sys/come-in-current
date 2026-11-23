@@ -46,7 +46,7 @@
 | 6 | Search and Filters | **COMPLETED** | Earlier Task 6 implementation and test reports preserved. | Not rerun in this batch. |
 | 7 | Cart and Checkout | **COMPLETED** | Checkout quote/idempotency source; historical COD/pickup UI/API tests; Iteration 3 fixes empty-cart and unavailable-fulfillment messaging. | No Expo runtime in current environment. |
 | 8 | Repeat Order | **COMPLETED** | Earlier TASK24 report and existing repeat-order source. | Measured repeat-order extension not fully verified. |
-| 9 | Out-of-Stock Replacement | **PARTIALLY VERIFIED** | Grocery cash coupons and ad delivery in local scope. [Evidence](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md) | Broader funding and external execution pending. |
+| 9 | Out-of-Stock Replacement | **PARTIALLY VERIFIED** | Local campaign and financial review safeguards. [Evidence](evidence/task-9-final/TASK-9-FINAL-COMPLETION-REPORT.md) | Financial execution and policy dependencies pending. |
 | 10 | Live Tracking | **COMPLETED** | Historical /api/orders/{id}/tracking runtime E2E report. | Not rerun in this batch. |
 | 11 | Order Help and Refund Status | **PARTIAL** | Restaurant Admin refund safeguards retained; Grocery refund summary states and in-app notification routes have offline coverage. | Automatic Grocery refunds, refund-specific notifications and live customer/seller/admin status synchronization remain pending. |
 | 12 | Excel/CSV Price and Stock Import | **COMPLETED** | Earlier reports; import confirmation dialog source fix; Task 5 measured CSV parser/model now has offline coverage. | Transaction-backed measured import apply remains pending with disposable MongoDB verification. |
@@ -1129,3 +1129,7 @@ Task 9 is **PARTIALLY VERIFIED**. COME-IN-funded Grocery cash coupons now suppor
 ## Task 9 — Local campaign lifecycle — 2026-11-23 IST
 
 Grocery coupon lifecycle and accepted ad delivery targets passed focused transaction checks. Apply `patches/task9-campaign-lifecycle.patch` after the checkout and ad delivery patch. Task 9 remains partially verified.
+
+## Task 9 — Local financial reconciliation — 2026-11-23 IST
+
+Task 9 remains **PARTIALLY VERIFIED**. Reward release eligibility checks, Admin reconciliation data and an approval-linked internal invoice draft are implemented. External financial execution, compensation policies and statutory issuance remain pending. Apply `patches/task9-local-financial-reconciliation.patch` after the campaign lifecycle patch.

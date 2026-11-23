@@ -58,3 +58,10 @@ The sole skip was the existing external object-storage test. Fresh referral test
 ## Local campaign lifecycle milestone
 
 Coupon and ad milestone focused result was **3 passed, 0 failed, 0 skipped** using test_task9_coupon_checkout.py and test_task9_business_policy.py. [Focused log](local-policy-20261123/coupon-ad-focused.log).
+
+## Local financial reconciliation and lifecycle increment
+
+- **66 focused passed, 0 failed, 0 skipped, 7 warnings.** Includes paused checkout and replay, ended shortfall and excess, reward availability after qualifying-order refund, two-party invoice approval, concurrent draft replay and immutable invoice linkage. [Focused output](local-policy-20261123/focused.log)
+- **700 full backend passed, 0 failed, 1 skipped, 9 warnings.** The existing skip was external object storage unavailable. Warnings are existing FastAPI lifecycle, multipart and parser deprecations. [Full output](local-policy-20261123/full.log)
+- TypeScript, targeted ESLint, Expo export, five Chromium scenarios, and process restart/replay passed. Browser validation covered Admin campaign pause, not statutory issuance. [TypeScript](local-policy-20261123/typescript.log) · [ESLint](local-policy-20261123/lint.log) · [Expo](local-policy-20261123/expo.log) · [Chromium](local-policy-20261123/browser.log) · [Restart](local-policy-20261123/restart.log)
+- Genuine provider, native-device, object storage, CHAND provider and statutory external checks remain deferred or blocked as documented. [Commands](local-policy-20261123/COMMANDS.md)

@@ -1,0 +1,179 @@
+diff --git a/backend/server.py b/backend/server.py
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -1151,7 +1151,7 @@
+             if not reward: raise HTTPException(status_code=404, detail="Reward not found")
+             current = reward.get("status")
+             if body.decision not in transitions.get(current, set()): raise HTTPException(status_code=409, detail="Invalid reward status transition")
+-            if body.decision == "approve":
++            if body.decision in {"approve", "available", "processing"}:
+                 if len(reward.get("qualifying_orders", [])) < REFERRAL_TARGET:
+                     raise HTTPException(status_code=409, detail="Reward is missing its ten qualifying order references")
+                 for qualifying in reward["qualifying_orders"]:
+@@ -5270,7 +5270,7 @@
+     linked_ticket = await db.restaurant_support.find_one({"_id": ObjectId(case["support_id"])}, session=session)
+     prior_review = (linked_ticket or {}).get("financial_review") or {}
+     if prior_review.get("replacement_id") == case["id"]:
+-        review.update({key: prior_review[key] for key in ("reward_status", "professional_tax_status", "admin_tax_status", "tax_reviewer_id", "refund_status", "collection_status") if key in prior_review})
++        review.update({key: prior_review[key] for key in ("reward_status", "professional_tax_status", "admin_tax_status", "tax_reviewer_id", "refund_status", "collection_status", "invoice_draft_status") if key in prior_review})
+     result = await db.restaurant_support.update_one(
+         {"_id": ObjectId(case["support_id"]), "user_id": order["customer_id"],
+          "order_id": str(order["_id"]), "order_kind": kind},
+@@ -8417,14 +8417,79 @@
+         return {"order_ref": ticket.get("order_ref"), "replacement_id": case["id"],
+                 "original": review["original"], "invoice_reference": order.get("invoice_number") or order.get("invoice_id"),
+                 "historical_tax_details": order.get("tax_details"), "replacement_actions": [entry["action"] for entry in case.get("decision_history", [])]}
++    order_filter = {"order_id": ticket["order_id"], "order_kind": ticket["order_kind"]}
++    ledger = [doc_out(row) async for row in db.financial_ledger.find(
++        order_filter, {"order_id": 1, "event_type": 1, "shopkeeper_payable": 1, "platform_earnings": 1, "recorded_at": 1},
++    ).sort("recorded_at", -1).limit(20)]
++    payment_collection = db.grocery_payments if ticket["order_kind"] == "grocery" else db.restaurant_payments
++    captured = await payment_collection.find_one({"order_id": ticket["order_id"], "status": "paid"},
++        {"amount": 1, "refunded_amount_paise": 1, "refund_pending_amount_paise": 1, "refund_status": 1})
++    reconciliation = {"order_payment_status": order.get("payment_status"), "seller_platform_ledger": ledger,
++                      "delivery_partner_adjustment_status": "pending_approved_allocation",
++                      "replacement_execution_status": "pending_authorized_execution"}
++    if captured:
++        reconciliation["captured_payment"] = doc_out(captured)
++    draft = await db.financial_audit.find_one({"action": "replacement_invoice_correction_drafted",
++        "ticket_id": ticket_id, "replacement_id": review["replacement_id"]})
+     return {
+         "customer_id": ticket["user_id"], "merchant_id": order.get("shop_id") or order.get("restaurant_id"),
+         "shopping_reward_balance": await _available_shopping_reward_balance(ticket["user_id"]) if "reward_review" in review["reasons"] else None,
+         "original_invoice_reference": order.get("invoice_number") or order.get("invoice_id"),
+         "historical_tax_details": order.get("tax_details"), "replacement_history": case.get("decision_history", []),
+         "audit": [doc_out(row) async for row in audit],
++        "reconciliation": reconciliation,
++        "invoice_correction_draft": doc_out(draft) if draft else None,
+         "tax_reviewer_id": review.get("tax_reviewer_id"),
+     }
++
++
++class InvoiceCorrectionDraftIn(BaseModel):
++    replacement_id: str = Field(min_length=1, max_length=40)
++    reason: str = Field(min_length=5, max_length=500)
++
++
++@api.post("/admin/restaurant/support/{ticket_id}/invoice-correction-draft")
++async def create_replacement_invoice_correction_draft(ticket_id: str, body: InvoiceCorrectionDraftIn,
++                                                       user: dict = Depends(require_role("admin"))):
++    oid = _object_id_or_404(ticket_id, "Support ticket")
++
++    async def apply(session):
++        ticket = await db.restaurant_support.find_one({"_id": oid}, session=session)
++        review = (ticket or {}).get("financial_review") or {}
++        if (review.get("replacement_id") != body.replacement_id
++                or review.get("admin_tax_status") != "approved_pending_accounting_procedure"):
++            raise HTTPException(409, "Professional and separate Admin approval are required")
++        criteria = {"ticket_id": ticket_id, "replacement_id": body.replacement_id,
++                    "action": "replacement_financial_review", "decision": "approve"}
++        professional = await db.financial_audit.find_one({**criteria, "stage": "professional_tax"}, session=session)
++        admin = await db.financial_audit.find_one({**criteria, "stage": "admin_tax"}, session=session)
++        if not professional or not admin or professional["actor_id"] == admin["actor_id"]:
++            raise HTTPException(409, "Both independent approval records are required")
++        collection = db.orders if ticket["order_kind"] == "grocery" else db.restaurant_orders
++        order = await collection.find_one({"_id": _object_id_or_404(ticket["order_id"], "Order"),
++                                          "customer_id": ticket["user_id"]}, session=session)
++        reference = (order or {}).get("invoice_number") or (order or {}).get("invoice_id")
++        case = next((row for row in (order or {}).get("replacements", []) if row["id"] == body.replacement_id), None)
++        if not isinstance(reference, str) or not reference.strip() or not case or case["state"] == "superseded":
++            raise HTTPException(409, "A current replacement case and original invoice reference are required")
++        key = f"invoice-review-draft:{ticket['order_kind']}:{ticket['order_id']}:{body.replacement_id}"
++        existing = await db.financial_audit.find_one({"_id": key}, session=session)
++        if existing:
++            if existing["reason"] != body.reason or existing["original_invoice_reference"] != reference:
++                raise HTTPException(409, "An immutable correction draft already exists")
++            return {"id": key, "status": existing["status"]}
++        now = now_utc()
++        record = {"_id": key, "action": "replacement_invoice_correction_drafted", "status": "pending_statutory_issuance",
++                  "version": 1, "ticket_id": ticket_id, "order_id": ticket["order_id"], "order_kind": ticket["order_kind"],
++                  "replacement_id": body.replacement_id, "original_invoice_reference": reference,
++                  "original_financials": review["original"], "professional_review_id": str(professional["_id"]),
++                  "admin_approval_id": str(admin["_id"]), "actor_id": user["id"], "reason": body.reason, "created_at": now}
++        await db.restaurant_support.update_one({"_id": oid}, {"$set": {"financial_review.invoice_draft_status": record["status"],
++            "financial_review.updated_at": now}}, session=session)
++        await db.financial_audit.insert_one(record, session=session)
++        return {"id": key, "status": record["status"]}
++
++    return await _run_replacement_transaction(apply)
+
+
+ @api.post("/admin/restaurant/support/{ticket_id}/financial-review")
+diff --git a/backend/tests/test_task9_restaurant_replacement.py b/backend/tests/test_task9_restaurant_replacement.py
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -155,6 +155,10 @@
+                 async def review(stage, decision, actor="admin", **extra):
+                     return await request("POST", f"/financial/tax-reviews/{ticket_id}" if actor == "professional" else path, {"replacement_id": case["id"], "stage": stage,
+                         "decision": decision, "reason": "Verified fixture policy", **extra}, actor)
++                correction = f"/admin/restaurant/support/{ticket_id}/invoice-correction-draft"
++                correction_body = {"replacement_id": case["id"], "reason": "Synthetic correction review"}
++                assert (await request("POST", correction, correction_body, "seller")).status_code == 403
++                assert (await request("POST", correction, correction_body, "admin")).status_code == 409
+                 assert (await review("reward", "approve", "seller")).status_code == 403
+                 assert (await review("admin_tax", "approve")).status_code == 409
+                 assert (await review("professional_tax", "approve", guidance_reference="CA fixture")).status_code == 403
+@@ -177,6 +181,20 @@
+                 assert (await request("GET", path, actor="buyer")).status_code == 403
+                 details = (await request("GET", path, actor="admin")).json()
+                 assert len(details["audit"]) == 3 and details["original_invoice_reference"] == "original-invoice"
++                drafts = await asyncio.gather(*(request("POST", correction, correction_body, "admin") for _ in range(2)))
++                assert all(response.status_code == 200 for response in drafts)
++                assert drafts[0].json() == drafts[1].json()
++                assert drafts[0].json()["status"] == "pending_statutory_issuance"
++                assert (await request("POST", correction, {**correction_body, "reason": "Different reason"}, "admin")).status_code == 409
++                details = (await request("GET", path, actor="admin")).json()
++                assert details["reconciliation"]["delivery_partner_adjustment_status"] == "pending_approved_allocation"
++                assert details["reconciliation"]["seller_platform_ledger"] == []
++                linked = details["invoice_correction_draft"]
++                assert linked["original_invoice_reference"] == "original-invoice" and linked["version"] == 1
++                assert linked["professional_review_id"] != linked["admin_approval_id"]
++                assert "invoice_number" not in linked
++                assert await db.financial_audit.count_documents({"action": "replacement_invoice_correction_drafted"}) == 1
++
+                 tickets = (await request("GET", "/restaurant/support/mine")).json()
+                 assert all("audit" not in ticket and "guidance_reference" not in ticket.get("financial_review", {}) for ticket in tickets)
+                 assert await db.referral_ledger.count_documents({}) == 0
+diff --git a/backend/tests/test_referral_task9_review_integration.py b/backend/tests/test_referral_task9_review_integration.py
+--- a/backend/tests/test_referral_task9_review_integration.py
++++ b/backend/tests/test_referral_task9_review_integration.py
+@@ -107,6 +107,15 @@
+                 assert entry["status"] == "approved" and entry["amount"] == server.REFERRAL_REWARD_INR
+                 assert await db.referral_ledger.count_documents({}) == 1
+                 assert await db.notifications.count_documents({"kind": "referral_reward", "data.reward_id": str(reward["_id"])}) == 1
++                await db.restaurant_orders.update_one({"_id": order_oid}, {"$set": {"refund_status": "refunded"}})
++                for decision in ("available", "processing"):
++                    response = await http.patch(reward_url, json={"decision": decision}, headers=auth["admin"])
++                    assert response.status_code == 422
++                assert (await db.referral_ledger.find_one({"_id": entry["_id"]}))["status"] == "approved"
++                await db.restaurant_orders.update_one({"_id": order_oid}, {"$unset": {"refund_status": ""}})
++                assert (await http.patch(reward_url, json={"decision": "available"}, headers=auth["admin"])).status_code == 200
++                assert await db.referral_ledger.count_documents({}) == 1
++
+
+         finally:
+             await mongo.drop_database(db.name)
+diff --git a/frontend/app/admin.tsx b/frontend/app/admin.tsx
+--- a/frontend/app/admin.tsx
++++ b/frontend/app/admin.tsx
+@@ -388,6 +388,20 @@
+                   <ActionBtn label="Approve reviewed tax case" onPress={() => submitReview(r, "admin_tax", "approve")} />
+                   <ActionBtn label="Reject reviewed tax case" onPress={() => submitReview(r, "admin_tax", "reject")} />
+                 </> : null}
++                {reviewDetails.data.reconciliation ? <View>
++                  <Text style={styles.cardMeta}>Order payment {reviewDetails.data.reconciliation.order_payment_status || "unavailable"} · Partner adjustment pending approved allocation</Text>
++                  {reviewDetails.data.reconciliation.captured_payment ? <Text style={styles.cardMeta}>Recorded capture ₹{reviewDetails.data.reconciliation.captured_payment.amount} · Refund {reviewDetails.data.reconciliation.captured_payment.refund_status || "none recorded"}</Text> : null}
++                  {reviewDetails.data.reconciliation.seller_platform_ledger.map((entry: any) => <Text key={entry.id} style={styles.cardMeta}>{entry.event_type} · Seller ₹{entry.shopkeeper_payable ?? "unavailable"} · Platform ₹{entry.platform_earnings ?? "unavailable"}</Text>)}
++                </View> : null}
++                {reviewDetails.data.invoice_correction_draft ? <Text style={styles.cardMeta}>Internal correction draft · pending statutory issuance</Text>
++                  : r.financial_review.admin_tax_status === "approved_pending_accounting_procedure" ? <ActionBtn label="Record internal invoice correction draft" onPress={async () => {
++                    try {
++                      await api.post(`/admin/restaurant/support/${r.id}/invoice-correction-draft`, {
++                        replacement_id: r.financial_review.replacement_id, reason: reviewReason.trim(),
++                      });
++                      await readReview(r.id);
++                    } catch (error: any) { setReviewError(error?.message || "Could not record correction draft."); }
++                  }} /> : null}
+                 {r.financial_review.reasons.includes("historical_tax_review") && !r.financial_review.professional_tax_status ? <Text style={styles.cardMeta}>Pending verified professional review</Text> : null}
+                 {reviewError ? <Text accessibilityRole="alert" style={styles.cardMeta}>{reviewError}</Text> : null}
+               </View> : null}

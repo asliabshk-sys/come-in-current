@@ -60,3 +60,11 @@ The [payout and campaign policy addendum](TASK-9-PAYOUT-AND-CAMPAIGN-POLICY.md) 
 ## Local campaign lifecycle milestone
 
 T9-41–43 retain PARTIALLY VERIFIED status for broader funding and checkout. Admin lifecycle, open quote rejection while paused, and duplicate status audit protection are locally verified. The optional accepted ad delivery target is a measured-report control, with compensation policy pending.
+
+## Local financial controls
+
+- **T9-26 and T9-29–31:** Admin reconciliation now reads current order/payment state and underlying seller/platform ledger lines. Provider transitions, approved partner and replacement allocation, and platform revenue completion remain open.
+- **T9-35–38:** Refunded qualifying orders now prevent moving existing approved rewards to Available or Processing. Existing reward credit is preserved. No reversal or compensating entry was authorized.
+- **T9-46 and T9-48:** The internal draft is uniquely keyed to the replacement and retains the original invoice and separate approvals. Corrected amounts, numbering and statutory issuance remain case-specific dependencies.
+
+No whole-policy status changed in the 50-row register.
