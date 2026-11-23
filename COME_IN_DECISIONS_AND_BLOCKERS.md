@@ -970,3 +970,7 @@ The authorized local fixes and fresh verification are complete. Apply `patches/t
 Paid/online orders, reward adjustments and legacy taxed orders use COME-IN Assist. Automated settlement and Restaurant post-order replacement require approved rules. Guest or empty-order cases use eligible cancellation or assistance. Native device and genuine Razorpay TEST checks remain deferred.
 
 For unpaid Grocery cases, the current checkout fee rules apply and approval keeps the existing payment status. COME-IN Assist operators coordinate with the shop. The order owner alone records a replacement decision.
+
+## Task 9 — Restaurant replacement and financial Assist — 2026-11-23 IST
+
+Task 9 is **PARTIALLY COMPLETE**. Eligible unpaid Restaurant orders now support seller proposals, customer-only approvals, current stock availability and price checks, existing Restaurant tax recalculation, and notification/deep-link integration. Grocery and Restaurant paid/online orders, recorded rewards, and unsupported historical tax go to order-linked COME-IN Assist. Original financial records stay intact. Automated replacement settlement and historical adjustment policy remain pending. Native and genuine Razorpay TEST validation remain deferred. [Implementation and verification](evidence/task-9-restaurant-assist-20261123/IMPLEMENTATION_REPORT.md)

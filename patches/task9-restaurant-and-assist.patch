@@ -1,0 +1,823 @@
+diff --git a/backend/server.py b/backend/server.py
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -4826,14 +4826,58 @@
+     option_id: Optional[str] = Field(default=None, max_length=40)
+
+
+-def _replacement_can_reprice(order: dict) -> bool:
+-    return (
+-        (order.get("payment_method"), order.get("payment_status")) in {
+-            ("cod", "cod_pending"), ("pickup", "pay_at_pickup_pending"),
+-            ("cash_shop", "pay_at_pickup_pending"), ("cash_shop", "pay_at_shop_pending"),
+-        }
+-        and not any(order.get(key) for key in ("reward_discount", "tax", "tax_amount", "gst", "razorpay_payment_id"))
+-    )
++def _replacement_adjustment_reason(order: dict, kind: str = "grocery") -> Optional[str]:
++    if any(order.get(key) for key in ("reward_discount", "coupon_discount", "coupon_code", "loyalty_discount", "credits_applied")):
++        return "reward_review"
++    if any(order.get(key) for key in ("tax_amount", "gst", "tax_details", "invoice_id", "invoice_number", "invoice")) or (kind == "grocery" and order.get("tax")):
++        return "historical_tax_review"
++    cash_terms = {("cod", "cod_pending"), ("pickup", "pay_at_pickup_pending")}
++    if kind == "grocery":
++        cash_terms.update({("cash_shop", "pay_at_pickup_pending"), ("cash_shop", "pay_at_shop_pending")})
++    if (order.get("payment_method"), order.get("payment_status")) not in cash_terms or any(
++        order.get(key) for key in ("razorpay_payment_id", "gateway_payment_id", "refund_status", "cash_collection_confirmed_at")
++    ):
++        return "payment_review"
++    return None
++
++
++REPLACEMENT_ASSIST_REASONS = {
++    "reward_review": "The existing reward or discount needs review.",
++    "historical_tax_review": "The original tax calculation or invoice needs review.",
++    "payment_review": "The original payment and any difference need review.",
++    "no_alternative": "No eligible replacement or removal is available.",
++}
++
++
++async def _replacement_escalate(session, order: dict, case: dict, kind: str, prior=None):
++    if prior and prior.get("support_id"):
++        case["support_id"] = prior["support_id"]
++        return
++    linked = await db.restaurant_support.find_one({
++        "user_id": order["customer_id"], "order_id": str(order["_id"]), "order_kind": kind,
++        "category": "wrong_or_missing_item", "status": {"$in": ["open", "in_progress"]},
++    }, session=session)
++    if linked:
++        case["support_id"] = str(linked["_id"])
++        return
++    now = now_utc()
++    result = await db.restaurant_support.insert_one({
++        "ref": "SUP-" + uuid.uuid4().hex[:10].upper(), "user_id": order["customer_id"],
++        "order_id": str(order["_id"]), "order_kind": kind, "order_ref": order.get("ref"),
++        "category": "wrong_or_missing_item", "replacement_id": case["id"],
++        "message": f"{case['original']['name']} is unavailable. {REPLACEMENT_ASSIST_REASONS[case['assist_reason']]}",
++        "request_id": "replacement-" + case["id"], "status": "open", "created_at": now, "updated_at": now,
++        "history": [{"status": "open", "at": now}],
++    }, session=session)
++    case["support_id"] = str(result.inserted_id)
++
++
++def _replacement_decision(case, order, body, user, now):
++    case.setdefault("decision_history", []).append({
++        "action": body.action, "option_id": body.option_id, "at": now, "customer_id": user["id"],
++        "order_total_at_decision": order["total"],
++    })
++    case["decision"] = case["decision_history"][-1]
+
+
+ def _replacement_items(order: dict, index: int, line: Optional[dict] = None) -> list[dict]:
+@@ -4911,10 +4955,10 @@
+     return options
+
+
+-async def _replacement_notify(session, order: dict, case: dict, title: str, body: str):
++async def _replacement_notify(session, order: dict, case: dict, title: str, body: str, kind: str = "grocery"):
+     await db.notifications.insert_one({
+-        "user_id": order["customer_id"], "kind": "grocery_replacement", "title": title, "body": body[:500],
+-        "data": {"order_id": str(order["_id"]), "order_kind": "grocery", "replacement_id": case["id"]},
++        "user_id": order["customer_id"], "kind": f"{kind}_replacement", "title": title, "body": body[:500],
++        "data": {"order_id": str(order["_id"]), "order_kind": kind, "replacement_id": case["id"]},
+         "read": False, "channel": "in_app", "push_status": "not_configured", "created_at": now_utc(),
+     }, session=session)
+
+@@ -4925,7 +4969,7 @@
+     except HTTPException:
+         raise
+     except Exception as exc:
+-        logger.exception("Grocery replacement transaction failed")
++        logger.exception("Order replacement transaction failed")
+         raise HTTPException(status_code=503, detail="The update could not be confirmed. Refresh the order before retrying.") from exc
+
+
+@@ -4960,24 +5004,32 @@
+             raise HTTPException(status_code=409, detail="The replacement request changed. Refresh the order.")
+         if len(cases) >= 40:
+             raise HTTPException(status_code=409, detail="Contact COME-IN Assist for further changes to this order")
+-        can_reprice = _replacement_can_reprice(order)
+-        options = await _replacement_options(session, order, body.line_index) if can_reprice else []
+-        keep_totals = _replacement_totals(order, body.line_index) if can_reprice else None
++        reason = _replacement_adjustment_reason(order)
++        options = await _replacement_options(session, order, body.line_index)
++        keep_totals = _replacement_totals(order, body.line_index) if not reason else None
++        if reason:
++            for option in options:
++                option["totals"] = None
++        reason = reason or ("no_alternative" if not options and not keep_totals else None)
+         if open_case:
+             same_options = [{k: v for k, v in option.items() if k != "id"} for option in options] == [
+                 {k: v for k, v in option.items() if k != "id"} for option in open_case["options"]
+             ]
+-            if open_case["state"] != "rejected" and same_options and keep_totals == open_case["keep_totals"]:
++            if (open_case["state"] != "rejected" and (open_case.get("decision") or {}).get("action") != "reject" and same_options and keep_totals == open_case["keep_totals"]
++                    and reason == open_case.get("assist_reason")):
+                 return open_case
+         now = now_utc()
+         case = {
+             "id": uuid.uuid4().hex, "line_index": body.line_index, "original": _replacement_snapshot(line),
+             "original_line_total": round(_line_amount(line), 2), "original_total": order["total"], "options": options,
+-            "keep_totals": keep_totals, "state": "awaiting_customer" if can_reprice else "assist_required",
++            "keep_totals": keep_totals, "state": "assist_required" if reason else "awaiting_customer",
++            "assist_reason": reason,
+             "reported_by": user["id"], "reported_at": now, "supersedes": body.refresh_case_id,
+         }
+         if open_case:
+             open_case.update({"state": "superseded", "superseded_at": now})
++        if reason:
++            await _replacement_escalate(session, order, case, "grocery", open_case)
+         cases.append(case)
+         await db.orders.update_one({"_id": oid}, {"$set": {"replacements": cases, "updated_at": now}}, session=session)
+         message = (
+@@ -5005,17 +5057,36 @@
+         decision = case.get("decision") or {}
+         if decision.get("action") == body.action and decision.get("option_id") == body.option_id:
+             return case
+-        if case["state"] not in {"awaiting_customer", "rejected"} or order["status"] not in GROCERY_REPLACEMENT_ORDER_STATES:
++        if case["state"] not in GROCERY_REPLACEMENT_OPEN_STATES or order["status"] not in GROCERY_REPLACEMENT_ORDER_STATES:
+             raise HTTPException(status_code=409, detail="This offer is no longer open. Refresh your order or contact COME-IN Assist.")
+-        if not _replacement_can_reprice(order):
+-            raise HTTPException(status_code=409, detail="Contact COME-IN Assist to handle the payment adjustment.")
+         if (body.action == "accept") != bool(body.option_id):
+             raise HTTPException(status_code=422, detail="Select one offered replacement to accept")
+-        if case["state"] == "rejected" and body.action != "keep_unavailable":
++        if case["state"] == "rejected" and body.action != "keep_unavailable" and not case.get("assist_reason"):
+             raise HTTPException(status_code=409, detail="Wait for new options or choose to continue without the item")
+         index = case["line_index"]
+         now = now_utc()
+         updates = {"replacements": cases, "updated_at": now}
++        reason = _replacement_adjustment_reason(order) or case.get("assist_reason")
++        if reason:
++            if body.action == "keep_unavailable":
++                raise HTTPException(409, "Contact COME-IN Assist to continue without this item.")
++            if case.get("decision"):
++                raise HTTPException(409, "Your decision was already sent. Ask the shop for a new offer.")
++            if body.action == "accept":
++                offered = next((row["item"] for row in case["options"] if row["id"] == body.option_id), None)
++                if offered is None or not case.get("assist_reason"):
++                    raise HTTPException(409, "Refresh the replacement options before recording your decision.")
++                lines, shop_id = await _resolve_grocery_lines(
++                    [QuoteLineIn(product_id=offered["product_id"], variant_id=offered["variant_id"], qty=offered["qty"])],
++                    session=session,
++                )
++                if shop_id != order["shop_id"] or _replacement_snapshot(lines[0]) != offered:
++                    raise HTTPException(409, "The replacement changed. Ask the shop to refresh the options.")
++            case.update({"state": "assist_required", "assist_reason": reason})
++            await _replacement_escalate(session, order, case, "grocery", case)
++            _replacement_decision(case, order, body, user, now)
++            await db.orders.update_one({"_id": oid}, {"$set": updates}, session=session)
++            return case
+         if body.action == "reject":
+             case["state"] = "rejected"
+         else:
+@@ -5045,8 +5116,7 @@
+             # Do not credit those missing units back into sellable inventory.
+             updates.update({"items": _replacement_items(order, index, line), **totals})
+             case.update({"state": "accepted" if line else "kept_unavailable", "final_totals": totals})
+-        case.setdefault("decision_history", []).append({"action": body.action, "option_id": body.option_id, "at": now, "customer_id": user["id"]})
+-        case["decision"] = case["decision_history"][-1]
++        _replacement_decision(case, order, body, user, now)
+         await db.orders.update_one({"_id": oid}, {"$set": updates}, session=session)
+         if body.action != "reject":
+             await _replacement_notify(
+@@ -6389,10 +6459,10 @@
+     return float(value)
+
+
+-async def _restaurant_resolve_line(restaurant_id, line):
++async def _restaurant_resolve_line(restaurant_id, line, *, session=None):
+     if not ObjectId.is_valid(line.menu_item_id):
+         raise HTTPException(409, "Menu item is no longer available")
+-    item = await db.restaurant_menu.find_one({"_id": ObjectId(line.menu_item_id), "restaurant_id": restaurant_id})
++    item = await db.restaurant_menu.find_one({"_id": ObjectId(line.menu_item_id), "restaurant_id": restaurant_id}, **({"session": session} if session else {}))
+     if not item or not item.get("available", True):
+         raise HTTPException(409, "Menu item is no longer available")
+     variants = {str(v["id"]): v for v in (item.get("variants") or []) if isinstance(v, dict) and v.get("id")}
+@@ -6650,6 +6720,190 @@
+     restaurant=await _restaurant_or_404(restaurant_id); _restaurant_owner(restaurant,user)
+     return [doc_out(x) async for x in db.restaurant_orders.find({"restaurant_id":restaurant_id}).sort("created_at",-1).limit(500)]
+
++RESTAURANT_REPLACEMENT_ORDER_STATES = {"pending_payment", "placed", "accepted", "preparing"}
++
++
++class RestaurantUnavailableIn(BaseModel):
++    line_index: int = Field(ge=0, lt=100)
++    menu_item_id: str = Field(min_length=1, max_length=40)
++    refresh_case_id: Optional[str] = Field(default=None, max_length=40)
++    alternatives: List[RestaurantOrderLineIn] = Field(default_factory=list, max_length=5)
++
++
++def _restaurant_replacement_totals(order, restaurant, items):
++    def subtotal(lines):
++        return round(sum(float(line.get("line_total", round(line["unit_price"] * line["quantity"], 2))) for line in lines), 2)
++
++    try:
++        fulfillment = order["fulfillment"]
++        if fulfillment not in {"delivery", "pickup"}:
++            return None
++        original = calculate_restaurant_totals(subtotal(order["items"]), order["delivery_fee"], restaurant.get("tax_rate", 5), fulfillment)
++        if any(order.get(key) != value for key, value in original.items()):
++            return None
++        return calculate_restaurant_totals(subtotal(items), order["delivery_fee"], restaurant.get("tax_rate", 5), fulfillment)
++    except (KeyError, ValueError, TypeError, OverflowError):
++        return None
++
++
++def _restaurant_replacement_display(line):
++    variant = line.get("variant") or {}
++    add_ons = line.get("add_ons") or []
++    return {
++        "product_id": line["menu_item_id"], "variant_id": variant.get("id"), "name": line["name"],
++        "unit": " · ".join(filter(None, [variant.get("name"), *(x.get("name") for x in add_ons)])),
++        "qty": line["quantity"], "price": line["unit_price"], "line_total": round(line["unit_price"] * line["quantity"], 2),
++    }
++
++
++async def _restaurant_replacement_context(order, session):
++    restaurant = await db.restaurants.find_one({"_id": _object_id_or_404(order["restaurant_id"], "Restaurant")}, session=session)
++    if not restaurant:
++        raise HTTPException(404, "Restaurant not found")
++    return restaurant
++
++
++@api.post("/restaurant/orders/{order_id}/replacements")
++async def report_restaurant_unavailable(order_id: str, body: RestaurantUnavailableIn, user: dict = Depends(get_current_user)):
++    if user.get("role") not in {"shopkeeper", "admin"}:
++        raise HTTPException(403, "Only authorized restaurant staff can report unavailable items")
++    oid = _object_id_or_404(order_id, "Order")
++
++    async def apply(session):
++        order = await db.restaurant_orders.find_one({"_id": oid}, session=session)
++        if not order:
++            raise HTTPException(404, "Order not found")
++        restaurant = await _restaurant_replacement_context(order, session)
++        _restaurant_owner(restaurant, user)
++        if user["role"] != "admin" and order.get("restaurant_owner_id") != user["id"]:
++            raise HTTPException(403, "Only this restaurant's owner can update its orders")
++        if order["status"] not in RESTAURANT_REPLACEMENT_ORDER_STATES or not order.get("customer_id"):
++            raise HTTPException(409, "Contact COME-IN Assist for this order.")
++        cases = order.get("replacements", [])
++        if body.refresh_case_id:
++            replay = next((row for row in cases if row.get("supersedes") == body.refresh_case_id), None)
++            if replay:
++                return replay
++        active = next((row for row in cases if row["state"] in GROCERY_REPLACEMENT_OPEN_STATES), None)
++        index = body.line_index
++        items = order["items"]
++        if index >= len(items) or items[index].get("menu_item_id") != body.menu_item_id:
++            raise HTTPException(409, "The order items changed. Refresh the order.")
++        if active and active["line_index"] != index:
++            raise HTTPException(409, "Resolve the existing unavailable item first.")
++        if active and not body.refresh_case_id:
++            return active
++        if body.refresh_case_id and (not active or active["id"] != body.refresh_case_id):
++            raise HTTPException(409, "The replacement request changed. Refresh the order.")
++        if len(cases) >= 40:
++            raise HTTPException(409, "Contact COME-IN Assist for further changes.")
++        original = items[index]
++        display = _restaurant_replacement_display(original)
++        reason = _replacement_adjustment_reason(order, "restaurant")
++        if not _restaurant_replacement_totals(order, restaurant, items):
++            reason = reason or "historical_tax_review"
++        options = []
++        seen = set()
++        for selected in body.alternatives:
++            if selected.quantity != original["quantity"]:
++                raise HTTPException(422, "Use the original quantity for a restaurant replacement.")
++            selection = selected.model_copy(update={"instructions": original.get("instructions", "")})
++            key = _restaurant_line_key(selection)
++            if key in seen:
++                raise HTTPException(422, "Duplicate replacement option.")
++            seen.add(key)
++            line = await _restaurant_resolve_line(order["restaurant_id"], selection, session=session)
++            if (line["menu_item_id"], (line.get("variant") or {}).get("id")) == (body.menu_item_id, display["variant_id"]):
++                raise HTTPException(422, "Choose a different item or variant.")
++            proposed = _restaurant_replacement_display(line)
++            options.append({
++                "id": uuid.uuid4().hex, "item": proposed, "selection": selection.model_dump(),
++                "line_difference": round(proposed["line_total"] - display["line_total"], 2),
++                "totals": None if reason else _restaurant_replacement_totals(order, restaurant, _replacement_items(order, index, line)),
++            })
++        reason = reason or ("no_alternative" if not options else None)
++        now = now_utc()
++        case = {
++            "id": uuid.uuid4().hex, "line_index": index, "original": display, "original_item": original,
++            "original_line_total": display["line_total"], "original_total": order["total"], "options": options,
++            "keep_totals": None, "state": "assist_required" if reason else "awaiting_customer",
++            "assist_reason": reason, "reported_by": user["id"], "reported_at": now, "supersedes": body.refresh_case_id,
++        }
++        if reason:
++            await _replacement_escalate(session, order, case, "restaurant", active)
++        if active:
++            active.update({"state": "superseded", "superseded_at": now})
++        cases.append(case)
++        await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"replacements": cases, "updated_at": now}}, session=session)
++        await _replacement_notify(session, order, case, "A restaurant order item is unavailable",
++                                  f"{display['name']} is unavailable. Review your order for replacement options or support.", "restaurant")
++        return case
++
++    return await _run_replacement_transaction(apply)
++
++
++@api.post("/restaurant/orders/{order_id}/replacements/{case_id}/decision")
++async def decide_restaurant_replacement(order_id: str, case_id: str, body: GroceryReplacementDecisionIn, user: dict = Depends(get_current_user)):
++    if user.get("role") != "customer":
++        raise HTTPException(403, "Only the customer can decide on a replacement")
++    if body.action not in {"accept", "reject"} or (body.action == "accept") != bool(body.option_id):
++        raise HTTPException(422, "Choose an offered replacement or reject the options.")
++    oid = _object_id_or_404(order_id, "Order")
++
++    async def apply(session):
++        order = await db.restaurant_orders.find_one({"_id": oid, "customer_id": user["id"]}, session=session)
++        cases = (order or {}).get("replacements", [])
++        case = next((row for row in cases if row["id"] == case_id), None)
++        if not case:
++            raise HTTPException(404, "Replacement request not found")
++        if case.get("decision"):
++            if (case["decision"]["action"], case["decision"]["option_id"]) == (body.action, body.option_id):
++                return case
++            raise HTTPException(409, "A decision was already recorded.")
++        if case["state"] not in {"awaiting_customer", "assist_required"} or order["status"] not in RESTAURANT_REPLACEMENT_ORDER_STATES:
++            raise HTTPException(409, "This offer is no longer open.")
++        reason = _replacement_adjustment_reason(order, "restaurant") or case.get("assist_reason")
++        now = now_utc()
++        updates = {"replacements": cases, "updated_at": now}
++        if body.action == "accept":
++            option = next((row for row in case["options"] if row["id"] == body.option_id), None)
++            if not option:
++                raise HTTPException(422, "Select an offered replacement.")
++            if reason != case.get("assist_reason"):
++                raise HTTPException(409, "Payment or reward terms changed. Ask the restaurant to refresh the offer.")
++            selection = RestaurantOrderLineIn.model_validate(option["selection"])
++            line = await _restaurant_resolve_line(order["restaurant_id"], selection, session=session)
++            if _restaurant_replacement_display(line) != option["item"]:
++                raise HTTPException(409, "The menu changed. Ask the restaurant to refresh the options.")
++            restaurant = await _restaurant_replacement_context(order, session)
++            items = _replacement_items(order, case["line_index"], line)
++            totals = _restaurant_replacement_totals(order, restaurant, items)
++            if not reason:
++                if not totals or totals != option["totals"] or order["total"] != case["original_total"]:
++                    raise HTTPException(409, "The price or tax changed. Ask the restaurant to refresh the options.")
++                # Restaurant stock is represented by menu availability. Write to the same
++                # menu row so concurrent catalogue updates conflict with approval.
++                await db.restaurant_menu.update_one({"_id": ObjectId(line["menu_item_id"])},
++                                                   {"$set": {"replacement_checked_at": now}}, session=session)
++                await db.restaurants.update_one({"_id": restaurant["_id"]},
++                                                {"$set": {"replacement_checked_at": now}}, session=session)
++                updates.update({"items": items, **totals})
++                case["final_totals"] = totals
++                case["state"] = "accepted"
++        elif not reason:
++            case["state"] = "rejected"
++        if reason:
++            case.update({"state": "assist_required", "assist_reason": reason})
++            await _replacement_escalate(session, order, case, "restaurant", case)
++        _replacement_decision(case, order, body, user, now)
++        await db.restaurant_orders.update_one({"_id": oid}, {"$set": updates}, session=session)
++        if case["state"] == "accepted":
++            await _replacement_notify(session, order, case, "Replacement confirmed", f"Your updated order total is ₹{totals['total']:.2f}.", "restaurant")
++        return case
++
++    return await _run_replacement_transaction(apply)
++
++
+ @api.patch("/restaurant/orders/{order_id}/status")
+ async def update_restaurant_order_status(order_id: str, body: RestaurantStatusIn, user: dict = Depends(get_current_user)):
+     oid=_object_id_or_404(order_id,"Order")
+@@ -6670,8 +6924,13 @@
+     unset = {"delivery_location": ""} if body.status in {"delivered", "cancelled", "rejected", "picked_up"} else {}
+     status_before = order.get("status")
+     status_at = now_utc()
++    status_filter = {"_id": oid, "status": status_before}
++    replacement_guard = (
++        {"replacements": {"$not": {"$elemMatch": {"state": {"$in": list(GROCERY_REPLACEMENT_OPEN_STATES)}}}}}
++        if body.status == "ready" else {}
++    )
+     changed = await db.restaurant_orders.update_one(
+-        {"_id": oid, "status": status_before},
++        {**status_filter, **replacement_guard},
+         {"$set": update, "$unset": unset, "$push": {"status_history": {"status": body.status, "at": status_at, "note": body.note}}},
+     )
+     if changed.modified_count != 1:
+@@ -7214,6 +7473,12 @@
+             raise HTTPException(status_code=404, detail="Order not found for this account")
+         order_id = str(order["_id"])
+         order_ref = order.get("ref")
++        if body.category == "wrong_or_missing_item":
++            active = next((case for case in order.get("replacements", []) if case.get("state") in GROCERY_REPLACEMENT_OPEN_STATES and case.get("support_id")), None)
++            if active and ObjectId.is_valid(active["support_id"]):
++                ticket = await db.restaurant_support.find_one({"_id": ObjectId(active["support_id"]), "user_id": user["id"], "order_id": order_id, "order_kind": order_kind})
++                if ticket:
++                    return doc_out(ticket)
+     if body.request_id:
+         prior = await db.restaurant_support.find_one({"user_id": user["id"], "request_id": body.request_id})
+         if prior:
+diff --git a/backend/tests/test_task9_grocery_replacement.py b/backend/tests/test_task9_grocery_replacement.py
+--- a/backend/tests/test_task9_grocery_replacement.py
++++ b/backend/tests/test_task9_grocery_replacement.py
+@@ -178,12 +178,25 @@
+                 for extras in ({"payment_method": "online_razorpay", "payment_status": "paid"}, {"reward_discount": 5}, {"tax_amount": 7}):
+                     oid = await order(**extras)
+                     case = (await report(oid)).json()
+-                    assert case["state"] == "assist_required" and case["options"] == []
++                    assert case["state"] == "assist_required" and case["options"]
++                    assert all(option["totals"] is None for option in case["options"])
++                    assert case["assist_reason"] == (
++                        "reward_review" if "reward_discount" in extras else
++                        "historical_tax_review" if "tax_amount" in extras else "payment_review"
++                    )
++                    option = case["options"][0]
++                    agreed = await asyncio.gather(*(decide(oid, case, "accept", option["id"]) for _ in range(2)))
++                    assert [response.status_code for response in agreed] == [200, 200]
++                    assert len(agreed[1].json()["decision_history"]) == 1
+                     assert (await decide(oid, case, "keep_unavailable")).status_code == 409
+                     assert (await db.orders.find_one({"_id": oid}))["total"] == 209
+                     ticket = {"order_id": str(oid), "order_kind": "grocery", "category": "wrong_or_missing_item", "message": "Please confirm the actual stock with the shop."}
+                     assert (await call("POST", "/restaurant/support", ticket, "other")).status_code == 404
+-                    assert (await call("POST", "/restaurant/support", ticket)).json()["order_id"] == str(oid)
++                    reused = (await call("POST", "/restaurant/support", ticket)).json()
++                    assert reused["order_id"] == str(oid) and reused["id"] == case["support_id"]
++                    assert await db.restaurant_support.count_documents({"order_id": str(oid)}) == 1
++                    assert await db.financial_ledger.count_documents({}) == 0
++                    assert await db.referral_ledger.count_documents({}) == 0
+                     assert (await call("GET", "/seller/support", actor="seller")).status_code == 200
+         finally:
+             await mongo.drop_database(db.name)
+diff --git a/backend/tests/test_task9_restaurant_replacement.py b/backend/tests/test_task9_restaurant_replacement.py
+new file mode 100644
+--- /dev/null
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -0,0 +1,138 @@
++"""Restaurant replacements via HTTP and disposable Mongo transactions."""
++import asyncio
++import os
++from pathlib import Path
++from uuid import uuid4
++
++import pytest
++
++
++def test_restaurant_replacement_approval_and_financial_assist(monkeypatch):
++    if os.environ.get("COMEIN_RUN_LOCAL_PAYMENT_TESTS") != "1":
++        pytest.skip("requires disposable loopback MongoDB")
++    import httpx
++    from bson import ObjectId
++    from motor.motor_asyncio import AsyncIOMotorClient
++    import server
++
++    monkeypatch.setenv("JWT_SECRET", uuid4().hex)
++
++    async def run():
++        mongo = AsyncIOMotorClient("mongodb://127.0.0.1:27018/?replicaSet=rs0", serverSelectionTimeoutMS=3000)
++        db = mongo["comein_disposable_food_replace_" + uuid4().hex]
++        monkeypatch.setattr(server, "db", db)
++        monkeypatch.setattr(server, "client", mongo)
++        try:
++            auth = {}
++            ids = {}
++            for actor, role in {"buyer": "customer", "other": "customer", "seller": "shopkeeper",
++                                "other_seller": "shopkeeper", "admin": "admin"}.items():
++                oid = ObjectId()
++                ids[actor] = str(oid)
++                email = f"{actor}@fixture.example"
++                await db.users.insert_one({"_id": oid, "role": role, "email": email})
++                auth[actor] = {"Authorization": "Bearer " + server.create_access_token(str(oid), role, email)}
++            restaurant, original, option, foreign = [ObjectId() for _ in range(4)]
++            await db.restaurants.insert_one({"_id": restaurant, "owner_id": ids["seller"], "tax_rate": 10})
++            await db.restaurant_menu.insert_many([
++                {"_id": option, "restaurant_id": str(restaurant), "name": "Bowl", "price": 100, "available": True,
++                 "variants": [{"id": "large", "name": "Large", "price": 110}],
++                 "add_ons": [{"id": "dip", "name": "Dip", "price": 10, "variant_ids": ["large"]}]},
++                {"_id": foreign, "restaurant_id": str(ObjectId()), "name": "Foreign", "price": 100, "available": True},
++            ])
++            first = {"menu_item_id": str(original), "name": "Soup", "unit_price": 50, "quantity": 2, "instructions": "No onions"}
++            unaffected = {"menu_item_id": str(ObjectId()), "name": "Side", "unit_price": 25, "quantity": 1, "instructions": "Keep sealed"}
++            selection = {"menu_item_id": str(option), "variant_id": "large", "add_on_ids": ["dip"], "quantity": 2, "price": 1}
++
++            async def order(**extra):
++                return (await db.restaurant_orders.insert_one({
++                    "customer_id": ids["buyer"], "restaurant_id": str(restaurant), "restaurant_owner_id": ids["seller"],
++                    "status": "preparing", "fulfillment": "delivery", "payment_method": "cod", "payment_status": "cod_pending",
++                    "items": [first, unaffected], "subtotal": 125, "tax": 12.5, "delivery_fee": 15, "total": 152.5,
++                    "status_history": [{"status": "preparing"}], **extra,
++                })).inserted_id
++
++            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=server.app), base_url="http://local") as http:
++                async def request(method, path, body=None, actor="buyer"):
++                    return await http.request(method, "/api" + path, json=body, headers=auth.get(actor))
++
++                async def report(oid, alternatives=None, actor="seller", **extra):
++                    return await request("POST", f"/restaurant/orders/{oid}/replacements",
++                                         {"line_index": 0, "menu_item_id": str(original),
++                                          "alternatives": [selection] if alternatives is None else alternatives, **extra}, actor)
++
++                async def decide(oid, case, action="accept", actor="buyer"):
++                    return await request("POST", f"/restaurant/orders/{oid}/replacements/{case['id']}/decision",
++                                         {"action": action, "option_id": case["options"][0]["id"] if action == "accept" else None}, actor)
++
++                oid = await order()
++                assert (await report(oid, actor=None)).status_code == 401
++                assert (await report(oid, actor="other_seller")).status_code == 403
++                assert (await report(oid, alternatives=[{"menu_item_id": str(foreign), "quantity": 2}])).status_code == 409
++                assert (await report(oid, alternatives=[{**selection, "quantity": 1}])).status_code == 422
++                requests = await asyncio.gather(report(oid), report(oid))
++                assert [r.status_code for r in requests] == [200, 200]
++                case = requests[0].json()
++                assert requests[1].json()["id"] == case["id"]
++                assert case["options"][0]["line_difference"] == 140
++                assert case["options"][0]["totals"] == {"subtotal": 265, "tax": 26.5, "delivery_fee": 15, "total": 306.5}
++                assert (await decide(oid, case, actor="other")).status_code == 404
++                assert (await decide(oid, case, actor="admin")).status_code == 403
++                assert (await request("PATCH", f"/restaurant/orders/{oid}/status", {"status": "ready"}, "seller")).status_code == 409
++                await db.restaurant_menu.update_one({"_id": option}, {"$set": {"available": False}})
++                assert (await decide(oid, case)).status_code == 409
++                await db.restaurant_menu.update_one({"_id": option}, {"$set": {"available": True, "variants.0.price": 120}})
++                assert (await decide(oid, case)).status_code == 409
++                await db.restaurant_menu.update_one({"_id": option}, {"$set": {"variants.0.price": 110}})
++                results = await asyncio.gather(decide(oid, case), decide(oid, case))
++                assert [r.status_code for r in results] == [200, 200]
++                assert (await decide(oid, case, "reject")).status_code == 409
++                saved = await db.restaurant_orders.find_one({"_id": oid})
++                assert saved["items"][0]["instructions"] == "No onions"
++                assert saved["items"][0]["unit_price"] == 120 and saved["items"][1] == unaffected
++                assert saved["tax"] == 26.5 and saved["payment_status"] == "cod_pending"
++                assert saved["status_history"] == [{"status": "preparing"}]
++                assert len(saved["replacements"][0]["decision_history"]) == 1
++                assert await db.notifications.count_documents({"data.order_id": str(oid), "data.order_kind": "restaurant"}) == 2
++
++                for extra, reason in (
++                    ({"payment_method": "razorpay", "payment_status": "paid", "gateway_payment_id": "fixture"}, "payment_review"),
++                    ({"invoice_id": "historic", "tax": 9.25}, "historical_tax_review"),
++                    ({"coupon_discount": 25}, "reward_review"),
++                ):
++                    oid = await order(**extra)
++                    case = (await report(oid)).json()
++                    assert case["assist_reason"] == reason and not case["options"][0]["totals"]
++                    assert (await decide(oid, case)).json()["state"] == "assist_required"
++                    assert (await decide(oid, case)).json()["support_id"] == case["support_id"]
++                    tickets = (await request("GET", "/restaurant/support/mine")).json()
++                    assert any(ticket["id"] == case["support_id"] and ticket["status"] == "open" for ticket in tickets)
++                    visible = (await request("GET", "/seller/support", actor="seller")).json()
++                    assert any(ticket["id"] == case["support_id"] for ticket in visible)
++                    assert (await request("GET", "/seller/support", actor="other_seller")).json() == []
++                    assert await db.restaurant_support.count_documents({"order_id": str(oid)}) == 1
++                    saved = await db.restaurant_orders.find_one({"_id": oid})
++                    assert saved["items"] == [first, unaffected] and saved["total"] == 152.5
++                    assert all(saved[key] == value for key, value in extra.items())
++                assert await db.financial_ledger.count_documents({}) == 0
++                assert await db.referral_ledger.count_documents({}) == 0
++
++                oid = await order()
++                case = (await report(oid)).json()
++                assert (await decide(oid, case, "reject")).json()["state"] == "rejected"
++                assert (await decide(oid, case)).status_code == 409
++                refreshed = (await report(oid, alternatives=[], refresh_case_id=case["id"])).json()
++                assert refreshed["assist_reason"] == "no_alternative"
++        finally:
++            await mongo.drop_database(db.name)
++            mongo.close()
++
++    asyncio.run(run())
++
++
++def test_restaurant_replacement_uses_existing_screens():
++    frontend = Path(__file__).resolve().parents[2] / "frontend/app"
++    assert 'staff kind="restaurant" menu={menu}' in (frontend / "restaurant/dashboard.tsx").read_text()
++    assert 'onChange={load} kind="restaurant"' in (frontend / "restaurant/orders/[id].tsx").read_text()
++    notification = (frontend / "notifications.tsx").read_text()
++    assert '"restaurant_replacement"' in notification and 'pathname: "/restaurant/orders/[id]"' in notification
+diff --git a/frontend/app/notifications.tsx b/frontend/app/notifications.tsx
+--- a/frontend/app/notifications.tsx
++++ b/frontend/app/notifications.tsx
+@@ -41,6 +41,9 @@
+     if (!n.read) { api.post(`/notifications/${n.id}/read`, {}).catch(() => {}); setItems((list) => list.map((x) => (x.id === n.id ? { ...x, read: true } : x))); }
+     if (n.data?.seller) router.push((n.data.order_kind === "restaurant" ? "/restaurant/dashboard" : "/seller/orders") as never);
+     else if (n.data?.product_id) router.push(`/product/${n.data.product_id}`);
++    else if (n.data?.order_id && n.data.order_kind === "restaurant" && n.kind === "restaurant_replacement") {
++      router.push({ pathname: "/restaurant/orders/[id]", params: { id: n.data.order_id } });
++    }
+     else if (n.data?.order_id) router.push({ pathname: "/order-tracking", params: { id: n.data.order_id, kind: n.data.order_kind || "grocery" } } as never);
+   };
+   const readAll = async () => { await api.post("/notifications/read-all", {}).catch(() => {}); setItems((list) => list.map((x) => ({ ...x, read: true }))); };
+diff --git a/frontend/app/restaurant/dashboard.tsx b/frontend/app/restaurant/dashboard.tsx
+--- a/frontend/app/restaurant/dashboard.tsx
++++ b/frontend/app/restaurant/dashboard.tsx
+@@ -1,16 +1,18 @@
+ import { useCallback, useRef, useState } from 'react';
+ import { useFocusEffect, useRouter } from 'expo-router';
+ import { Pressable, Text, TextInput, View, ActivityIndicator, Platform } from 'react-native';
++import { GroceryOrderReplacements, groceryReplacementOpenStates, restaurantReplacementOrder, type ReplacementOrder } from '@/src/components/GroceryOrderReplacements';
+ import { api } from '@/src/lib/api';
+ import { RestaurantPage, rs } from '@/src/restaurant/RestaurantPage';
+ import { restaurantTheme as t } from '@/src/restaurant/theme';
+ type R={id:string;name:string;status:string;available:boolean;city:string;phone?:string;address?:string;description?:string;cuisines?:string[];image_url?:string;delivery_available?:boolean;pickup_available?:boolean;payment_methods?:string[];delivery_fee?:number;tax_rate?:number;min_order?:number;estimated_minutes?:number};
+-type O={id:string;ref:string;status:string;total:number;customer_name:string;items:any[];fulfillment:'delivery'|'pickup'};
++type O=Omit<ReplacementOrder, 'items'>&{id:string;ref:string;status:string;total:number;customer_name:string;items:any[];fulfillment:'delivery'|'pickup'};
+ type Menu={id:string;name:string;description:string;category:string;price:number;available:boolean;image_url?:string;variants:any[];add_ons:any[]};
+ export default function RestaurantDashboard(){
+  const router=useRouter();const [restaurants,setRestaurants]=useState<R[]>([]);const [selected,setSelected]=useState<R|null>(null);const [orders,setOrders]=useState<O[]>([]);const [menu,setMenu]=useState<Menu[]>([]);
+  const [name,setName]=useState('');const [paymentMethods,setPaymentMethods]=useState<string[]>(['cod','pickup']);const [razorpayAvailable,setRazorpayAvailable]=useState(false);const [phone,setPhone]=useState('');const [address,setAddress]=useState('');const [city,setCity]=useState('');const [description,setDescription]=useState('');const [cuisines,setCuisines]=useState('');const [imageURL,setImageURL]=useState('');const imageInput=useRef<any>(null);const [itemName,setItemName]=useState('');const [itemPrice,setItemPrice]=useState('');const [priceDrafts,setPriceDrafts]=useState<Record<string,string>>({});const [message,setMessage]=useState('');const [loading,setLoading]=useState(true);const [busy,setBusy]=useState(false);
+- const load=useCallback(async()=>{setLoading(true);try{const config=await api.get<any>('/restaurant/payments/config').catch(()=>({razorpay_enabled:false}));setRazorpayAvailable(Boolean(config.razorpay_enabled));const rows=await api.get<R[]>('/restaurants/mine');setRestaurants(rows);const current=selected?rows.find(r=>r.id===selected.id)||null:rows[0]||null;setSelected(current);if(current){setName(current.name||'');setPhone(current.phone||'');setAddress(current.address||'');setCity(current.city||'');setDescription(current.description||'');setCuisines((current.cuisines||[]).join(', '));setImageURL(current.image_url||'');setPaymentMethods(current.payment_methods||['cod','pickup']);const [o,m]=await Promise.all([api.get<O[]>(`/restaurants/${current.id}/orders`),api.get<Menu[]>(`/restaurants/${current.id}/menu`)]);setOrders(o);setMenu(m)}}catch(e:any){setMessage(e?.message||'Please sign in to use the restaurant dashboard.')}finally{setLoading(false)}},[selected?.id]);
++ const selectedId=selected?.id;
++ const load=useCallback(async()=>{setLoading(true);try{const config=await api.get<any>('/restaurant/payments/config').catch(()=>({razorpay_enabled:false}));setRazorpayAvailable(Boolean(config.razorpay_enabled));const rows=await api.get<R[]>('/restaurants/mine');setRestaurants(rows);const current=selectedId?rows.find(r=>r.id===selectedId)||null:rows[0]||null;setSelected(current);if(current){setName(current.name||'');setPhone(current.phone||'');setAddress(current.address||'');setCity(current.city||'');setDescription(current.description||'');setCuisines((current.cuisines||[]).join(', '));setImageURL(current.image_url||'');setPaymentMethods(current.payment_methods||['cod','pickup']);const [o,m]=await Promise.all([api.get<O[]>(`/restaurants/${current.id}/orders`),api.get<Menu[]>(`/restaurants/${current.id}/menu`)]);setOrders(o);setMenu(m)}}catch(e:any){setMessage(e?.message||'Please sign in to use the restaurant dashboard.')}finally{setLoading(false)}},[selectedId]);
+  useFocusEffect(useCallback(()=>{load()},[load]));
+  function togglePaymentMethod(method:string){setPaymentMethods(current=>current.includes(method)?current.filter(x=>x!==method):[...current,method])}
+  async function create(){setBusy(true);setMessage('');try{if(paymentMethods.length===0){setMessage('Choose at least one payment method.');return;}const r=await api.post<R>('/restaurants',{name,phone,address,city,cuisines:cuisines.split(',').map(x=>x.trim()).filter(Boolean),description,image_url:imageURL||undefined,delivery_available:true,pickup_available:true,payment_methods:paymentMethods,delivery_fee:0,tax_rate:5,min_order:0,estimated_minutes:35});setRestaurants(prev=>[r,...prev]);setSelected(r);setMessage('Restaurant profile submitted. It remains unavailable until an admin approves it.')}catch(e:any){setMessage(e?.message||'Could not submit restaurant profile.')}finally{setBusy(false)}}
+@@ -28,7 +30,7 @@
+   {!selected&&<View style={rs.card}><Text style={rs.heading}>Register a restaurant</Text>{Platform.OS==='web'&&!selected?<><input ref={imageInput} type="file" accept="image/*" style={{display:'none'}} onChange={uploadLogo}/><Pressable style={rs.chip} onPress={()=>imageInput.current?.click()}><Text style={rs.chipText}>{imageURL?'Change restaurant image':'Upload restaurant image'}</Text></Pressable></>:null}{[[name,setName,'Restaurant name'],[phone,setPhone,'Contact phone'],[address,setAddress,'Street address'],[city,setCity,'City'],[description,setDescription,'Description'],[cuisines,setCuisines,'Cuisine categories (comma separated)']].map(([value,setter,label]:any)=><TextInput key={label} value={value} onChangeText={setter} placeholder={label} placeholderTextColor={t.textMuted} style={rs.input}/>)}<Text style={rs.muted}>Choose accepted payment methods</Text><View style={rs.row}>{[{id:'cod',label:'Cash on Delivery'},{id:'pickup',label:'Cash at Pickup'}].map(m=><Pressable key={m.id} onPress={()=>togglePaymentMethod(m.id)} style={[rs.chip,paymentMethods.includes(m.id)&&rs.chipActive]}><Text style={rs.chipText}>{paymentMethods.includes(m.id)?'✓ ':''}{m.label}</Text></Pressable>)}</View><Text style={rs.muted}>{razorpayAvailable?'Razorpay credentials are configured, but the customer-facing Restaurant payment screen is not integrated yet. Do not enable online-only checkout.':'Online payment (Razorpay) is unavailable until the server is configured and its customer-facing checkout is integrated.'}</Text><Pressable disabled={busy||!name.trim()||!phone.trim()||!address.trim()||!city.trim()} style={rs.button} onPress={create}><Text style={rs.buttonText}>{busy?'Saving…':'Submit restaurant profile'}</Text></Pressable></View>}
+   {selected?<><View style={rs.card}><Text style={rs.heading}>Add menu item</Text><TextInput value={itemName} onChangeText={setItemName} placeholder="Food item name" placeholderTextColor={t.textMuted} style={rs.input}/><TextInput value={itemPrice} onChangeText={setItemPrice} placeholder="Price in ₹" keyboardType="decimal-pad" placeholderTextColor={t.textMuted} style={rs.input}/><Pressable disabled={busy||!itemName.trim()||!Number.isFinite(Number(itemPrice))||Number(itemPrice)<0} style={rs.button} onPress={addItem}><Text style={rs.buttonText}>Save menu item</Text></Pressable></View>
+   <Text style={rs.heading}>Menu management</Text>{menu.length===0?<Text style={rs.muted}>No menu items yet.</Text>:menu.map(item=><View key={item.id} style={rs.card}><Text style={{color:t.text,fontWeight:'900'}}>{item.name} · ₹{item.price}</Text><Text style={rs.muted}>{item.category} · {item.available?'Available':'Unavailable'}</Text><View style={rs.row}><TextInput value={priceDrafts[item.id]??String(item.price)} onChangeText={v=>setPriceDrafts(prev=>({...prev,[item.id]:v}))} keyboardType="decimal-pad" style={[rs.input,{flex:1}]} placeholder="Price in ₹"/><Pressable style={[rs.button,{flex:1}]} onPress={()=>updatePrice(item)}><Text style={rs.buttonText}>Save price</Text></Pressable></View><View style={rs.row}><Pressable style={[rs.chip,{flex:1}]} onPress={()=>toggleItem(item)}><Text style={rs.chipText}>{item.available?'Mark unavailable':'Mark available'}</Text></Pressable><Pressable style={[rs.chip,{flex:1}]} onPress={()=>deleteItem(item)}><Text style={rs.chipText}>Delete item</Text></Pressable></View></View>)}
+-  <Text style={rs.heading}>Incoming orders</Text>{orders.length===0?<Text style={rs.muted}>No server-saved orders yet.</Text>:orders.map(o=><View key={o.id} style={rs.card}><Text style={{color:t.text,fontWeight:'900'}}>{o.ref} · ₹{o.total}</Text><Text style={rs.muted}>{o.status} · {(o.items||[]).map(i=>`${i.name} × ${i.quantity}`).join(', ')}</Text>{o.status==='placed'?<View style={rs.row}><Pressable style={[rs.button,{flex:1}]} onPress={()=>setStatus(o,'accepted')}><Text style={rs.buttonText}>Accept</Text></Pressable><Pressable style={[rs.chip,{flex:1}]} onPress={()=>setStatus(o,'rejected')}><Text style={rs.chipText}>Reject</Text></Pressable></View>:o.status==='accepted'?<Pressable style={rs.button} onPress={()=>setStatus(o,'preparing')}><Text style={rs.buttonText}>Start preparing</Text></Pressable>:o.status==='preparing'?<Pressable style={rs.button} onPress={()=>setStatus(o,'ready')}><Text style={rs.buttonText}>Mark ready</Text></Pressable>:o.status==='ready'?<Pressable style={rs.button} onPress={()=>setStatus(o,o.fulfillment==='pickup'?'picked_up':'out_for_delivery')}><Text style={rs.buttonText}>{o.fulfillment==='pickup'?'Mark picked up':'Send for delivery'}</Text></Pressable>:o.status==='out_for_delivery'?<Pressable style={rs.button} onPress={()=>setStatus(o,'delivered')}><Text style={rs.buttonText}>Mark delivered</Text></Pressable>:null}</View>)}</>:null}
++  <Text style={rs.heading}>Incoming orders</Text>{orders.length===0?<Text style={rs.muted}>No server-saved orders yet.</Text>:orders.map(o=><View key={o.id} style={rs.card}><Text style={{color:t.text,fontWeight:'900'}}>{o.ref} · ₹{o.total}</Text><Text style={rs.muted}>{o.status} · {(o.items||[]).map(i=>`${i.name} × ${i.quantity}`).join(', ')}</Text><GroceryOrderReplacements order={restaurantReplacementOrder(o)} onChange={load} staff kind="restaurant" menu={menu}/>{o.status==='placed'?<View style={rs.row}><Pressable style={[rs.button,{flex:1}]} onPress={()=>setStatus(o,'accepted')}><Text style={rs.buttonText}>Accept</Text></Pressable><Pressable style={[rs.chip,{flex:1}]} onPress={()=>setStatus(o,'rejected')}><Text style={rs.chipText}>Reject</Text></Pressable></View>:o.status==='accepted'?<Pressable style={rs.button} onPress={()=>setStatus(o,'preparing')}><Text style={rs.buttonText}>Start preparing</Text></Pressable>:o.status==='preparing'&&!o.replacements?.some(entry=>groceryReplacementOpenStates.includes(entry.state))?<Pressable style={rs.button} onPress={()=>setStatus(o,'ready')}><Text style={rs.buttonText}>Mark ready</Text></Pressable>:o.status==='ready'?<Pressable style={rs.button} onPress={()=>setStatus(o,o.fulfillment==='pickup'?'picked_up':'out_for_delivery')}><Text style={rs.buttonText}>{o.fulfillment==='pickup'?'Mark picked up':'Send for delivery'}</Text></Pressable>:o.status==='out_for_delivery'?<Pressable style={rs.button} onPress={()=>setStatus(o,'delivered')}><Text style={rs.buttonText}>Mark delivered</Text></Pressable>:null}</View>)}</>:null}
+   {message?<Text style={{color:t.primary,fontSize:12}}>{message}</Text>:null}<Pressable style={rs.chip} onPress={()=>router.replace('/restaurant' as never)}><Text style={rs.chipText}>Back to Restaurant Home</Text></Pressable>
+  </RestaurantPage>;
+ }
+diff --git a/frontend/app/restaurant/orders/[id].tsx b/frontend/app/restaurant/orders/[id].tsx
+--- a/frontend/app/restaurant/orders/[id].tsx
++++ b/frontend/app/restaurant/orders/[id].tsx
+@@ -2,8 +2,9 @@
+ import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+ import { Pressable, Text, TextInput, View, ActivityIndicator } from 'react-native';
+ import { GroceryOnlinePayment } from '@/src/components/GroceryOnlinePayment';
++import { GroceryOrderReplacements, restaurantReplacementOrder, type ReplacementOrder } from '@/src/components/GroceryOrderReplacements';
+ import { api } from '@/src/lib/api';
+ import { RestaurantPage, rs } from '@/src/restaurant/RestaurantPage';
+ import { restaurantTheme as t } from '@/src/restaurant/theme';
+-type Order={id:string;ref:string;restaurant_id:string;restaurant_name:string;status:string;payment_status:string;payment_method?:string;refund_status?:string;total:number;created_at:string;items:any[];status_history:any[];delivery_address:string;fulfillment:string};
+-export default function RestaurantOrderDetail(){const {id}=useLocalSearchParams<{id:string}>();const router=useRouter();const [order,setOrder]=useState<Order|null>(null);const [loading,setLoading]=useState(true);const [message,setMessage]=useState('');const [rating,setRating]=useState(5);const [comment,setComment]=useState('');const load=useCallback(()=>{setLoading(true);api.get<Order[]>('/restaurant/orders/mine').then(rows=>setOrder(rows.find(o=>o.id===id)||null)).catch((e:any)=>setMessage(e?.message||'Sign in to view this order.')).finally(()=>setLoading(false))},[id]);useFocusEffect(useCallback(()=>{load()},[load]));async function cancel(){try{const updated=await api.post<Order>(`/restaurant/orders/${id}/cancel`,{});setOrder(updated);setMessage('Cancellation saved.')}catch(e:any){setMessage(e?.message||'This order can no longer be cancelled online.')}}async function review(){if(!order)return;try{const r=await api.post(`/restaurants/${order.restaurant_id}/reviews`,{rating,comment});setMessage(`Review saved. Updated restaurant rating: ${(r as any).rating}`)}catch(e:any){setMessage(e?.message||'Review could not be saved. Only delivered orders can be reviewed.')}}return <RestaurantPage title="Order tracking" subtitle="Persistent order status · no GPS tracking is available unless a delivery provider is connected">{loading?<ActivityIndicator color={t.primary}/>:!order?<Text style={rs.muted}>Order not found for this account.</Text>:<><View style={rs.card}><Text style={rs.heading}>{order.ref}</Text><Text style={{color:t.primary,fontWeight:'900'}}>{order.status.replaceAll('_',' ')}</Text><Text style={rs.muted}>{order.restaurant_name} · ₹{order.total}</Text><Text style={rs.muted}>Payment: {order.payment_status}{order.refund_status?` · Refund: ${order.refund_status}`:''}</Text><GroceryOnlinePayment kind="restaurant" order={order} onChange={setOrder}/><Text style={rs.muted}>{order.fulfillment==='pickup'?'Pickup':`Delivery address: ${order.delivery_address}`}</Text><Text style={rs.muted}>ETA/GPS: no live delivery-partner location is connected. The displayed restaurant preparation estimate is not live tracking.</Text><Pressable style={rs.chip} onPress={()=>router.push({pathname:'/order-tracking',params:{id:order.id,kind:'restaurant'}} as never)}><Text style={rs.chipText}>Open delivery tracking</Text></Pressable>{['placed','pending_payment'].includes(order.status)?<Pressable style={rs.chip} onPress={cancel}><Text style={rs.chipText}>Cancel order (when eligible)</Text></Pressable>:null}</View><Text style={rs.heading}>Status history</Text>{(order.status_history||[]).map((h:any,i:number)=><View key={`${h.status}-${i}`} style={rs.card}><Text style={{color:t.text,fontWeight:'800'}}>{h.status.replaceAll('_',' ')}</Text><Text style={rs.muted}>{new Date(h.at).toLocaleString()}</Text>{h.note?<Text style={rs.muted}>{h.note}</Text>:null}</View>)}{order.status==='delivered'?<View style={rs.card}><Text style={rs.heading}>Rate your order</Text><View style={rs.row}>{[1,2,3,4,5].map(n=><Pressable key={n} style={[rs.chip,rating===n&&rs.chipActive]} onPress={()=>setRating(n)}><Text style={[rs.chipText,rating===n&&rs.chipTextActive]}>{n} ★</Text></Pressable>)}</View><TextInput value={comment} onChangeText={setComment} placeholder="Optional review" placeholderTextColor={t.textMuted} style={rs.input}/><Pressable style={rs.button} onPress={review}><Text style={rs.buttonText}>Submit review</Text></Pressable></View>:null}</>}{message?<Text style={{color:t.primary,fontSize:12}}>{message}</Text>:null}<Pressable style={rs.chip} onPress={()=>{if(order) router.push({pathname:'/restaurant/support',params:{order_id:order.id,order_kind:'restaurant'}} as never)}}><Text style={rs.chipText}>Need help? Contact support</Text></Pressable></RestaurantPage>}
++type Order=Omit<ReplacementOrder, 'items'>&{id:string;ref:string;restaurant_id:string;restaurant_name:string;status:string;payment_status:string;payment_method?:string;refund_status?:string;total:number;created_at:string;items:any[];status_history:any[];delivery_address:string;fulfillment:string};
++export default function RestaurantOrderDetail(){const {id}=useLocalSearchParams<{id:string}>();const router=useRouter();const [order,setOrder]=useState<Order|null>(null);const [loading,setLoading]=useState(true);const [message,setMessage]=useState('');const [rating,setRating]=useState(5);const [comment,setComment]=useState('');const load=useCallback(()=>{setLoading(true);return api.get<Order[]>('/restaurant/orders/mine').then(rows=>setOrder(rows.find(o=>o.id===id)||null)).catch((e:any)=>setMessage(e?.message||'Sign in to view this order.')).finally(()=>setLoading(false))},[id]);useFocusEffect(useCallback(()=>{load()},[load]));async function cancel(){try{const updated=await api.post<Order>(`/restaurant/orders/${id}/cancel`,{});setOrder(updated);setMessage('Cancellation saved.')}catch(e:any){setMessage(e?.message||'This order can no longer be cancelled online.')}}async function review(){if(!order)return;try{const r=await api.post(`/restaurants/${order.restaurant_id}/reviews`,{rating,comment});setMessage(`Review saved. Updated restaurant rating: ${(r as any).rating}`)}catch(e:any){setMessage(e?.message||'Review could not be saved. Only delivered orders can be reviewed.')}}return <RestaurantPage title="Order tracking" subtitle="Persistent order status · no GPS tracking is available unless a delivery provider is connected">{loading?<ActivityIndicator color={t.primary}/>:!order?<Text style={rs.muted}>Order not found for this account.</Text>:<><View style={rs.card}><Text style={rs.heading}>{order.ref}</Text><Text style={{color:t.primary,fontWeight:'900'}}>{order.status.replaceAll('_',' ')}</Text><Text style={rs.muted}>{order.restaurant_name} · ₹{order.total}</Text><Text style={rs.muted}>Payment: {order.payment_status}{order.refund_status?` · Refund: ${order.refund_status}`:''}</Text><GroceryOnlinePayment kind="restaurant" order={order} onChange={setOrder}/><GroceryOrderReplacements order={restaurantReplacementOrder(order)} onChange={load} kind="restaurant"/><Text style={rs.muted}>{order.fulfillment==='pickup'?'Pickup':`Delivery address: ${order.delivery_address}`}</Text><Text style={rs.muted}>ETA/GPS: no live delivery-partner location is connected. The displayed restaurant preparation estimate is not live tracking.</Text><Pressable style={rs.chip} onPress={()=>router.push({pathname:'/order-tracking',params:{id:order.id,kind:'restaurant'}} as never)}><Text style={rs.chipText}>Open delivery tracking</Text></Pressable>{['placed','pending_payment'].includes(order.status)?<Pressable style={rs.chip} onPress={cancel}><Text style={rs.chipText}>Cancel order (when eligible)</Text></Pressable>:null}</View><Text style={rs.heading}>Status history</Text>{(order.status_history||[]).map((h:any,i:number)=><View key={`${h.status}-${i}`} style={rs.card}><Text style={{color:t.text,fontWeight:'800'}}>{h.status.replaceAll('_',' ')}</Text><Text style={rs.muted}>{new Date(h.at).toLocaleString()}</Text>{h.note?<Text style={rs.muted}>{h.note}</Text>:null}</View>)}{order.status==='delivered'?<View style={rs.card}><Text style={rs.heading}>Rate your order</Text><View style={rs.row}>{[1,2,3,4,5].map(n=><Pressable key={n} style={[rs.chip,rating===n&&rs.chipActive]} onPress={()=>setRating(n)}><Text style={[rs.chipText,rating===n&&rs.chipTextActive]}>{n} ★</Text></Pressable>)}</View><TextInput value={comment} onChangeText={setComment} placeholder="Optional review" placeholderTextColor={t.textMuted} style={rs.input}/><Pressable style={rs.button} onPress={review}><Text style={rs.buttonText}>Submit review</Text></Pressable></View>:null}</>}{message?<Text style={{color:t.primary,fontSize:12}}>{message}</Text>:null}<Pressable style={rs.chip} onPress={()=>{if(order) router.push({pathname:'/restaurant/support',params:{order_id:order.id,order_kind:'restaurant'}} as never)}}><Text style={rs.chipText}>Need help? Contact support</Text></Pressable></RestaurantPage>}
+diff --git a/frontend/src/components/GroceryOrderReplacements.tsx b/frontend/src/components/GroceryOrderReplacements.tsx
+--- a/frontend/src/components/GroceryOrderReplacements.tsx
++++ b/frontend/src/components/GroceryOrderReplacements.tsx
+@@ -15,8 +15,8 @@
+   price: number;
+   line_total?: number | null;
+ };
+-type Totals = { subtotal: number; delivery_fee: number; total: number };
+-type Offer = { id: string; item: Line; line_difference: number; totals: Totals };
++type Totals = { subtotal: number; delivery_fee: number; tax?: number; total: number };
++type Offer = { id: string; item: Line; line_difference: number; totals: Totals | null };
+ type ReplacementCase = {
+   id: string;
+   line_index: number;
+@@ -27,6 +27,9 @@
+   keep_totals: Totals | null;
+   state: "awaiting_customer" | "rejected" | "assist_required" | "superseded" | "accepted" | "kept_unavailable";
+   final_totals?: Totals;
++  support_id?: string;
++  assist_reason?: string;
++  decision?: { action: Decision };
+ };
+ export type ReplacementOrder = {
+   id: string;
+@@ -38,6 +41,13 @@
+ type Decision = "accept" | "reject" | "keep_unavailable";
+
+ export const groceryReplacementOpenStates = ["awaiting_customer", "rejected", "assist_required"];
++const restaurantReportStatuses = ["pending_payment", "placed", "accepted", "preparing"];
++const assistReasons: Record<string, string> = {
++  payment_review: "Assist will review the original payment and any difference.",
++  reward_review: "Assist will review the existing rewards or discounts.",
++  historical_tax_review: "Assist will review the original tax calculation or invoice.",
++  no_alternative: "No eligible replacement or removal is available.",
++};
+ const reportStatuses = ["pending_payment", "pending", "accepted", "preparing"];
+ const money = (amount: number) => `₹${amount.toFixed(2)}`;
+ const describe = (line: Line) => `${line.quantity_label || line.qty} × ${line.name}${line.unit ? ` · ${line.unit}` : ""}`;
+@@ -50,19 +60,26 @@
+   kept_unavailable: "Customer continued without this item",
+ };
+
+-export function GroceryOrderReplacements({ order, onChange, staff = false }: {
++type MenuOption = { id: string; name: string; available: boolean; variants?: { id: string; name: string; available?: boolean }[] };
++
++export function GroceryOrderReplacements({ order, onChange, staff = false, kind = "grocery", menu = [] }: {
+   order: ReplacementOrder;
+   onChange: () => Promise<unknown>;
+   staff?: boolean;
++  kind?: "grocery" | "restaurant";
++  menu?: MenuOption[];
+ }) {
+   const router = useRouter();
+   const styles = useStyles();
+   const [busy, setBusy] = useState(false);
+   const [error, setError] = useState("");
++  const [draft, setDraft] = useState<{ index: number; caseId?: string } | null>(null);
++  const restaurant = kind === "restaurant";
++  const statuses = restaurant ? restaurantReportStatuses : reportStatuses;
+   const cases = order.replacements ?? [];
+   const active = cases.find((entry) => groceryReplacementOpenStates.includes(entry.state));
+-  const canReport = staff && Boolean(order.customer_id) && reportStatuses.includes(order.status);
+-  const base = `/orders/${encodeURIComponent(order.id)}/replacements`;
++  const canReport = staff && Boolean(order.customer_id) && statuses.includes(order.status);
++  const base = `${restaurant ? "/restaurant" : ""}/orders/${encodeURIComponent(order.id)}/replacements`;
+
+   async function update(path: string, body: object) {
+     if (busy) return;
+@@ -70,6 +87,7 @@
+     setError("");
+     try {
+       await api.post(path, body);
++      setDraft(null);
+       await onChange();
+     } catch (cause) {
+       setError(cause && typeof cause === "object" && "message" in cause && typeof cause.message === "string"
+@@ -81,6 +99,17 @@
+
+   const report = (line: Line, index: number, refreshCaseId?: string) =>
+     void update(base, { line_index: index, product_id: line.product_id, variant_id: line.variant_id ?? null, qty: line.qty, refresh_case_id: refreshCaseId });
++  const restaurantReport = (alternative?: { menu_item_id: string; variant_id?: string }) => {
++    if (!draft) return;
++    const line = order.items[draft.index];
++    if (!line) return;
++    void update(base, {
++      line_index: draft.index, menu_item_id: line.product_id, refresh_case_id: draft.caseId,
++      alternatives: alternative ? [{ ...alternative, quantity: line.qty }] : [],
++    });
++  };
++  const openReport = (line: Line, index: number, caseId?: string) =>
++    restaurant ? setDraft({ index, caseId }) : report(line, index, caseId);
+   const decide = (entry: ReplacementCase, action: Decision, optionId?: string) =>
+     void update(`${base}/${entry.id}/decision`, { action, option_id: optionId });
+   const button = (label: string, action: () => void) => (
+@@ -95,21 +124,36 @@
+     <Text style={styles.title}>Unavailable items</Text>
+     {error ? <Text accessibilityLiveRegion="polite" style={styles.error}>{error}</Text> : null}
+     {canReport && !active && order.items.map((line, index) => <View key={`${line.product_id}:${index}`}>
+-      {button(`Report ${line.name}${line.unit ? ` (${line.unit})` : ""} unavailable`, () => report(line, index))}
++      {button(`Report ${line.name}${line.unit ? ` (${line.unit})` : ""} unavailable`, () => openReport(line, index))}
+     </View>)}
++    {canReport && restaurant && draft && order.items[draft.index] ? <View style={styles.offer}>
++      <Text style={styles.title}>Choose a replacement for {order.items[draft.index].name}</Text>
++      {menu.filter((item) => item.available).flatMap((item) =>
++        (item.variants?.length ? item.variants.filter((variant) => variant.available !== false) : [{ id: undefined, name: "" }])
++          .filter((variant) => item.id !== order.items[draft.index].product_id || variant.id !== (order.items[draft.index].variant_id ?? undefined))
++          .map((variant) => <View key={`${item.id}:${variant.id ?? ""}`}>
++            {button(`Offer ${item.name}${variant.name ? ` · ${variant.name}` : ""}`, () => restaurantReport({ menu_item_id: item.id, variant_id: variant.id }))}
++          </View>),
++      )}
++      {button("Report and ask Assist for help", () => restaurantReport())}
++      {button("Cancel", () => setDraft(null))}
++    </View> : null}
+     {cases.filter((entry) => entry.state !== "superseded").reverse().map((entry) => {
+-      const canDecide = !staff && entry === active && reportStatuses.includes(order.status) && entry.state !== "assist_required";
++      const canDecide = !staff && entry === active && statuses.includes(order.status) && (!entry.assist_reason || !entry.decision);
+       return <View style={styles.case} key={entry.id}>
+         <Text style={styles.title}>{describe(entry.original)} · {money(entry.original_line_total)} original</Text>
+         <Text style={styles.text}>{order.status === "cancelled" && entry === active ? "Order cancelled" : labels[entry.state]}</Text>
++        {entry.assist_reason ? <Text style={styles.text}>{assistReasons[entry.assist_reason]}</Text> : null}
++        {entry.assist_reason && entry.decision ? <Text style={styles.text}>Your decision was sent to Assist. The order and payment stay unchanged during review.</Text> : null}
+         {entry.final_totals ? <Text style={styles.text}>Confirmed order total {money(entry.final_totals.total)} · was {money(entry.original_total)}</Text> : null}
+-        {entry === active && entry.state === "awaiting_customer" && reportStatuses.includes(order.status) ? <>
++        {entry === active && (entry.state === "awaiting_customer" || entry.state === "assist_required") && statuses.includes(order.status) ? <>
+           {!entry.options.length ? <Text style={styles.text}>The shop has no matching replacements in stock right now.</Text> : null}
+           {entry.options.map((option) => <View key={option.id} style={styles.offer}>
+             <Text style={styles.text}>{describe(option.item)} · {money(option.item.line_total ?? option.item.price * option.item.qty)}</Text>
+             <Text style={styles.text}>Item difference {option.line_difference > 0 ? "+" : option.line_difference < 0 ? "−" : ""}{money(Math.abs(option.line_difference))}</Text>
+-            <Text style={styles.text}>New order total {money(option.totals.total)} · delivery {money(option.totals.delivery_fee)}</Text>
+-            {canDecide ? button(`Accept ${option.item.name} · ${money(option.totals.total)} total`, () => decide(entry, "accept", option.id)) : null}
++            {option.totals ? <Text style={styles.text}>New order total {money(option.totals.total)} · delivery {money(option.totals.delivery_fee)}{option.totals.tax != null ? ` · tax ${money(option.totals.tax)}` : ""}</Text>
++              : <Text style={styles.text}>Assist will confirm any change to the order total.</Text>}
++            {canDecide ? button(option.totals ? `Accept ${option.item.name} · ${money(option.totals.total)} total` : `Approve ${option.item.name} for Assist review`, () => decide(entry, "accept", option.id)) : null}
+           </View>)}
+           {canDecide && entry.options.length ? button("Reject these replacements", () => decide(entry, "reject")) : null}
+         </> : null}
+@@ -117,14 +161,16 @@
+           `Keep item unavailable · ${money(entry.keep_totals.total)} total`,
+           () => decide(entry, "keep_unavailable"),
+         ) : null}
+-        {canDecide && !entry.keep_totals ? <Text style={styles.text}>Without this item your order would be empty. Contact COME-IN Assist for help.</Text> : null}
+-        {canReport && entry === active && entry.state !== "assist_required" && order.items[entry.line_index]
+-          ? button("Refresh in-stock options", () => report(order.items[entry.line_index], entry.line_index, entry.id))
++        {canDecide && !restaurant && !entry.assist_reason && !entry.keep_totals ? <Text style={styles.text}>Without this item your order would be empty. Contact COME-IN Assist for help.</Text> : null}
++        {canReport && entry === active && order.items[entry.line_index]
++          ? button(restaurant ? "Update replacement offer" : "Refresh in-stock options", () => openReport(order.items[entry.line_index], entry.line_index, entry.id))
+           : null}
+       </View>;
+     })}
+-    {!staff && active && reportStatuses.includes(order.status) ? button("Contact COME-IN Assist", () =>
+-      router.push({ pathname: "/chand", params: { openHelp: "1", order_id: order.id, order_kind: "grocery" } }),
++    {!staff && active && statuses.includes(order.status) ? button(active.support_id ? "View COME-IN Assist status" : "Contact COME-IN Assist", () =>
++      restaurant
++        ? router.push({ pathname: "/chand", params: { openHelp: "1", order_id: order.id, order_kind: "restaurant" } })
++        : router.push({ pathname: "/chand", params: { openHelp: "1", order_id: order.id, order_kind: "grocery" } }),
+     ) : null}
+   </View>;
+ }
+@@ -140,3 +186,15 @@
+   buttonText: { color: colors.onBrandPrimary, fontWeight: "700" },
+   disabled: { opacity: 0.55 },
+ }));
++
++type RestaurantLine = { menu_item_id: string; name: string; quantity: number; unit_price: number; variant?: { id: string; name?: string } };
++
++export function restaurantReplacementOrder<T extends Omit<ReplacementOrder, "items"> & { items: RestaurantLine[] }>(order: T): ReplacementOrder {
++  return {
++    ...order,
++    items: order.items.map((line) => ({
++      product_id: line.menu_item_id, variant_id: line.variant?.id, name: line.name,
++      unit: line.variant?.name, qty: line.quantity, price: line.unit_price,
++    })),
++  };
++}

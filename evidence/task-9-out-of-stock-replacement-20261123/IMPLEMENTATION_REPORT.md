@@ -31,3 +31,7 @@
 - [Commands and run notes](COMMANDS.md)
 
 Final verification recorded 22 focused passes and 689 full backend passes with zero failures and five skips. Four optional catalogue-parser skips were covered separately after adding the retained parser libraries to the test path. The entire catalogue module then passed 21 tests. The object-storage case remains skipped because external storage is unavailable. [Parser rerun](optional-catalogue.log)
+
+## Follow-up implementation
+
+This report preserves the Grocery milestone. The Restaurant replacement flow and the paid, reward and legacy tax Assist integration were added in a follow-up. [Follow-up report](../task-9-restaurant-assist-20261123/IMPLEMENTATION_REPORT.md)
