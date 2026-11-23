@@ -51,3 +51,7 @@ Replacement-offer expiry and separate cancellation remain unimplemented, with th
 ### Stage 10 — blocked policies
 
 Eight blocked operations have named owners, missing decisions, external evidence and next steps. Local safety checks passed. [Blockers](final-closure-20261123/BLOCKERS-AND-DEPENDENCIES.md)
+
+### Stage 11 — seven-area integration
+
+Fresh backend 707 passed and one object-storage skip. Seven Chromium scenarios and 16 restart checks passed. [Commands and evidence](final-closure-20261123/INTEGRATION-TESTS.md)

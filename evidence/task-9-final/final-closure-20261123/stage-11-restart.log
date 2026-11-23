@@ -1,0 +1,16 @@
+PASS restarted API preserved terminal status, campaign counters, order receipt and spent audit reconciliation
+PASS after restart an eligible unpaid cancellation restored budget exactly once despite closure and replay
+PASS immutable shortfall review preserved and replayed after process restart
+PASS terminal removal and audit persisted without any duplicate audit or budget mutation
+PASS original order and finalized fee evidence reconciled unchanged after restart
+PASS malformed order fee was flagged without mutating the finalized ledger or creating a payable
+PASS approved credit and notification persisted and approval replay did not duplicate either
+PASS refunded qualifying order blocks release after restart without reversing the original credit
+PASS post-restart COD replay preserved one audit and one finalized ledger snapshot
+PASS persisted COD evidence remains review-only and no provider refund record was created
+PASS process 1 saved normalized promotion fields; redemption is disabled.
+PASS process 2 retrieved the same draft and caps; replay reused the identifier.
+PASS process 2 revalidated the persisted provider request preview from the original synthetic capture.
+PASS process 2 replayed the same immutable ended-campaign review without compensation.
+PASS process 2 reloaded pending collection and its audit; replay created no duplicate or payment.
+PASS internal draft and original invoice reference persisted across restart without duplicate or statutory issuance
