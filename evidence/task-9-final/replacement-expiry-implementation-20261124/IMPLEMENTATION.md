@@ -1,0 +1,13 @@
+# T9-12 replacement expiry and sequential re-offers
+
+The source patch applies after the existing Task 9 patch series, including the final invoice snapshot consistency patch. Only the existing backend, two replacement suites, shared replacement component and Admin screen are changed. No data migration is required. The worker adds sparse expiry indexes to the two existing order collections. Policy and audit records use the existing financial policy and audit collections.
+
+- New Grocery and Restaurant offers start at 15 minutes. Creation records a server timestamp, then writes the customer’s in-app notification and records availability and the deadline inside the same MongoDB transaction as the order update. Failed publication rolls back both writes. Device clocks only prompt a UI reload.
+- Each case has one actionable option. A decline or expiry records the outcome, revalidates remaining candidates and publishes the next eligible option. An exhausted case links to COME-IN Assist. Existing explicit item-removal rules remain available where applicable. Acceptance still uses the original stock, pricing, tax, customer ownership and financial-review checks.
+- A server worker scans for due offers, including after restart. Customer actions also check the authoritative deadline. The existing Mongo transaction retry logic handles concurrent writers. Option IDs protect against stale decisions and repeats.
+- Admin Support exposes default and min/max settings. The existing Admin role gates all settings and per-offer endpoints. Concurrent edits use expected version or expected deadline. Admin changes persist the reason, actor, timestamp, old value and new value. An individual adjustment requires a current unexpired option and creates a new customer notice. The individual adjustment is available through the Admin API.
+- Existing issued offers without sequence metadata use their existing behavior. Default changes apply to future publications. Existing order, tax and payment references are retained. No real settlement, refund or collection runs through the expiry workflow.
+
+The owner supplied the 15-minute default and successful-availability start. No global minimum or maximum has been specified, so Admin must configure explicit limits before using per-offer adjustment. Independent cancellation outside decline/expiry and controlled migration remain open under the prior decision packet. Define actor eligibility and reason rules, treatment of accepted/post-dispatch offers, and legacy migration eligibility, notice, timing and grace period before implementing those paths. T9-12 is PARTIALLY VERIFIED as a whole.
+
+See [audit](AUDIT.md) and [test results](TESTS.md).

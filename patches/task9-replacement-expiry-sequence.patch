@@ -1,0 +1,821 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -5407,6 +5407,7 @@
+ class GroceryReplacementDecisionIn(BaseModel):
+     action: Literal["accept", "reject", "keep_unavailable"]
+     option_id: Optional[str] = Field(default=None, max_length=40)
++    offer_id: Optional[str] = Field(default=None, max_length=40)
+
+
+ def _replacement_adjustment_reasons(order: dict, kind: str) -> list[str]:
+@@ -5511,6 +5512,7 @@
+
+
+ def _replacement_decision(case, order, body, user, now):
++    _archive_replacement_option(case, body.action, now, user["id"])
+     case.setdefault("decision_history", []).append({
+         "action": body.action, "option_id": body.option_id, "at": now, "customer_id": user["id"],
+         "order_total_at_decision": order["total"],
+@@ -5601,6 +5603,272 @@
+     }, session=session)
+
+
++DEFAULT_REPLACEMENT_EXPIRY_MINUTES = 15
++REPLACEMENT_EXPIRY_SETTINGS = "replacement-expiry-settings"
++_EXPIRED_REPLACEMENT = object()
++
++
++class ReplacementExpirySettingsIn(BaseModel):
++    default_minutes: int = Field(gt=0, strict=True)
++    minimum_minutes: int = Field(gt=0, strict=True)
++    maximum_minutes: int = Field(gt=0, strict=True)
++    expected_version: int = Field(ge=0, strict=True)
++    reason: str = Field(min_length=5, max_length=500)
++
++
++class ReplacementExpiryAdjustmentIn(BaseModel):
++    offer_id: str = Field(min_length=1, max_length=40)
++    expected_expires_at: datetime
++    duration_minutes: int = Field(gt=0, strict=True)
++    reason: str = Field(min_length=5, max_length=500)
++
++
++async def _replacement_expiry_settings(session=None):
++    stored = await db.financial_policy_drafts.find_one({"_id": REPLACEMENT_EXPIRY_SETTINGS}, session=session)
++    return stored or {"default_minutes": DEFAULT_REPLACEMENT_EXPIRY_MINUTES,
++                      "minimum_minutes": None, "maximum_minutes": None, "version": 0}
++
++
++@api.get("/admin/replacements/expiry-settings")
++async def get_replacement_expiry_settings(_: dict = Depends(require_role("admin"))):
++    return doc_out(await _replacement_expiry_settings())
++
++
++@api.put("/admin/replacements/expiry-settings")
++async def save_replacement_expiry_settings(body: ReplacementExpirySettingsIn, user: dict = Depends(require_role("admin"))):
++    if not body.minimum_minutes <= body.default_minutes <= body.maximum_minutes or len(body.reason.strip()) < 5:
++        raise HTTPException(422, "Set minimum ≤ default ≤ maximum and provide a reason.")
++    try:
++        now_utc() + timedelta(minutes=body.maximum_minutes)
++    except OverflowError:
++        raise HTTPException(422, "The maximum cannot be represented as an expiry timestamp.") from None
++
++    async def apply(session):
++        previous = await _replacement_expiry_settings(session)
++        if previous["version"] != body.expected_version:
++            raise HTTPException(409, "Expiry settings changed. Reload before saving.")
++        fields = ("default_minutes", "minimum_minutes", "maximum_minutes")
++        values = {key: getattr(body, key) for key in fields}
++        now = now_utc()
++        updated = {"_id": REPLACEMENT_EXPIRY_SETTINGS, "record_type": "replacement_expiry",
++                   **values, "version": previous["version"] + 1, "updated_at": now}
++        await db.financial_policy_drafts.replace_one({"_id": REPLACEMENT_EXPIRY_SETTINGS}, updated, upsert=True, session=session)
++        await db.financial_audit.insert_one({"action": "replacement_expiry_settings_updated", "actor_id": user["id"],
++            "previous": {key: previous[key] for key in fields}, "new": values, "version": updated["version"],
++            "created_at": now, "reason": body.reason.strip()}, session=session)
++        return doc_out(updated)
++
++    return await _run_replacement_transaction(apply)
++
++
++def _replacement_scope(kind):
++    return (db.orders, GROCERY_REPLACEMENT_ORDER_STATES) if kind == "grocery" else (db.restaurant_orders, RESTAURANT_REPLACEMENT_ORDER_STATES)
++
++
++async def _publish_replacement_option(session, order, case, option, kind, title, message):
++    policy = await _replacement_expiry_settings(session)
++    # Order visibility and in-app delivery commit together. A failed notice
++    # cannot leave an actionable offer or start its clock.
++    created = now_utc()
++    await _replacement_notify(session, order, case, title, message, kind)
++    available = now_utc()
++    duration = policy["default_minutes"]
++    case["active_offer"] = {"option_id": option["id"], "created_at": created, "available_at": available,
++                            "expires_at": available + timedelta(minutes=duration), "duration_minutes": duration,
++                            "policy_version": policy["version"]}
++
++
++def _archive_replacement_option(case, state, now, actor_id):
++    active = case.pop("active_offer", None)
++    if active:
++        case.setdefault("offer_history", []).append({**active, "status": state, "closed_at": now, "actor_id": actor_id})
++
++
++async def _available_replacement_option(session, order, case, option, kind):
++    """Skip stale alternatives. Confirmation still uses the original decision path."""
++    if order["total"] != case["original_total"] or not 0 <= case["line_index"] < len(order["items"]):
++        return False
++    try:
++        item = option["item"]
++        if kind == "grocery":
++            if _replacement_snapshot(order["items"][case["line_index"]]) != case["original"]:
++                return False
++            lines, shop_id = await _resolve_grocery_lines(
++                [QuoteLineIn(product_id=item["product_id"], variant_id=item.get("variant_id"), qty=item["qty"])], session=session)
++            if shop_id != order["shop_id"] or _replacement_snapshot(lines[0]) != item:
++                return False
++            totals = _replacement_totals(order, case["line_index"], lines[0])
++        else:
++            if _restaurant_replacement_display(order["items"][case["line_index"]]) != case["original"]:
++                return False
++            restaurant = await _restaurant_replacement_context(order, session)
++            selection = RestaurantOrderLineIn.model_validate(option["selection"])
++            line = await _restaurant_resolve_line(order["restaurant_id"], selection, session=session)
++            if _restaurant_replacement_display(line) != item:
++                return False
++            totals = _restaurant_replacement_totals(order, restaurant, _replacement_items(order, case["line_index"], line))
++    except HTTPException as exc:
++        if exc.status_code in {404, 409, 422}:
++            return False
++        raise
++    reason = _replacement_adjustment_reason(order, kind)
++    if reason != case.get("assist_reason") or not totals:
++        return False
++    if option["totals"] is not None:
++        return totals == option["totals"]
++    return _replacement_payment_quotes(order, totals, kind) == {
++        key: option[key] for key in ("collection_quote", "replacement_refund_quote") if key in option
++    }
++
++
++async def _advance_replacement_offer(session, order, case, kind, outcome, actor_id):
++    now = now_utc()
++    _archive_replacement_option(case, outcome, now, actor_id)
++    attempted = {entry["option_id"] for entry in case["offer_history"]}
++    for option in case["options"]:
++        if option["id"] in attempted:
++            continue
++        if await _available_replacement_option(session, order, case, option, kind):
++            await _publish_replacement_option(session, order, case, option, kind, "Another replacement is available",
++                                             "Open your order to review the next option and its deadline.",)
++            break
++        case["offer_history"].append({"option_id": option["id"], "status": "unavailable", "closed_at": now,
++                                      "actor_id": "system"})
++    else:
++        # Preserve explicitly chosen eligible item-removal behavior after a
++        # decline. Escalation itself never changes the line, totals or payment.
++        if outcome == "rejected":
++            _replacement_decision(case, order, GroceryReplacementDecisionIn(action="reject"), {"id": actor_id}, now)
++            case["state"] = "assist_required" if case.get("assist_reason") else "rejected"
++        else:
++            case.update({"state": "assist_required", "assist_reason": case.get("assist_reason") or "no_alternative"})
++        support_case = {**case, "assist_reason": case.get("assist_reason") or "no_alternative"}
++        await _replacement_escalate(session, order, support_case, kind, case)
++        case["support_id"] = support_case["support_id"]
++        if case.get("assist_reason"):
++            await _replacement_financial_review(session, order, case, kind)
++        # An expiry needs a fresh customer notice. A decline is already shown
++        # synchronously in the order UI and has an available Assist link.
++        if outcome == "expired":
++            await _replacement_notify(session, order, case, "Replacement offer expired",
++                                      "Contact COME-IN Assist for this unavailable item. Your order was not cancelled.", kind)
++    collection, _ = _replacement_scope(kind)
++    await collection.update_one({"_id": order["_id"]}, {"$set": {
++        "replacements": order["replacements"], "updated_at": now,
++    }}, session=session)
++    return case
++
++
++async def _managed_replacement_decision(session, order, case, kind, body, user):
++    """Return a handled result or defer to existing acceptance/removal rules."""
++    if not case.get("offer_sequence") or case.get("state") not in GROCERY_REPLACEMENT_OPEN_STATES:
++        return None
++    _, states = _replacement_scope(kind)
++    if order["status"] not in states:
++        return None
++    active = case.get("active_offer")
++    if body.action == "reject" and body.offer_id and any(
++        entry["option_id"] == body.offer_id and entry["status"] == "rejected" for entry in case["offer_history"]
++    ):
++        return case
++    if not active:
++        if body.action == "accept" and not case.get("decision"):
++            raise HTTPException(409, "No replacement option is open. Contact COME-IN Assist.")
++        return None
++    if utc(active["expires_at"]) <= now_utc():
++        await _advance_replacement_offer(session, order, case, kind, "expired", "system")
++        return _EXPIRED_REPLACEMENT
++    if body.action == "reject":
++        if body.option_id or body.offer_id != active["option_id"]:
++            raise HTTPException(409, "Refresh the order before declining the current option.")
++        return await _advance_replacement_offer(session, order, case, kind, "rejected", user["id"])
++    if body.action == "accept" and body.option_id != active["option_id"]:
++        if not any(option["id"] == body.option_id for option in case["options"]):
++            raise HTTPException(422, "Select an offered replacement.")
++        raise HTTPException(409, "Only the current replacement option can be accepted.")
++    return None
++
++
++def _check_active_replacement_deadline(case):
++    active = case.get("active_offer")
++    if active and utc(active["expires_at"]) <= now_utc():
++        raise HTTPException(409, "The offer expired. Refresh the order to check the replacement status.")
++
++
++@api.patch("/admin/replacements/{kind}/{order_id}/{case_id}/expiry")
++async def adjust_replacement_offer_expiry(kind: Literal["grocery", "restaurant"], order_id: str, case_id: str,
++                                         body: ReplacementExpiryAdjustmentIn, user: dict = Depends(require_role("admin"))):
++    if body.expected_expires_at.utcoffset() is None or len(body.reason.strip()) < 5:
++        raise HTTPException(422, "Provide the expiry with its timezone and a reason.")
++    oid = _object_id_or_404(order_id, "Order")
++    collection, states = _replacement_scope(kind)
++
++    async def apply(session):
++        order = await collection.find_one({"_id": oid}, session=session)
++        case = next((entry for entry in (order or {}).get("replacements", []) if entry["id"] == case_id), None)
++        if not case:
++            raise HTTPException(404, "Replacement request not found.")
++        active = case.get("active_offer")
++        now = now_utc()
++        if (not active or case.get("decision") or case["state"] not in GROCERY_REPLACEMENT_OPEN_STATES
++                or order["status"] not in states or active["option_id"] != body.offer_id or utc(active["expires_at"]) <= now
++                or utc(active["expires_at"]) != body.expected_expires_at):
++            raise HTTPException(409, "Only the current pending, unexpired offer can be adjusted.")
++        policy = await _replacement_expiry_settings(session)
++        if policy["minimum_minutes"] is None or not policy["minimum_minutes"] <= body.duration_minutes <= policy["maximum_minutes"]:
++            raise HTTPException(422, "Configure Admin expiry limits and select a duration within them.")
++        try:
++            deadline = utc(active["available_at"]) + timedelta(minutes=body.duration_minutes)
++        except OverflowError:
++            raise HTTPException(422, "The adjusted expiry timestamp is outside the supported range.") from None
++        if deadline <= now:
++            raise HTTPException(422, "The adjusted expiry must be in the future.")
++        if deadline == utc(active["expires_at"]):
++            return case
++        previous = {"duration_minutes": active["duration_minutes"], "expires_at": active["expires_at"]}
++        active.update({"duration_minutes": body.duration_minutes, "expires_at": deadline})
++        await _replacement_notify(session, order, case, "Replacement deadline updated",
++                                  "Open your order to review the new deadline.", kind)
++        await collection.update_one({"_id": oid}, {"$set": {"replacements": order["replacements"], "updated_at": now}}, session=session)
++        await db.financial_audit.insert_one({"action": "replacement_offer_expiry_adjusted", "order_id": order_id,
++            "order_kind": kind, "replacement_id": case_id, "offer_id": body.offer_id, "actor_id": user["id"],
++            "created_at": now, "reason": body.reason.strip(), "previous": previous,
++            "new": {"duration_minutes": body.duration_minutes, "expires_at": deadline}}, session=session)
++        return case
++
++    return await _run_replacement_transaction(apply)
++
++
++async def _expire_due_replacement_offers(kind):
++    collection, states = _replacement_scope(kind)
++    due = {"state": {"$in": list(GROCERY_REPLACEMENT_OPEN_STATES)},
++           "active_offer.expires_at": {"$lte": now_utc()}}
++    rows = await collection.find({"status": {"$in": list(states)}, "replacements": {"$elemMatch": due}},
++                                 {"_id": 1}).limit(50).to_list(50)
++    for row in rows:
++        async def apply(session):
++            order = await collection.find_one({"_id": row["_id"], "status": {"$in": list(states)}}, session=session)
++            for case in (order or {}).get("replacements", []):
++                active = case.get("active_offer")
++                if active and not case.get("decision") and case["state"] in GROCERY_REPLACEMENT_OPEN_STATES and utc(active["expires_at"]) <= now_utc():
++                    await _advance_replacement_offer(session, order, case, kind, "expired", "system")
++
++        try:
++            await _run_replacement_transaction(apply)
++        except Exception:
++            logger.exception("Replacement expiry could not be committed; order %s will be retried", row["_id"])
++
++
++async def _replacement_expiry_worker():
++    while True:
++        await asyncio.sleep(5)
++        try:
++            for kind in ("grocery", "restaurant"):
++                await _expire_due_replacement_offers(kind)
++        except Exception:
++            logger.exception("Replacement expiry scan failed; retrying")
++
++
+ async def _run_replacement_transaction(callback):
+     try:
+         return await run_transaction(client, callback)
+@@ -5666,17 +5934,24 @@
+             "reported_by": user["id"], "reported_at": now, "supersedes": body.refresh_case_id,
+         }
+         if open_case:
++            _archive_replacement_option(open_case, "superseded", now, user["id"])
+             open_case.update({"state": "superseded", "superseded_at": now})
+         if reason:
+             await _replacement_escalate(session, order, case, "grocery", open_case)
+             await _replacement_financial_review(session, order, case, "grocery")
++        if options:
++            case.update({"offer_sequence": True, "offer_history": []})
++            await _publish_replacement_option(session, order, case, options[0], "grocery", "An order item is unavailable",
++                                             f"{line['name']} is unavailable. Open your order to review the replacement and its deadline.")
++        else:
++            if not case.get("support_id"):
++                support_case = {**case, "assist_reason": "no_alternative"}
++                await _replacement_escalate(session, order, support_case, "grocery", case)
++                case["support_id"] = support_case["support_id"]
++            await _replacement_notify(session, order, case, "An order item is unavailable",
++                                      f"{line['name']} is unavailable. Review your order or contact COME-IN Assist.")
+         cases.append(case)
+         await db.orders.update_one({"_id": oid}, {"$set": {"replacements": cases, "updated_at": now}}, session=session)
+-        message = (
+-            "Review your replacement options and choose how to continue." if options else
+-            "Review the unavailable item in your order or contact COME-IN Assist."
+-        )
+-        await _replacement_notify(session, order, case, "An order item is unavailable", f"{line['name']} is unavailable. {message}")
+         return case
+
+     return await _run_replacement_transaction(apply)
+@@ -5763,6 +6038,9 @@
+         decision = case.get("decision") or {}
+         if decision.get("action") == body.action and decision.get("option_id") == body.option_id:
+             return case
++        managed = await _managed_replacement_decision(session, order, case, "grocery", body, user)
++        if managed is not None:
++            return managed
+         if case["state"] not in GROCERY_REPLACEMENT_OPEN_STATES or order["status"] not in GROCERY_REPLACEMENT_ORDER_STATES:
+             raise HTTPException(status_code=409, detail="This offer is no longer open. Refresh your order or contact COME-IN Assist.")
+         if (body.action == "accept") != bool(body.option_id):
+@@ -5795,6 +6073,7 @@
+                 if quote and (_replacement_totals(order, index, lines[0])["total"] != quote["total"]
+                               or order["total"] != case["original_total"]):
+                     raise HTTPException(409, "The quoted total changed. Ask the shop to refresh the options.")
++            _check_active_replacement_deadline(case)
+             case.update({"state": "assist_required", "assist_reason": reason})
+             await _replacement_escalate(session, order, case, "grocery", case)
+             _replacement_decision(case, order, body, user, now)
+@@ -5824,6 +6103,7 @@
+                 raise HTTPException(status_code=409, detail="No items would remain. Contact COME-IN Assist or cancel if your order is eligible.")
+             if totals != shown_totals or order["total"] != case["original_total"]:
+                 raise HTTPException(status_code=409, detail="The order total changed. Ask the shop to refresh the options.")
++            _check_active_replacement_deadline(case)
+             if line and not await _atomic_decrement_line(session, line):
+                 raise HTTPException(status_code=409, detail="Replacement stock changed. Ask the shop for new options.")
+             # The shop confirmed the originally reserved units cannot be supplied.
+@@ -5839,7 +6119,10 @@
+             )
+         return case
+
+-    return await _run_replacement_transaction(apply)
++    result = await _run_replacement_transaction(apply)
++    if result is _EXPIRED_REPLACEMENT:
++        raise HTTPException(409, "This replacement expired. Refresh your order for the next option or Assist.")
++    return result
+
+
+ @api.patch("/orders/{order_id}/status")
+@@ -7682,11 +7965,18 @@
+             await _replacement_escalate(session, order, case, "restaurant", active)
+             await _replacement_financial_review(session, order, case, "restaurant")
+         if active:
++            _archive_replacement_option(active, "superseded", now, user["id"])
+             active.update({"state": "superseded", "superseded_at": now})
++        title = "A restaurant order item is unavailable"
++        if options:
++            case.update({"offer_sequence": True, "offer_history": []})
++            await _publish_replacement_option(session, order, case, options[0], "restaurant", title,
++                                             f"{display['name']} is unavailable. Open your order to review the replacement and its deadline.")
++        else:
++            await _replacement_notify(session, order, case, title,
++                                      f"{display['name']} is unavailable. Review your order for support.", "restaurant")
+         cases.append(case)
+         await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"replacements": cases, "updated_at": now}}, session=session)
+-        await _replacement_notify(session, order, case, "A restaurant order item is unavailable",
+-                                  f"{display['name']} is unavailable. Review your order for replacement options or support.", "restaurant")
+         return case
+
+     return await _run_replacement_transaction(apply)
+@@ -7706,6 +7996,9 @@
+         case = next((row for row in cases if row["id"] == case_id), None)
+         if not case:
+             raise HTTPException(404, "Replacement request not found")
++        managed = await _managed_replacement_decision(session, order, case, "restaurant", body, user)
++        if managed is not None:
++            return managed
+         if (body.action == "keep_unavailable" and (case.get("decision") or {}).get("action") == "reject"
+                 and case["state"] in {"rejected", "assist_required"} and order["status"] in RESTAURANT_REPLACEMENT_ORDER_STATES):
+             return await _decide_rejected_removal(session, order, case, "restaurant", body, user)
+@@ -7736,6 +8029,7 @@
+             quote = option.get("collection_quote") or option.get("replacement_refund_quote")
+             if quote and (not totals or totals["total"] != quote["total"] or order["total"] != case["original_total"]):
+                 raise HTTPException(409, "The quoted total changed. Ask the restaurant to refresh the options.")
++            _check_active_replacement_deadline(case)
+             if not reason:
+                 if not totals or totals != option["totals"] or order["total"] != case["original_total"]:
+                     raise HTTPException(409, "The price or tax changed. Ask the restaurant to refresh the options.")
+@@ -7761,7 +8055,10 @@
+             await _replacement_notify(session, order, case, "Replacement confirmed", f"Your updated order total is ₹{totals['total']:.2f}.", "restaurant")
+         return case
+
+-    return await _run_replacement_transaction(apply)
++    result = await _run_replacement_transaction(apply)
++    if result is _EXPIRED_REPLACEMENT:
++        raise HTTPException(409, "This replacement expired. Refresh your order for the next option or Assist.")
++    return result
+
+
+ @api.patch("/restaurant/orders/{order_id}/status")
+@@ -9433,8 +9730,19 @@
+         logger.warning("ADMIN_EMAIL/ADMIN_PASSWORD not configured; admin account seeding is disabled")
+
+
++@app.on_event("startup")
++async def _start_replacement_expiry_worker():
++    for collection in (db.orders, db.restaurant_orders):
++        await collection.create_index("replacements.active_offer.expires_at", sparse=True)
++    app.state.replacement_expiry_worker = asyncio.create_task(_replacement_expiry_worker())
++
++
+ @app.on_event("shutdown")
+ async def _shutdown():
++    worker = getattr(app.state, "replacement_expiry_worker", None)
++    if worker:
++        worker.cancel()
++        await asyncio.gather(worker, return_exceptions=True)
+     client.close()
+
+
+--- a/backend/tests/test_task9_grocery_replacement.py
++++ b/backend/tests/test_task9_grocery_replacement.py
+@@ -2,6 +2,7 @@
+
+ import asyncio
+ from copy import deepcopy
++from datetime import datetime, timedelta
+ import os
+ from pathlib import Path
+ from uuid import uuid4
+@@ -82,7 +83,7 @@
+
+                 async def decide(oid, case, action, option=None, actor="buyer"):
+                     return await call("POST", f"/orders/{oid}/replacements/{case['id']}/decision",
+-                                      {"action": action, "option_id": option, "price": 1, "total": 1}, actor)
++                                      {"action": action, "option_id": option, "offer_id": (case.get("active_offer") or {}).get("option_id"), "price": 1, "total": 1}, actor)
+
+                 async def notices(oid):
+                     return await db.notifications.count_documents({"data.order_id": str(oid)})
+@@ -95,6 +96,8 @@
+                 assert [response.status_code for response in reports] == [200, 200]
+                 case = reports[0].json()
+                 assert reports[1].json()["id"] == case["id"]
++                active = case["active_offer"]
++                assert datetime.fromisoformat(active["expires_at"]) - datetime.fromisoformat(active["available_at"]) == timedelta(minutes=15)
+                 assert case["original_line_total"] == 130
+                 assert await notices(oid) == 1
+                 offers = {option["item"]["name"]: option for option in case["options"]}
+@@ -140,9 +143,14 @@
+
+                 oid = await order()
+                 case = (await report(oid, "admin")).json()
+-                assert (await decide(oid, case, "reject")).json()["state"] == "rejected"
+-                assert (await decide(oid, case, "reject")).json()["state"] == "rejected"
+-                assert await notices(oid) == 1
++                declines = await asyncio.gather(decide(oid, case, "reject"), decide(oid, case, "reject"))
++                assert [response.status_code for response in declines] == [200, 200]
++                next_offer = declines[0].json()
++                assert next_offer["active_offer"]["option_id"] != case["active_offer"]["option_id"]
++                assert declines[1].json()["active_offer"]["option_id"] == next_offer["active_offer"]["option_id"]
++                assert all(len(response.json()["offer_history"]) == 1 for response in declines)
++                assert (await decide(oid, next_offer, "reject")).json()["state"] == "rejected"
++                assert await notices(oid) == 2
+                 refreshed = (await report(oid, refresh_case_id=case["id"])).json()
+                 assert refreshed["id"] != case["id"]
+                 assert (await report(oid, refresh_case_id=case["id"])).json()["id"] == refreshed["id"]
+@@ -152,16 +160,19 @@
+                 assert stored["items"] == [unaffected]
+                 assert [entry["state"] for entry in stored["replacements"]] == ["superseded", "kept_unavailable"]
+                 assert stored["replacements"][0]["decision"]["action"] == "reject"
+-                assert await notices(oid) == 3
++                assert await notices(oid) == 4
+
+                 oid = await order()
+                 case = (await report(oid)).json()
+                 old_price = next(option for option in case["options"] if option["item"]["name"] == "Value Milk")
++                case = (await decide(oid, case, "reject")).json()
++                assert case["active_offer"]["option_id"] == old_price["id"]
+                 await db.products.update_one({"_id": product_ids["lower"]}, {"$set": {"price": 65}})
+                 assert (await decide(oid, case, "accept", old_price["id"])).status_code == 409
+                 assert (await db.orders.find_one({"_id": oid}))["total"] == 209
+                 case = (await report(oid, refresh_case_id=case["id"])).json()
+                 new_price = next(option for option in case["options"] if option["item"]["name"] == "Value Milk")
++                case = (await decide(oid, case, "reject")).json()
+                 assert (await decide(oid, case, "accept", new_price["id"])).json()["final_totals"]["total"] == 144
+
+                 oid = await order(status="pending")
+@@ -201,6 +212,7 @@
+
+                 oid = await order(payment_method="online_razorpay", payment_status="paid")
+                 case = (await report(oid)).json()
++                case = (await decide(oid, case, "reject")).json()
+                 assert (await decide(oid, case, "reject")).status_code == 200
+                 result = (await decide(oid, case, "keep_unavailable")).json()
+                 assert result["removal_quote"]["potential_refund_paise"] == 13000
+@@ -218,6 +230,7 @@
+                 path = f"/admin/restaurant/support/{case['support_id']}/financial-review"
+                 payload = {"replacement_id": case["id"], "stage": "refund", "decision": "approve", "reason": "Fixture pending settlement"}
+                 assert (await call("POST", path, payload, "admin")).status_code == 409
++                case = (await decide(oid, case, "reject")).json()
+                 assert (await decide(oid, case, "accept", lower["id"])).status_code == 200
+                 await db.products.update_one({"_id": product_ids["lower"]}, {"$set": {"price": 64}})
+                 assert (await call("POST", path, payload, "admin")).status_code == 409
+@@ -240,6 +253,70 @@
+                 accepted = await decide(oid, case, "accept", case["options"][0]["id"])
+                 assert accepted.json()["final_totals"]["total"] == 139
+                 assert (await db.products.find_one({"_id": product_ids["measured_available"]}))["stock"] == 180
++
++                settings_path = "/admin/replacements/expiry-settings"
++                policy = {"default_minutes": 12, "minimum_minutes": 5, "maximum_minutes": 20,
++                          "expected_version": 0, "reason": "Fixture verification"}
++                assert (await call("GET", settings_path, actor="seller")).status_code == 403
++                assert (await call("PUT", settings_path, policy, "seller")).status_code == 403
++                assert (await call("PUT", settings_path, {**policy, "maximum_minutes": 10}, "admin")).status_code == 422
++                oid = await order()
++                clock = [server.now_utc()]
++                notify = server._replacement_notify
++
++                async def failed_notice(*args, **kwargs):
++                    await notify(*args, **kwargs)
++                    raise RuntimeError("Fixture notification transaction failed")
++
++                with monkeypatch.context() as failing:
++                    failing.setattr(server, "_replacement_notify", failed_notice)
++                    assert (await report(oid)).status_code == 503
++                assert await notices(oid) == 0
++                assert not (await db.orders.find_one({"_id": oid})).get("replacements")
++
++                async def delayed_notice(*args, **kwargs):
++                    await notify(*args, **kwargs)
++                    clock[0] += timedelta(minutes=2)
++
++                with monkeypatch.context() as ticking:
++                    ticking.setattr(server, "now_utc", lambda: clock[0])
++                    ticking.setattr(server, "_replacement_notify", delayed_notice)
++                    case = (await report(oid)).json()
++                active = case["active_offer"]
++                assert datetime.fromisoformat(active["available_at"]) - datetime.fromisoformat(active["created_at"]) == timedelta(minutes=2)
++                assert active["duration_minutes"] == 15
++                assert (await call("PUT", settings_path, policy, "admin")).status_code == 200
++                assert (await call("PUT", settings_path, policy, "admin")).status_code == 409
++                assert (await report(oid)).json()["active_offer"]["duration_minutes"] == 15
++                path = f"/admin/replacements/grocery/{oid}/{case['id']}/expiry"
++                expires = server.utc(datetime.fromisoformat(active["expires_at"]))
++                adjustment = {"offer_id": active["option_id"],
++                              "expected_expires_at": expires.replace(microsecond=expires.microsecond // 1000 * 1000).isoformat(),
++                              "duration_minutes": 18, "reason": "Fixture adjustment"}
++                assert (await call("PATCH", path, adjustment, "buyer")).status_code == 403
++                assert (await call("PATCH", path, {**adjustment, "duration_minutes": 21}, "admin")).status_code == 422
++                adjusted = (await call("PATCH", path, adjustment, "admin"))
++                assert adjusted.status_code == 200, adjusted.text
++                assert adjusted.json()["active_offer"]["duration_minutes"] == 18
++                assert (await call("PATCH", path, adjustment, "admin")).status_code == 409
++                audit = await db.financial_audit.find_one({"action": "replacement_offer_expiry_adjusted", "order_id": str(oid)})
++                assert audit["previous"]["duration_minutes"] == 15 and audit["new"]["duration_minutes"] == 18
++                assert audit["actor_id"] == user_ids["admin"]
++                with monkeypatch.context() as ticking:
++                    ticking.setattr(server, "now_utc", lambda: clock[0] + timedelta(minutes=19))
++                    assert (await decide(oid, case, "accept", active["option_id"])).status_code == 409
++                    current = (await db.orders.find_one({"_id": oid}))["replacements"][0]
++                    assert current["offer_history"][0]["status"] == "expired"
++                    assert current["active_offer"]["duration_minutes"] == 12
++                with monkeypatch.context() as ticking:
++                    ticking.setattr(server, "now_utc", lambda: clock[0] + timedelta(minutes=32))
++                    await asyncio.gather(*(server._expire_due_replacement_offers("grocery") for _ in range(2)))
++                stored = await db.orders.find_one({"_id": oid})
++                expired = stored["replacements"][0]
++                assert [entry["status"] for entry in expired["offer_history"]] == ["expired", "expired"]
++                assert expired["support_id"] and expired["state"] == "assist_required"
++                assert stored["items"] == [original, unaffected] and stored["status"] == "preparing"
++                assert stored["total"] == 209 and stored["payment_status"] == "cod_pending"
+
+         finally:
+             await mongo.drop_database(db.name)
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -63,7 +63,8 @@
+
+                 async def decide(oid, case, action="accept", actor="buyer"):
+                     return await request("POST", f"/restaurant/orders/{oid}/replacements/{case['id']}/decision",
+-                                         {"action": action, "option_id": case["options"][0]["id"] if action == "accept" else None}, actor)
++                                         {"action": action, "offer_id": (case.get("active_offer") or {}).get("option_id"),
++                                          "option_id": case["options"][0]["id"] if action == "accept" else None}, actor)
+
+                 oid = await order()
+                 assert (await report(oid, actor=None)).status_code == 401
+@@ -74,6 +75,8 @@
+                 assert [r.status_code for r in requests] == [200, 200]
+                 case = requests[0].json()
+                 assert requests[1].json()["id"] == case["id"]
++                assert case["active_offer"]["duration_minutes"] == 15
++                assert case["active_offer"]["option_id"] == case["options"][0]["id"]
+                 assert case["options"][0]["line_difference"] == 140
+                 assert case["options"][0]["totals"] == {"subtotal": 265, "tax": 26.5, "delivery_fee": 15, "total": 306.5}
+                 assert (await decide(oid, case, actor="other")).status_code == 404
+@@ -327,6 +330,24 @@
+                 await db.restaurant_payments.delete_one({"_id": captured})
+
+                 cheaper = (await db.restaurant_menu.insert_one({"restaurant_id": str(restaurant), "name": "Budget Soup", "price": 30})).inserted_id
++                oid = await order()
++                sequence = (await report(oid, alternatives=[selection, {"menu_item_id": str(cheaper), "quantity": 2}])).json()
++                assert len(sequence["options"]) == 2
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {
++                    "replacements.0.active_offer.expires_at": server.now_utc(),
++                }})
++                await server._expire_due_replacement_offers("restaurant")
++                persisted = await db.restaurant_orders.find_one({"_id": oid})
++                current = persisted["replacements"][0]
++                assert current["offer_history"][0]["status"] == "expired"
++                assert current["active_offer"]["option_id"] == current["options"][1]["id"]
++                assert persisted["total"] == 152.5 and persisted["items"][0]["menu_item_id"] == str(original)
++                await db.restaurant_menu.update_one({"_id": cheaper}, {"$set": {"price": 31}})
++                stale = await request("POST", f"/restaurant/orders/{oid}/replacements/{sequence['id']}/decision",
++                                      {"action": "accept", "option_id": current["active_offer"]["option_id"]})
++                assert stale.status_code == 409
++                await db.restaurant_menu.update_one({"_id": cheaper}, {"$set": {"price": 30}})
++
+                 oid = await order(payment_method="razorpay", payment_status="paid")
+                 cheap_case = (await report(oid, alternatives=[{"menu_item_id": str(cheaper), "quantity": 2}])).json()
+                 assert cheap_case["options"][0]["replacement_refund_quote"] == {"total": 108.5, "potential_refund_paise": 4400}
+--- a/frontend/app/admin.tsx
++++ b/frontend/app/admin.tsx
+@@ -335,7 +335,7 @@
+             {o.payment_status === "paid" && !["refund_requested", "refund_uncertain", "refund_pending", "pending", "processed", "refunded", "partially_refunded", "refund_reconciliation_required", "under_review", "completed", "succeeded"].includes(o.refund_status || "") && <View style={styles.btnRow}><ActionBtn label="Request full refund" onPress={() => requestRefund(o.id)} tone="danger" /></View>}
+           </View>
+         ))}
+-        {tab === "support" ? <PromotionDrafts /> : null}
++        {tab === "support" ? <><ReplacementExpirySettings /><PromotionDrafts /></> : null}
+         {tab === "support" && support.map((r) => (
+           <View key={r.id} style={styles.card}>
+             <Text style={styles.cardTitle}>{r.ref} · {r.category}</Text>
+@@ -598,6 +598,46 @@
+   );
+ }
+
++function ReplacementExpirySettings() {
++  const styles = useStyles();
++  const [policy, setPolicy] = useState<{ default_minutes: number; minimum_minutes: number | null; maximum_minutes: number | null; version: number } | null>(null);
++  const [reason, setReason] = useState("");
++  const [notice, setNotice] = useState("");
++  const [busy, setBusy] = useState(false);
++  const path = "/admin/replacements/expiry-settings";
++
++  const load = async () => {
++    try { setPolicy(await api.get<NonNullable<typeof policy>>(path)); }
++    catch (error: any) { setNotice(error?.message || "Could not load replacement expiry settings."); }
++  };
++
++  return <View style={styles.card}>
++    <ActionBtn label="Load replacement expiry settings" onPress={load} />
++    {policy ? <>
++      {(["default_minutes", "minimum_minutes", "maximum_minutes"] as const).map((field) =>
++        <TextInput key={field} accessibilityLabel={field.replaceAll("_", " ")} placeholder={field.replaceAll("_", " ")}
++          style={styles.input} inputMode="numeric" value={policy[field] == null ? "" : String(policy[field])}
++          onChangeText={(value) => {
++            if (/^\d*$/.test(value)) {
++              setPolicy((current) => current ? { ...current, [field]: value ? Number(value) : null } : current);
++            }
++          }} />)}
++      <TextInput accessibilityLabel="Expiry settings reason" placeholder="Reason for changing expiry settings" style={styles.input} value={reason} onChangeText={setReason} />
++      <ActionBtn label="Save replacement expiry settings" onPress={async () => {
++        if (busy) return;
++        setBusy(true);
++        try {
++          setPolicy(await api.put<NonNullable<typeof policy>>(path, { default_minutes: policy.default_minutes, minimum_minutes: policy.minimum_minutes,
++            maximum_minutes: policy.maximum_minutes, expected_version: policy.version, reason: reason.trim() }));
++          setNotice("Settings saved for newly issued options.");
++        } catch (error: any) { setNotice(error?.message || "Could not save replacement expiry settings."); }
++        finally { setBusy(false); }
++      }} />
++    </> : null}
++    {notice ? <Text accessibilityLiveRegion="polite" style={styles.cardMeta}>{notice}</Text> : null}
++  </View>;
++}
++
+ function PromotionDrafts() {
+   const styles = useStyles();
+   const { colors } = useTheme();
+--- a/frontend/src/components/GroceryOrderReplacements.tsx
++++ b/frontend/src/components/GroceryOrderReplacements.tsx
+@@ -1,5 +1,5 @@
+ import { useRouter } from "expo-router";
+-import { useState } from "react";
++import { useEffect, useState } from "react";
+ import { Pressable, Text, View } from "react-native";
+
+ import { api } from "@/src/lib/api";
+@@ -31,6 +31,8 @@
+   support_id?: string;
+   assist_reason?: string;
+   decision?: { action: Decision };
++  offer_sequence?: boolean;
++  active_offer?: { option_id: string; expires_at: string };
+ };
+ export type ReplacementOrder = {
+   id: string;
+@@ -61,6 +63,7 @@
+   kept_unavailable: "Customer continued without this item",
+ };
+
++type SelectedAlternative = { menu_item_id: string; variant_id?: string };
+ type MenuOption = { id: string; name: string; available: boolean; variants?: { id: string; name: string; available?: boolean }[] };
+
+ export function GroceryOrderReplacements({ order, onChange, staff = false, kind = "grocery", menu = [] }: {
+@@ -74,13 +77,25 @@
+   const styles = useStyles();
+   const [busy, setBusy] = useState(false);
+   const [error, setError] = useState("");
+-  const [draft, setDraft] = useState<{ index: number; caseId?: string } | null>(null);
++  const [draft, setDraft] = useState<{ index: number; caseId?: string; alternatives: SelectedAlternative[] } | null>(null);
+   const restaurant = kind === "restaurant";
+   const statuses = restaurant ? restaurantReportStatuses : reportStatuses;
+   const cases = order.replacements ?? [];
+   const active = cases.find((entry) => groceryReplacementOpenStates.includes(entry.state));
+   const canReport = staff && Boolean(order.customer_id) && statuses.includes(order.status);
+   const base = `${restaurant ? "/restaurant" : ""}/orders/${encodeURIComponent(order.id)}/replacements`;
++
++  // The device clock only schedules refreshing the server-owned status.
++  const expiry = active?.active_offer?.expires_at;
++  useEffect(() => {
++    if (!expiry || staff) return;
++    const deadline = Date.parse(/(?:Z|[+-]\d\d:\d\d)$/.test(expiry) ? expiry : `${expiry}Z`);
++    if (!Number.isFinite(deadline)) return;
++    const timer = setInterval(() => {
++      if (Date.now() >= deadline) void onChange().catch(() => {});
++    }, 5000);
++    return () => clearInterval(timer);
++  }, [expiry, onChange, staff]);
+
+   async function update(path: string, body: object) {
+     if (busy) return;
+@@ -100,19 +115,28 @@
+
+   const report = (line: Line, index: number, refreshCaseId?: string) =>
+     void update(base, { line_index: index, product_id: line.product_id, variant_id: line.variant_id ?? null, qty: line.qty, refresh_case_id: refreshCaseId });
+-  const restaurantReport = (alternative?: { menu_item_id: string; variant_id?: string }) => {
++  const restaurantReport = (alternatives: SelectedAlternative[]) => {
+     if (!draft) return;
+     const line = order.items[draft.index];
+     if (!line) return;
+     void update(base, {
+       line_index: draft.index, menu_item_id: line.product_id, refresh_case_id: draft.caseId,
+-      alternatives: alternative ? [{ ...alternative, quantity: line.qty }] : [],
++      alternatives: alternatives.map((alternative) => ({ ...alternative, quantity: line.qty })),
+     });
+   };
++  const toggleAlternative = (candidate: SelectedAlternative) => {
++    if (!draft) return;
++    const matches = (item: SelectedAlternative) => item.menu_item_id === candidate.menu_item_id && item.variant_id === candidate.variant_id;
++    if (draft.alternatives.some(matches)) {
++      setDraft({ ...draft, alternatives: draft.alternatives.filter((item) => !matches(item)) });
++    } else if (draft.alternatives.length < 5) {
++      setDraft({ ...draft, alternatives: [...draft.alternatives, candidate] });
++    }
++  };
+   const openReport = (line: Line, index: number, caseId?: string) =>
+-    restaurant ? setDraft({ index, caseId }) : report(line, index, caseId);
++    restaurant ? setDraft({ index, caseId, alternatives: [] }) : report(line, index, caseId);
+   const decide = (entry: ReplacementCase, action: Decision, optionId?: string) =>
+-    void update(`${base}/${entry.id}/decision`, { action, option_id: optionId });
++    void update(`${base}/${entry.id}/decision`, { action, option_id: optionId, offer_id: entry.active_offer?.option_id });
+   const button = (label: string, action: () => void) => (
+     <Pressable accessibilityRole="button" disabled={busy} onPress={action} style={[styles.button, busy && styles.disabled]}>
+       <Text style={styles.buttonText}>{label}</Text>
+@@ -128,18 +152,22 @@
+       {button(`Report ${line.name}${line.unit ? ` (${line.unit})` : ""} unavailable`, () => openReport(line, index))}
+     </View>)}
+     {canReport && restaurant && draft && order.items[draft.index] ? <View style={styles.offer}>
+-      <Text style={styles.title}>Choose a replacement for {order.items[draft.index].name}</Text>
++      <Text style={styles.title}>Choose up to five replacements for {order.items[draft.index].name}</Text>
+       {menu.filter((item) => item.available).flatMap((item) =>
+         (item.variants?.length ? item.variants.filter((variant) => variant.available !== false) : [{ id: undefined, name: "" }])
+           .filter((variant) => item.id !== order.items[draft.index].product_id || variant.id !== (order.items[draft.index].variant_id ?? undefined))
+           .map((variant) => <View key={`${item.id}:${variant.id ?? ""}`}>
+-            {button(`Offer ${item.name}${variant.name ? ` · ${variant.name}` : ""}`, () => restaurantReport({ menu_item_id: item.id, variant_id: variant.id }))}
++            {button(`${draft.alternatives.some((selected) => selected.menu_item_id === item.id && selected.variant_id === variant.id) ? "Remove" : "Add"} ${item.name}${variant.name ? ` · ${variant.name}` : ""}`, () => toggleAlternative({ menu_item_id: item.id, variant_id: variant.id }))}
+           </View>),
+       )}
+-      {button("Report and ask Assist for help", () => restaurantReport())}
++      {draft.alternatives.length ? button("Send selected options", () => restaurantReport(draft.alternatives)) : null}
++      {button("Report and ask Assist for help", () => restaurantReport([]))}
+       {button("Cancel", () => setDraft(null))}
+     </View> : null}
+     {cases.filter((entry) => entry.state !== "superseded").reverse().map((entry) => {
++      const visibleOptions = entry.offer_sequence
++        ? entry.options.filter((option) => option.id === entry.active_offer?.option_id)
++        : entry.options;
+       const canDecide = !staff && entry === active && statuses.includes(order.status) && (!entry.assist_reason || !entry.decision);
+       const canRemove = !staff && entry === active && statuses.includes(order.status)
+         && (entry.decision?.action === "reject" || (canDecide && !restaurant && Boolean(entry.keep_totals)));
+@@ -151,8 +179,9 @@
+         {entry.removal_quote ? <Text style={styles.text}>Proposed order total {money(entry.removal_quote.total)} · Potential refund {money(entry.removal_quote.potential_refund_paise / 100)} pending review</Text> : null}
+         {entry.final_totals ? <Text style={styles.text}>Confirmed order total {money(entry.final_totals.total)} · was {money(entry.original_total)}</Text> : null}
+         {entry === active && (entry.state === "awaiting_customer" || entry.state === "assist_required") && statuses.includes(order.status) ? <>
+-          {!entry.options.length ? <Text style={styles.text}>The shop has no matching replacements in stock right now.</Text> : null}
+-          {entry.options.map((option) => <View key={option.id} style={styles.offer}>
++          {entry.active_offer ? <Text style={styles.text}>Offer deadline: {new Date(/(?:Z|[+-]\d\d:\d\d)$/.test(entry.active_offer.expires_at) ? entry.active_offer.expires_at : `${entry.active_offer.expires_at}Z`).toLocaleString()}</Text> : null}
++          {!visibleOptions.length && !entry.decision ? <Text style={styles.text}>There is no open replacement option.</Text> : null}
++          {visibleOptions.map((option) => <View key={option.id} style={styles.offer}>
+             <Text style={styles.text}>{describe(option.item)} · {money(option.item.line_total ?? option.item.price * option.item.qty)}</Text>
+             <Text style={styles.text}>Item difference {option.line_difference > 0 ? "+" : option.line_difference < 0 ? "−" : ""}{money(Math.abs(option.line_difference))}</Text>
+             {option.totals ? <Text style={styles.text}>New order total {money(option.totals.total)} · delivery {money(option.totals.delivery_fee)}{option.totals.tax != null ? ` · tax ${money(option.totals.tax)}` : ""}</Text>
+@@ -161,7 +190,7 @@
+             {option.replacement_refund_quote ? <Text style={styles.text}>Proposed order total {money(option.replacement_refund_quote.total)} · Potential refund {money(option.replacement_refund_quote.potential_refund_paise / 100)} pending review</Text> : null}
+             {canDecide ? button(option.totals ? `Accept ${option.item.name} · ${money(option.totals.total)} total` : `Approve ${option.item.name} for Assist review`, () => decide(entry, "accept", option.id)) : null}
+           </View>)}
+-          {canDecide && entry.options.length ? button("Reject these replacements", () => decide(entry, "reject")) : null}
++          {canDecide && visibleOptions.length ? button(entry.offer_sequence ? "Decline this option" : "Reject these replacements", () => decide(entry, "reject")) : null}
+         </> : null}
+         {canRemove ? button(
+           entry.keep_totals ? `Remove item · ${money(entry.keep_totals.total)} total` : "Request item removal",

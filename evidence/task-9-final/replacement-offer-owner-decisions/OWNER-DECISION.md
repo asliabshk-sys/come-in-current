@@ -80,3 +80,7 @@ Choose one.
 - Decision 2 allow/deny by actor, permitted case/order states, reason, acceptance and delivery handling ____________________
 - Decision 3 option, effective time, legacy coverage, notice and approval for any migration ____________________
 - Owner name, signature, date and evidence reference ____________________
+
+### 24 November 2026 — T9-12 replacement offer expiry
+
+The owner subsequently approved a 15-minute Grocery and Restaurant default starting when an offer successfully becomes available to the customer, bounded Admin configuration and audited per-offer changes, and sequential re-offers on rejection or expiry with Assist fallback. No numerical min/max or independent cancellation eligibility, protected handling, migration notice, grace or timing were supplied by this decision. [Implementation record](../replacement-expiry-implementation-20261124/IMPLEMENTATION.md)

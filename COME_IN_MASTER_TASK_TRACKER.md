@@ -1189,3 +1189,7 @@ T9-12 remains **NOT IMPLEMENTED**. The documentation-only packet awaits the owne
 ### 23 November 2026 — T9-12 owner decisions recorded
 
 Three policy decisions are owner-approved. Operational parameters remain open and T9-12 remains **NOT IMPLEMENTED**. This is a documentation-only checkpoint. [Decisions and clarification list](evidence/task-9-final/replacement-offer-owner-decisions/OWNER-DECISION.md)
+
+### 24 November 2026 — T9-12 replacement offer expiry
+
+T9-12 remains **PARTIALLY VERIFIED**. New Grocery and Restaurant offers support audited Admin settings, a 15-minute initial default from transactional customer availability, sequential offers and Assist fallback. Independent cancellation and legacy migration require the remaining decision parameters. Apply `patches/task9-replacement-expiry-sequence.patch` after the existing Task 9 patch series. [replacement-expiry-implementation-20261124](evidence/task-9-final/replacement-expiry-implementation-20261124/IMPLEMENTATION.md)
