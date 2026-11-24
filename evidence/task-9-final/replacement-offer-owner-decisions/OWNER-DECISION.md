@@ -84,3 +84,8 @@ Choose one.
 ### 24 November 2026 — T9-12 replacement offer expiry
 
 The owner subsequently approved a 15-minute Grocery and Restaurant default starting when an offer successfully becomes available to the customer, bounded Admin configuration and audited per-offer changes, and sequential re-offers on rejection or expiry with Assist fallback. No numerical min/max or independent cancellation eligibility, protected handling, migration notice, grace or timing were supplied by this decision. [Implementation record](../replacement-expiry-implementation-20261124/IMPLEMENTATION.md)
+
+
+### 24 November 2026 — Four decisions approved
+
+The owner approved Admin-adjustable offer expiry within 5–30 minutes and a 15-minute default, with individual edits anchored to original offer creation. The customer may withdraw independently or explicitly confirm unavailable-item removal before preparation. Acceptance is locked and packing, preparation and dispatch restrict automation. Admin may enroll eligible legacy cases in a 24-hour notice and grace campaign. After revalidation, successful migration starts a fresh 15-minute expiry. This latest approval supersedes earlier unresolved values for this scope. Live migration remains an Admin rollout action. [Implementation and recovery](../replacement-lifecycle-20261124/IMPLEMENTATION.md)

@@ -240,3 +240,7 @@ Three policy decisions are owner-approved. Operational parameters remain open an
 ### 24 November 2026 — T9-12 replacement offer expiry
 
 T9-12 remains **PARTIALLY VERIFIED**. New Grocery and Restaurant offers support audited Admin settings, a 15-minute initial default from transactional customer availability, sequential offers and Assist fallback. Independent cancellation and legacy migration require the remaining decision parameters. Apply `patches/task9-replacement-expiry-sequence.patch` after the existing Task 9 patch series. [replacement-expiry-implementation-20261124](evidence/task-9-final/replacement-expiry-implementation-20261124/IMPLEMENTATION.md)
+
+### 24 November 2026 — T9-12 approved lifecycle and migration
+
+T9-12 implements all four owner-approved decisions for Grocery and Restaurant. The lifecycle patch adds bounded expiry adjustment, independent customer withdrawal and confirmed removal, fulfillment stage locks and manual Assist closure, and opt-in legacy migration with 24-hour grace and a 15-minute activation. Task 9 overall retains its existing release status. No live migration or financial execution ran. Apply `patches/task9-replacement-lifecycle.patch` after the replacement expiry sequence patch. [Implementation and recovery](evidence/task-9-final/replacement-lifecycle-20261124/IMPLEMENTATION.md) · [Tests](evidence/task-9-final/replacement-lifecycle-20261124/TESTS.md)

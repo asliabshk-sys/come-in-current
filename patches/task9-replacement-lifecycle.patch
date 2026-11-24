@@ -1,0 +1,1308 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -5392,7 +5392,7 @@
+     return [doc_out(r) async for r in cursor]
+
+
+-GROCERY_REPLACEMENT_ORDER_STATES = {"pending_payment", "pending", "accepted", "preparing"}
++GROCERY_REPLACEMENT_ORDER_STATES = {"pending_payment", "pending", "accepted"}
+ GROCERY_REPLACEMENT_OPEN_STATES = {"awaiting_customer", "rejected", "assist_required"}
+
+
+@@ -5405,7 +5405,8 @@
+
+
+ class GroceryReplacementDecisionIn(BaseModel):
+-    action: Literal["accept", "reject", "keep_unavailable"]
++    action: Literal["accept", "reject", "withdraw", "keep_unavailable"]
++    removal_confirmation: Optional[str] = Field(default=None, min_length=64, max_length=64)
+     option_id: Optional[str] = Field(default=None, max_length=40)
+     offer_id: Optional[str] = Field(default=None, max_length=40)
+
+@@ -5485,6 +5486,7 @@
+     "historical_tax_review": "The original tax calculation or invoice needs review.",
+     "payment_review": "The original payment and any difference need review.",
+     "no_alternative": "No eligible replacement or removal is available.",
++    "fulfillment_started": "Packing or preparation has started. Assist will review the unavailable item.",
+ }
+
+
+@@ -5604,14 +5606,16 @@
+
+
+ DEFAULT_REPLACEMENT_EXPIRY_MINUTES = 15
++MIN_REPLACEMENT_EXPIRY_MINUTES = 5
++MAX_REPLACEMENT_EXPIRY_MINUTES = 30
+ REPLACEMENT_EXPIRY_SETTINGS = "replacement-expiry-settings"
+ _EXPIRED_REPLACEMENT = object()
+
+
+ class ReplacementExpirySettingsIn(BaseModel):
+-    default_minutes: int = Field(gt=0, strict=True)
+-    minimum_minutes: int = Field(gt=0, strict=True)
+-    maximum_minutes: int = Field(gt=0, strict=True)
++    default_minutes: int = Field(ge=MIN_REPLACEMENT_EXPIRY_MINUTES, le=MAX_REPLACEMENT_EXPIRY_MINUTES, strict=True)
++    minimum_minutes: int = Field(ge=MIN_REPLACEMENT_EXPIRY_MINUTES, le=MAX_REPLACEMENT_EXPIRY_MINUTES, strict=True)
++    maximum_minutes: int = Field(ge=MIN_REPLACEMENT_EXPIRY_MINUTES, le=MAX_REPLACEMENT_EXPIRY_MINUTES, strict=True)
+     expected_version: int = Field(ge=0, strict=True)
+     reason: str = Field(min_length=5, max_length=500)
+
+@@ -5619,14 +5623,19 @@
+ class ReplacementExpiryAdjustmentIn(BaseModel):
+     offer_id: str = Field(min_length=1, max_length=40)
+     expected_expires_at: datetime
+-    duration_minutes: int = Field(gt=0, strict=True)
++    duration_minutes: int = Field(ge=MIN_REPLACEMENT_EXPIRY_MINUTES, le=MAX_REPLACEMENT_EXPIRY_MINUTES, strict=True)
+     reason: str = Field(min_length=5, max_length=500)
+
+
+ async def _replacement_expiry_settings(session=None):
+     stored = await db.financial_policy_drafts.find_one({"_id": REPLACEMENT_EXPIRY_SETTINGS}, session=session)
+-    return stored or {"default_minutes": DEFAULT_REPLACEMENT_EXPIRY_MINUTES,
+-                      "minimum_minutes": None, "maximum_minutes": None, "version": 0}
++    policy = stored or {"version": 0}
++    minimum = max(MIN_REPLACEMENT_EXPIRY_MINUTES, min(MAX_REPLACEMENT_EXPIRY_MINUTES,
++                  policy.get("minimum_minutes") or MIN_REPLACEMENT_EXPIRY_MINUTES))
++    maximum = max(minimum, min(MAX_REPLACEMENT_EXPIRY_MINUTES,
++                  policy.get("maximum_minutes") or MAX_REPLACEMENT_EXPIRY_MINUTES))
++    default = max(minimum, min(maximum, policy.get("default_minutes") or DEFAULT_REPLACEMENT_EXPIRY_MINUTES))
++    return {**policy, "default_minutes": default, "minimum_minutes": minimum, "maximum_minutes": maximum}
+
+
+ @api.get("/admin/replacements/expiry-settings")
+@@ -5638,11 +5647,6 @@
+ async def save_replacement_expiry_settings(body: ReplacementExpirySettingsIn, user: dict = Depends(require_role("admin"))):
+     if not body.minimum_minutes <= body.default_minutes <= body.maximum_minutes or len(body.reason.strip()) < 5:
+         raise HTTPException(422, "Set minimum ≤ default ≤ maximum and provide a reason.")
+-    try:
+-        now_utc() + timedelta(minutes=body.maximum_minutes)
+-    except OverflowError:
+-        raise HTTPException(422, "The maximum cannot be represented as an expiry timestamp.") from None
+-
+     async def apply(session):
+         previous = await _replacement_expiry_settings(session)
+         if previous["version"] != body.expected_version:
+@@ -5665,14 +5669,14 @@
+     return (db.orders, GROCERY_REPLACEMENT_ORDER_STATES) if kind == "grocery" else (db.restaurant_orders, RESTAURANT_REPLACEMENT_ORDER_STATES)
+
+
+-async def _publish_replacement_option(session, order, case, option, kind, title, message):
++async def _publish_replacement_option(session, order, case, option, kind, title, message, *, migration=False):
+     policy = await _replacement_expiry_settings(session)
+     # Order visibility and in-app delivery commit together. A failed notice
+     # cannot leave an actionable offer or start its clock.
+     created = now_utc()
+     await _replacement_notify(session, order, case, title, message, kind)
+     available = now_utc()
+-    duration = policy["default_minutes"]
++    duration = DEFAULT_REPLACEMENT_EXPIRY_MINUTES if migration else policy["default_minutes"]
+     case["active_offer"] = {"option_id": option["id"], "created_at": created, "available_at": available,
+                             "expires_at": available + timedelta(minutes=duration), "duration_minutes": duration,
+                             "policy_version": policy["version"]}
+@@ -5795,6 +5799,19 @@
+         raise HTTPException(409, "The offer expired. Refresh the order to check the replacement status.")
+
+
++@api.get("/admin/replacements/{kind}/{order_id}/{case_id}/expiry")
++async def get_replacement_offer_expiry(kind: Literal["grocery", "restaurant"], order_id: str, case_id: str,
++                                       _: dict = Depends(require_role("admin"))):
++    oid = _object_id_or_404(order_id, "Order")
++    collection, states = _replacement_scope(kind)
++    order = await collection.find_one({"_id": oid, "status": {"$in": list(states)}}, {"replacements": 1})
++    case = next((row for row in (order or {}).get("replacements", []) if row["id"] == case_id), None)
++    active = (case or {}).get("active_offer")
++    if not active or (case.get("decision") or {}).get("action") or utc(active["expires_at"]) <= now_utc():
++        raise HTTPException(404, "No adjustable active offer was found.")
++    return {**active, "expires_at": utc(active["expires_at"])}
++
++
+ @api.patch("/admin/replacements/{kind}/{order_id}/{case_id}/expiry")
+ async def adjust_replacement_offer_expiry(kind: Literal["grocery", "restaurant"], order_id: str, case_id: str,
+                                          body: ReplacementExpiryAdjustmentIn, user: dict = Depends(require_role("admin"))):
+@@ -5817,10 +5834,8 @@
+         policy = await _replacement_expiry_settings(session)
+         if policy["minimum_minutes"] is None or not policy["minimum_minutes"] <= body.duration_minutes <= policy["maximum_minutes"]:
+             raise HTTPException(422, "Configure Admin expiry limits and select a duration within them.")
+-        try:
+-            deadline = utc(active["available_at"]) + timedelta(minutes=body.duration_minutes)
+-        except OverflowError:
+-            raise HTTPException(422, "The adjusted expiry timestamp is outside the supported range.") from None
++        # Every adjustment uses the same origin, so repeated edits cannot reset the clock.
++        deadline = utc(active["created_at"]) + timedelta(minutes=body.duration_minutes)
+         if deadline <= now:
+             raise HTTPException(422, "The adjusted expiry must be in the future.")
+         if deadline == utc(active["expires_at"]):
+@@ -5859,12 +5874,245 @@
+             logger.exception("Replacement expiry could not be committed; order %s will be retried", row["_id"])
+
+
++REPLACEMENT_MIGRATION_CAMPAIGN = "t9-12-legacy-v1"
++REPLACEMENT_MIGRATION_GRACE = timedelta(hours=24)
++
++
++async def _legacy_replacement_options(session, order, case, kind):
++    if order["status"] not in _replacement_scope(kind)[1]:
++        return [], "order_stage_ineligible"
++    if case["state"] != "awaiting_customer" or case.get("decision") or case.get("decision_history"):
++        return [], "offer_has_decision_or_is_closed"
++    if case.get("offer_sequence") or case.get("active_offer"):
++        return [], "already_uses_timed_policy"
++    if case.get("expires_at"):
++        if not isinstance(case["expires_at"], datetime):
++            return [], "legacy_expiry_ambiguous"
++        if utc(case["expires_at"]) <= now_utc():
++            return [], "legacy_offer_expired"
++    if not isinstance(case.get("reported_at"), datetime) or not case.get("options"):
++        return [], "legacy_record_incomplete"
++    try:
++        _validate_replacement_original(order, case, kind)
++        eligible = [option for option in case["options"]
++                    if await _available_replacement_option(session, order, case, option, kind)]
++    except (KeyError, TypeError, ValueError, IndexError):
++        return [], "legacy_record_incomplete"
++    except HTTPException as exc:
++        if exc.status_code != 409:
++            raise
++        return [], "order_snapshot_changed"
++    return eligible, None if eligible else "no_current_eligible_options"
++
++
++async def _record_replacement_migration(session, order, case, kind, actor, state, **details):
++    now = now_utc()
++    migration = case.get("legacy_migration") or {"campaign": REPLACEMENT_MIGRATION_CAMPAIGN,
++                                               "legacy_reported_at": case.get("reported_at")}
++    previous = migration.get("status")
++    migration.update({"status": state, "updated_at": now, **details})
++    case["legacy_migration"] = migration
++    if state != "grace":
++        migration.pop("next_attempt_at", None)
++    collection, _ = _replacement_scope(kind)
++    await collection.update_one({"_id": order["_id"]}, {"$set": {"replacements": order["replacements"]}}, session=session)
++    await db.financial_audit.insert_one({
++        "action": "replacement_legacy_migration", "campaign": REPLACEMENT_MIGRATION_CAMPAIGN,
++        "order_kind": kind, "order_id": str(order["_id"]), "replacement_id": case["id"],
++        "actor_id": actor, "previous": previous, "new": state, "created_at": now, **details,
++    }, session=session)
++    return migration
++
++
++@api.post("/admin/replacements/migration/{kind}/{order_id}/{case_id}")
++async def enroll_legacy_replacement(kind: Literal["grocery", "restaurant"], order_id: str, case_id: str,
++                                   user: dict = Depends(require_role("admin"))):
++    collection, _ = _replacement_scope(kind)
++    oid = _object_id_or_404(order_id, "Order")
++
++    async def apply(session):
++        order = await collection.find_one({"_id": oid}, session=session)
++        case = next((row for row in (order or {}).get("replacements", []) if row["id"] == case_id), None)
++        if not case:
++            raise HTTPException(404, "Replacement request not found.")
++        if case.get("legacy_migration"):
++            return case["legacy_migration"]
++        _, reason = await _legacy_replacement_options(session, order, case, kind)
++        if reason:
++            return await _record_replacement_migration(session, order, case, kind, user["id"], "excluded", reason=reason)
++        await _replacement_notify(session, order, case, "Replacement offer policy is changing",
++                                  "Your current offer remains available under its existing terms for the migration grace period. "
++                                  "After 24 hours we will recheck it and notify you if a timed offer is available.", kind)
++        notified = now_utc()
++        grace_until = notified + REPLACEMENT_MIGRATION_GRACE
++        return await _record_replacement_migration(session, order, case, kind, user["id"], "grace",
++            notified_at=notified, grace_until=grace_until, next_attempt_at=grace_until,
++            source_status=order["status"], source_case_status=case["state"],
++            source_financials=_replacement_original_financials(order),
++            option_ids=[option["id"] for option in case["options"]])
++
++    return await _run_replacement_transaction(apply)
++
++
++@api.get("/admin/replacements/migration")
++async def replacement_migration_status(_: dict = Depends(require_role("admin"))):
++    statuses = {"grace": 0, "migrated": 0, "excluded": 0}
++    failed = 0
++    eligible = 0
++    review = []
++    for kind in ("grocery", "restaurant"):
++        collection, _ = _replacement_scope(kind)
++        pipeline = [{"$match": {"replacements.legacy_migration.campaign": REPLACEMENT_MIGRATION_CAMPAIGN}},
++                    {"$unwind": "$replacements"},
++                    {"$match": {"replacements.legacy_migration.campaign": REPLACEMENT_MIGRATION_CAMPAIGN}}]
++        groups = await collection.aggregate([*pipeline, {"$group": {
++            "_id": "$replacements.legacy_migration.status", "count": {"$sum": 1},
++            "failed": {"$sum": {"$cond": [{"$ifNull": ["$replacements.legacy_migration.last_failure", False]}, 1, 0]}},
++            "eligible": {"$sum": {"$cond": [{"$ifNull": ["$replacements.legacy_migration.notified_at", False]}, 1, 0]}},
++        }}]).to_list(None)
++        for group in groups:
++            statuses[group["_id"]] += group["count"]
++            failed += group["failed"]
++            eligible += group["eligible"]
++        rows = await collection.aggregate([*pipeline, {"$sort": {"replacements.legacy_migration.updated_at": -1}},
++            {"$limit": 25}, {"$project": {"case_id": "$replacements.id", "migration": "$replacements.legacy_migration"}}]).to_list(25)
++        review.extend({**doc_out(row), "kind": kind} for row in rows)
++    audit = await db.financial_audit.find({"action": "replacement_legacy_migration", "campaign": REPLACEMENT_MIGRATION_CAMPAIGN},
++                                          {"source_financials": 0}).sort("created_at", -1).limit(50).to_list(50)
++    return {"campaign": REPLACEMENT_MIGRATION_CAMPAIGN, "statuses": statuses, "failed": failed,
++            "eligible": eligible, "recent": review, "audit": [doc_out(row) for row in audit]}
++
++
++async def _migrate_legacy_replacement(session, order, case, kind):
++    migration = case["legacy_migration"]
++    if (order["status"] != migration["source_status"] or case["state"] != migration["source_case_status"]
++            or _replacement_original_financials(order) != migration["source_financials"]
++            or [option["id"] for option in case.get("options", [])] != migration["option_ids"]):
++        eligible, reason = [], "changed_during_grace"
++    else:
++        eligible, reason = await _legacy_replacement_options(session, order, case, kind)
++    if reason:
++        return await _record_replacement_migration(session, order, case, kind, "system", "excluded", reason=reason)
++    case.update({"offer_sequence": True, "offer_history": []})
++    eligible_ids = {option["id"] for option in eligible}
++    now = now_utc()
++    for option in case["options"]:
++        if option["id"] not in eligible_ids:
++            case["offer_history"].append({"option_id": option["id"], "status": "unavailable", "actor_id": "system", "closed_at": now})
++    await _publish_replacement_option(session, order, case, eligible[0], kind,
++                                    "Your timed replacement offer is active",
++                                    "Open your order to review the available option. It is valid for 15 minutes.",
++                                    migration=True)
++    return await _record_replacement_migration(session, order, case, kind, "system", "migrated",
++                                               migrated_at=case["active_offer"]["available_at"], last_failure=None)
++
++
++async def _process_legacy_replacement_migration(kind):
++    collection, _ = _replacement_scope(kind)
++    now = now_utc()
++    due = {"legacy_migration.status": "grace", "legacy_migration.next_attempt_at": {"$lte": now}}
++    orders = await collection.find({"replacements": {"$elemMatch": due}}, {"_id": 1}).limit(50).to_list(50)
++    for row in orders:
++        async def apply(session, failure=False):
++            order = await collection.find_one({"_id": row["_id"]}, session=session)
++            for case in (order or {}).get("replacements", []):
++                migration = case.get("legacy_migration")
++                if not migration or migration["status"] != "grace" or utc(migration["next_attempt_at"]) > now_utc():
++                    continue
++                if failure:
++                    await _record_replacement_migration(session, order, case, kind, "system", "grace",
++                        next_attempt_at=now_utc() + timedelta(minutes=1), last_failure="activation_transaction_failed")
++                else:
++                    await _migrate_legacy_replacement(session, order, case, kind)
++
++        try:
++            await _run_replacement_transaction(apply)
++        except Exception:
++            logger.exception("Legacy replacement migration failed for order %s", row["_id"])
++            await _run_replacement_transaction(lambda session: apply(session, failure=True))
++
++
++async def _start_replacement_protected_stage(kind, order_id, from_status, update):
++    collection, _ = _replacement_scope(kind)
++
++    async def apply(session):
++        order = await collection.find_one({"_id": order_id, "status": from_status}, session=session)
++        if not order:
++            raise HTTPException(409, "Order status changed; refresh before trying again.")
++        for case in order.get("replacements", []):
++            if (case["state"] not in GROCERY_REPLACEMENT_OPEN_STATES
++                    or (case.get("decision") or {}).get("action") == "accept"):
++                continue
++            _archive_replacement_option(case, "fulfillment_started", now_utc(), "system")
++            case.update({"state": "assist_required", "fulfillment_locked_at": now_utc()})
++            linked = {**case, "assist_reason": "fulfillment_started"}
++            await _replacement_escalate(session, order, linked, kind, case)
++            case["support_id"] = linked["support_id"]
++            await _replacement_notify(session, order, case, "Replacement moved to Assist",
++                                      "Packing or preparation has begun. Contact Assist to review the unavailable item.", kind)
++        await collection.update_one({"_id": order_id, "status": from_status},
++                                    {**update, "$set": {**update["$set"], "replacements": order.get("replacements", [])}},
++                                    session=session)
++
++    await _run_replacement_transaction(apply)
++
++
++class ReplacementManualResolutionIn(BaseModel):
++    reason: str = Field(min_length=5, max_length=500)
++    confirm_existing_fulfillment: Literal[True]
++
++
++@api.post("/admin/replacements/{kind}/{order_id}/{case_id}/manual-resolution")
++async def resolve_protected_replacement(kind: Literal["grocery", "restaurant"], order_id: str, case_id: str,
++                                        body: ReplacementManualResolutionIn, user: dict = Depends(require_role("admin"))):
++    reason = body.reason.strip()
++    if len(reason) < 5:
++        raise HTTPException(422, "Document why the existing order can be fulfilled.")
++    collection, _ = _replacement_scope(kind)
++    oid = _object_id_or_404(order_id, "Order")
++
++    async def apply(session):
++        order = await collection.find_one({"_id": oid}, session=session)
++        case = next((row for row in (order or {}).get("replacements", []) if row["id"] == case_id), None)
++        if not case:
++            raise HTTPException(404, "Replacement request not found.")
++        if case.get("manual_resolution"):
++            return case["manual_resolution"]
++        if (order["status"] not in {"preparing", "ready"} or case["state"] != "assist_required"
++                or not case.get("fulfillment_locked_at") or (case.get("decision") or {}).get("action") == "accept"
++                or not ObjectId.is_valid(case.get("support_id"))):
++            raise HTTPException(409, "Only a protected unresolved replacement can be closed here.")
++        _validate_replacement_original(order, case, kind)
++        ticket = await db.restaurant_support.find_one({"_id": ObjectId(case["support_id"]), "user_id": order["customer_id"],
++            "order_id": order_id, "order_kind": kind, "status": {"$in": ["resolved", "closed"]}}, session=session)
++        if not ticket:
++            raise HTTPException(409, "Resolve the linked COME-IN Assist ticket first.")
++        # Touch the resolved ticket in this transaction so a concurrent reopen conflicts.
++        now = now_utc()
++        await db.restaurant_support.update_one({"_id": ticket["_id"]},
++            {"$push": {"history": {"status": ticket["status"], "at": now, "updated_by": user["id"],
++                                    "actor_role": user["role"], "action": "replacement_closed_existing_fulfillment"}}}, session=session)
++        resolution = {"resolved_at": now, "support_id": case["support_id"]}
++        case.update({"state": "resolved", "manual_resolution": resolution})
++        await db.financial_audit.insert_one({"action": "replacement_manual_resolution", "order_id": order_id,
++            "order_kind": kind, "replacement_id": case_id, "previous": "assist_required", "new": "resolved",
++            "actor_id": user["id"], "reason": reason, **resolution},
++            session=session)
++        await _replacement_notify(session, order, case, "Replacement review resolved",
++                                  "Assist completed the review. Your existing order items and total are unchanged.", kind)
++        await collection.update_one({"_id": oid}, {"$set": {"replacements": order["replacements"], "updated_at": now}}, session=session)
++        return resolution
++
++    return await _run_replacement_transaction(apply)
++
++
+ async def _replacement_expiry_worker():
+     while True:
+         await asyncio.sleep(5)
+         try:
+             for kind in ("grocery", "restaurant"):
+                 await _expire_due_replacement_offers(kind)
++                await _process_legacy_replacement_migration(kind)
+         except Exception:
+             logger.exception("Replacement expiry scan failed; retrying")
+
+@@ -5908,6 +6156,9 @@
+             return open_case
+         if body.refresh_case_id and (not open_case or open_case["id"] != body.refresh_case_id):
+             raise HTTPException(status_code=409, detail="The replacement request changed. Refresh the order.")
++        if any(row["line_index"] == body.line_index and (row["state"] == "accepted" or
++               (row.get("decision") or {}).get("action") == "accept") for row in cases):
++            raise HTTPException(409, "This replacement is locked. Contact COME-IN Assist for changes.")
+         if len(cases) >= 40:
+             raise HTTPException(status_code=409, detail="Contact COME-IN Assist for further changes to this order")
+         reason = _replacement_adjustment_reason(order)
+@@ -5957,7 +6208,7 @@
+     return await _run_replacement_transaction(apply)
+
+
+-async def _replacement_removal_totals(session, order, index, kind):
++async def _replacement_removal_totals(session, order, index, kind, *, lock_catalogue=True):
+     """Price from reserved order lines and recheck that remaining lines can be supplied."""
+     remaining = _replacement_items(order, index)
+     if not remaining:
+@@ -5979,30 +6230,107 @@
+                 variant_id=(line.get("variant") or {}).get("id"),
+                 add_on_ids=[option["id"] for option in line.get("add_ons") or []],
+             ), session=session)
+-            await db.restaurant_menu.update_one({"_id": ObjectId(current["menu_item_id"])},
+-                                               {"$set": {"replacement_checked_at": now_utc()}}, session=session)
++            if lock_catalogue:
++                await db.restaurant_menu.update_one({"_id": ObjectId(current["menu_item_id"])},
++                                                   {"$set": {"replacement_checked_at": now_utc()}}, session=session)
+         totals = _restaurant_replacement_totals(order, restaurant, remaining)
+         if not totals or totals["subtotal"] < float(restaurant.get("min_order", 0)):
+             return None
+-        await db.restaurants.update_one({"_id": restaurant["_id"]},
+-                                        {"$set": {"replacement_checked_at": now_utc()}}, session=session)
++        if lock_catalogue:
++            await db.restaurants.update_one({"_id": restaurant["_id"]},
++                                            {"$set": {"replacement_checked_at": now_utc()}}, session=session)
+         return totals
+     except (HTTPException, ValueError, KeyError, TypeError):
+         return None
+
+
++def _pending_replacement_change(order, case, kind):
++    _, states = _replacement_scope(kind)
++    return (order["status"] in states and case["state"] in GROCERY_REPLACEMENT_OPEN_STATES
++            and (case.get("decision") or {}).get("action") in {None, "reject", "withdraw"})
++
++
++def _validate_replacement_original(order, case, kind):
++    index = case["line_index"]
++    snapshot = _replacement_snapshot if kind == "grocery" else _restaurant_replacement_display
++    if (not 0 <= index < len(order["items"]) or snapshot(order["items"][index]) != case["original"]
++            or order["total"] != case["original_total"]):
++        raise HTTPException(409, "The order changed. Contact COME-IN Assist before changing this item.")
++
++
++async def _replacement_removal_preview(session, order, case, kind, *, lock_catalogue=False):
++    if not _pending_replacement_change(order, case, kind):
++        raise HTTPException(409, "This replacement is locked. Contact COME-IN Assist.")
++    _validate_replacement_original(order, case, kind)
++    reasons = _replacement_adjustment_reasons(order, kind)
++    totals = None
++    if not {"historical_tax_review", "reward_review"}.intersection(reasons):
++        totals = await _replacement_removal_totals(session, order, case["line_index"], kind, lock_catalogue=lock_catalogue)
++    reason = next(iter(reasons), None)
++    if not totals:
++        reason = reason or "no_alternative"
++    refund = 0
++    if totals and reason == "payment_review" and order.get("payment_status") in {"paid", "cash_collected"}:
++        refund = max(0, int((money(order["total"]) - money(totals["total"])) * 100))
++    quote = {"original": case["original"], "original_total": order["total"], "totals": totals,
++             "potential_refund_paise": refund, "reason": reason, "replacement_status": case["state"]}
++    evidence = [str(order["_id"]), case["id"], order["status"], case.get("decision"),
++                case.get("active_offer"), order["items"], _replacement_original_financials(order), quote]
++    quote["confirmation"] = hashlib.sha256(json.dumps(evidence, sort_keys=True, default=str).encode()).hexdigest()
++    return quote
++
++
++@api.get("/orders/{order_id}/replacements/{case_id}/removal-preview")
++@api.get("/restaurant/orders/{order_id}/replacements/{case_id}/removal-preview")
++async def replacement_removal_preview(order_id: str, case_id: str, request: Request,
++                                     user: dict = Depends(require_role("customer"))):
++    kind = "restaurant" if "/restaurant/orders/" in request.url.path else "grocery"
++    collection, _ = _replacement_scope(kind)
++    oid = _object_id_or_404(order_id, "Order")
++
++    async def apply(session):
++        order = await collection.find_one({"_id": oid, "customer_id": user["id"]}, session=session)
++        case = next((row for row in (order or {}).get("replacements", []) if row["id"] == case_id), None)
++        if not case:
++            raise HTTPException(404, "Replacement request not found.")
++        return await _replacement_removal_preview(session, order, case, kind)
++
++    return await _run_replacement_transaction(apply)
++
++
++async def _withdraw_replacement(session, order, case, kind, body, user):
++    if not _pending_replacement_change(order, case, kind):
++        raise HTTPException(409, "This replacement is locked. Contact COME-IN Assist.")
++    _validate_replacement_original(order, case, kind)
++    active = case.get("active_offer")
++    if active and active["option_id"] != body.offer_id:
++        raise HTTPException(409, "Refresh the order before withdrawing the replacement.")
++    _check_active_replacement_deadline(case)
++    now = now_utc()
++    _replacement_decision(case, order, body, user, now)
++    case["state"] = "assist_required"
++    case["assist_reason"] = _replacement_adjustment_reason(order, kind) or "no_alternative"
++    await _replacement_escalate(session, order, case, kind, case)
++    await _replacement_notify(session, order, case, "Replacement withdrawn",
++                              "Your order was not cancelled. Review item removal or contact COME-IN Assist.", kind)
++    collection, _ = _replacement_scope(kind)
++    await collection.update_one({"_id": order["_id"]}, {"$set": {"replacements": order["replacements"], "updated_at": now}}, session=session)
++    return case
++
++
+ async def _decide_rejected_removal(session, order, case, kind, body, user):
+-    if (case.get("decision") or {}).get("action") != "reject":
+-        raise HTTPException(409, "Reject the replacement offer before requesting removal.")
+     collection = db.orders if kind == "grocery" else db.restaurant_orders
+     now = now_utc()
+-    reasons = _replacement_adjustment_reasons(order, kind)
+-    totals = None if {"historical_tax_review", "reward_review"}.intersection(reasons) else await _replacement_removal_totals(
+-        session, order, case["line_index"], kind,
+-    )
+-    reason = next(iter(reasons), None) or case.get("assist_reason")
++    _check_active_replacement_deadline(case)
++    quote = await _replacement_removal_preview(session, order, case, kind, lock_catalogue=True)
++    if body.removal_confirmation and body.removal_confirmation != quote["confirmation"]:
++        raise HTTPException(409, "The removal quote changed. Review the new total before confirming.")
++    decision = (case.get("decision") or {}).get("action")
++    if not body.removal_confirmation and not (decision == "reject" or (kind == "grocery" and case.get("keep_totals") and not decision)):
++        raise HTTPException(422, "Review and confirm the item-removal quote.")
++    totals, reason = quote["totals"], quote["reason"]
+     updates = {"replacements": order["replacements"], "updated_at": now}
+-    if totals and not reason and totals == case.get("keep_totals") and order["total"] == case["original_total"]:
++    if totals and not reason and (body.removal_confirmation or totals == case.get("keep_totals")):
+         case.update({"state": "kept_unavailable", "final_totals": totals})
+         updates.update({"items": _replacement_items(order, case["line_index"]), **totals})
+         await _replacement_notify(session, order, case, "Unavailable item removed",
+@@ -6018,6 +6346,9 @@
+         await _replacement_escalate(session, order, case, kind, case)
+     _replacement_decision(case, order, body, user, now)
+     if case["state"] == "assist_required":
++        await _replacement_notify(session, order, case, "Item removal sent to Assist",
++                                  "Your order and payment stay unchanged while Assist reviews your request.", kind)
++    if case["state"] == "assist_required":
+         await _replacement_financial_review(session, order, case, kind)
+     await collection.update_one({"_id": order["_id"]}, {"$set": updates}, session=session)
+     return case
+@@ -6038,6 +6369,12 @@
+         decision = case.get("decision") or {}
+         if decision.get("action") == body.action and decision.get("option_id") == body.option_id:
+             return case
++        if body.action in {"withdraw", "keep_unavailable"} and body.option_id:
++            raise HTTPException(422, "An item removal or withdrawal cannot select a replacement.")
++        if body.action == "withdraw":
++            return await _withdraw_replacement(session, order, case, "grocery", body, user)
++        if body.action == "keep_unavailable" and (body.removal_confirmation or decision.get("action") == "reject"):
++            return await _decide_rejected_removal(session, order, case, "grocery", body, user)
+         managed = await _managed_replacement_decision(session, order, case, "grocery", body, user)
+         if managed is not None:
+             return managed
+@@ -6047,8 +6384,6 @@
+             raise HTTPException(status_code=422, detail="Select one offered replacement to accept")
+         if case["state"] == "rejected" and body.action != "keep_unavailable" and not case.get("assist_reason"):
+             raise HTTPException(status_code=409, detail="Wait for new options or choose to continue without the item")
+-        if body.action == "keep_unavailable" and decision.get("action") == "reject":
+-            return await _decide_rejected_removal(session, order, case, "grocery", body, user)
+         index = case["line_index"]
+         now = now_utc()
+         updates = {"replacements": cases, "updated_at": now}
+@@ -6167,6 +6502,12 @@
+     }
+     if body.status in {"delivered", "cancelled"}:
+         update["$unset"] = {"delivery_location": ""}
++    if body.status == "preparing":
++        await _start_replacement_protected_stage("grocery", oid, order["status"], update)
++        fresh = await db.orders.find_one({"_id": oid})
++        await _record_finalized_order_ledger(fresh, "grocery")
++        await _notify_order_status(fresh)
++        return doc_out(fresh)
+     if body.status == "ready":
+         changed = await db.orders.update_one({
+             "_id": oid, "status": order.get("status"),
+@@ -7849,7 +8190,7 @@
+     restaurant=await _restaurant_or_404(restaurant_id); _restaurant_owner(restaurant,user)
+     return [doc_out(x) async for x in db.restaurant_orders.find({"restaurant_id":restaurant_id}).sort("created_at",-1).limit(500)]
+
+-RESTAURANT_REPLACEMENT_ORDER_STATES = {"pending_payment", "placed", "accepted", "preparing"}
++RESTAURANT_REPLACEMENT_ORDER_STATES = {"pending_payment", "placed", "accepted"}
+
+
+ class RestaurantUnavailableIn(BaseModel):
+@@ -7924,6 +8265,9 @@
+             return active
+         if body.refresh_case_id and (not active or active["id"] != body.refresh_case_id):
+             raise HTTPException(409, "The replacement request changed. Refresh the order.")
++        if any(row["line_index"] == index and (row["state"] == "accepted" or
++               (row.get("decision") or {}).get("action") == "accept") for row in cases):
++            raise HTTPException(409, "This replacement is locked. Contact COME-IN Assist for changes.")
+         if len(cases) >= 40:
+             raise HTTPException(409, "Contact COME-IN Assist for further changes.")
+         original = items[index]
+@@ -7996,12 +8340,18 @@
+         case = next((row for row in cases if row["id"] == case_id), None)
+         if not case:
+             raise HTTPException(404, "Replacement request not found")
++        if body.action in {"withdraw", "keep_unavailable"} and body.option_id:
++            raise HTTPException(422, "An item removal or withdrawal cannot select a replacement.")
++        decision = case.get("decision") or {}
++        if decision and (decision.get("action"), decision.get("option_id")) == (body.action, body.option_id):
++            return case
++        if body.action == "withdraw":
++            return await _withdraw_replacement(session, order, case, "restaurant", body, user)
++        if body.action == "keep_unavailable" and (body.removal_confirmation or decision.get("action") == "reject"):
++            return await _decide_rejected_removal(session, order, case, "restaurant", body, user)
+         managed = await _managed_replacement_decision(session, order, case, "restaurant", body, user)
+         if managed is not None:
+             return managed
+-        if (body.action == "keep_unavailable" and (case.get("decision") or {}).get("action") == "reject"
+-                and case["state"] in {"rejected", "assist_required"} and order["status"] in RESTAURANT_REPLACEMENT_ORDER_STATES):
+-            return await _decide_rejected_removal(session, order, case, "restaurant", body, user)
+         if case.get("decision"):
+             if (case["decision"]["action"], case["decision"]["option_id"]) == (body.action, body.option_id):
+                 return case
+@@ -8086,12 +8436,14 @@
+         {"replacements": {"$not": {"$elemMatch": {"state": {"$in": list(GROCERY_REPLACEMENT_OPEN_STATES)}}}}}
+         if body.status == "ready" else {}
+     )
+-    changed = await db.restaurant_orders.update_one(
+-        {**status_filter, **replacement_guard},
+-        {"$set": update, "$unset": unset, "$push": {"status_history": {"status": body.status, "at": status_at, "note": body.note}}},
+-    )
+-    if changed.modified_count != 1:
+-        raise HTTPException(status_code=409, detail="Order status changed; refresh before trying again")
++    status_update = {"$set": update, "$unset": unset,
++                     "$push": {"status_history": {"status": body.status, "at": status_at, "note": body.note}}}
++    if body.status == "preparing":
++        await _start_replacement_protected_stage("restaurant", oid, status_before, status_update)
++    else:
++        changed = await db.restaurant_orders.update_one({**status_filter, **replacement_guard}, status_update)
++        if changed.modified_count != 1:
++            raise HTTPException(status_code=409, detail="Order status changed; refresh before trying again")
+     fresh_order = await db.restaurant_orders.find_one({"_id":oid})
+     if body.status == "delivered":
+         await _refresh_referral_order_candidate(fresh_order, "restaurant")
+@@ -9734,6 +10086,7 @@
+ async def _start_replacement_expiry_worker():
+     for collection in (db.orders, db.restaurant_orders):
+         await collection.create_index("replacements.active_offer.expires_at", sparse=True)
++        await collection.create_index("replacements.legacy_migration.next_attempt_at", sparse=True)
+     app.state.replacement_expiry_worker = asyncio.create_task(_replacement_expiry_worker())
+
+
+--- a/backend/tests/test_task9_grocery_replacement.py
++++ b/backend/tests/test_task9_grocery_replacement.py
+@@ -66,7 +66,7 @@
+                 oid = ObjectId()
+                 await db.orders.insert_one({
+                     "_id": oid, "shop_id": str(shop), "customer_id": user_ids["buyer"], "ref": "FIXTURE",
+-                    "status": "preparing", "payment_method": "cod", "payment_status": "cod_pending",
++                    "status": "accepted", "payment_method": "cod", "payment_status": "cod_pending",
+                     "fulfillment": "delivery", "items": [deepcopy(original), deepcopy(unaffected)],
+                     "subtotal": 180, "delivery_fee": 29, "total": 209, "notes": "Keep the bag sealed",
+                     **overrides,
+@@ -139,6 +139,7 @@
+                 assert stored["total"] == 210
+                 assert len(stored["replacements"][0]["decision_history"]) == 1
+                 assert await notices(oid) == 2
++                assert (await call("PATCH", f"/orders/{oid}/status", {"status": "preparing"}, "seller")).status_code == 200
+                 assert (await call("PATCH", f"/orders/{oid}/status", {"status": "ready"}, "seller")).status_code == 200
+
+                 oid = await order()
+@@ -315,9 +316,181 @@
+                 expired = stored["replacements"][0]
+                 assert [entry["status"] for entry in expired["offer_history"]] == ["expired", "expired"]
+                 assert expired["support_id"] and expired["state"] == "assist_required"
+-                assert stored["items"] == [original, unaffected] and stored["status"] == "preparing"
++                assert stored["items"] == [original, unaffected] and stored["status"] == "accepted"
+                 assert stored["total"] == 209 and stored["payment_status"] == "cod_pending"
+
++
++                # Owner-approved individual adjustment and stale request boundaries.
++                oid = await order()
++                case = (await report(oid)).json()
++                base = f"/orders/{oid}/replacements/{case['id']}"
++                adjust = f"/admin/replacements/grocery/{oid}/{case['id']}/expiry"
++                def adjustment(active, minutes):
++                    return {"offer_id": active["option_id"], "expected_expires_at": active["expires_at"],
++                            "duration_minutes": minutes, "reason": "T9-12 boundary fixture"}
++                # Grocery earlier verifies versioned configuration. Use the full approved range here.
++                policy_path = "/admin/replacements/expiry-settings"
++                version = (await call("GET", policy_path, actor="admin")).json()["version"]
++                policy = {"default_minutes": 15, "minimum_minutes": 5, "maximum_minutes": 30,
++                          "expected_version": version, "reason": "Restore approved fixture limits"}
++                assert (await call("PUT", policy_path, {**policy, "minimum_minutes": 4}, "admin")).status_code == 422
++                assert (await call("PUT", policy_path, policy, "admin")).status_code == 200
++                active = (await call("GET", adjust, actor="admin")).json()
++                assert (await call("GET", adjust, actor="buyer")).status_code == 403
++                for minutes in (4, 31):
++                    assert (await call("PATCH", adjust, adjustment(active, minutes), "admin")).status_code == 422
++                for minutes in (5, 30):
++                    adjusted = await call("PATCH", adjust, adjustment(active, minutes), "admin")
++                    assert adjusted.status_code == 200, adjusted.text
++                    current = adjusted.json()["active_offer"]
++                    assert current["duration_minutes"] == minutes
++                    active = (await call("GET", adjust, actor="admin")).json()
++                persisted = (await db.orders.find_one({"_id": oid}))["replacements"][0]["active_offer"]
++                assert persisted["expires_at"] - persisted["created_at"] == timedelta(minutes=30)
++                assert await db.financial_audit.count_documents({"action": "replacement_offer_expiry_adjusted", "order_id": str(oid)}) == 2
++                with monkeypatch.context() as ticking:
++                    cutoff = server.utc(persisted["expires_at"])
++                    ticking.setattr(server, "now_utc", lambda: cutoff)
++                    assert (await call("PATCH", adjust, adjustment(active, 30), "admin")).status_code == 409
++
++                # A stale preview is rejected after Admin changes the active offer; a retry is idempotent.
++                preview = (await call("GET", base + "/removal-preview")).json()
++                assert preview["totals"]["total"] == 79
++                assert (await call("PATCH", adjust, adjustment(active, 20), "admin")).status_code == 200
++                payload = {"action": "keep_unavailable", "removal_confirmation": preview["confirmation"]}
++                assert (await call("POST", base + "/decision", payload)).status_code == 409
++                active = (await call("GET", adjust, actor="admin")).json()
++                withdraw = {"action": "withdraw", "offer_id": active["option_id"]}
++                assert (await call("POST", base + "/decision", withdraw, "seller")).status_code == 403
++                results = await asyncio.gather(*(call("POST", base + "/decision", withdraw) for _ in range(2)))
++                assert all(r.status_code == 200 for r in results)
++                assert all(len(r.json()["decision_history"]) == 1 for r in results)
++                saved = await db.orders.find_one({"_id": oid})
++                assert len(saved["items"]) == 2 and saved["status"] == "accepted"
++                assert (await call("PATCH", adjust, adjustment(active, 15), "admin")).status_code == 409
++                preview = (await call("GET", base + "/removal-preview")).json()
++                payload["removal_confirmation"] = preview["confirmation"]
++                processed = await asyncio.gather(*(call("POST", base + "/decision", payload) for _ in range(2)))
++                assert all(r.status_code == 200 for r in processed)
++                saved = await db.orders.find_one({"_id": oid})
++                assert saved["items"] == [unaffected] and saved["total"] == 79
++                assert len(saved["replacements"][0]["decision_history"]) == 2
++
++                oid = await order(payment_method="online_razorpay", payment_status="paid")
++                case = (await report(oid)).json()
++                base = f"/orders/{oid}/replacements/{case['id']}"
++                preview = (await call("GET", base + "/removal-preview")).json()
++                assert preview["potential_refund_paise"] > 0
++                payload["removal_confirmation"] = preview["confirmation"]
++                replies = await asyncio.gather(*(call("POST", base + "/decision", payload) for _ in range(2)))
++                assert all(r.status_code == 200 and r.json()["state"] == "assist_required" for r in replies)
++                saved = await db.orders.find_one({"_id": oid})
++                assert len(saved["items"]) == 2 and saved["payment_status"] == "paid"
++                assert await db.grocery_payments.count_documents({"order_id": str(oid)}) == 0
++
++                oid = await order()
++                case = (await report(oid)).json()
++                base = f"/orders/{oid}/replacements/{case['id']}"
++                ptransition = await call("PATCH", f"/orders/{oid}/status", {"status": "preparing"}, "seller")
++                assert ptransition.status_code == 200, ptransition.text
++                locked = (await db.orders.find_one({"_id": oid}))["replacements"][0]
++                assert locked["support_id"] and locked["state"] == "assist_required"
++                assert "active_offer" not in locked and locked["offer_history"][-1]["status"] == "fulfillment_started"
++                assert (await call("POST", base + "/decision", {"action": "withdraw"})).status_code == 409
++                assert (await call("GET", base + "/removal-preview")).status_code == 409
++                assert (await report(oid)).status_code == 409
++                manual = f"/admin/replacements/grocery/{oid}/{case['id']}/manual-resolution"
++                resolution = {"confirm_existing_fulfillment": True, "reason": "Confirmed existing items can be fulfilled"}
++                assert (await call("POST", manual, resolution, "seller")).status_code == 403
++                assert (await call("POST", manual, resolution, "admin")).status_code == 409
++                assert (await call("PATCH", f"/orders/{oid}/status", {"status": "ready"}, "seller")).status_code == 409
++                ticket = "/admin/restaurant/support/" + locked["support_id"]
++                assert (await call("PATCH", ticket, {"status": "resolved"}, "admin")).status_code == 200
++                for _ in range(2):
++                    reply = await call("POST", manual, resolution, "admin")
++                    assert reply.status_code == 200, reply.text
++                saved = await db.orders.find_one({"_id": oid})
++                assert saved["status"] == "preparing" and len(saved["items"]) == 2
++                assert saved["replacements"][0]["state"] == "resolved"
++                assert await db.financial_audit.count_documents({"action": "replacement_manual_resolution", "order_id": str(oid)}) == 1
++                for status in ("ready", "out_for_delivery"):
++                    assert (await call("PATCH", f"/orders/{oid}/status", {"status": status}, "seller")).status_code == 200
++                assert (await call("POST", base + "/decision", {"action": "accept", "option_id": case["options"][0]["id"]})).status_code == 409
++                assert (await db.orders.find_one({"_id": oid}))["status"] == "out_for_delivery"
++
++                oid = await order()
++                case = (await report(oid)).json()
++                base = f"/orders/{oid}/replacements/{case['id']}"
++                assert (await call("POST", base + "/decision", {"action": "accept", "option_id": case["options"][0]["id"]})).status_code == 200
++                assert (await call("POST", base + "/decision", {"action": "withdraw"})).status_code == 409
++                assert (await call("GET", base + "/removal-preview")).status_code == 409
++                support = {"order_kind": "grocery", "order_id": str(oid), "category": "wrong_or_missing_item",
++                            "message": "Report a concern with the accepted replacement"}
++                assert (await call("POST", "/restaurant/support", support)).status_code == 200
++
++                async def legacy_offer():
++                    legacy_id = await order()
++                    legacy_case = (await report(legacy_id)).json()
++                    await db.orders.update_one({"_id": legacy_id}, {"$unset": {
++                        "replacements.0.active_offer": "", "replacements.0.offer_history": "", "replacements.0.offer_sequence": "",
++                    }})
++                    return legacy_id, legacy_case["id"]
++
++                migrated_id, migrated_case = await legacy_offer()
++                changed_id, changed_case = await legacy_offer()
++                excluded_id, excluded_case = await legacy_offer()
++                await db.orders.update_one({"_id": excluded_id}, {"$set": {"status": "preparing"}})
++                migration_base = "/admin/replacements/migration"
++                migration_path = f"{migration_base}/grocery/{migrated_id}/{migrated_case}"
++                changed_path = f"{migration_base}/grocery/{changed_id}/{changed_case}"
++                excluded_path = f"{migration_base}/grocery/{excluded_id}/{excluded_case}"
++                clock = [server.now_utc()]
++                notifier = server._replacement_notify
++
++                async def notification_failure(*args, **kwargs):
++                    await notifier(*args, **kwargs)
++                    raise RuntimeError("Injected notice failure")
++
++                async def notice_count(order_id):
++                    return await db.notifications.count_documents({"data.order_id": str(order_id)})
++
++                original_reported = (await db.orders.find_one({"_id": migrated_id}))["replacements"][0]["reported_at"]
++                with monkeypatch.context() as ticking:
++                    ticking.setattr(server, "now_utc", lambda: clock[0])
++                    assert (await call("POST", migration_path, {}, "buyer")).status_code == 403
++                    with monkeypatch.context() as failing:
++                        failing.setattr(server, "_replacement_notify", notification_failure)
++                        assert (await call("POST", migration_path, {}, "admin")).status_code == 503
++                    assert await notice_count(migrated_id) == 1
++                    enrollments = await asyncio.gather(*(call("POST", migration_path, {}, "admin") for _ in range(2)))
++                    assert all(reply.status_code == 200 and reply.json()["status"] == "grace" for reply in enrollments)
++                    assert await notice_count(migrated_id) == 2
++                    assert (await call("POST", changed_path, {}, "admin")).json()["status"] == "grace"
++                    assert (await call("POST", excluded_path, {}, "admin")).json()["reason"] == "order_stage_ineligible"
++                    await db.orders.update_one({"_id": changed_id}, {"$set": {"status": "preparing"}})
++                    initial = clock[0]
++                    clock[0] = initial + timedelta(hours=24) - timedelta(seconds=1)
++                    await server._process_legacy_replacement_migration("grocery")
++                    pending = (await db.orders.find_one({"_id": migrated_id}))["replacements"][0]
++                    assert pending["legacy_migration"]["status"] == "grace" and "active_offer" not in pending
++                    clock[0] = initial + timedelta(hours=24)
++                    with monkeypatch.context() as failing:
++                        failing.setattr(server, "_replacement_notify", notification_failure)
++                        await server._process_legacy_replacement_migration("grocery")
++                    pending = (await db.orders.find_one({"_id": migrated_id}))["replacements"][0]
++                    assert pending["legacy_migration"]["last_failure"] and "active_offer" not in pending
++                    assert await notice_count(migrated_id) == 2
++                    clock[0] += timedelta(minutes=1)
++                    await asyncio.gather(*(server._process_legacy_replacement_migration("grocery") for _ in range(2)))
++                final = (await db.orders.find_one({"_id": migrated_id}))["replacements"][0]
++                assert final["legacy_migration"]["status"] == "migrated" and final["reported_at"] == original_reported
++                assert final["active_offer"]["expires_at"] - final["legacy_migration"]["migrated_at"] == timedelta(minutes=15)
++                assert await notice_count(migrated_id) == 3
++                changed = (await db.orders.find_one({"_id": changed_id}))["replacements"][0]
++                assert changed["legacy_migration"]["reason"] == "changed_during_grace" and "active_offer" not in changed
++                metrics = (await call("GET", migration_base, actor="admin")).json()
++                assert metrics["statuses"] == {"grace": 0, "migrated": 1, "excluded": 2}
++                assert metrics["eligible"] == 2 and metrics["failed"] == 0 and metrics["audit"]
+         finally:
+             await mongo.drop_database(db.name)
+             mongo.close()
+@@ -336,6 +509,8 @@
+     assert "disabled={busy}" in widget and "await onChange()" in widget
+     assert 'decide(entry, "accept", option.id)' in widget
+     assert 'decide(entry, "reject")' in widget
+-    assert 'decide(entry, "keep_unavailable")' in widget
++    assert 'decide(entry, "keep_unavailable", undefined, quote.confirmation)' in widget
++    assert 'decide(entry, "withdraw")' in widget
++    assert 'removal-preview' in widget
+     assert "option.totals.total" in widget and "option.line_difference" in widget
+     assert 'openHelp: "1", order_id: order.id, order_kind: "grocery"' in widget
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -1,5 +1,6 @@
+ """Restaurant replacements via HTTP and disposable Mongo transactions."""
+ import asyncio
++from datetime import timedelta
+ import os
+ from pathlib import Path
+ from uuid import uuid4
+@@ -47,9 +48,9 @@
+             async def order(**extra):
+                 return (await db.restaurant_orders.insert_one({
+                     "customer_id": ids["buyer"], "restaurant_id": str(restaurant), "restaurant_owner_id": ids["seller"],
+-                    "status": "preparing", "fulfillment": "delivery", "payment_method": "cod", "payment_status": "cod_pending",
++                    "status": "accepted", "fulfillment": "delivery", "payment_method": "cod", "payment_status": "cod_pending",
+                     "items": [first, unaffected], "subtotal": 125, "tax": 12.5, "delivery_fee": 15, "total": 152.5,
+-                    "status_history": [{"status": "preparing"}], **extra,
++                    "status_history": [{"status": "accepted"}], **extra,
+                 })).inserted_id
+
+             async with httpx.AsyncClient(transport=httpx.ASGITransport(app=server.app), base_url="http://local") as http:
+@@ -94,7 +95,7 @@
+                 assert saved["items"][0]["instructions"] == "No onions"
+                 assert saved["items"][0]["unit_price"] == 120 and saved["items"][1] == unaffected
+                 assert saved["tax"] == 26.5 and saved["payment_status"] == "cod_pending"
+-                assert saved["status_history"] == [{"status": "preparing"}]
++                assert saved["status_history"] == [{"status": "accepted"}]
+                 assert len(saved["replacements"][0]["decision_history"]) == 1
+                 assert await db.notifications.count_documents({"data.order_id": str(oid), "data.order_kind": "restaurant"}) == 2
+
+@@ -274,7 +275,7 @@
+                 assert (await decide(oid, paid_case)).status_code == 200
+                 await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"status": "cancelled"}})
+                 assert (await request("POST", path, approval, "admin")).status_code == 409
+-                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"status": "preparing", "coupon_discount": 10}})
++                await db.restaurant_orders.update_one({"_id": oid}, {"$set": {"status": "accepted", "coupon_discount": 10}})
+                 assert (await request("POST", path, approval, "admin")).status_code == 409
+                 await db.restaurant_orders.update_one({"_id": oid}, {"$unset": {"coupon_discount": ""}})
+                 await db.restaurant_menu.update_one({"_id": option}, {"$set": {"variants.0.price": 120}})
+@@ -470,6 +471,183 @@
+                 assert (await decide(oid, case)).status_code == 409
+                 refreshed = (await report(oid, alternatives=[], refresh_case_id=case["id"])).json()
+                 assert refreshed["assist_reason"] == "no_alternative"
++
++                await db.restaurant_menu.update_one({"_id": ObjectId(unaffected["menu_item_id"])}, {"$set": {"available": True}})
++                await db.restaurants.update_one({"_id": restaurant}, {"$unset": {
++                    "financial_policy_updated_at": "", "commission_rate_percent": "", "platform_service_fee_inr": "",
++                    "delivery_fee_beneficiary": "",
++                }})
++                # Owner-approved individual adjustment and stale request boundaries.
++                oid = await order()
++                case = (await report(oid)).json()
++                base = f"/restaurant/orders/{oid}/replacements/{case['id']}"
++                adjust = f"/admin/replacements/restaurant/{oid}/{case['id']}/expiry"
++                def adjustment(active, minutes):
++                    return {"offer_id": active["option_id"], "expected_expires_at": active["expires_at"],
++                            "duration_minutes": minutes, "reason": "T9-12 boundary fixture"}
++                # Grocery earlier verifies versioned configuration. Use the full approved range here.
++                policy_path = "/admin/replacements/expiry-settings"
++                version = (await request("GET", policy_path, actor="admin")).json()["version"]
++                policy = {"default_minutes": 15, "minimum_minutes": 5, "maximum_minutes": 30,
++                          "expected_version": version, "reason": "Restore approved fixture limits"}
++                assert (await request("PUT", policy_path, {**policy, "minimum_minutes": 4}, "admin")).status_code == 422
++                assert (await request("PUT", policy_path, policy, "admin")).status_code == 200
++                active = (await request("GET", adjust, actor="admin")).json()
++                assert (await request("GET", adjust, actor="buyer")).status_code == 403
++                for minutes in (4, 31):
++                    assert (await request("PATCH", adjust, adjustment(active, minutes), "admin")).status_code == 422
++                for minutes in (5, 30):
++                    adjusted = await request("PATCH", adjust, adjustment(active, minutes), "admin")
++                    assert adjusted.status_code == 200, adjusted.text
++                    current = adjusted.json()["active_offer"]
++                    assert current["duration_minutes"] == minutes
++                    active = (await request("GET", adjust, actor="admin")).json()
++                persisted = (await db.restaurant_orders.find_one({"_id": oid}))["replacements"][0]["active_offer"]
++                assert persisted["expires_at"] - persisted["created_at"] == timedelta(minutes=30)
++                assert await db.financial_audit.count_documents({"action": "replacement_offer_expiry_adjusted", "order_id": str(oid)}) == 2
++                with monkeypatch.context() as ticking:
++                    cutoff = server.utc(persisted["expires_at"])
++                    ticking.setattr(server, "now_utc", lambda: cutoff)
++                    assert (await request("PATCH", adjust, adjustment(active, 30), "admin")).status_code == 409
++
++                # A stale preview is rejected after Admin changes the active offer; a retry is idempotent.
++                preview = (await request("GET", base + "/removal-preview")).json()
++                assert preview["totals"]["total"] == 42.5
++                assert (await request("PATCH", adjust, adjustment(active, 20), "admin")).status_code == 200
++                payload = {"action": "keep_unavailable", "removal_confirmation": preview["confirmation"]}
++                assert (await request("POST", base + "/decision", payload)).status_code == 409
++                active = (await request("GET", adjust, actor="admin")).json()
++                withdraw = {"action": "withdraw", "offer_id": active["option_id"]}
++                assert (await request("POST", base + "/decision", withdraw, "seller")).status_code == 403
++                results = await asyncio.gather(*(request("POST", base + "/decision", withdraw) for _ in range(2)))
++                assert all(r.status_code == 200 for r in results)
++                assert all(len(r.json()["decision_history"]) == 1 for r in results)
++                saved = await db.restaurant_orders.find_one({"_id": oid})
++                assert len(saved["items"]) == 2 and saved["status"] == "accepted"
++                assert (await request("PATCH", adjust, adjustment(active, 15), "admin")).status_code == 409
++                preview = (await request("GET", base + "/removal-preview")).json()
++                payload["removal_confirmation"] = preview["confirmation"]
++                processed = await asyncio.gather(*(request("POST", base + "/decision", payload) for _ in range(2)))
++                assert all(r.status_code == 200 for r in processed)
++                saved = await db.restaurant_orders.find_one({"_id": oid})
++                assert saved["items"] == [unaffected] and saved["total"] == 42.5
++                assert len(saved["replacements"][0]["decision_history"]) == 2
++
++                oid = await order(payment_method="razorpay", payment_status="paid")
++                case = (await report(oid)).json()
++                base = f"/restaurant/orders/{oid}/replacements/{case['id']}"
++                preview = (await request("GET", base + "/removal-preview")).json()
++                assert preview["potential_refund_paise"] > 0
++                payload["removal_confirmation"] = preview["confirmation"]
++                replies = await asyncio.gather(*(request("POST", base + "/decision", payload) for _ in range(2)))
++                assert all(r.status_code == 200 and r.json()["state"] == "assist_required" for r in replies)
++                saved = await db.restaurant_orders.find_one({"_id": oid})
++                assert len(saved["items"]) == 2 and saved["payment_status"] == "paid"
++                assert await db.restaurant_payments.count_documents({"order_id": str(oid)}) == 0
++
++                oid = await order()
++                case = (await report(oid)).json()
++                base = f"/restaurant/orders/{oid}/replacements/{case['id']}"
++                ptransition = await request("PATCH", f"/restaurant/orders/{oid}/status", {"status": "preparing"}, "seller")
++                assert ptransition.status_code == 200, ptransition.text
++                locked = (await db.restaurant_orders.find_one({"_id": oid}))["replacements"][0]
++                assert locked["support_id"] and locked["state"] == "assist_required"
++                assert "active_offer" not in locked and locked["offer_history"][-1]["status"] == "fulfillment_started"
++                assert (await request("POST", base + "/decision", {"action": "withdraw"})).status_code == 409
++                assert (await request("GET", base + "/removal-preview")).status_code == 409
++                assert (await report(oid)).status_code == 409
++                manual = f"/admin/replacements/restaurant/{oid}/{case['id']}/manual-resolution"
++                resolution = {"confirm_existing_fulfillment": True, "reason": "Confirmed existing items can be fulfilled"}
++                assert (await request("POST", manual, resolution, "seller")).status_code == 403
++                assert (await request("POST", manual, resolution, "admin")).status_code == 409
++                assert (await request("PATCH", f"/restaurant/orders/{oid}/status", {"status": "ready"}, "seller")).status_code == 409
++                ticket = "/admin/restaurant/support/" + locked["support_id"]
++                assert (await request("PATCH", ticket, {"status": "resolved"}, "admin")).status_code == 200
++                for _ in range(2):
++                    reply = await request("POST", manual, resolution, "admin")
++                    assert reply.status_code == 200, reply.text
++                saved = await db.restaurant_orders.find_one({"_id": oid})
++                assert saved["status"] == "preparing" and len(saved["items"]) == 2
++                assert saved["replacements"][0]["state"] == "resolved"
++                assert await db.financial_audit.count_documents({"action": "replacement_manual_resolution", "order_id": str(oid)}) == 1
++                for status in ("ready", "out_for_delivery"):
++                    assert (await request("PATCH", f"/restaurant/orders/{oid}/status", {"status": status}, "seller")).status_code == 200
++                assert (await request("POST", base + "/decision", {"action": "accept", "option_id": case["options"][0]["id"]})).status_code == 409
++                assert (await db.restaurant_orders.find_one({"_id": oid}))["status"] == "out_for_delivery"
++
++                oid = await order()
++                case = (await report(oid)).json()
++                base = f"/restaurant/orders/{oid}/replacements/{case['id']}"
++                assert (await request("POST", base + "/decision", {"action": "accept", "option_id": case["options"][0]["id"]})).status_code == 200
++                assert (await request("POST", base + "/decision", {"action": "withdraw"})).status_code == 409
++                assert (await request("GET", base + "/removal-preview")).status_code == 409
++                support = {"order_kind": "restaurant", "order_id": str(oid), "category": "wrong_or_missing_item",
++                            "message": "Report a concern with the accepted replacement"}
++                assert (await request("POST", "/restaurant/support", support)).status_code == 200
++
++                async def legacy_offer():
++                    legacy_id = await order()
++                    legacy_case = (await report(legacy_id)).json()
++                    await db.restaurant_orders.update_one({"_id": legacy_id}, {"$unset": {
++                        "replacements.0.active_offer": "", "replacements.0.offer_history": "", "replacements.0.offer_sequence": "",
++                    }})
++                    return legacy_id, legacy_case["id"]
++
++                migrated_id, migrated_case = await legacy_offer()
++                changed_id, changed_case = await legacy_offer()
++                excluded_id, excluded_case = await legacy_offer()
++                await db.restaurant_orders.update_one({"_id": excluded_id}, {"$set": {"status": "preparing"}})
++                migration_base = "/admin/replacements/migration"
++                migration_path = f"{migration_base}/restaurant/{migrated_id}/{migrated_case}"
++                changed_path = f"{migration_base}/restaurant/{changed_id}/{changed_case}"
++                excluded_path = f"{migration_base}/restaurant/{excluded_id}/{excluded_case}"
++                clock = [server.now_utc()]
++                notifier = server._replacement_notify
++
++                async def notification_failure(*args, **kwargs):
++                    await notifier(*args, **kwargs)
++                    raise RuntimeError("Injected notice failure")
++
++                async def notice_count(order_id):
++                    return await db.notifications.count_documents({"data.order_id": str(order_id)})
++
++                original_reported = (await db.restaurant_orders.find_one({"_id": migrated_id}))["replacements"][0]["reported_at"]
++                with monkeypatch.context() as ticking:
++                    ticking.setattr(server, "now_utc", lambda: clock[0])
++                    assert (await request("POST", migration_path, {}, "buyer")).status_code == 403
++                    with monkeypatch.context() as failing:
++                        failing.setattr(server, "_replacement_notify", notification_failure)
++                        assert (await request("POST", migration_path, {}, "admin")).status_code == 503
++                    assert await notice_count(migrated_id) == 1
++                    enrollments = await asyncio.gather(*(request("POST", migration_path, {}, "admin") for _ in range(2)))
++                    assert all(reply.status_code == 200 and reply.json()["status"] == "grace" for reply in enrollments)
++                    assert await notice_count(migrated_id) == 2
++                    assert (await request("POST", changed_path, {}, "admin")).json()["status"] == "grace"
++                    assert (await request("POST", excluded_path, {}, "admin")).json()["reason"] == "order_stage_ineligible"
++                    await db.restaurant_orders.update_one({"_id": changed_id}, {"$set": {"status": "preparing"}})
++                    initial = clock[0]
++                    clock[0] = initial + timedelta(hours=24) - timedelta(seconds=1)
++                    await server._process_legacy_replacement_migration("restaurant")
++                    pending = (await db.restaurant_orders.find_one({"_id": migrated_id}))["replacements"][0]
++                    assert pending["legacy_migration"]["status"] == "grace" and "active_offer" not in pending
++                    clock[0] = initial + timedelta(hours=24)
++                    with monkeypatch.context() as failing:
++                        failing.setattr(server, "_replacement_notify", notification_failure)
++                        await server._process_legacy_replacement_migration("restaurant")
++                    pending = (await db.restaurant_orders.find_one({"_id": migrated_id}))["replacements"][0]
++                    assert pending["legacy_migration"]["last_failure"] and "active_offer" not in pending
++                    assert await notice_count(migrated_id) == 2
++                    clock[0] += timedelta(minutes=1)
++                    await asyncio.gather(*(server._process_legacy_replacement_migration("restaurant") for _ in range(2)))
++                final = (await db.restaurant_orders.find_one({"_id": migrated_id}))["replacements"][0]
++                assert final["legacy_migration"]["status"] == "migrated" and final["reported_at"] == original_reported
++                assert final["active_offer"]["expires_at"] - final["legacy_migration"]["migrated_at"] == timedelta(minutes=15)
++                assert await notice_count(migrated_id) == 3
++                changed = (await db.restaurant_orders.find_one({"_id": changed_id}))["replacements"][0]
++                assert changed["legacy_migration"]["reason"] == "changed_during_grace" and "active_offer" not in changed
++                metrics = (await request("GET", migration_base, actor="admin")).json()
++                assert metrics["statuses"] == {"grace": 0, "migrated": 1, "excluded": 2}
++                assert metrics["eligible"] == 2 and metrics["failed"] == 0 and metrics["audit"]
+         finally:
+             await mongo.drop_database(db.name)
+             mongo.close()
+--- a/frontend/app/admin.tsx
++++ b/frontend/app/admin.tsx
+@@ -335,7 +335,7 @@
+             {o.payment_status === "paid" && !["refund_requested", "refund_uncertain", "refund_pending", "pending", "processed", "refunded", "partially_refunded", "refund_reconciliation_required", "under_review", "completed", "succeeded"].includes(o.refund_status || "") && <View style={styles.btnRow}><ActionBtn label="Request full refund" onPress={() => requestRefund(o.id)} tone="danger" /></View>}
+           </View>
+         ))}
+-        {tab === "support" ? <><ReplacementExpirySettings /><PromotionDrafts /></> : null}
++        {tab === "support" ? <><ReplacementExpirySettings /><ReplacementOfferOperations /><PromotionDrafts /></> : null}
+         {tab === "support" && support.map((r) => (
+           <View key={r.id} style={styles.card}>
+             <Text style={styles.cardTitle}>{r.ref} · {r.category}</Text>
+@@ -638,6 +638,84 @@
+   </View>;
+ }
+
++function ReplacementOfferOperations() {
++  const styles = useStyles();
++  const [kind, setKind] = useState<"grocery" | "restaurant">("grocery");
++  const [order, setOrder] = useState("");
++  const [caseId, setCaseId] = useState("");
++  const [duration, setDuration] = useState("");
++  const [resolutionReason, setResolutionReason] = useState("");
++  const [reason, setReason] = useState("");
++  const [notice, setNotice] = useState("");
++  const [busy, setBusy] = useState(false);
++  const [offer, setOffer] = useState<{ path: string; option_id: string; expires_at: string } | null>(null);
++  const [migration, setMigration] = useState<{
++    campaign: string; eligible: number; failed: number;
++    statuses: { grace: number; migrated: number; excluded: number };
++    recent: { id: string; kind: string; case_id: string; migration: { status: string; reason?: string; last_failure?: string } }[];
++    audit: { id: string; order_id: string; replacement_id: string; new: string; actor_id: string; created_at: string }[];
++  } | null>(null);
++  const ids = `${kind}/${encodeURIComponent(order.trim())}/${encodeURIComponent(caseId.trim())}`;
++  const path = `/admin/replacements/${ids}/expiry`;
++  const migrationPath = "/admin/replacements/migration";
++
++  const run = async (action: () => Promise<void>) => {
++    if (busy) return;
++    setBusy(true);
++    setNotice("");
++    try { await action(); }
++    catch (error: any) { setNotice(error?.message || "Could not update the replacement offer."); }
++    finally { setBusy(false); }
++  };
++  const loadMigration = async () => setMigration(await api.get<NonNullable<typeof migration>>(migrationPath));
++
++  return <View style={styles.card}>
++    <ActionBtn label={`Order type: ${kind} · Switch`} onPress={() => setKind(kind === "grocery" ? "restaurant" : "grocery")} />
++    <TextInput accessibilityLabel="Replacement order ID" placeholder="Order ID" style={styles.input} value={order} onChangeText={setOrder} />
++    <TextInput accessibilityLabel="Replacement case ID" placeholder="Replacement case ID" style={styles.input} value={caseId} onChangeText={setCaseId} />
++    {order.trim() && caseId.trim() ? <>
++      <ActionBtn label="Load active offer" onPress={() => run(async () => {
++        setOffer(null);
++        setOffer({ path, ...await api.get<Omit<NonNullable<typeof offer>, "path">>(path) });
++      })} />
++      <ActionBtn label="Review legacy offer and start grace period if eligible" onPress={() => run(async () => {
++        const result = await api.post<{ status: string; reason?: string }>(`${migrationPath}/${ids}`, {});
++        setNotice(`Migration status: ${result.status}${result.reason ? ` · ${result.reason}` : ""}`);
++        await loadMigration();
++      })} />
++      <TextInput accessibilityLabel="Manual resolution reason" placeholder="Why the order can be fulfilled as recorded"
++        style={styles.input} value={resolutionReason} onChangeText={setResolutionReason} />
++      {resolutionReason.trim().length >= 5 ? <ActionBtn label="Confirm existing fulfillment and close replacement"
++        onPress={() => run(async () => {
++          await api.post(`/admin/replacements/${ids}/manual-resolution`,
++            { reason: resolutionReason.trim(), confirm_existing_fulfillment: true });
++          setResolutionReason("");
++          setNotice("Replacement review closed. Order and payment stayed unchanged.");
++        })} /> : null}
++    </> : null}
++    {offer?.path === path ? <>
++      <Text>Current expiry {new Date(offer.expires_at).toLocaleString()}</Text>
++      <TextInput accessibilityLabel="Individual expiry duration" placeholder="Offer duration in minutes" inputMode="numeric"
++        style={styles.input} value={duration} onChangeText={setDuration} />
++      <TextInput accessibilityLabel="Individual expiry adjustment reason" placeholder="Adjustment reason"
++        style={styles.input} value={reason} onChangeText={setReason} />
++      <ActionBtn label="Adjust active offer expiry" onPress={() => run(async () => {
++        await api.patch(path, { offer_id: offer.option_id, expected_expires_at: offer.expires_at,
++          duration_minutes: Number(duration), reason: reason.trim() });
++        setOffer(null);
++        setNotice("Expiry updated and the customer was notified.");
++      })} />
++    </> : null}
++    <ActionBtn label="Load legacy migration status" onPress={() => run(loadMigration)} />
++    {migration ? <>
++      <Text>{migration.campaign} · Eligible {migration.eligible} · In grace {migration.statuses.grace} · Migrated {migration.statuses.migrated} · Excluded {migration.statuses.excluded} · Failed {migration.failed}</Text>
++      {migration.recent.map((row) => <Text key={`${row.id}/${row.case_id}`}>{row.kind} · {row.id} · {row.case_id} · {row.migration.status} {row.migration.reason || row.migration.last_failure || ""}</Text>)}
++      {migration.audit.map((row) => <Text key={row.id}>{row.order_id} · {row.replacement_id} · {row.new} · {row.actor_id} · {row.created_at}</Text>)}
++    </> : null}
++    {notice ? <Text>{notice}</Text> : null}
++  </View>;
++}
++
+ function PromotionDrafts() {
+   const styles = useStyles();
+   const { colors } = useTheme();
+--- a/frontend/src/components/GroceryOrderReplacements.tsx
++++ b/frontend/src/components/GroceryOrderReplacements.tsx
+@@ -26,7 +26,7 @@
+   options: Offer[];
+   keep_totals: Totals | null;
+   removal_quote?: Totals & { potential_refund_paise: number };
+-  state: "awaiting_customer" | "rejected" | "assist_required" | "superseded" | "accepted" | "kept_unavailable";
++  state: "awaiting_customer" | "rejected" | "assist_required" | "superseded" | "accepted" | "kept_unavailable" | "resolved";
+   final_totals?: Totals;
+   support_id?: string;
+   assist_reason?: string;
+@@ -41,17 +41,26 @@
+   items: Line[];
+   replacements?: ReplacementCase[];
+ };
+-type Decision = "accept" | "reject" | "keep_unavailable";
++type Decision = "accept" | "reject" | "withdraw" | "keep_unavailable";
++type RemovalPreview = {
++  original: Line;
++  original_total: number;
++  totals: Totals | null;
++  potential_refund_paise: number;
++  reason: string | null;
++  replacement_status: ReplacementCase["state"];
++  confirmation: string;
++};
+
+ export const groceryReplacementOpenStates = ["awaiting_customer", "rejected", "assist_required"];
+-const restaurantReportStatuses = ["pending_payment", "placed", "accepted", "preparing"];
++const restaurantReportStatuses = ["pending_payment", "placed", "accepted"];
+ const assistReasons: Record<string, string> = {
+   payment_review: "Assist will review the original payment and any difference.",
+   reward_review: "Assist will review the existing rewards or discounts.",
+   historical_tax_review: "Assist will review the original tax calculation or invoice.",
+   no_alternative: "No eligible replacement or removal is available.",
+ };
+-const reportStatuses = ["pending_payment", "pending", "accepted", "preparing"];
++const reportStatuses = ["pending_payment", "pending", "accepted"];
+ const money = (amount: number) => `₹${amount.toFixed(2)}`;
+ const describe = (line: Line) => `${line.quantity_label || line.qty} × ${line.name}${line.unit ? ` · ${line.unit}` : ""}`;
+ const labels = {
+@@ -61,6 +70,7 @@
+   superseded: "Options updated by the shop",
+   accepted: "Replacement confirmed",
+   kept_unavailable: "Customer continued without this item",
++  resolved: "Assist resolved the replacement review",
+ };
+
+ type SelectedAlternative = { menu_item_id: string; variant_id?: string };
+@@ -77,6 +87,7 @@
+   const styles = useStyles();
+   const [busy, setBusy] = useState(false);
+   const [error, setError] = useState("");
++  const [removal, setRemoval] = useState<{ caseId: string; quote: RemovalPreview } | null>(null);
+   const [draft, setDraft] = useState<{ index: number; caseId?: string; alternatives: SelectedAlternative[] } | null>(null);
+   const restaurant = kind === "restaurant";
+   const statuses = restaurant ? restaurantReportStatuses : reportStatuses;
+@@ -104,6 +115,7 @@
+     try {
+       await api.post(path, body);
+       setDraft(null);
++      setRemoval(null);
+       await onChange();
+     } catch (cause) {
+       setError(cause && typeof cause === "object" && "message" in cause && typeof cause.message === "string"
+@@ -135,8 +147,24 @@
+   };
+   const openReport = (line: Line, index: number, caseId?: string) =>
+     restaurant ? setDraft({ index, caseId, alternatives: [] }) : report(line, index, caseId);
+-  const decide = (entry: ReplacementCase, action: Decision, optionId?: string) =>
+-    void update(`${base}/${entry.id}/decision`, { action, option_id: optionId, offer_id: entry.active_offer?.option_id });
++  const decide = (entry: ReplacementCase, action: Decision, optionId?: string, confirmation?: string) =>
++    void update(`${base}/${entry.id}/decision`, {
++      action, option_id: optionId, offer_id: entry.active_offer?.option_id, removal_confirmation: confirmation,
++    });
++  const previewRemoval = async (entry: ReplacementCase) => {
++    if (busy) return;
++    setBusy(true);
++    setError("");
++    setRemoval(null);
++    try {
++      setRemoval({ caseId: entry.id, quote: await api.get<RemovalPreview>(`${base}/${entry.id}/removal-preview`) });
++    } catch (cause) {
++      setError(cause && typeof cause === "object" && "message" in cause && typeof cause.message === "string"
++        ? cause.message : "Could not preview item removal.");
++    } finally {
++      setBusy(false);
++    }
++  };
+   const button = (label: string, action: () => void) => (
+     <Pressable accessibilityRole="button" disabled={busy} onPress={action} style={[styles.button, busy && styles.disabled]}>
+       <Text style={styles.buttonText}>{label}</Text>
+@@ -168,14 +196,15 @@
+       const visibleOptions = entry.offer_sequence
+         ? entry.options.filter((option) => option.id === entry.active_offer?.option_id)
+         : entry.options;
+-      const canDecide = !staff && entry === active && statuses.includes(order.status) && (!entry.assist_reason || !entry.decision);
+-      const canRemove = !staff && entry === active && statuses.includes(order.status)
+-        && (entry.decision?.action === "reject" || (canDecide && !restaurant && Boolean(entry.keep_totals)));
++      const canChange = !staff && entry === active && statuses.includes(order.status);
++      const canDecide = canChange && !entry.decision;
++      const canRemove = canChange && (!entry.decision || ["reject", "withdraw"].includes(entry.decision.action));
++      const quote = removal?.caseId === entry.id ? removal.quote : null;
+       return <View style={styles.case} key={entry.id}>
+         <Text style={styles.title}>{describe(entry.original)} · {money(entry.original_line_total)} original</Text>
+         <Text style={styles.text}>{order.status === "cancelled" && entry === active ? "Order cancelled" : labels[entry.state]}</Text>
+         {entry.assist_reason ? <Text style={styles.text}>{assistReasons[entry.assist_reason]}</Text> : null}
+-        {entry.assist_reason && entry.decision ? <Text style={styles.text}>Your decision was sent to Assist. The order and payment stay unchanged during review.</Text> : null}
++        {entry.assist_reason && entry.decision && entry.decision.action !== "withdraw" ? <Text style={styles.text}>Your decision was sent to Assist. The order and payment stay unchanged during review.</Text> : null}
+         {entry.removal_quote ? <Text style={styles.text}>Proposed order total {money(entry.removal_quote.total)} · Potential refund {money(entry.removal_quote.potential_refund_paise / 100)} pending review</Text> : null}
+         {entry.final_totals ? <Text style={styles.text}>Confirmed order total {money(entry.final_totals.total)} · was {money(entry.original_total)}</Text> : null}
+         {entry === active && (entry.state === "awaiting_customer" || entry.state === "assist_required") && statuses.includes(order.status) ? <>
+@@ -192,17 +221,25 @@
+           </View>)}
+           {canDecide && visibleOptions.length ? button(entry.offer_sequence ? "Decline this option" : "Reject these replacements", () => decide(entry, "reject")) : null}
+         </> : null}
+-        {canRemove ? button(
+-          entry.keep_totals ? `Remove item · ${money(entry.keep_totals.total)} total` : "Request item removal",
+-          () => decide(entry, "keep_unavailable"),
+-        ) : null}
++        {canDecide && visibleOptions.length ? button("Withdraw from replacement", () => decide(entry, "withdraw")) : null}
++        {entry.decision?.action === "withdraw" ? <Text style={styles.text}>You withdrew from replacement. Your order remains open.</Text> : null}
++        {canRemove && !quote ? button("Review item removal", () => void previewRemoval(entry)) : null}
++        {canRemove && quote ? <View style={styles.offer}>
++          <Text style={styles.text}>{describe(quote.original)} · {labels[quote.replacement_status]}</Text>
++          {quote.totals ? <Text style={styles.text}>Revised total {money(quote.totals.total)} · Difference {money(quote.totals.total - quote.original_total)}</Text> : null}
++          {quote.potential_refund_paise ? <Text style={styles.text}>Potential refund {money(quote.potential_refund_paise / 100)} · Pending review</Text> : null}
++          {quote.reason ? <Text style={styles.text}>Assist will review this request before the order or payment changes.</Text>
++            : <Text style={styles.text}>The payable amount will be updated. No refund is scheduled.</Text>}
++          {button(quote.reason ? "Confirm removal request" : "Confirm item removal", () => decide(entry, "keep_unavailable", undefined, quote.confirmation))}
++          {button("Back", () => setRemoval(null))}
++        </View> : null}
+         {canDecide && !restaurant && !entry.assist_reason && !entry.keep_totals ? <Text style={styles.text}>Without this item your order would be empty. Contact COME-IN Assist for help.</Text> : null}
+         {canReport && entry === active && order.items[entry.line_index]
+           ? button(restaurant ? "Update replacement offer" : "Refresh in-stock options", () => openReport(order.items[entry.line_index], entry.line_index, entry.id))
+           : null}
+       </View>;
+     })}
+-    {!staff && active && statuses.includes(order.status) ? button(active.support_id ? "View COME-IN Assist status" : "Contact COME-IN Assist", () =>
++    {!staff && (active || cases.some((entry) => entry.state === "accepted" || entry.decision?.action === "accept")) ? button(active?.support_id ? "View COME-IN Assist status" : "Contact COME-IN Assist", () =>
+       restaurant
+         ? router.push({ pathname: "/chand", params: { openHelp: "1", order_id: order.id, order_kind: "restaurant" } })
+         : router.push({ pathname: "/chand", params: { openHelp: "1", order_id: order.id, order_kind: "grocery" } }),
