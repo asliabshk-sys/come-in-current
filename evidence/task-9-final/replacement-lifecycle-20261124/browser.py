@@ -11,7 +11,7 @@ from pymongo import MongoClient
 
 web = "http://127.0.0.1:8294"
 api = "http://127.0.0.1:8293/api"
-assert os.environ["DB_NAME"] == "comein_disposable_t912_browser"
+assert os.environ["DB_NAME"] == "comein_disposable_t9ops_browser"
 db = MongoClient("mongodb://127.0.0.1:27018/?replicaSet=rs0")[os.environ["DB_NAME"]]
 now = datetime.now(timezone.utc)
 
@@ -99,7 +99,12 @@ with sync_playwright() as p:
     print("PASS Admin adjusts an individual active offer")
     admin.get_by_label("Replacement order ID").fill(str(legacy_id))
     admin.get_by_label("Replacement case ID").fill(legacy["id"])
-    admin.get_by_text("Review legacy offer and start grace period if eligible").click()
+    admin.get_by_text("Review legacy migration eligibility", exact=True).click()
+    expect(admin.get_by_text("Selected offer · Eligible 1 · Excluded 0 · Ambiguous 0 · Already enrolled 0")).to_be_visible()
+    expect(admin.get_by_text("The offer keeps its existing terms for 24 hours.", exact=False)).to_be_visible()
+    assert "legacy_migration" not in db.orders.find_one({"_id": legacy_id})["replacements"][0]
+    print("PASS Admin eligibility preview is read-only and shows the notice and activation policy")
+    admin.get_by_text("Confirm enrollment and notify customer", exact=True).click()
     expect(admin.get_by_text("Migration status: grace", exact=True)).to_be_visible()
     assert db.orders.find_one({"_id": legacy_id})["replacements"][0]["legacy_migration"]["status"] == "grace"
     print("PASS Admin enrolls an eligible legacy case and sees grace status")

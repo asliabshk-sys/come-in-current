@@ -16,7 +16,7 @@ cd frontend
 EXPO_NO_TELEMETRY=1 EXPO_OFFLINE=1 EXPO_PUBLIC_BACKEND_URL=http://127.0.0.1:8293 CI=1 ./node_modules/.bin/expo export --platform web --output-dir /tmp/t912-web
 ```
 
-For Chromium, start the exported app with the existing SPA server on port 8294 and FastAPI on 8293. Use disposable database `comein_disposable_t912_browser`, set the API CORS origin to the loopback web origin, and seed preview accounts. Run [browser.py](browser.py) with Chromium, Playwright, PyMongo and requests. The harness aborts external HTTPS requests.
+For Chromium, start the exported app with the existing SPA server on port 8294 and FastAPI on 8293. Use disposable database `comein_disposable_t912_browser`, set the API CORS origin to the loopback web origin, and seed preview accounts. Run [the lifecycle browser harness at its verified checkpoint](https://github.com/asliabshk-sys/come-in-current/blob/1c8cddd41a719501df4d973f2f901d097e69f882/evidence/task-9-final/replacement-lifecycle-20261124/browser.py) with Chromium, Playwright, PyMongo and requests. The harness aborts external HTTPS requests.
 
 ## Coverage
 

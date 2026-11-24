@@ -1,0 +1,209 @@
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -5924,8 +5924,46 @@
+     return migration
+
+
++_AMBIGUOUS_REPLACEMENT_MIGRATION_REASONS = (
++    "legacy_expiry_ambiguous", "legacy_record_incomplete", "order_snapshot_changed",
++)
++
++
++class ReplacementMigrationConfirmationIn(BaseModel):
++    confirm_enrollment: Literal[True]
++
++
++@api.get("/admin/replacements/migration/{kind}/{order_id}/{case_id}")
++async def preview_legacy_replacement(kind: Literal["grocery", "restaurant"], order_id: str, case_id: str,
++                                     _: dict = Depends(require_role("admin"))):
++    collection, _ = _replacement_scope(kind)
++    oid = _object_id_or_404(order_id, "Order")
++
++    async def review(session):
++        order = await collection.find_one({"_id": oid}, session=session)
++        case = next((row for row in (order or {}).get("replacements", []) if row["id"] == case_id), None)
++        if not case:
++            raise HTTPException(404, "Replacement request not found.")
++        migration = case.get("legacy_migration")
++        if migration:
++            reason = migration.get("reason")
++            status = ("ambiguous" if reason in _AMBIGUOUS_REPLACEMENT_MIGRATION_REASONS else
++                      "excluded" if migration["status"] == "excluded" else "already_enrolled")
++        else:
++            _, reason = await _legacy_replacement_options(session, order, case, kind)
++            status = ("eligible" if not reason else
++                      "ambiguous" if reason in _AMBIGUOUS_REPLACEMENT_MIGRATION_REASONS else "excluded")
++        return {"status": status, "reason": reason, "counts": {
++                    value: int(status == value) for value in ("eligible", "excluded", "ambiguous", "already_enrolled")
++                }, "grace_hours": int(REPLACEMENT_MIGRATION_GRACE.total_seconds() // 3600),
++                "activation_minutes": DEFAULT_REPLACEMENT_EXPIRY_MINUTES}
++
++    return await _run_replacement_transaction(review)
++
++
+ @api.post("/admin/replacements/migration/{kind}/{order_id}/{case_id}")
+ async def enroll_legacy_replacement(kind: Literal["grocery", "restaurant"], order_id: str, case_id: str,
++                                   body: ReplacementMigrationConfirmationIn,
+                                    user: dict = Depends(require_role("admin"))):
+     collection, _ = _replacement_scope(kind)
+     oid = _object_id_or_404(order_id, "Order")
+@@ -5947,6 +5985,7 @@
+         grace_until = notified + REPLACEMENT_MIGRATION_GRACE
+         return await _record_replacement_migration(session, order, case, kind, user["id"], "grace",
+             notified_at=notified, grace_until=grace_until, next_attempt_at=grace_until,
++            enrollment_confirmed=body.confirm_enrollment,
+             source_status=order["status"], source_case_status=case["state"],
+             source_financials=_replacement_original_financials(order),
+             option_ids=[option["id"] for option in case["options"]])
+@@ -5959,6 +5998,7 @@
+     statuses = {"grace": 0, "migrated": 0, "excluded": 0}
+     failed = 0
+     eligible = 0
++    ambiguous = 0
+     review = []
+     for kind in ("grocery", "restaurant"):
+         collection, _ = _replacement_scope(kind)
+@@ -5969,18 +6009,21 @@
+             "_id": "$replacements.legacy_migration.status", "count": {"$sum": 1},
+             "failed": {"$sum": {"$cond": [{"$ifNull": ["$replacements.legacy_migration.last_failure", False]}, 1, 0]}},
+             "eligible": {"$sum": {"$cond": [{"$ifNull": ["$replacements.legacy_migration.notified_at", False]}, 1, 0]}},
++            "ambiguous": {"$sum": {"$cond": [{"$in": ["$replacements.legacy_migration.reason",
++                                                         list(_AMBIGUOUS_REPLACEMENT_MIGRATION_REASONS)]}, 1, 0]}},
+         }}]).to_list(None)
+         for group in groups:
+             statuses[group["_id"]] += group["count"]
+             failed += group["failed"]
+             eligible += group["eligible"]
++            ambiguous += group["ambiguous"]
+         rows = await collection.aggregate([*pipeline, {"$sort": {"replacements.legacy_migration.updated_at": -1}},
+             {"$limit": 25}, {"$project": {"case_id": "$replacements.id", "migration": "$replacements.legacy_migration"}}]).to_list(25)
+         review.extend({**doc_out(row), "kind": kind} for row in rows)
+     audit = await db.financial_audit.find({"action": "replacement_legacy_migration", "campaign": REPLACEMENT_MIGRATION_CAMPAIGN},
+                                           {"source_financials": 0}).sort("created_at", -1).limit(50).to_list(50)
+     return {"campaign": REPLACEMENT_MIGRATION_CAMPAIGN, "statuses": statuses, "failed": failed,
+-            "eligible": eligible, "recent": review, "audit": [doc_out(row) for row in audit]}
++            "eligible": eligible, "ambiguous": ambiguous, "recent": review, "audit": [doc_out(row) for row in audit]}
+
+
+ async def _migrate_legacy_replacement(session, order, case, kind):
+--- a/backend/tests/test_task9_grocery_replacement.py
++++ b/backend/tests/test_task9_grocery_replacement.py
+@@ -457,16 +457,27 @@
+                 original_reported = (await db.orders.find_one({"_id": migrated_id}))["replacements"][0]["reported_at"]
+                 with monkeypatch.context() as ticking:
+                     ticking.setattr(server, "now_utc", lambda: clock[0])
+-                    assert (await call("POST", migration_path, {}, "buyer")).status_code == 403
++                    assert (await call("POST", migration_path, {"confirm_enrollment": True}, "buyer")).status_code == 403
++                    assert (await call("GET", migration_path, actor="buyer")).status_code == 403
++                    assert (await call("POST", migration_path, {}, "admin")).status_code == 422
++                    counts = (await call("GET", migration_path, actor="admin")).json()
++                    assert counts["counts"] == {"eligible": 1, "excluded": 0, "ambiguous": 0, "already_enrolled": 0}
++                    assert counts["grace_hours"] == 24 and counts["activation_minutes"] == 15
++                    assert (await call("GET", excluded_path, actor="admin")).json()["counts"]["excluded"] == 1
++                    await db.orders.update_one({"_id": migrated_id}, {"$set": {"replacements.0.expires_at": "unknown"}})
++                    assert (await call("GET", migration_path, actor="admin")).json()["counts"]["ambiguous"] == 1
++                    await db.orders.update_one({"_id": migrated_id}, {"$unset": {"replacements.0.expires_at": ""}})
++                    assert await notice_count(migrated_id) == 1
++                    assert "legacy_migration" not in (await db.orders.find_one({"_id": migrated_id}))["replacements"][0]
+                     with monkeypatch.context() as failing:
+                         failing.setattr(server, "_replacement_notify", notification_failure)
+-                        assert (await call("POST", migration_path, {}, "admin")).status_code == 503
++                        assert (await call("POST", migration_path, {"confirm_enrollment": True}, "admin")).status_code == 503
+                     assert await notice_count(migrated_id) == 1
+-                    enrollments = await asyncio.gather(*(call("POST", migration_path, {}, "admin") for _ in range(2)))
++                    enrollments = await asyncio.gather(*(call("POST", migration_path, {"confirm_enrollment": True}, "admin") for _ in range(2)))
+                     assert all(reply.status_code == 200 and reply.json()["status"] == "grace" for reply in enrollments)
+                     assert await notice_count(migrated_id) == 2
+-                    assert (await call("POST", changed_path, {}, "admin")).json()["status"] == "grace"
+-                    assert (await call("POST", excluded_path, {}, "admin")).json()["reason"] == "order_stage_ineligible"
++                    assert (await call("POST", changed_path, {"confirm_enrollment": True}, "admin")).json()["status"] == "grace"
++                    assert (await call("POST", excluded_path, {"confirm_enrollment": True}, "admin")).json()["reason"] == "order_stage_ineligible"
+                     await db.orders.update_one({"_id": changed_id}, {"$set": {"status": "preparing"}})
+                     initial = clock[0]
+                     clock[0] = initial + timedelta(hours=24) - timedelta(seconds=1)
+--- a/backend/tests/test_task9_restaurant_replacement.py
++++ b/backend/tests/test_task9_restaurant_replacement.py
+@@ -614,16 +614,27 @@
+                 original_reported = (await db.restaurant_orders.find_one({"_id": migrated_id}))["replacements"][0]["reported_at"]
+                 with monkeypatch.context() as ticking:
+                     ticking.setattr(server, "now_utc", lambda: clock[0])
+-                    assert (await request("POST", migration_path, {}, "buyer")).status_code == 403
++                    assert (await request("POST", migration_path, {"confirm_enrollment": True}, "buyer")).status_code == 403
++                    assert (await request("GET", migration_path, actor="buyer")).status_code == 403
++                    assert (await request("POST", migration_path, {}, "admin")).status_code == 422
++                    counts = (await request("GET", migration_path, actor="admin")).json()
++                    assert counts["counts"] == {"eligible": 1, "excluded": 0, "ambiguous": 0, "already_enrolled": 0}
++                    assert counts["grace_hours"] == 24 and counts["activation_minutes"] == 15
++                    assert (await request("GET", excluded_path, actor="admin")).json()["counts"]["excluded"] == 1
++                    await db.restaurant_orders.update_one({"_id": migrated_id}, {"$set": {"replacements.0.expires_at": "unknown"}})
++                    assert (await request("GET", migration_path, actor="admin")).json()["counts"]["ambiguous"] == 1
++                    await db.restaurant_orders.update_one({"_id": migrated_id}, {"$unset": {"replacements.0.expires_at": ""}})
++                    assert await notice_count(migrated_id) == 1
++                    assert "legacy_migration" not in (await db.restaurant_orders.find_one({"_id": migrated_id}))["replacements"][0]
+                     with monkeypatch.context() as failing:
+                         failing.setattr(server, "_replacement_notify", notification_failure)
+-                        assert (await request("POST", migration_path, {}, "admin")).status_code == 503
++                        assert (await request("POST", migration_path, {"confirm_enrollment": True}, "admin")).status_code == 503
+                     assert await notice_count(migrated_id) == 1
+-                    enrollments = await asyncio.gather(*(request("POST", migration_path, {}, "admin") for _ in range(2)))
++                    enrollments = await asyncio.gather(*(request("POST", migration_path, {"confirm_enrollment": True}, "admin") for _ in range(2)))
+                     assert all(reply.status_code == 200 and reply.json()["status"] == "grace" for reply in enrollments)
+                     assert await notice_count(migrated_id) == 2
+-                    assert (await request("POST", changed_path, {}, "admin")).json()["status"] == "grace"
+-                    assert (await request("POST", excluded_path, {}, "admin")).json()["reason"] == "order_stage_ineligible"
++                    assert (await request("POST", changed_path, {"confirm_enrollment": True}, "admin")).json()["status"] == "grace"
++                    assert (await request("POST", excluded_path, {"confirm_enrollment": True}, "admin")).json()["reason"] == "order_stage_ineligible"
+                     await db.restaurant_orders.update_one({"_id": changed_id}, {"$set": {"status": "preparing"}})
+                     initial = clock[0]
+                     clock[0] = initial + timedelta(hours=24) - timedelta(seconds=1)
+--- a/frontend/app/admin.tsx
++++ b/frontend/app/admin.tsx
+@@ -649,8 +649,12 @@
+   const [notice, setNotice] = useState("");
+   const [busy, setBusy] = useState(false);
+   const [offer, setOffer] = useState<{ path: string; option_id: string; expires_at: string } | null>(null);
++  const [migrationPreview, setMigrationPreview] = useState<{
++    ids: string; status: string; reason?: string; grace_hours: number; activation_minutes: number;
++    counts: { eligible: number; excluded: number; ambiguous: number; already_enrolled: number };
++  } | null>(null);
+   const [migration, setMigration] = useState<{
+-    campaign: string; eligible: number; failed: number;
++    campaign: string; eligible: number; failed: number; ambiguous: number;
+     statuses: { grace: number; migrated: number; excluded: number };
+     recent: { id: string; kind: string; case_id: string; migration: { status: string; reason?: string; last_failure?: string } }[];
+     audit: { id: string; order_id: string; replacement_id: string; new: string; actor_id: string; created_at: string }[];
+@@ -678,11 +682,21 @@
+         setOffer(null);
+         setOffer({ path, ...await api.get<Omit<NonNullable<typeof offer>, "path">>(path) });
+       })} />
+-      <ActionBtn label="Review legacy offer and start grace period if eligible" onPress={() => run(async () => {
+-        const result = await api.post<{ status: string; reason?: string }>(`${migrationPath}/${ids}`, {});
+-        setNotice(`Migration status: ${result.status}${result.reason ? ` · ${result.reason}` : ""}`);
+-        await loadMigration();
++      <ActionBtn label="Review legacy migration eligibility" onPress={() => run(async () => {
++        setMigrationPreview(null);
++        setMigrationPreview({ ids, ...await api.get<Omit<NonNullable<typeof migrationPreview>, "ids">>(`${migrationPath}/${ids}`) });
+       })} />
++      {migrationPreview?.ids === ids ? <>
++        <Text>Selected offer · Eligible {migrationPreview.counts.eligible} · Excluded {migrationPreview.counts.excluded} · Ambiguous {migrationPreview.counts.ambiguous} · Already enrolled {migrationPreview.counts.already_enrolled}</Text>
++        {migrationPreview.reason ? <Text>{migrationPreview.reason}</Text> : null}
++        <Text>Enrollment sends a customer notice. The offer keeps its existing terms for {migrationPreview.grace_hours} hours. After revalidation an eligible offer activates for {migrationPreview.activation_minutes} minutes.</Text>
++        {migrationPreview.status === "eligible" ? <ActionBtn label="Confirm enrollment and notify customer" onPress={() => run(async () => {
++          const result = await api.post<{ status: string; reason?: string }>(`${migrationPath}/${ids}`, { confirm_enrollment: true });
++          setMigrationPreview(null);
++          setNotice(`Migration status: ${result.status}${result.reason ? ` · ${result.reason}` : ""}`);
++          await loadMigration();
++        })} /> : null}
++      </> : null}
+       <TextInput accessibilityLabel="Manual resolution reason" placeholder="Why the order can be fulfilled as recorded"
+         style={styles.input} value={resolutionReason} onChangeText={setResolutionReason} />
+       {resolutionReason.trim().length >= 5 ? <ActionBtn label="Confirm existing fulfillment and close replacement"
+@@ -708,7 +722,7 @@
+     </> : null}
+     <ActionBtn label="Load legacy migration status" onPress={() => run(loadMigration)} />
+     {migration ? <>
+-      <Text>{migration.campaign} · Eligible {migration.eligible} · In grace {migration.statuses.grace} · Migrated {migration.statuses.migrated} · Excluded {migration.statuses.excluded} · Failed {migration.failed}</Text>
++      <Text>{migration.campaign} · Eligible {migration.eligible} · In grace {migration.statuses.grace} · Migrated {migration.statuses.migrated} · Excluded {migration.statuses.excluded} · Ambiguous {migration.ambiguous} · Failed {migration.failed}</Text>
+       {migration.recent.map((row) => <Text key={`${row.id}/${row.case_id}`}>{row.kind} · {row.id} · {row.case_id} · {row.migration.status} {row.migration.reason || row.migration.last_failure || ""}</Text>)}
+       {migration.audit.map((row) => <Text key={row.id}>{row.order_id} · {row.replacement_id} · {row.new} · {row.actor_id} · {row.created_at}</Text>)}
+     </> : null}

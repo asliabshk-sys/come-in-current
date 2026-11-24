@@ -244,3 +244,7 @@ T9-12 remains **PARTIALLY VERIFIED**. New Grocery and Restaurant offers support 
 ### 24 November 2026 — T9-12 approved lifecycle and migration
 
 T9-12 implements all four owner-approved decisions for Grocery and Restaurant. The lifecycle patch adds bounded expiry adjustment, independent customer withdrawal and confirmed removal, fulfillment stage locks and manual Assist closure, and opt-in legacy migration with 24-hour grace and a 15-minute activation. Task 9 overall retains its existing release status. No live migration or financial execution ran. Apply `patches/task9-replacement-lifecycle.patch` after the replacement expiry sequence patch. [Implementation and recovery](evidence/task-9-final/replacement-lifecycle-20261124/IMPLEMENTATION.md) · [Tests](evidence/task-9-final/replacement-lifecycle-20261124/TESTS.md)
+
+### 24 November 2026 — T9-12 operational rollout verification
+
+T9-12 remains **FULLY IMPLEMENTED AND VERIFIED** for Grocery and Restaurant. The operational patch separates Admin eligibility preview from confirmed enrollment. Disposable checks verified grace, activation, audit and recovery. Live enrollment remains an explicit Admin action. Native iOS and Android and genuine Razorpay TEST are blocked by the prerequisites recorded in the evidence. Apply `patches/task9-legacy-enrollment-review.patch` after the lifecycle patch. [Verification](evidence/task-9-final/replacement-rollout-20261124/VERIFICATION.md) · [Admin runbook](evidence/task-9-final/replacement-rollout-20261124/ADMIN-RUNBOOK.md)
